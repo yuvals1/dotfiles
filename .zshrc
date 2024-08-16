@@ -116,3 +116,5 @@ alias ls="eza --icons=always"
 # Configure bat
 alias cat='bat --style=plain --paging=never'
 
+# Kitty
+alias icat='kitty +kitten icat'
