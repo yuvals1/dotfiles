@@ -937,3 +937,7 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+--
+--
+-- my additions
+vim.keymap.set('n', 'yaa', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
