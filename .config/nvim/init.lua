@@ -864,6 +864,15 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = '<C-space>',
+          node_incremental = '<C-space>',
+          scope_incremental = false,
+          node_decremental = '<bs>',
+        },
+      },
       ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
