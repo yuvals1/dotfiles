@@ -347,12 +347,32 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {}
+        defaults = {
+          --   mappings = {
+          --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          --   },
+          layout_strategy = 'vertical',
+          layout_config = {
+            vertical = {
+              width = 0.8,
+              height = 0.9,
+              preview_height = 0.5,
+              preview_cutoff = 0, -- Always show preview
+            },
+          },
+          -- sorting_strategy = 'ascending',
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+            find_command = { 'rg', '--files', '--hidden', '--glob', '!**/.git/*' },
+          },
+          live_grep = {
+            additional_args = function()
+              return { '--hidden' }
+            end,
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
