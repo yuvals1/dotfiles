@@ -119,3 +119,5 @@ alias cat='bat --style=plain --paging=never'
 # Kitty
 alias icat='kitty +kitten icat'
 alias y='yazi'
+
+alias sc='sesh connect'
