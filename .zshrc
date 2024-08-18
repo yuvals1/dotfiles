@@ -121,3 +121,5 @@ alias icat='kitty +kitten icat'
 alias y='yazi'
 
 alias sc='sesh connect'
+
+. "$HOME/.cargo/env"
