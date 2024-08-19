@@ -4,8 +4,13 @@ return {
   dependencies = {
     '3rd/image.nvim', -- optional; for image support
   },
-  build = ':UpdateRemotePlugins',
+  build = function()
+    vim.cmd [[UpdateRemotePlugins]]
+  end,
   init = function()
+    -- Set the Python host program
+    vim.g.python3_host_prog = vim.fn.expand '~/.virtualenvs/neovim/bin/python3'
+
     -- Configuration options
     vim.g.molten_output_win_max_height = 12
     vim.g.molten_auto_open_output = false
