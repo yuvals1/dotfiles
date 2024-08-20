@@ -953,3 +953,21 @@ vim.keymap.set('n', 'yaa', ':%y<CR>', { noremap = true, silent = true, desc = 'Y
 
 vim.keymap.set('n', '<C-M>', 'o<Esc>', { desc = 'Add new line below without exiting normal mode' })
 vim.keymap.set('n', '<C-S-M>', 'O<Esc>', { desc = 'Add new line above without exiting normal mode' })
+
+vim.g.image_magick_dir = '/opt/homebrew'
+--
+local home = os.getenv 'HOME'
+package.path = package.path .. ';' .. home .. '/.luarocks/share/lua/5.1/?.lua;' .. home .. '/.luarocks/share/lua/5.1/?/init.lua'
+package.cpath = package.cpath .. ';' .. home .. '/.luarocks/lib/lua/5.1/?.so'
+
+-- local image = require 'image'
+-- local old_render = image.get_images()[1].render
+-- image.get_images()[1].render = function(self)
+--   print 'Render called'
+--   print('Window:', self.window)
+--   print('Is window valid:', vim.api.nvim_win_is_valid(self.window))
+--   old_render(self)
+-- end
+--
+--
+-- Your existing init.lua content here...
