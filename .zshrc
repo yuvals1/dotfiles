@@ -99,7 +99,7 @@ alias gc='gt create -m'
 
 # Shell integrations
 eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+# eval "$(zoxide init --cmd cd zsh)"
 
 
 # Add eza, bat, and zoxide
@@ -119,7 +119,36 @@ alias cat='bat --style=plain --paging=never'
 # Kitty
 alias icat='kitty +kitten icat'
 alias y='yazi'
-
+alias cd='z'
 alias sc='sesh connect'
 
 . "$HOME/.cargo/env"
+
+export DYLD_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_LIBRARY_PATH"
+
+function sesh-sessions() {
+  {
+    exec </dev/tty
+    exec <&1
+    local session
+    session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
+    [[ -z "$session" ]] && return
+    sesh connect $session
+  }
+}
+
+zle     -N             sesh-sessions
+bindkey -M emacs '\es' sesh-sessions
+bindkey -M vicmd '\es' sesh-sessions
+bindkey -M viins '\es' sesh-sessions
+
+# Install and load zoxide
+zinit ice from"gh-r" as"program" pick"zoxide*/zoxide"
+zinit light ajeetdsouza/zoxide
+zinit ice wait"0" lucid
+zinit light ajeetdsouza/zoxide
+
+# Initialize zoxide
+eval "$(zoxide init zsh)"
+
+***REMOVED***
