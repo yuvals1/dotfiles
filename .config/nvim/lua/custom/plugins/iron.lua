@@ -45,19 +45,24 @@ return {
           repl_open_cmd = custom_repl_open_cmd,
         },
         keymaps = {
-          send_file = '<space>ra',
-          send_line = '<space>rl',
-          send_until_cursor = '<space>rc',
-          exit = '<space>rq',
-          send_motion = '<space>re',
-          visual_send = '<space>rv',
+          send_file = '<space>ja',
+          send_line = '<space>jl',
+          send_until_cursor = '<space>jc',
+          exit = '<space>jq',
+          -- send_motion = '<space>re',
+          visual_send = '<space>jm',
         },
         highlight = { italic = true },
         ignore_blank_lines = true,
       }
 
       -- Set up the toggle keymap outside of iron.setup
-      vim.api.nvim_set_keymap('n', '<space>rt', [[<cmd>lua require('iron.core').repl_for(vim.bo.filetype)<CR>]], { noremap = true, silent = true })
+      vim.api.nvim_set_keymap(
+        'n',
+        '<space>jj',
+        [[<cmd>lua require('iron.core').repl_for(vim.bo.filetype)<CR>]],
+        { noremap = true, silent = true, desc = 'Toggle REPL' }
+      )
 
       -- Additional setup for better REPL experience
       vim.api.nvim_create_autocmd('TermOpen', {
