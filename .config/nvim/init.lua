@@ -971,3 +971,36 @@ package.cpath = package.cpath .. ';' .. home .. '/.luarocks/lib/lua/5.1/?.so'
 --
 --
 -- Your existing init.lua content here...
+-- neotree as file explorer
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function(data)
+    -- buffer is a directory
+    local directory = vim.fn.isdirectory(data.file) == 1
+
+    if not directory then
+      return
+    end
+
+    -- change to the directory
+    vim.cmd.cd(data.file)
+
+    -- close the current buffer (default directory listing)
+    vim.cmd.bdelete()
+
+    -- open the tree
+    require('neo-tree.command').execute { toggle = true, dir = data.file }
+  end,
+  desc = 'Open Neo-tree on startup with directory',
+})
+
+-- Optionally, you can add this to close Neovim if Neo-tree is the last window
+vim.api.nvim_create_autocmd('BufEnter', {
+  nested = true,
+  callback = function()
+    if #vim.api.nvim_list_wins() == 1 and vim.bo.filetype == 'neo-tree' then
+      vim.cmd 'quit'
+    end
+  end,
+})
+
+vim.g.python3_host_prog = vim.fn.expand '~/.virtualenvs/neovim311/bin/python3'
