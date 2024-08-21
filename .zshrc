@@ -53,7 +53,7 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
-
+bindkey '^D' forward-word  # Add Ctrl+D to accept next word in suggestion
 # Function to yank current line to clipboard
 yank-line-to-clipboard() {
   if [[ "$OSTYPE" == "darwin"* ]]; then
