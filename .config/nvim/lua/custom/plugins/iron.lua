@@ -6,29 +6,36 @@ return {
       local iron = require 'iron.core'
       local view = require 'iron.view'
       local fts = require 'iron.fts'
+
+      -- Custom function to create a right split
+      local function custom_repl_open_cmd(bufnr)
+        -- Calculate 40% of the total columns
+        local width = math.floor(vim.o.columns * 0.4)
+        -- Open a new vertical split on the far right
+        vim.cmd('botright vertical ' .. width .. 'split')
+        -- Set the buffer for this new window to the REPL buffer
+        vim.api.nvim_win_set_buf(0, bufnr)
+        -- Set some window options
+        local win = vim.api.nvim_get_current_win()
+        -- Use vim.wo instead of nvim_win_set_option
+        vim.wo[win].number = false
+        vim.wo[win].relativenumber = false
+        -- Return the window ID
+        return win
+      end
+
       iron.setup {
         config = {
-          -- Whether a repl should be discarded or not
           scratch_repl = true,
-          -- Your repl definitions come here
           repl_definition = {
             sh = {
-              -- Can be a table or a function that
-              -- returns a table (see below)
               command = { 'zsh' },
             },
             python = fts.python.ipython,
           },
-          -- How the repl window will be displayed
-          -- See below for more information
-          repl_open_cmd = view.split('%30', {
-            winfixwidth = true,
-            winfixheight = true,
-            number = false,
-          }),
+          -- Use our custom function to open the REPL
+          repl_open_cmd = custom_repl_open_cmd,
         },
-        -- Iron doesn't set keymaps by default anymore.
-        -- You can set them here or manually add keymaps to the functions in iron.core
         keymaps = {
           send_file = '<space>rt',
           send_line = '<space>rl',
@@ -36,10 +43,8 @@ return {
           exit = '<space>rq',
           send_motion = '<space>re',
         },
-        -- If the highlight is on, you can change how it looks
-        -- For the available options, check nvim_set_hl
         highlight = { italic = true },
-        ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
+        ignore_blank_lines = true,
       }
     end,
   },
