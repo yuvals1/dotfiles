@@ -1,3 +1,4 @@
 .DS_Store
 .avante_chat_history/*
 
+.tmux/plugins/*
