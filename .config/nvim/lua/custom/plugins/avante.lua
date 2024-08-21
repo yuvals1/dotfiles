@@ -3,7 +3,46 @@ return {
   event = 'VeryLazy',
   build = 'make',
   opts = {
-    -- add any opts here
+    provider = 'claude',
+    claude = {
+      endpoint = 'https://api.anthropic.com',
+      model = 'claude-3-5-sonnet-20240620',
+      temperature = 0,
+      max_tokens = 4096,
+    },
+    mappings = {
+      ask = '<leader>aa',
+      edit = '<leader>ae',
+      refresh = '<leader>ar',
+      diff = {
+        ours = 'co',
+        theirs = 'ct',
+        none = 'c0',
+        both = 'cb',
+        next = ']x',
+        prev = '[x',
+      },
+      jump = {
+        next = ']]',
+        prev = '[[',
+      },
+    },
+    hints = { enabled = true },
+    windows = {
+      wrap_line = true,
+      width = 30,
+    },
+    highlights = {
+      diff = {
+        current = 'DiffText',
+        incoming = 'DiffAdd',
+      },
+    },
+    diff = {
+      debug = false,
+      autojump = true,
+      list_opener = 'copen',
+    },
   },
   dependencies = {
     'nvim-tree/nvim-web-devicons',
