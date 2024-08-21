@@ -15,6 +15,10 @@ return {
         local win = vim.api.nvim_get_current_win()
         vim.wo[win].number = false
         vim.wo[win].relativenumber = false
+
+        -- Add Esc mapping for the REPL buffer
+        vim.api.nvim_buf_set_keymap(bufnr, 't', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
+
         return win
       end
 
@@ -41,7 +45,7 @@ return {
           repl_open_cmd = custom_repl_open_cmd,
         },
         keymaps = {
-          send_file = '<space>rt',
+          send_file = '<space>ra',
           send_line = '<space>rl',
           send_until_cursor = '<space>rc',
           exit = '<space>rq',
@@ -53,7 +57,35 @@ return {
       }
 
       -- Set up the toggle keymap outside of iron.setup
-      vim.api.nvim_set_keymap('n', '<space>ts', [[<cmd>lua require('iron.core').repl_for(vim.bo.filetype)<CR>]], { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<space>rt', [[<cmd>lua require('iron.core').repl_for(vim.bo.filetype)<CR>]], { noremap = true, silent = true })
+
+      -- Additional setup for better REPL experience
+      vim.api.nvim_create_autocmd('TermOpen', {
+        pattern = 'term://*',
+        callback = function()
+          vim.opt_local.number = false
+          vim.opt_local.relativenumber = false
+          vim.cmd 'startinsert'
+          vim.api.nvim_buf_set_keymap(0, 't', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
+        end,
+      })
+
+      -- Set ttimeoutlen to 0 to eliminate delay when pressing Esc
+      vim.opt.ttimeoutlen = 0
+
+      -- Add custom keymaps for REPL buffers
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = 'iron',
+        callback = function()
+          -- Exit insert mode with jk
+          vim.api.nvim_buf_set_keymap(0, 'i', 'jk', '<Esc>', { noremap = true, silent = true })
+          -- Enter insert mode with i
+          vim.api.nvim_buf_set_keymap(0, 'n', 'i', 'i', { noremap = true, silent = true })
+        end,
+      })
+
+      -- Add keymap to easily focus out of REPL
+      vim.keymap.set('n', '<leader>wo', '<C-w>p', { noremap = true, silent = true, desc = 'Go to previous (last accessed) window' })
     end,
   },
 }
