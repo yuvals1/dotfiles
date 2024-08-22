@@ -39,10 +39,18 @@ return {
       -- Function to execute the current cell and move to the next one
       local function execute_cell_and_move()
         execute_cell()
-        local next_cell = vim.fn.search('^# %%', 'nW')
-        if next_cell ~= 0 then
-          vim.api.nvim_win_set_cursor(0, { next_cell + 1, 0 })
-        end
+        vim.cmd [[
+          if search('^# %%', 'nW') == 0
+            " We're in the last cell, create a new one
+            normal! G
+            call append(line('.'), ['', '# %%', ''])
+            normal! 3j
+          else
+            " Move to the next cell
+            call search('^# %%', 'W')
+            normal! j
+          endif
+        ]]
       end
 
       iron.setup {
@@ -62,7 +70,7 @@ return {
           send_line = '<space>jl',
           send_until_cursor = '<space>jc',
           exit = '<space>jq',
-          visual_send = '<space>jm',
+          visual_send = '<space>jv',
         },
         highlight = { italic = true },
         ignore_blank_lines = true,
@@ -73,10 +81,10 @@ return {
         iron.repl_for(vim.bo.filetype)
       end, { noremap = true, silent = true, desc = 'Toggle REPL' })
 
-      -- Set up a keymap to execute the current cell
-      vim.keymap.set('n', '<space>jx', execute_cell, { noremap = true, silent = true, desc = 'Execute current cell' })
+      -- Set up a keymap to execute the current cell (m for 'mark')
+      vim.keymap.set('n', '<space>jm', execute_cell, { noremap = true, silent = true, desc = 'Execute current cell' })
 
-      -- Set up a keymap to execute the current cell and move to the next one
+      -- Set up a keymap to execute the current cell and move to the next one (n for 'next')
       vim.keymap.set('n', '<space>jn', execute_cell_and_move, { noremap = true, silent = true, desc = 'Execute current cell and move to next' })
 
       -- Additional setup for better REPL experience
