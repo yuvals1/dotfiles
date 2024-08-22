@@ -119,6 +119,7 @@ alias cat='bat --style=plain --paging=never'
 # Kitty
 alias icat='kitty +kitten icat'
 alias y='yazi'
+alias n='nvim'
 alias cd='z'
 alias sc='sesh connect'
 
