@@ -36,6 +36,15 @@ return {
         iron.send(vim.bo.filetype, code)
       end
 
+      -- Function to execute the current cell and move to the next one
+      local function execute_cell_and_move()
+        execute_cell()
+        local next_cell = vim.fn.search('^# %%', 'nW')
+        if next_cell ~= 0 then
+          vim.api.nvim_win_set_cursor(0, { next_cell + 1, 0 })
+        end
+      end
+
       iron.setup {
         config = {
           visibility = require('iron.visibility').toggle,
@@ -66,6 +75,9 @@ return {
 
       -- Set up a keymap to execute the current cell
       vim.keymap.set('n', '<space>jx', execute_cell, { noremap = true, silent = true, desc = 'Execute current cell' })
+
+      -- Set up a keymap to execute the current cell and move to the next one
+      vim.keymap.set('n', '<space>jn', execute_cell_and_move, { noremap = true, silent = true, desc = 'Execute current cell and move to next' })
 
       -- Additional setup for better REPL experience
       vim.api.nvim_create_autocmd('TermOpen', {
