@@ -75,6 +75,38 @@ return {
         local current_line = vim.api.nvim_get_current_line()
         iron.send(vim.bo.filetype, current_line)
       end
+      -- Function to create a new cell below the current one
+      local function create_cell_below()
+        local current_line = vim.fn.line '.'
+        vim.api.nvim_buf_set_lines(0, current_line, current_line, false, { '', '# %%', '' })
+        vim.api.nvim_win_set_cursor(0, { current_line + 3, 0 })
+      end
+
+      -- New function to remove the current cell
+      local function remove_current_cell()
+        local current_line = vim.fn.line '.'
+        local start_line = vim.fn.search('^# %%', 'bnW')
+        local end_line = vim.fn.search('^# %%', 'nW') - 1
+
+        if start_line == 0 then
+          start_line = 1
+        end
+
+        if end_line == -1 then
+          end_line = vim.fn.line '$'
+        end
+
+        -- Delete the cell
+        vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, {})
+
+        -- Move cursor to the start of the next cell or the end of the file
+        local next_cell = vim.fn.search('^# %%', 'nW')
+        if next_cell == 0 then
+          vim.api.nvim_win_set_cursor(0, { vim.fn.line '$', 0 })
+        else
+          vim.api.nvim_win_set_cursor(0, { next_cell, 0 })
+        end
+      end
 
       iron.setup {
         config = {
@@ -104,6 +136,8 @@ return {
       vim.api.nvim_create_user_command('IronExecuteAndMove', execute_cell_and_move, {})
       vim.api.nvim_create_user_command('IronExecuteLineAndMove', execute_line_and_move, {})
       vim.api.nvim_create_user_command('IronExecuteLine', execute_line, {})
+      vim.api.nvim_create_user_command('IronCreateCellBelow', create_cell_below, {})
+      vim.api.nvim_create_user_command('IronRemoveCurrentCell', remove_current_cell, {})
 
       -- Set up the toggle keymap
       vim.keymap.set('n', '<space>jj', function()
@@ -121,6 +155,8 @@ return {
 
       -- Set up a keymap to execute the current line without moving
       vim.keymap.set('n', '<space>je', execute_line, { noremap = true, silent = true, desc = 'Execute current line' })
+      vim.keymap.set('n', '<space>jc', create_cell_below, { noremap = true, silent = true, desc = 'Create cell below' })
+      vim.keymap.set('n', '<space>jd', remove_current_cell, { noremap = true, silent = true, desc = 'Remove current cell' })
 
       -- Additional setup for better REPL experience
       vim.api.nvim_create_autocmd('TermOpen', {
