@@ -76,6 +76,9 @@ return {
         ignore_blank_lines = true,
       }
 
+      -- Create a user command for execute_and_move
+      vim.api.nvim_create_user_command('IronExecuteAndMove', execute_cell_and_move, {})
+
       -- Set up the toggle keymap
       vim.keymap.set('n', '<space>jj', function()
         iron.repl_for(vim.bo.filetype)
