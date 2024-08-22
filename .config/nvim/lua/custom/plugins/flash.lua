@@ -1,8 +1,16 @@
 return {
   'folke/flash.nvim',
   event = 'VeryLazy',
-  ---@type Flash.Config
   opts = {},
+  config = function(_, opts)
+    -- Enable flash for regular search
+    opts.modes = {
+      search = {
+        enabled = true,
+      },
+    }
+    require('flash').setup(opts)
+  end,
   -- stylua: ignore
   keys = {
     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
