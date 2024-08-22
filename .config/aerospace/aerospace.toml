@@ -215,4 +215,7 @@ run = ['layout floating']
 if.app-id = 'org.videolan.vlc'
 run = ['layout floating']
 
+[[on-window-detected]]
+if.app-name-regex-substring = 'WhatsApp'
+run = ['layout floating']
 
