@@ -201,3 +201,18 @@ if.app-id = 'com.apple.Preview'
 # if.during-aerospace-startup = true
 # check-further-callbacks = true
 run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = ['layout floating']
+
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.videolan.vlc'
+run = ['layout floating']
+
+
