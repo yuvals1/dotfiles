@@ -53,6 +53,29 @@ return {
         ]]
       end
 
+      -- Function to execute the current line and move to the next line
+      local function execute_line_and_move()
+        local current_line = vim.api.nvim_get_current_line()
+        iron.send(vim.bo.filetype, current_line)
+
+        local last_line = vim.fn.line '$'
+        local current_line_num = vim.fn.line '.'
+
+        if current_line_num == last_line then
+          -- If it's the last line, create a new line and move to it
+          vim.cmd 'normal! o'
+        else
+          -- Otherwise, just move to the next line
+          vim.cmd 'normal! j'
+        end
+      end
+
+      -- Function to execute the current line without moving
+      local function execute_line()
+        local current_line = vim.api.nvim_get_current_line()
+        iron.send(vim.bo.filetype, current_line)
+      end
+
       iron.setup {
         config = {
           visibility = require('iron.visibility').toggle,
@@ -76,8 +99,11 @@ return {
         ignore_blank_lines = true,
       }
 
-      -- Create a user command for execute_and_move
+      -- Create user commands
+      vim.api.nvim_create_user_command('IronExecuteCell', execute_cell, {})
       vim.api.nvim_create_user_command('IronExecuteAndMove', execute_cell_and_move, {})
+      vim.api.nvim_create_user_command('IronExecuteLineAndMove', execute_line_and_move, {})
+      vim.api.nvim_create_user_command('IronExecuteLine', execute_line, {})
 
       -- Set up the toggle keymap
       vim.keymap.set('n', '<space>jj', function()
@@ -89,6 +115,12 @@ return {
 
       -- Set up a keymap to execute the current cell and move to the next one (n for 'next')
       vim.keymap.set('n', '<space>jn', execute_cell_and_move, { noremap = true, silent = true, desc = 'Execute current cell and move to next' })
+
+      -- Set up a keymap to execute the current line and move to the next line
+      vim.keymap.set('n', '<space>jl', execute_line_and_move, { noremap = true, silent = true, desc = 'Execute current line and move to next' })
+
+      -- Set up a keymap to execute the current line without moving
+      vim.keymap.set('n', '<space>je', execute_line, { noremap = true, silent = true, desc = 'Execute current line' })
 
       -- Additional setup for better REPL experience
       vim.api.nvim_create_autocmd('TermOpen', {
