@@ -820,7 +820,15 @@ require('lazy').setup({
     end,
   },
 
-  -- Highlight todo, notes, etc in comments
+  -- todo comments variants:
+  --TODO:
+  --NOTE:
+  --INFO:
+  --WARNING:
+  --HACK:
+  --FIXME:
+  --BUG:
+
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
