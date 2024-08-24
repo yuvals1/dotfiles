@@ -9,6 +9,7 @@ M.setup = function(iron, executor, cells)
   vim.api.nvim_create_user_command('IronExecuteLine', executor.execute_line, {})
   vim.api.nvim_create_user_command('IronCreateCellBelow', cells.create_cell_below, {})
   vim.api.nvim_create_user_command('IronRemoveCurrentCell', cells.remove_current_cell, {})
+  vim.api.nvim_create_user_command('IronSmartExecute', executor.smart_execute, {}) -- Added this line
 
   -- Set up keymaps
   vim.keymap.set('n', '<space>jj', function()
