@@ -19,6 +19,13 @@ local function is_executable_node(node_type)
     or node_type == 'generator_expression'
     or node_type == 'string'
     or node_type == 'expression_statement'
+    or node_type == 'assignment' -- Added for multiline assignments
+    or node_type == 'binary_operator' -- Added for long calculations
+    or node_type == 'parenthesized_expression' -- Added for expressions in parentheses
+    or node_type == 'tuple' -- Added for multiline tuples
+    or node_type == 'list' -- Added for multiline lists
+    or node_type == 'dictionary' -- Added for multiline dictionaries
+    or node_type == 'call' -- Added for multiline function calls
 end
 
 local function get_parent_class(node)
