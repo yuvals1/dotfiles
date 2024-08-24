@@ -16,6 +16,9 @@ end
 
 M.send_to_repl = function(code)
   iron.send(vim.bo.filetype, code)
+  -- Switch back to normal mode
+  vim.cmd 'stopinsert'
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
 end
 
 return M
