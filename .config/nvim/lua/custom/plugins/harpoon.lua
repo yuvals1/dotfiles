@@ -10,12 +10,12 @@ return {
       harpoon:setup()
       -- REQUIRED
 
-      vim.keymap.set('n', '<leader>hh', function()
+      vim.keymap.set('n', '<leader>hn', function()
         harpoon:list():add()
-      end)
-      vim.keymap.set('n', '<C-e>', function()
+      end, { noremap = true, silent = true, desc = 'Add current buffer to Harpoon list' })
+      vim.keymap.set('n', '<leader>hh', function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
-      end)
+      end, { noremap = true, silent = true, desc = 'Toggle Harpoon list' })
       --
       -- vim.keymap.set('n', '<C-h>', function()
       --   harpoon:list():select(1)
