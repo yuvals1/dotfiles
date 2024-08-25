@@ -20,6 +20,7 @@ M.setup = function(iron, custom_functions)
   vim.keymap.set('n', '<space>je', custom_functions.execute_line, { noremap = true, silent = true, desc = 'Execute current line' })
   vim.keymap.set('n', '<space>jc', custom_functions.create_cell_below, { noremap = true, silent = true, desc = 'Create cell below' })
   vim.keymap.set('n', '<space>jd', custom_functions.remove_current_cell, { noremap = true, silent = true, desc = 'Remove current cell' })
+  vim.keymap.set('n', '<space>js', custom_functions.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
 
   vim.keymap.set('n', '<leader>wo', '<C-w>p', { noremap = true, silent = true, desc = 'Go to previous (last accessed) window' })
 end
