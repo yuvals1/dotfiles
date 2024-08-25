@@ -26,8 +26,11 @@ M.setup = function(iron, executor, cells)
   vim.keymap.set('n', '<space>js', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
   vim.keymap.set('n', '<space>jx', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
   vim.keymap.set('n', '<C-S-K>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
-
   vim.keymap.set('n', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+
+  -- Add visual mode mappings
+  vim.keymap.set('v', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute selection and move' })
+  vim.keymap.set('v', '<C-S-k>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute selection' })
 
   -- New keybinding for IronRestart
   vim.keymap.set('n', '<space>jr', ':IronRestart<CR>', { noremap = true, silent = true, desc = 'Restart REPL' })

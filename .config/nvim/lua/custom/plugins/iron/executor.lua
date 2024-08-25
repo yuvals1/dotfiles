@@ -2,6 +2,7 @@
 local repl = require 'custom.plugins.iron.repl'
 local cells = require 'custom.plugins.iron.cells'
 local analyzer = require 'custom.plugins.iron.analyzer'
+local iron = require 'iron.core'
 
 local M = {}
 
@@ -51,32 +52,45 @@ M.execute_cell_and_move = function()
 end
 
 M.smart_execute = function()
-  if not is_current_line_empty() then
-    local node = analyzer.get_executable_node()
-    if node then
-      local code = analyzer.get_node_text(node)
-      local start_row, _, end_row, _ = node:range()
-      repl.send_to_repl(code, start_row + 1, end_row + 1)
+  if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
+    -- Visual mode: send selected text
+    iron.visual_send()
+  else
+    -- Normal mode: existing logic
+    if not is_current_line_empty() then
+      local node = analyzer.get_executable_node()
+      if node then
+        local code = analyzer.get_node_text(node)
+        local start_row, _, end_row, _ = node:range()
+        repl.send_to_repl(code, start_row + 1, end_row + 1)
+      end
     end
+    -- No message is printed for empty lines
   end
-  -- No message is printed for empty lines
 end
 
 M.smart_execute_and_move = function()
-  if is_current_line_empty() then
-    ensure_next_line()
-    vim.cmd 'normal! j'
+  if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
+    -- Visual mode: send selected text and move to end of selection
+    iron.visual_send()
+    vim.api.nvim_input '<Esc>`>'
   else
-    local node = analyzer.get_executable_node()
-    if node then
-      local code = analyzer.get_node_text(node)
-      local start_row, _, end_row, _ = node:range()
-      repl.send_to_repl(code, start_row + 1, end_row + 1)
+    -- Normal mode: existing logic
+    if is_current_line_empty() then
+      ensure_next_line()
+      vim.cmd 'normal! j'
+    else
+      local node = analyzer.get_executable_node()
+      if node then
+        local code = analyzer.get_node_text(node)
+        local start_row, _, end_row, _ = node:range()
+        repl.send_to_repl(code, start_row + 1, end_row + 1)
 
-      local created_new_line = ensure_next_line()
+        local created_new_line = ensure_next_line()
 
-      -- Move to the line after the executed block
-      vim.api.nvim_win_set_cursor(0, { end_row + 2, created_new_line and vim.fn.col '$' - 1 or 0 })
+        -- Move to the line after the executed block
+        vim.api.nvim_win_set_cursor(0, { end_row + 2, created_new_line and vim.fn.col '$' - 1 or 0 })
+      end
     end
   end
 end
