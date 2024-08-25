@@ -17,17 +17,20 @@ M.setup = function(iron, executor, cells)
     iron.repl_for(vim.bo.filetype)
   end, { noremap = true, silent = true, desc = 'Toggle REPL' })
 
-  vim.keymap.set('n', '<space>jm', executor.execute_cell, { noremap = true, silent = true, desc = 'Execute current cell' })
-  vim.keymap.set('n', '<space>jn', executor.execute_cell_and_move, { noremap = true, silent = true, desc = 'Execute current cell and move to next' })
+  -- vim.keymap.set('n', '<space>jm', executor.execute_cell, { noremap = true, silent = true, desc = 'Execute current cell' })
+  -- vim.keymap.set('n', '<space>jn', executor.execute_cell_and_move, { noremap = true, silent = true, desc = 'Execute current cell and move to next' })
   vim.keymap.set('n', '<space>jl', executor.execute_line_and_move, { noremap = true, silent = true, desc = 'Execute current line and move to next' })
   vim.keymap.set('n', '<space>je', executor.execute_line, { noremap = true, silent = true, desc = 'Execute current line' })
-  vim.keymap.set('n', '<space>jc', cells.create_cell_below, { noremap = true, silent = true, desc = 'Create cell below' })
-  vim.keymap.set('n', '<space>jd', cells.remove_current_cell, { noremap = true, silent = true, desc = 'Remove current cell' })
+  -- vim.keymap.set('n', '<space>jc', cells.create_cell_below, { noremap = true, silent = true, desc = 'Create cell below' })
+  -- vim.keymap.set('n', '<space>jd', cells.remove_current_cell, { noremap = true, silent = true, desc = 'Remove current cell' })
   vim.keymap.set('n', '<space>js', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
   vim.keymap.set('n', '<space>jx', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+  -- add smart execute keymaps
   vim.keymap.set('n', '<C-S-K>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
   vim.keymap.set('n', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
-
+  -- make it also work in insert mode
+  vim.keymap.set('i', '<C-S-K>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('i', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
   -- Add visual mode mappings
   vim.keymap.set('v', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute selection and move' })
   vim.keymap.set('v', '<C-S-k>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute selection' })
