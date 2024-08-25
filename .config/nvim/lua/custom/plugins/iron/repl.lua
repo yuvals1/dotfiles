@@ -21,6 +21,42 @@ local function place_execution_signs(start_line, end_line)
   end
 end
 
+-- New function to mark empty lines between signs
+local function mark_empty_lines_between_signs()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local signs = vim.fn.sign_getplaced(bufnr, { group = 'IronExecutionGroup' })[1].signs
+  local signed_lines = {}
+
+  for _, sign in ipairs(signs) do
+    table.insert(signed_lines, sign.lnum)
+  end
+
+  table.sort(signed_lines)
+
+  for i = 1, #signed_lines - 1 do
+    local start_line = signed_lines[i]
+    local end_line = signed_lines[i + 1]
+
+    if end_line - start_line > 1 then
+      local all_empty = true
+      for line = start_line + 1, end_line - 1 do
+        local content = vim.api.nvim_buf_get_lines(bufnr, line - 1, line, false)[1]
+        if content and content:match '%S' then
+          all_empty = false
+          break
+        end
+      end
+
+      if all_empty then
+        for line = start_line + 1, end_line - 1 do
+          vim.fn.sign_place(sign_id, 'IronExecutionGroup', 'IronExecuted', bufnr, { lnum = line })
+          sign_id = sign_id + 1
+        end
+      end
+    end
+  end
+end
+
 -- Function to clean execution signs
 M.clean_signs = function()
   vim.fn.sign_unplace 'IronExecutionGroup'
@@ -63,6 +99,9 @@ M.send_to_repl = function(code, start_line, end_line)
 
     -- Place execution signs
     place_execution_signs(start_line, end_line)
+
+    -- Mark empty lines between signs
+    mark_empty_lines_between_signs()
 
     -- Clear the highlight after a short delay
     vim.defer_fn(function()
