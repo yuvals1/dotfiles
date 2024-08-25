@@ -14,6 +14,9 @@ return {
     local keymaps = require 'custom.plugins.iron.keymaps'
     local autocmds = require 'custom.plugins.iron.autocmds'
 
+    -- Add highlight group for the execution sign
+    vim.api.nvim_command 'highlight IronExecutedSign guifg=#2ecc71'
+
     iron.setup {
       config = {
         -- visibility = require('iron.visibility').toggle,
