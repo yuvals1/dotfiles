@@ -6,6 +6,9 @@ local M = {}
 -- Create a custom highlight group for executed code
 vim.api.nvim_command 'highlight IronExecutedCode guibg=#2ecc71 guifg=black'
 
+-- Initialize sign ID
+local sign_id = 1
+
 -- New function to place execution signs
 local function place_execution_signs(start_line, end_line)
   -- Define a sign group for our execution markers
@@ -13,13 +16,15 @@ local function place_execution_signs(start_line, end_line)
 
   -- Place signs for each executed line
   for line = start_line, end_line do
-    vim.fn.sign_place(0, 'IronExecutionGroup', 'IronExecuted', vim.api.nvim_get_current_buf(), { lnum = line })
+    vim.fn.sign_place(sign_id, 'IronExecutionGroup', 'IronExecuted', vim.api.nvim_get_current_buf(), { lnum = line })
+    sign_id = sign_id + 1
   end
 end
 
--- New function to clear execution signs
-local function clear_execution_signs()
+-- Function to clean execution signs
+M.clean_signs = function()
   vim.fn.sign_unplace 'IronExecutionGroup'
+  sign_id = 1 -- Reset sign ID
 end
 
 M.custom_repl_open_cmd = function(bufnr)
@@ -34,9 +39,6 @@ M.custom_repl_open_cmd = function(bufnr)
 end
 
 M.send_to_repl = function(code, start_line, end_line)
-  -- Clear existing signs
-  clear_execution_signs()
-
   -- Store the current buffer
   local current_buf = vim.api.nvim_get_current_buf()
 
