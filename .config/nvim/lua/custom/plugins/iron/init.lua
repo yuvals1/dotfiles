@@ -16,7 +16,7 @@ return {
 
     iron.setup {
       config = {
-        visibility = require('iron.visibility').toggle,
+        -- visibility = require('iron.visibility').toggle,
         scratch_repl = true,
         repl_definition = {
           sh = {
