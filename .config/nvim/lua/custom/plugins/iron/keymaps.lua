@@ -26,14 +26,14 @@ M.setup = function(iron, executor, cells)
   vim.keymap.set('n', '<space>js', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
   vim.keymap.set('n', '<space>jx', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
   -- add smart execute keymaps
-  vim.keymap.set('n', '<C-S-K>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
-  vim.keymap.set('n', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+  vim.keymap.set('n', '<C-p>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('n', '<C-n>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
   -- make it also work in insert mode
-  vim.keymap.set('i', '<C-S-K>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
-  vim.keymap.set('i', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+  vim.keymap.set('i', '<C-p>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('i', '<C-n>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
   -- Add visual mode mappings
-  vim.keymap.set('v', '<C-k>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute selection and move' })
-  vim.keymap.set('v', '<C-S-k>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute selection' })
+  vim.keymap.set('v', '<C-n>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute selection and move' })
+  vim.keymap.set('v', '<C-p>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute selection' })
 
   -- New keybinding for IronRestart
   vim.keymap.set('n', '<space>jr', ':IronRestart<CR>', { noremap = true, silent = true, desc = 'Restart REPL' })
