@@ -1010,7 +1010,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
     vim.cmd.bdelete()
 
     -- open the tree
-    require('neo-tree.command').execute { toggle = true, dir = data.file }
+    -- require('neo-tree.command').execute { toggle = true, dir = data.file }
   end,
   desc = 'Open Neo-tree on startup with directory',
 })
