@@ -71,13 +71,17 @@ M.send_to_repl = function(code, start_line, end_line)
   end
 end
 
--- New function to clear signs and restart REPL
+-- Updated function to clear signs, restart REPL, and ensure normal mode
 M.clear_and_restart = function()
   -- Clear signs
   M.clean_signs()
 
   -- Restart REPL
   iron_core.repl_restart(vim.bo.filetype)
+
+  -- Ensure we're in normal mode
+  vim.cmd 'stopinsert'
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
 end
 
 return M
