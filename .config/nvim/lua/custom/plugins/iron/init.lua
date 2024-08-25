@@ -17,6 +17,9 @@ return {
     -- Add highlight group for the execution sign
     vim.api.nvim_command 'highlight IronExecutedSign guifg=#2ecc71'
 
+    -- Add user command to clean signs
+    vim.api.nvim_create_user_command('IronCleanSigns', repl.clean_signs, {})
+
     iron.setup {
       config = {
         -- visibility = require('iron.visibility').toggle,
