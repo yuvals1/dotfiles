@@ -13,12 +13,13 @@ return {
     local cells = require 'custom.plugins.iron.cells'
     local keymaps = require 'custom.plugins.iron.keymaps'
     local autocmds = require 'custom.plugins.iron.autocmds'
+    local execution_tracker = require 'custom.plugins.iron.execution_tracker'
 
     -- Add highlight group for the execution sign
     vim.api.nvim_command 'highlight IronExecutedSign guifg=#2ecc71'
 
     -- Add user command to clean signs
-    vim.api.nvim_create_user_command('IronCleanSigns', repl.clean_signs, {})
+    vim.api.nvim_create_user_command('IronCleanSigns', execution_tracker.clean_execution_marks, {})
 
     -- Add user command to clear signs and restart REPL
     vim.api.nvim_create_user_command('IronClearAndRestart', repl.clear_and_restart, {})
