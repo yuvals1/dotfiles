@@ -8,7 +8,6 @@ return {
         theme = 'auto',
         component_separators = { left = '', right = '' },
         section_separators = { left = '', right = '' },
-
         disabled_filetypes = {
           statusline = {},
           winbar = {},
@@ -28,13 +27,20 @@ return {
         lualine_c = {
           {
             'filename',
-            path = 1, -- 0 = just filename, 1 = relative path, 2 = absolute path
-            shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+            path = 1,
+            shorting_target = 40,
           },
         },
         lualine_x = { 'filetype' },
         lualine_y = { 'progress' },
-        lualine_z = {},
+        lualine_z = {
+          {
+            function()
+              return tostring(vim.fn.line '$')
+            end,
+            icon = '☰',
+          },
+        },
       },
       inactive_sections = {
         lualine_a = {},
