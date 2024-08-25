@@ -8,7 +8,9 @@ return {
     local view = require 'iron.view'
     local fts = require 'iron.fts'
 
-    local custom_functions = require 'custom.plugins.iron.functions'
+    local repl = require 'custom.plugins.iron.repl'
+    local executor = require 'custom.plugins.iron.executor'
+    local cells = require 'custom.plugins.iron.cells'
     local keymaps = require 'custom.plugins.iron.keymaps'
     local autocmds = require 'custom.plugins.iron.autocmds'
 
@@ -22,7 +24,7 @@ return {
           },
           python = fts.python.ipython,
         },
-        repl_open_cmd = custom_functions.custom_repl_open_cmd,
+        repl_open_cmd = repl.custom_repl_open_cmd,
       },
       keymaps = {
         send_file = '<space>ja',
@@ -35,7 +37,7 @@ return {
       ignore_blank_lines = true,
     }
 
-    keymaps.setup(iron, custom_functions)
+    keymaps.setup(iron, executor, cells)
     autocmds.setup()
   end,
 }
