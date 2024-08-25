@@ -6,6 +6,22 @@ local M = {}
 -- Create a custom highlight group for executed code
 vim.api.nvim_command 'highlight IronExecutedCode guibg=#2ecc71 guifg=black'
 
+-- New function to place execution signs
+local function place_execution_signs(start_line, end_line)
+  -- Define a sign group for our execution markers
+  vim.fn.sign_define('IronExecuted', { text = '▌', texthl = 'IronExecutedSign' })
+
+  -- Place signs for each executed line
+  for line = start_line, end_line do
+    vim.fn.sign_place(0, 'IronExecutionGroup', 'IronExecuted', vim.api.nvim_get_current_buf(), { lnum = line })
+  end
+end
+
+-- New function to clear execution signs
+local function clear_execution_signs()
+  vim.fn.sign_unplace 'IronExecutionGroup'
+end
+
 M.custom_repl_open_cmd = function(bufnr)
   local width = math.floor(vim.o.columns * 0.3)
   vim.cmd('silent! botright vertical ' .. width .. 'split')
@@ -18,6 +34,9 @@ M.custom_repl_open_cmd = function(bufnr)
 end
 
 M.send_to_repl = function(code, start_line, end_line)
+  -- Clear existing signs
+  clear_execution_signs()
+
   -- Store the current buffer
   local current_buf = vim.api.nvim_get_current_buf()
 
@@ -39,6 +58,9 @@ M.send_to_repl = function(code, start_line, end_line)
     for i = start_line - 1, end_line - 1 do
       vim.api.nvim_buf_add_highlight(current_buf, ns_id, 'IronExecutedCode', i, 0, -1)
     end
+
+    -- Place execution signs
+    place_execution_signs(start_line, end_line)
 
     -- Clear the highlight after a short delay
     vim.defer_fn(function()
