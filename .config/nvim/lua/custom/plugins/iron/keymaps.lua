@@ -30,8 +30,11 @@ M.setup = function(iron, executor, cells)
 
   vim.keymap.set('n', '<space>jr', ':IronRestart<CR>', { noremap = true, silent = true, desc = 'Restart REPL' })
 
-  -- New keymapping for cleaning signs
+  -- Keymapping for cleaning signs
   vim.keymap.set('n', '<space>jc', ':IronCleanSigns<CR>', { noremap = true, silent = true, desc = 'Clean execution signs' })
+
+  -- New keymapping for clearing signs and restarting REPL
+  vim.keymap.set('n', '<space>jR', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
 
   vim.keymap.set('n', '<leader>wo', '<C-w>p', { noremap = true, silent = true, desc = 'Go to previous (last accessed) window' })
 end

@@ -20,6 +20,9 @@ return {
     -- Add user command to clean signs
     vim.api.nvim_create_user_command('IronCleanSigns', repl.clean_signs, {})
 
+    -- Add user command to clear signs and restart REPL
+    vim.api.nvim_create_user_command('IronClearAndRestart', repl.clear_and_restart, {})
+
     iron.setup {
       config = {
         -- visibility = require('iron.visibility').toggle,
