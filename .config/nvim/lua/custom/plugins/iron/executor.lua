@@ -11,7 +11,7 @@ local function is_current_line_empty()
   return current_line:match '^%s*$' ~= nil
 end
 
--- New helper function to ensure there's a line to move to
+-- Helper function to ensure there's a line to move to
 local function ensure_next_line()
   local last_line = vim.fn.line '$'
   local last_line_content = vim.fn.getline(last_line)
@@ -24,8 +24,9 @@ local function ensure_next_line()
 end
 
 M.execute_line = function()
-  local current_line = vim.api.nvim_get_current_line()
-  repl.send_to_repl(current_line)
+  local current_line = vim.fn.line '.'
+  local current_line_content = vim.api.nvim_get_current_line()
+  repl.send_to_repl(current_line_content, current_line, current_line)
 end
 
 M.execute_line_and_move = function()
@@ -36,7 +37,12 @@ end
 
 M.execute_cell = function()
   local code = cells.get_cell_content()
-  repl.send_to_repl(code)
+  local start_line = vim.fn.search('^# %%', 'bnW') + 1
+  local end_line = vim.fn.search('^# %%', 'nW') - 1
+  if end_line == -1 then
+    end_line = vim.fn.line '$'
+  end
+  repl.send_to_repl(code, start_line, end_line)
 end
 
 M.execute_cell_and_move = function()
@@ -49,7 +55,8 @@ M.smart_execute = function()
     local node = analyzer.get_executable_node()
     if node then
       local code = analyzer.get_node_text(node)
-      repl.send_to_repl(code)
+      local start_row, _, end_row, _ = node:range()
+      repl.send_to_repl(code, start_row + 1, end_row + 1)
     end
   end
   -- No message is printed for empty lines
@@ -63,9 +70,9 @@ M.smart_execute_and_move = function()
     local node = analyzer.get_executable_node()
     if node then
       local code = analyzer.get_node_text(node)
-      repl.send_to_repl(code)
+      local start_row, _, end_row, _ = node:range()
+      repl.send_to_repl(code, start_row + 1, end_row + 1)
 
-      local _, _, end_row, _ = node:range()
       local created_new_line = ensure_next_line()
 
       -- Move to the line after the executed block
