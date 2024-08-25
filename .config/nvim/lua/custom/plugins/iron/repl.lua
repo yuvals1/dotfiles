@@ -71,7 +71,7 @@ M.send_to_repl = function(code, start_line, end_line)
   end
 end
 
--- Updated function to clear signs, restart REPL, and ensure normal mode
+-- Updated function to clear signs, restart REPL, ensure normal mode, and dismiss Noice notification
 M.clear_and_restart = function()
   -- Clear signs
   M.clean_signs()
@@ -82,6 +82,11 @@ M.clear_and_restart = function()
   -- Ensure we're in normal mode
   vim.cmd 'stopinsert'
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+
+  -- Dismiss Noice notification
+  vim.defer_fn(function()
+    require('noice').cmd 'dismiss'
+  end, 10) -- Small delay to ensure the restart message appears before dismissing
 end
 
 return M
