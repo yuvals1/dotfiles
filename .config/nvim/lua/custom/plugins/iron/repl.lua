@@ -1,5 +1,5 @@
 -- File: lua/custom/plugins/iron/repl.lua
-local iron = require 'iron.core'
+local iron_core = require 'iron.core'
 
 local M = {}
 
@@ -43,7 +43,7 @@ M.send_to_repl = function(code, start_line, end_line)
   local current_buf = vim.api.nvim_get_current_buf()
 
   -- Send code to REPL
-  iron.send(vim.bo.filetype, code)
+  iron_core.send(vim.bo.filetype, code)
 
   -- Switch back to normal mode
   vim.cmd 'stopinsert'
@@ -69,6 +69,15 @@ M.send_to_repl = function(code, start_line, end_line)
       vim.api.nvim_buf_clear_namespace(current_buf, ns_id, 0, -1)
     end, 200) -- 200ms delay, adjust as needed
   end
+end
+
+-- New function to clear signs and restart REPL
+M.clear_and_restart = function()
+  -- Clear signs
+  M.clean_signs()
+
+  -- Restart REPL
+  iron_core.repl_restart(vim.bo.filetype)
 end
 
 return M
