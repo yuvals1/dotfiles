@@ -7,7 +7,7 @@ local M = {}
 vim.api.nvim_command 'highlight IronExecutedCode guibg=#2ecc71 guifg=black'
 
 M.custom_repl_open_cmd = function(bufnr)
-  local width = math.floor(vim.o.columns * 0.4)
+  local width = math.floor(vim.o.columns * 0.3)
   vim.cmd('silent! botright vertical ' .. width .. 'split')
   vim.api.nvim_win_set_buf(0, bufnr)
   local win = vim.api.nvim_get_current_win()
