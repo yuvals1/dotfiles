@@ -45,7 +45,7 @@ end
 M.execute_line = function()
   local current_line = vim.fn.line '.'
   local current_line_content = vim.api.nvim_get_current_line()
-  repl.send_to_repl(current_line_content, current_line, current_line)
+  repl.send_to_repl(current_line_content, current_line, current_line, 'line')
 end
 
 M.execute_line_and_move = function()
@@ -61,7 +61,7 @@ M.execute_cell = function()
   if end_line == -1 then
     end_line = vim.fn.line '$'
   end
-  repl.send_to_repl(code, start_line, end_line)
+  repl.send_to_repl(code, start_line, end_line, 'cell')
 end
 
 M.execute_cell_and_move = function()
@@ -72,7 +72,11 @@ end
 M.smart_execute = function()
   if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
     -- Visual mode: send selected text
-    iron.visual_send()
+    local start_line = vim.fn.line "'<"
+    local end_line = vim.fn.line "'>"
+    local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+    local code = table.concat(lines, '\n')
+    repl.send_to_repl(code, start_line, end_line, 'visual')
   else
     -- Normal mode: existing logic
     if not is_current_line_empty() then
@@ -80,7 +84,7 @@ M.smart_execute = function()
       if node then
         local code = analyzer.get_node_text(node)
         local start_row, _, end_row, _ = node:range()
-        repl.send_to_repl(code, start_row + 1, end_row + 1)
+        repl.send_to_repl(code, start_row + 1, end_row + 1, 'smart')
       end
     end
     -- No message is printed for empty lines
@@ -90,7 +94,11 @@ end
 M.smart_execute_and_move = function()
   if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
     -- Visual mode: send selected text and move to end of selection
-    iron.visual_send()
+    local start_line = vim.fn.line "'<"
+    local end_line = vim.fn.line "'>"
+    local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+    local code = table.concat(lines, '\n')
+    repl.send_to_repl(code, start_line, end_line, 'visual')
     vim.api.nvim_input '<Esc>`>'
   else
     -- Normal mode: existing logic
@@ -102,7 +110,7 @@ M.smart_execute_and_move = function()
       if node then
         local code = analyzer.get_node_text(node)
         local start_row, _, end_row, _ = node:range()
-        repl.send_to_repl(code, start_row + 1, end_row + 1)
+        repl.send_to_repl(code, start_row + 1, end_row + 1, 'smart')
 
         -- Move to the line after the executed block
         local row, col = ensure_valid_cursor_position(end_row + 2, 0)
@@ -110,6 +118,19 @@ M.smart_execute_and_move = function()
       end
     end
   end
+end
+
+M.execute_file = function()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local code = table.concat(lines, '\n')
+  repl.send_to_repl(code, 1, #lines, 'file')
+end
+
+M.execute_until_cursor = function()
+  local cursor_line = vim.fn.line '.'
+  local lines = vim.api.nvim_buf_get_lines(0, 0, cursor_line, false)
+  local code = table.concat(lines, '\n')
+  repl.send_to_repl(code, 1, cursor_line, 'until_cursor')
 end
 
 return M
