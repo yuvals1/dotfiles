@@ -9,7 +9,8 @@ M.setup = function(iron, executor, cells)
   vim.api.nvim_create_user_command('IronExecuteLine', executor.execute_line, {})
   vim.api.nvim_create_user_command('IronCreateCellBelow', cells.create_cell_below, {})
   vim.api.nvim_create_user_command('IronRemoveCurrentCell', cells.remove_current_cell, {})
-  vim.api.nvim_create_user_command('IronSmartExecute', executor.smart_execute, {}) -- Added this line
+  vim.api.nvim_create_user_command('IronSmartExecute', executor.smart_execute, {})
+  vim.api.nvim_create_user_command('IronSmartExecuteAndMove', executor.smart_execute_and_move, {}) -- Added this line
 
   -- Set up keymaps
   vim.keymap.set('n', '<space>jj', function()
@@ -23,6 +24,7 @@ M.setup = function(iron, executor, cells)
   vim.keymap.set('n', '<space>jc', cells.create_cell_below, { noremap = true, silent = true, desc = 'Create cell below' })
   vim.keymap.set('n', '<space>jd', cells.remove_current_cell, { noremap = true, silent = true, desc = 'Remove current cell' })
   vim.keymap.set('n', '<space>js', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('n', '<space>jx', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' }) -- Added this line
 
   vim.keymap.set('n', '<leader>wo', '<C-w>p', { noremap = true, silent = true, desc = 'Go to previous (last accessed) window' })
 end

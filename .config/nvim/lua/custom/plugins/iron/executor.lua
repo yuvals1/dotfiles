@@ -40,6 +40,33 @@ M.smart_execute = function()
   if node then
     local code = analyzer.get_node_text(node)
     repl.send_to_repl(code)
+    return node
+  end
+  return nil
+end
+
+M.smart_execute_and_move = function()
+  local node = M.smart_execute()
+  if node then
+    local _, _, end_row, _ = node:range()
+    local target_row = end_row + 2 -- Move to one line below the executed code
+    local last_line = vim.fn.line '$'
+
+    if target_row > last_line then
+      vim.cmd 'normal! Go' -- Go to the end of the file and create a new line
+    else
+      vim.api.nvim_win_set_cursor(0, { target_row, 0 })
+    end
+  else
+    -- If no node was executed, just move down one line
+    local current_line = vim.fn.line '.'
+    local last_line = vim.fn.line '$'
+
+    if current_line == last_line then
+      vim.cmd 'normal! o' -- Create a new line if we're at the end of the file
+    else
+      vim.cmd 'normal! j' -- Move to the next line
+    end
   end
 end
 
