@@ -6,6 +6,24 @@ local iron = require 'iron.core'
 
 local M = {}
 
+-- New function to ensure valid cursor position
+local function ensure_valid_cursor_position(row, col)
+  local line_count = vim.api.nvim_buf_line_count(0)
+  if row > line_count then
+    -- Append new lines as needed
+    local lines_to_append = row - line_count
+    local empty_lines = {}
+    for _ = 1, lines_to_append do
+      table.insert(empty_lines, '')
+    end
+    vim.api.nvim_buf_set_lines(0, -1, -1, false, empty_lines)
+  end
+  -- Ensure column is within bounds
+  local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1] or ''
+  col = math.min(col, #line)
+  return row, col
+end
+
 -- Helper function to check if the current line is empty
 local function is_current_line_empty()
   local current_line = vim.api.nvim_get_current_line()
@@ -77,8 +95,8 @@ M.smart_execute_and_move = function()
   else
     -- Normal mode: existing logic
     if is_current_line_empty() then
-      ensure_next_line()
-      vim.cmd 'normal! j'
+      local row, col = ensure_valid_cursor_position(vim.fn.line '.' + 1, 0)
+      vim.api.nvim_win_set_cursor(0, { row, col })
     else
       local node = analyzer.get_executable_node()
       if node then
@@ -86,10 +104,9 @@ M.smart_execute_and_move = function()
         local start_row, _, end_row, _ = node:range()
         repl.send_to_repl(code, start_row + 1, end_row + 1)
 
-        local created_new_line = ensure_next_line()
-
         -- Move to the line after the executed block
-        vim.api.nvim_win_set_cursor(0, { end_row + 2, created_new_line and vim.fn.col '$' - 1 or 0 })
+        local row, col = ensure_valid_cursor_position(end_row + 2, 0)
+        vim.api.nvim_win_set_cursor(0, { row, col })
       end
     end
   end
