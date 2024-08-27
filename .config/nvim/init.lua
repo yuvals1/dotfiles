@@ -854,14 +854,25 @@ require('lazy').setup({
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      local ai = require 'mini.ai'
+
+      ai.setup {
+        n_lines = 500,
+        custom_textobjects = {
+          F = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' },
+          C = ai.gen_spec.treesitter { a = '@class.outer', i = '@class.inner' },
+          -- Add more Python-specific objects
+          L = ai.gen_spec.treesitter { a = '@loop.outer', i = '@loop.inner' },
+          I = ai.gen_spec.treesitter { a = '@conditional.outer', i = '@conditional.inner' },
+        },
+      }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      -- require('mini.surround').setup()
+      require('mini.surround').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
