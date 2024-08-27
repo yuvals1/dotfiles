@@ -755,6 +755,7 @@ require('lazy').setup({
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<C-m>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
@@ -984,8 +985,8 @@ require('lazy').setup({
 -- my additions
 vim.keymap.set('n', 'yaa', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
 
-vim.keymap.set('n', '<C-M>', 'o<Esc>', { desc = 'Add new line below without exiting normal mode' })
-vim.keymap.set('n', '<C-S-M>', 'O<Esc>', { desc = 'Add new line above without exiting normal mode' })
+-- vim.keymap.set('n', '<C-M>', 'o<Esc>', { desc = 'Add new line below without exiting normal mode' })
+-- vim.keymap.set('n', '<C-S-M>', 'O<Esc>', { desc = 'Add new line above without exiting normal mode' })
 
 vim.g.image_magick_dir = '/opt/homebrew'
 --
