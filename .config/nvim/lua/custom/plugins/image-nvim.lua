@@ -1,5 +1,8 @@
 return {
   '3rd/image.nvim',
+  cond = function()
+    return vim.fn.has 'mac' == 1
+  end,
   config = function()
     local image = require 'image'
     image.setup {
