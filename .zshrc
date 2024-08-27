@@ -122,6 +122,7 @@ alias y='yazi'
 alias n='nvim'
 alias cd='z'
 alias sc='sesh connect'
+alias lt='ls --tree'
 
 . "$HOME/.cargo/env"
 
