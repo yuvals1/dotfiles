@@ -4,3 +4,4 @@
 .avante_chat_history/*
 
 .tmux/plugins/*
+.api_key.txt
