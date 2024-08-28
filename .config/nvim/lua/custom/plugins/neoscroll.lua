@@ -2,32 +2,34 @@ return {
   'karb94/neoscroll.nvim',
   event = 'VeryLazy',
   config = function()
-    local neoscroll = require 'neoscroll'
-
-    neoscroll.setup {
-      -- All these keys will be mapped to their corresponding default scrolling animation
-      mappings = { '<C-u>', '<C-d>', '<C-b>', '<C-f>', '<C-y>', '<C-e>', 'zt', 'zz', 'zb' },
-      hide_cursor = true, -- Hide cursor while scrolling
-      stop_eof = true, -- Stop at <EOF> when scrolling downwards
-      respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
-      cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-      easing_function = 'quadratic', -- Default easing function
-      pre_hook = nil, -- Function to run before the scrolling animation starts
-      post_hook = nil, -- Function to run after the scrolling animation ends
-      performance_mode = false, -- Disable "Performance Mode" on all buffers.
+    require('neoscroll').setup {
+      -- Remove the default mappings
+      mappings = {},
+      hide_cursor = true,
+      stop_eof = true,
+      respect_scrolloff = false,
+      cursor_scrolls_alone = true,
+      easing_function = nil, -- Use default easing function
+      pre_hook = nil,
+      post_hook = nil,
+      performance_mode = false,
     }
+
     local t = {}
-    -- Syntax: t[keys] = {function, {function arguments}}
-    -- Adjusted scroll amount for <C-u> and <C-d>
-    t['<C-u>'] = { 'scroll', { '-vim.wo.scroll / 2', 'true', '250', [['cubic']] } }
-    t['<C-d>'] = { 'scroll', { 'vim.wo.scroll / 2', 'true', '250', [['cubic']] } }
-    t['<C-b>'] = { 'scroll', { '-vim.api.nvim_win_get_height(0)', 'true', '450', [['cubic']] } }
-    t['<C-f>'] = { 'scroll', { 'vim.api.nvim_win_get_height(0)', 'true', '450', [['cubic']] } }
-    t['<C-y>'] = { 'scroll', { '-0.10', 'false', '100', [['cubic']] } }
-    t['<C-e>'] = { 'scroll', { '0.10', 'false', '100', [['cubic']] } }
-    t['zt'] = { 'zt', { '250' } }
-    t['zz'] = { 'zz', { '250' } }
-    t['zb'] = { 'zb', { '250' } }
+    -- Scroll 2 lines at a time, with a short duration for a snappy feel
+    t['<C-u>'] = { 'scroll', { '-3', 'true', '50' } }
+    t['<C-d>'] = { 'scroll', { '3', 'true', '50' } }
+    -- Scroll 10 lines for <C-b> and <C-f>
+    t['<C-b>'] = { 'scroll', { '-10', 'true', '100' } }
+    t['<C-f>'] = { 'scroll', { '10', 'true', '100' } }
+    -- Keep <C-y> and <C-e> as single line scrolls
+    t['<C-y>'] = { 'scroll', { '-1', 'false', '50' } }
+    t['<C-e>'] = { 'scroll', { '1', 'false', '50' } }
+    -- Quick centering
+    t['zt'] = { 'zt', { '100' } }
+    t['zz'] = { 'zz', { '100' } }
+    t['zb'] = { 'zb', { '100' } }
+
     require('neoscroll.config').set_mappings(t)
   end,
 }
