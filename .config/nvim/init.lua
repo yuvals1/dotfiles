@@ -985,9 +985,6 @@ require('lazy').setup({
 -- my additions
 vim.keymap.set('n', 'yaa', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
 
--- vim.keymap.set('n', '<C-M>', 'o<Esc>', { desc = 'Add new line below without exiting normal mode' })
--- vim.keymap.set('n', '<C-S-M>', 'O<Esc>', { desc = 'Add new line above without exiting normal mode' })
-
 vim.g.image_magick_dir = '/opt/homebrew'
 --
 local home = os.getenv 'HOME'
