@@ -75,6 +75,27 @@
                 ]
               }
             ]
+          },
+          {
+            "description": "Command+M to Shift+Enter",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m",
+                  "modifiers": {
+                    "mandatory": ["command"],
+                    "optional": ["any"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "return_or_enter",
+                    "modifiers": ["shift"]
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
