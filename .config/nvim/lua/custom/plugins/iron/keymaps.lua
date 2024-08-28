@@ -20,12 +20,12 @@ M.setup = function(iron, executor, cells)
   end, { noremap = true, silent = true, desc = 'Toggle REPL' })
 
   vim.keymap.set('n', '<space>jx', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
-  vim.keymap.set('n', '<C-p>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
-  vim.keymap.set('n', '<C-n>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
-  vim.keymap.set('i', '<C-p>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
-  vim.keymap.set('i', '<C-n>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
-  vim.keymap.set('v', '<C-n>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute selection and move' })
-  vim.keymap.set('v', '<C-p>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute selection' })
+  vim.keymap.set('n', '<C-y>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('n', '<C-e>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+  vim.keymap.set('i', '<C-y>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('i', '<C-e>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+  vim.keymap.set('v', '<C-m>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute selection and move' })
+  vim.keymap.set('v', '<C-y>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute selection' })
 
   -- New keymaps for execute file and execute until cursor
   vim.keymap.set('n', '<space>jf', executor.execute_file, { noremap = true, silent = true, desc = 'Execute entire file' })
