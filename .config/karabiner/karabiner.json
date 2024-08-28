@@ -1,53 +1,83 @@
 {
-    "global": {
-        "check_for_updates_on_startup": true,
-        "show_in_menu_bar": true,
-        "show_profile_name_in_menu_bar": false
-    },
-    "profiles": [
-        {
-            "name": "Default profile",
-            "selected": true,
-            "simple_modifications": [
-                {
-                    "from": {
-                        "key_code": "m",
-                        "modifiers": {
-                            "mandatory": ["control"],
-                            "optional": ["any"]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "return_or_enter"
-                        }
-                    ]
+  "global": {
+    "check_for_updates_on_startup": true,
+    "show_in_menu_bar": true,
+    "show_profile_name_in_menu_bar": false
+  },
+  "profiles": [
+    {
+      "name": "Default profile",
+      "selected": true,
+      "simple_modifications": [],
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Caps Lock to Ctrl when held, Escape when tapped",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "optional": ["any"]
+                  }
                 },
-                {
-                    "from": {
-                        "key_code": "comma",
-                        "modifiers": {
-                            "mandatory": ["control"],
-                            "optional": ["any"]
-                        }
-                    },
-                    "to": [
-                        {
-                            "key_code": "delete_or_backspace"
-                        }
-                    ]
-                },
-                {
-                    "from": {
-                        "key_code": "caps_lock"
-                    },
-                    "to": [
-                        {
-                            "key_code": "escape"
-                        }
-                    ]
-                }
+                "to": [
+                  {
+                    "key_code": "left_control",
+                    "lazy": true
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "escape"
+                  }
+                ]
+              }
             ]
-        }
-    ]
+          },
+          {
+            "description": "Ctrl+M to Return",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m",
+                  "modifiers": {
+                    "mandatory": ["control"],
+                    "optional": ["any"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "return_or_enter"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "description": "Ctrl+Comma to Backspace",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "comma",
+                  "modifiers": {
+                    "mandatory": ["control"],
+                    "optional": ["any"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "delete_or_backspace"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }
