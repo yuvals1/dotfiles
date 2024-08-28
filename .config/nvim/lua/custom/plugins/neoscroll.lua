@@ -23,8 +23,8 @@ return {
     t['<C-b>'] = { 'scroll', { '-10', 'true', '100' } }
     t['<C-f>'] = { 'scroll', { '10', 'true', '100' } }
     -- Keep <C-y> and <C-e> as single line scrolls
-    t['<C-y>'] = { 'scroll', { '-1', 'false', '50' } }
-    t['<C-e>'] = { 'scroll', { '1', 'false', '50' } }
+    -- t['<C-y>'] = { 'scroll', { '-1', 'false', '50' } }
+    -- t['<C-e>'] = { 'scroll', { '1', 'false', '50' } }
     -- Quick centering
     t['zt'] = { 'zt', { '100' } }
     t['zz'] = { 'zz', { '100' } }
