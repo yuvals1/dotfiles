@@ -177,7 +177,7 @@ alias icat='kitty +kitten icat'
 alias y='yazi'
 alias n='nvim'
 alias cd='z'
-alias sc='sesh connect'
+alias sc='sesh connect $(sesh list | fzf)'
 
 . "$HOME/.cargo/env"
 
