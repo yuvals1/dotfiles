@@ -202,7 +202,6 @@ bindkey -M viins '\es' sesh-sessions
 # Initialize zoxide
 eval "$(zoxide init zsh)"
 
-***REMOVED***
 
 alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
