@@ -37,12 +37,12 @@
             ]
           },
           {
-            "description": "Ctrl+M to Return",
+            "description": "Ctrl+Comma to Return",
             "manipulators": [
               {
                 "type": "basic",
                 "from": {
-                  "key_code": "m",
+                  "key_code": "comma",
                   "modifiers": {
                     "mandatory": ["control"],
                     "optional": ["any"]
@@ -57,12 +57,12 @@
             ]
           },
           {
-            "description": "Ctrl+Comma to Backspace",
+            "description": "Ctrl+Period to Backspace",
             "manipulators": [
               {
                 "type": "basic",
                 "from": {
-                  "key_code": "comma",
+                  "key_code": "period",
                   "modifiers": {
                     "mandatory": ["control"],
                     "optional": ["any"]
@@ -77,12 +77,12 @@
             ]
           },
           {
-            "description": "Command+M to Shift+Enter",
+            "description": "Command+Comma to Shift+Enter",
             "manipulators": [
               {
                 "type": "basic",
                 "from": {
-                  "key_code": "m",
+                  "key_code": "comma",
                   "modifiers": {
                     "mandatory": ["command"],
                     "optional": ["any"]
