@@ -16,11 +16,11 @@ return {
       post_hook = nil, -- Function to run after the scrolling animation ends
       performance_mode = false, -- Disable "Performance Mode" on all buffers.
     }
-
     local t = {}
     -- Syntax: t[keys] = {function, {function arguments}}
-    t['<C-u>'] = { 'scroll', { '-vim.wo.scroll', 'true', '250', [['cubic']] } }
-    t['<C-d>'] = { 'scroll', { 'vim.wo.scroll', 'true', '250', [['cubic']] } }
+    -- Adjusted scroll amount for <C-u> and <C-d>
+    t['<C-u>'] = { 'scroll', { '-vim.wo.scroll / 2', 'true', '250', [['cubic']] } }
+    t['<C-d>'] = { 'scroll', { 'vim.wo.scroll / 2', 'true', '250', [['cubic']] } }
     t['<C-b>'] = { 'scroll', { '-vim.api.nvim_win_get_height(0)', 'true', '450', [['cubic']] } }
     t['<C-f>'] = { 'scroll', { 'vim.api.nvim_win_get_height(0)', 'true', '450', [['cubic']] } }
     t['<C-y>'] = { 'scroll', { '-0.10', 'false', '100', [['cubic']] } }
@@ -28,7 +28,6 @@ return {
     t['zt'] = { 'zt', { '250' } }
     t['zz'] = { 'zz', { '250' } }
     t['zb'] = { 'zb', { '250' } }
-
     require('neoscroll.config').set_mappings(t)
   end,
 }
