@@ -29,6 +29,9 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+
+# Install fzf-tab
+zinit ice wait'0' lucid
 zinit light Aloxaf/fzf-tab
 
 # Add in snippets
@@ -91,27 +94,80 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
+# Ensure Cargo is installed
+ensure_cargo_installed() {
+    if ! command -v cargo &> /dev/null; then
+        echo "Cargo not found. Installing Rust and Cargo..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+        source "$HOME/.cargo/env"
+    fi
+
+    # Add Cargo bin directory to PATH if not already present
+    if [[ ":$PATH:" != *":$HOME/.cargo/bin:"* ]]; then
+        export PATH="$HOME/.cargo/bin:$PATH"
+    fi
+}
+
+# Install eza using Cargo
+install_eza() {
+    if ! command -v eza &> /dev/null; then
+        echo "Installing eza using Cargo..."
+        cargo install eza
+    fi
+}
+
+# Set up eza aliases
+setup_eza_aliases() {
+    if command -v eza &> /dev/null; then
+        alias ls="eza --icons=always"
+        alias ll='eza -l --color=auto --icons=always'
+        alias la='eza -la --color=auto --icons=always'
+        alias lt='eza --tree'
+    else
+        echo "eza not found. Falling back to standard ls."
+        alias ls='ls -G'
+        alias ll='ls -lG'
+        alias la='ls -laG'
+    fi
+}
+
+# Run the setup
+ensure_cargo_installed
+install_eza
+setup_eza_aliases
+
+# Install and configure bat
+zinit ice from"gh-r" as"command" mv"bat* -> bat" pick"bat/bat"
+zinit light sharkdp/bat
+
+# Install and load zoxide
+zinit ice from"gh-r" as"command" pick"zoxide*/zoxide"
+zinit light ajeetdsouza/zoxide
+
+# Install sesh
+zinit ice from"gh-r" as"command" pick"sesh"
+zinit light joshmedeski/sesh
+
+# Install yazi (modern file manager)
+zinit ice from"gh-r" as"command" pick"yazi*/yazi"
+zinit light sxyazi/yazi
+
+# Install fzf
+zinit ice from"gh-r" as"command" pick"fzf"
+zinit light junegunn/fzf
+
+# Install fzf-tmux script
+zinit ice as"command" pick"bin/fzf-tmux"
+zinit light junegunn/fzf
+
+# Source fzf keybindings and completion
+zinit snippet 'https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh'
+zinit snippet 'https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh'
+
 # Aliases
-alias ls='ls --color'
 alias vim='nvim'
 alias c='clear'
 alias gc='gt create -m'
-
-# Shell integrations
-eval "$(fzf --zsh)"
-# eval "$(zoxide init --cmd cd zsh)"
-
-
-# Add eza, bat, and zoxide
-
-zinit ice from"gh-r" as"program" mv"bat* -> bat" pick"bat/bat"
-zinit light sharkdp/bat
-
-# Configure eza alias (replaces ls alias)
-# alias ls='eza --color=auto'
-alias ll='eza -l --color=auto --icons=always'
-alias la='eza -la --color=auto --icons=always' 
-alias ls="eza --icons=always"
 
 # Configure bat
 alias cat='bat --style=plain --paging=never'
@@ -122,7 +178,6 @@ alias y='yazi'
 alias n='nvim'
 alias cd='z'
 alias sc='sesh connect'
-alias lt='ls --tree'
 
 . "$HOME/.cargo/env"
 
@@ -144,12 +199,6 @@ bindkey -M emacs '\es' sesh-sessions
 bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
 
-# Install and load zoxide
-zinit ice from"gh-r" as"program" pick"zoxide*/zoxide"
-zinit light ajeetdsouza/zoxide
-zinit ice wait"0" lucid
-zinit light ajeetdsouza/zoxide
-
 # Initialize zoxide
 eval "$(zoxide init zsh)"
 
@@ -160,7 +209,7 @@ alias kickstart='NVIM_APPNAME=kickstart nvim'
 
 function nvims() {
   items=("default" "scivim" "kickstart")
-  config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
+  config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --height=~50% --layout=reverse --border --exit-0)
   if [[ -z $config ]]; then
     echo "Nothing selected"
     return 0
@@ -174,3 +223,10 @@ bindkey -s ^a "nvims\n"
 
 # Created by `pipx` on 2024-08-21 15:29:07
 export PATH="$PATH:/Users/yuvals1/.local/bin"
+
+# Load secrets file if it exists
+if [ -f "$HOME/.zsh_secrets" ]; then
+    source "$HOME/.zsh_secrets"
+else
+    echo "Warning: ~/.zsh_secrets file not found. API keys may not be set."
+fi
