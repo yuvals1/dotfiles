@@ -96,6 +96,26 @@
                 ]
               }
             ]
+          },
+          {
+            "description": "Unmap Ctrl+M",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "m",
+                  "modifiers": {
+                    "mandatory": ["control"],
+                    "optional": ["any"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "vk_none"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
