@@ -7,9 +7,9 @@ return {
     vim.g.copilot_tab_fallback = ''
     -- Custom keybindings for Copilot
     -- vim.api.nvim_set_keymap('i', '<C-d>', '<Plug>(copilot-accept-word)', { silent = true })
-    vim.api.nvim_set_keymap('i', '<C-d>', 'copilot#AcceptWord()', { silent = true, expr = true, script = true })
+    vim.api.nvim_set_keymap('i', '<C-e>', 'copilot#AcceptWord()', { silent = true, expr = true, script = true })
 
-    vim.api.nvim_set_keymap('i', '<C-f>', 'copilot#Accept()', { silent = true, expr = true, script = true })
+    vim.api.nvim_set_keymap('i', '<C-d>', 'copilot#Accept()', { silent = true, expr = true, script = true })
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'jupyter',
       callback = function()

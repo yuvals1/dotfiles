@@ -56,8 +56,8 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
-bindkey '^D' forward-word  # Add Ctrl+D to accept next word in suggestion
-# Function to yank current line to clipboard
+bindkey '^D' autosuggest-accept  # Ctrl-D to accept entire suggestion
+bindkey '^E' forward-word        # Ctrl-S to accept next word
 yank-line-to-clipboard() {
   if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "$BUFFER" | pbcopy
