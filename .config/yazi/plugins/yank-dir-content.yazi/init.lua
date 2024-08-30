@@ -26,20 +26,29 @@ return {
 			return info("Hovered item is not a directory")
 		end
 
-		local output, err = Command("find")
-			:arg(tostring(dir_url))
-			:arg("-type")
-			:arg("f")
-			:arg("-exec")
-			:arg("cat")
-			:arg("{}")
-			:arg("+")
-			:output()
+		local output, err = Command("find"):arg(tostring(dir_url)):arg("-type"):arg("f"):output()
+
 		if not output then
-			return info("Failed to read directory contents, error: " .. err)
+			return info("Failed to list directory contents, error: " .. err)
 		end
 
-		ya.clipboard(output.stdout)
+		local files = {}
+		for file in output.stdout:gmatch("[^\r\n]+") do
+			table.insert(files, file)
+		end
+
+		local content = ""
+		for _, file in ipairs(files) do
+			local file_content, file_err = Command("cat"):arg(file):output()
+			if file_content then
+				local file_name = file:match("([^/]+)$")
+				content = content .. "# " .. file_name .. "\n" .. file_content.stdout .. "\n"
+			else
+				content = content .. "# " .. file .. " (Error reading file: " .. file_err .. ")\n"
+			end
+		end
+
+		ya.clipboard(content)
 		info("Directory content copied to clipboard")
 	end,
 }
