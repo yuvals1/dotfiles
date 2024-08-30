@@ -6,6 +6,11 @@ local function info(content)
 	})
 end
 
+local hovered_url = ya.sync(function()
+	local h = cx.active.current.hovered
+	return h and h.url
+end)
+
 local function get_language(file)
 	local ext = file:match("%.([^%.]+)$")
 	if ext then
@@ -17,24 +22,12 @@ local function get_language(file)
 			css = "css",
 			lua = "lua",
 			md = "markdown",
-			sh = "bash",
-			yaml = "yaml",
-			toml = "toml",
-			json = "json",
-			xml = "xml",
-			sql = "sql",
-			zsh = "bash",
 			-- Add more as needed
 		}
 		return extensions[ext] or ""
 	end
 	return ""
 end
-
-local hovered_url = ya.sync(function()
-	local h = cx.active.current.hovered
-	return h and h.url
-end)
 
 return {
 	entry = function()
@@ -56,25 +49,18 @@ return {
 			return info("Failed to list directory contents, error: " .. err)
 		end
 
-		local files = {}
-		for file in output.stdout:gmatch("[^\r\n]+") do
-			table.insert(files, file)
-		end
-
 		local content = ""
-		local dir_path = tostring(dir_url)
-		for _, file in ipairs(files) do
+		for file in output.stdout:gmatch("[^\r\n]+") do
 			local file_content, file_err = Command("cat"):arg(file):output()
 			if file_content then
-				local relative_path = file:sub(#dir_path + 2) -- +2 to remove the leading slash
-				local language = get_language(relative_path)
+				local relative_path = file:sub(#tostring(dir_url) + 2)
+				local language = get_language(file)
 				content = content .. "# " .. relative_path .. "\n"
 				content = content .. "````" .. language .. "\n"
 				content = content .. file_content.stdout
 				content = content .. "````\n\n"
 			else
-				local relative_path = file:sub(#dir_path + 2)
-				content = content .. "# " .. relative_path .. " (Error reading file: " .. file_err .. ")\n\n"
+				content = content .. "# " .. file .. " (Error reading file: " .. file_err .. ")\n\n"
 			end
 		end
 
