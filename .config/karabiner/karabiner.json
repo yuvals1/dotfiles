@@ -158,6 +158,26 @@
                 ]
               }
             ]
+          },
+          {
+            "description": "Ctrl+/ to Forward Delete",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": {
+                  "key_code": "slash",
+                  "modifiers": {
+                    "mandatory": ["control"],
+                    "optional": ["any"]
+                  }
+                },
+                "to": [
+                  {
+                    "key_code": "delete_forward"
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
