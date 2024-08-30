@@ -1,3 +1,11 @@
+local function info(content)
+	return ya.notify({
+		title = "Yank Directory Content",
+		content = content,
+		timeout = 5,
+	})
+end
+
 local function get_language(file)
 	local ext = file:match("%.([^%.]+)$")
 	if ext then
@@ -11,19 +19,16 @@ local function get_language(file)
 			md = "markdown",
 			sh = "bash",
 			yaml = "yaml",
+			toml = "toml",
+			json = "json",
+			xml = "xml",
+			sql = "sql",
+			zsh = "bash",
 			-- Add more as needed
 		}
 		return extensions[ext] or ""
 	end
 	return ""
-end
-
-local function info(content)
-	return ya.notify({
-		title = "Yank Directory Content",
-		content = content,
-		timeout = 5,
-	})
 end
 
 local hovered_url = ya.sync(function()
@@ -63,9 +68,9 @@ return {
 				local file_name = file:match("([^/]+)$")
 				local language = get_language(file_name)
 				content = content .. "# " .. file_name .. "\n"
-				content = content .. "```" .. language .. "\n"
+				content = content .. "````" .. language .. "\n"
 				content = content .. file_content.stdout
-				content = content .. "```\n\n"
+				content = content .. "````\n\n"
 			else
 				content = content .. "# " .. file .. " (Error reading file: " .. file_err .. ")\n\n"
 			end
