@@ -20,8 +20,8 @@ return {
     t['<C-u>'] = { 'scroll', { '-3', 'true', '50' } }
     t['<C-d>'] = { 'scroll', { '3', 'true', '50' } }
     -- Scroll 10 lines for <C-b> and <C-f>
-    t['<C-b>'] = { 'scroll', { '-10', 'true', '100' } }
-    t['<C-f>'] = { 'scroll', { '10', 'true', '100' } }
+    -- t['<C-b>'] = { 'scroll', { '-10', 'true', '100' } }
+    -- t['<C-f>'] = { 'scroll', { '10', 'true', '100' } }
     -- Keep <C-y> and <C-e> as single line scrolls
     -- t['<C-y>'] = { 'scroll', { '-1', 'false', '50' } }
     -- t['<C-e>'] = { 'scroll', { '1', 'false', '50' } }
