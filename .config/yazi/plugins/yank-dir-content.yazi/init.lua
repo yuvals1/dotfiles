@@ -29,6 +29,22 @@ local function get_language(file)
 	return ""
 end
 
+-- New function to generate tree structure
+local function generate_tree(dir_url)
+	local output, err = Command("tree")
+		:arg("-L")
+		:arg("3") -- Limit depth to 3 levels, adjust as needed
+		:arg("--charset=ascii") -- Use ASCII characters for compatibility
+		:arg(tostring(dir_url))
+		:output()
+
+	if not output then
+		return "Failed to generate tree, error: " .. err
+	end
+
+	return output.stdout
+end
+
 return {
 	entry = function()
 		local dir_url = hovered_url()
@@ -44,12 +60,15 @@ return {
 			return info("Hovered item is not a directory")
 		end
 
+		-- Generate tree structure
+		local tree_content = generate_tree(dir_url)
+
 		local output, err = Command("find"):arg(tostring(dir_url)):arg("-type"):arg("f"):output()
 		if not output then
 			return info("Failed to list directory contents, error: " .. err)
 		end
 
-		local content = ""
+		local content = tree_content .. "\n\n" -- Add tree content at the top
 		local total_lines = 0
 		local file_count = 0
 
@@ -73,6 +92,6 @@ return {
 		end
 
 		ya.clipboard(content)
-		info(string.format("Copied content of %d files (%d lines) to clipboard", file_count, total_lines))
+		info(string.format("Copied tree and content of %d files (%d lines) to clipboard", file_count, total_lines))
 	end,
 }
