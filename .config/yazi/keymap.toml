@@ -154,6 +154,7 @@ keymap = [
 	{on   = ["F", "y"], run = "plugin yank-content", desc = "Yank the content of the selected file"},
 	{on   = ["F", "d"], run = "plugin diff", desc = "Diff the selected files"},
 	{on   = ["F", "t"], run = "plugin tree-to-clipboard", desc = "Copy the tree of the selected directory to the clipboard"},
+	{on   = ["F", "f"], run = "plugin my-debug", desc = "debug the current location"},
 
 ]
 
