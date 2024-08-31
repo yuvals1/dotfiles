@@ -1,9 +1,17 @@
+-- Configuration
+local CONFIG = {
+	log_to_file = false, -- Set this to false to disable logging to file
+}
+
 local function get_log_file_path()
 	local home = os.getenv("HOME")
 	return home .. "/.config/yazi/yank-selected-content.log"
 end
 
 local function log_to_file(message)
+	if not CONFIG.log_to_file then
+		return -- Exit the function if logging is disabled
+	end
 	local log_file = io.open(get_log_file_path(), "a")
 	if log_file then
 		local timestamp = os.date("%Y-%m-%d %H:%M:%S")
