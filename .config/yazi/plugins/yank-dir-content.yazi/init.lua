@@ -50,6 +50,9 @@ return {
 		end
 
 		local content = ""
+		local total_lines = 0
+		local file_count = 0
+
 		for file in output.stdout:gmatch("[^\r\n]+") do
 			local file_content, file_err = Command("cat"):arg(file):output()
 			if file_content then
@@ -59,12 +62,17 @@ return {
 				content = content .. "````" .. language .. "\n"
 				content = content .. file_content.stdout
 				content = content .. "````\n\n"
+
+				-- Count lines in this file
+				local file_lines = select(2, file_content.stdout:gsub("\n", "\n"))
+				total_lines = total_lines + file_lines
+				file_count = file_count + 1
 			else
 				content = content .. "# " .. file .. " (Error reading file: " .. file_err .. ")\n\n"
 			end
 		end
 
 		ya.clipboard(content)
-		info("Directory content copied to clipboard")
+		info(string.format("Copied content of %d files (%d lines) to clipboard", file_count, total_lines))
 	end,
 }
