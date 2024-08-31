@@ -5,9 +5,15 @@ local get_state = ya.sync(function()
 	local current = tab.current
 	local hovered = current.hovered
 
+	local last_modified = "N/A"
+	if hovered and hovered.cha and hovered.cha.modified then
+		last_modified = tostring(hovered.cha.modified)
+	end
+
 	return {
 		cwd = tostring(current.cwd),
 		hovered = hovered and hovered.name or "None",
+		hovered_modified = last_modified,
 		selected_count = #tab.selected,
 		total_files = #current.files,
 		sorted_by = tab.conf.sort_by,
@@ -16,6 +22,17 @@ local get_state = ya.sync(function()
 		yanked_count = #cx.yanked,
 	}
 end)
+
+local function format_time(time_str)
+	local seconds, fractional = time_str:match("(%d+)%.(%d+)")
+	if seconds and fractional then
+		local time = tonumber(seconds)
+		if time then
+			return os.date("%Y-%m-%d %H:%M:%S", time) .. "." .. fractional
+		end
+	end
+	return time_str -- Return as is if parsing fails
+end
 
 local function info(content)
 	return ya.notify({
@@ -35,6 +52,7 @@ return {
 		local content = string.format(
 			"CWD: %s\n"
 				.. "Hovered: %s\n"
+				.. "Hovered Last Modified: %s\n"
 				.. "Selected: %d of %d files\n"
 				.. "Sorted by: %s\n"
 				.. "Show hidden: %s\n"
@@ -42,6 +60,7 @@ return {
 				.. "Yanked files: %d",
 			state.cwd,
 			state.hovered,
+			format_time(state.hovered_modified),
 			state.selected_count,
 			state.total_files,
 			state.sorted_by,
