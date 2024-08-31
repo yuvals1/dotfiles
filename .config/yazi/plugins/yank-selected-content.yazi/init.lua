@@ -46,6 +46,66 @@ local function get_file_content(file_path)
 	return output.stdout, nil
 end
 
+local function get_language(file)
+	local ext = file:match("%.([^%.]+)$")
+	if ext then
+		ext = ext:lower()
+		local extensions = {
+			py = "python",
+			js = "javascript",
+			html = "html",
+			css = "css",
+			lua = "lua",
+			md = "markdown",
+			txt = "text",
+			-- Add more as needed
+		}
+		return extensions[ext] or "text"
+	end
+	return "text"
+end
+
+local function find_common_ancestor(paths)
+	if #paths == 0 then
+		return ""
+	end
+	if #paths == 1 then
+		return ya.parent_path(paths[1])
+	end
+
+	local parts = {}
+	for _, path in ipairs(paths) do
+		local path_parts = {}
+		for part in path:gmatch("[^/]+") do
+			table.insert(path_parts, part)
+		end
+		table.insert(parts, path_parts)
+	end
+
+	local common = {}
+	for i = 1, #parts[1] do
+		local part = parts[1][i]
+		local is_common = true
+		for j = 2, #parts do
+			if parts[j][i] ~= part then
+				is_common = false
+				break
+			end
+		end
+		if is_common then
+			table.insert(common, part)
+		else
+			break
+		end
+	end
+
+	return "/" .. table.concat(common, "/")
+end
+
+local function get_relative_path(file_path, common_ancestor)
+	return file_path:sub(#common_ancestor + 2) -- +2 to remove leading '/'
+end
+
 return {
 	entry = function()
 		local selected_files = safe_access(get_selected_files, {})
@@ -54,7 +114,9 @@ return {
 			return info("No files selected")
 		end
 
-		local content = ""
+		local common_ancestor = find_common_ancestor(selected_files)
+
+		local content = "# Common ancestor: " .. common_ancestor .. "\n\n"
 		local error_messages = {}
 		local file_count = 0
 		local total_lines = 0
@@ -62,8 +124,12 @@ return {
 		for _, file_path in ipairs(selected_files) do
 			local file_content, err = get_file_content(file_path)
 			if file_content then
-				content = content .. "# " .. file_path .. "\n\n"
-				content = content .. file_content .. "\n\n"
+				local relative_path = get_relative_path(file_path, common_ancestor)
+				local language = get_language(file_path)
+				content = content .. "## " .. relative_path .. "\n"
+				content = content .. "````" .. language .. "\n"
+				content = content .. file_content
+				content = content .. "````\n\n"
 				file_count = file_count + 1
 				total_lines = total_lines + select(2, file_content:gsub("\n", "\n"))
 			else
