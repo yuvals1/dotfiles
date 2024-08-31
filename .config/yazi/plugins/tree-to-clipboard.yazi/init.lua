@@ -1,3 +1,5 @@
+-- plugins/tree-from-hovered.yazi/init.lua
+
 local function info(content)
 	return ya.notify({
 		title = "ASCII Tree",
@@ -6,22 +8,32 @@ local function info(content)
 	})
 end
 
-local current_dir = ya.sync(function()
-	return cx.active.current.cwd
+local get_hovered = ya.sync(function()
+	local hovered = cx.active.current.hovered
+	if hovered then
+		return hovered.url, hovered.cha.is_dir
+	end
+	return nil, false
 end)
 
 return {
 	entry = function()
-		local dir = current_dir()
-		if not dir then
-			return info("Failed to get current directory")
+		local hovered_path, is_dir = get_hovered()
+		if not hovered_path then
+			return info("No item hovered")
+		end
+
+		local path = tostring(hovered_path)
+		if not is_dir then
+			-- If the hovered item is a file, use its parent directory
+			path = ya.parent_path(path)
 		end
 
 		local output, err = Command("tree")
 			:arg("-L")
 			:arg("3") -- Limit depth to 3 levels, adjust as needed
 			:arg("--charset=ascii") -- Use ASCII characters for compatibility
-			:arg(tostring(dir))
+			:arg(path)
 			:output()
 
 		if not output then
