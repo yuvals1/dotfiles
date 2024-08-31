@@ -131,10 +131,23 @@ setup_eza_aliases() {
     fi
 }
 
+# Install tree command using Homebrew
+install_tree() {
+    if ! command -v tree &> /dev/null; then
+        if command -v brew &> /dev/null; then
+            echo "Installing tree using Homebrew..."
+            brew install tree
+        else
+            echo "Homebrew not found. Please install Homebrew or tree manually."
+        fi
+    fi
+}
+
 # Run the setup
 ensure_cargo_installed
 install_eza
 setup_eza_aliases
+install_tree
 
 # Install and configure bat
 zinit ice from"gh-r" as"command" mv"bat* -> bat" pick"bat/bat"
