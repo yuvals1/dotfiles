@@ -62,17 +62,19 @@ return {
 		end
 
 		local content = ""
+		local dir_path = tostring(dir_url)
 		for _, file in ipairs(files) do
 			local file_content, file_err = Command("cat"):arg(file):output()
 			if file_content then
-				local file_name = file:match("([^/]+)$")
-				local language = get_language(file_name)
-				content = content .. "# " .. file_name .. "\n"
+				local relative_path = file:sub(#dir_path + 2) -- +2 to remove the leading slash
+				local language = get_language(relative_path)
+				content = content .. "# " .. relative_path .. "\n"
 				content = content .. "````" .. language .. "\n"
 				content = content .. file_content.stdout
 				content = content .. "````\n\n"
 			else
-				content = content .. "# " .. file .. " (Error reading file: " .. file_err .. ")\n\n"
+				local relative_path = file:sub(#dir_path + 2)
+				content = content .. "# " .. relative_path .. " (Error reading file: " .. file_err .. ")\n\n"
 			end
 		end
 
