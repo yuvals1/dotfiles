@@ -23,6 +23,16 @@ local function get_language(file)
 			lua = "lua",
 			md = "markdown",
 			txt = "text",
+			json = "json",
+			yaml = "yaml",
+			yml = "yaml",
+			toml = "toml",
+			sh = "bash",
+			bash = "bash",
+			zsh = "bash",
+			sql = "sql",
+			xml = "xml",
+			rst = "rst",
 			-- Add more as needed
 		}
 		return extensions[ext]
