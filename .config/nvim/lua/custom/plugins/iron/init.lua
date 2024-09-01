@@ -31,11 +31,8 @@ return {
         repl_open_cmd = repl.custom_repl_open_cmd,
       },
       keymaps = {
-        send_file = '<space>ja',
-        send_line = '<space>jl',
-        send_until_cursor = '<space>jc',
         exit = '<space>jq',
-        visual_send = '<space>jv',
+        -- visual_send = '<space>jv',
       },
       highlight = { italic = true },
       ignore_blank_lines = true,
