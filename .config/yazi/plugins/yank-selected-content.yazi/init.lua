@@ -20,6 +20,15 @@ local function log_to_file(message)
 	end
 end
 
+local function info(content)
+	log_to_file(content)
+	return ya.notify({
+		title = "Yank Content",
+		content = content,
+		timeout = 5,
+	})
+end
+
 local function safe_access(func, default)
 	local success, result = pcall(func)
 	if success then
@@ -37,14 +46,10 @@ local get_selected_files = ya.sync(function()
 	return selected
 end)
 
-local function info(content)
-	log_to_file(content)
-	return ya.notify({
-		title = "Yank Selected Content",
-		content = content,
-		timeout = 10,
-	})
-end
+local get_hovered_file = ya.sync(function()
+	local h = cx.active.current.hovered
+	return h and tostring(h.url)
+end)
 
 local function get_file_content(file_path)
 	local output, err = Command("cat"):arg(file_path):output()
@@ -103,8 +108,14 @@ end
 return {
 	entry = function()
 		local selected_files = safe_access(get_selected_files, {})
+
 		if #selected_files == 0 then
-			return info("No files selected")
+			-- No files selected, use hovered file
+			local hovered_file = safe_access(get_hovered_file)
+			if not hovered_file then
+				return info("No file selected or hovered")
+			end
+			selected_files = { hovered_file }
 		end
 
 		local common_prefix = get_common_prefix(selected_files)
@@ -131,8 +142,13 @@ return {
 
 		if content ~= "" then
 			ya.clipboard(content)
-			local success_message =
-				string.format("Copied content of %d files (%d lines) to clipboard", file_count, total_lines)
+			local success_message
+			if file_count == 1 then
+				success_message = string.format("Copied content of 1 file (%d lines) to clipboard", total_lines)
+			else
+				success_message =
+					string.format("Copied content of %d files (%d lines) to clipboard", file_count, total_lines)
+			end
 			info(success_message)
 		end
 
