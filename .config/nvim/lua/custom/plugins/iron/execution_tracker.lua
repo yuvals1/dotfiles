@@ -92,4 +92,26 @@ M.clean_execution_marks = function()
   }
 end
 
+M.get_first_non_executed_line = function()
+  if not current_execution.bufnr then
+    return 1
+  end
+
+  local signs = vim.fn.sign_getplaced(current_execution.bufnr, { group = 'IronExecutionGroup' })[1].signs
+  local executed_lines = {}
+
+  for _, sign in ipairs(signs) do
+    executed_lines[sign.lnum] = true
+  end
+
+  local total_lines = vim.api.nvim_buf_line_count(current_execution.bufnr)
+  for line = 1, total_lines do
+    if not executed_lines[line] then
+      return line
+    end
+  end
+
+  return total_lines + 1 -- If all lines are executed, return the line after the last one
+end
+
 return M

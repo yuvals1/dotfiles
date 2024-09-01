@@ -1,6 +1,7 @@
 -- File: lua/custom/plugins/iron/executor.lua
 local repl = require 'custom.plugins.iron.repl'
 local iron = require 'iron.core'
+local execution_tracker = require 'custom.plugins.iron.execution_tracker'
 
 local M = {}
 
@@ -36,9 +37,16 @@ end
 
 M.execute_until_cursor = function()
   local cursor_line = vim.fn.line '.'
-  local lines = vim.api.nvim_buf_get_lines(0, 0, cursor_line, false)
+  local start_line = execution_tracker.get_first_non_executed_line()
+
+  if start_line > cursor_line then
+    print 'All lines up to the cursor have already been executed.'
+    return
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, cursor_line, false)
   local code = table.concat(lines, '\n')
-  repl.send_to_repl(code, 1, cursor_line, 'until_cursor')
+  repl.send_to_repl(code, start_line, cursor_line, 'until_cursor')
 end
 
 -- New function for smart execution
