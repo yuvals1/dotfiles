@@ -1,7 +1,5 @@
 -- File: lua/custom/plugins/iron/executor.lua
 local repl = require 'custom.plugins.iron.repl'
-local cells = require 'custom.plugins.iron.cells'
-local analyzer = require 'custom.plugins.iron.analyzer'
 local iron = require 'iron.core'
 
 local M = {}
@@ -52,72 +50,6 @@ M.execute_line_and_move = function()
   M.execute_line()
   local created_new_line = ensure_next_line()
   vim.cmd(created_new_line and 'normal! j$' or 'normal! j')
-end
-
-M.execute_cell = function()
-  local code = cells.get_cell_content()
-  local start_line = vim.fn.search('^# %%', 'bnW') + 1
-  local end_line = vim.fn.search('^# %%', 'nW') - 1
-  if end_line == -1 then
-    end_line = vim.fn.line '$'
-  end
-  repl.send_to_repl(code, start_line, end_line, 'cell')
-end
-
-M.execute_cell_and_move = function()
-  M.execute_cell()
-  cells.move_to_next_cell()
-end
-
-M.smart_execute = function()
-  if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
-    -- Visual mode: send selected text
-    local start_line = vim.fn.line "'<"
-    local end_line = vim.fn.line "'>"
-    local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-    local code = table.concat(lines, '\n')
-    repl.send_to_repl(code, start_line, end_line, 'visual')
-  else
-    -- Normal mode: existing logic
-    if not is_current_line_empty() then
-      local node = analyzer.get_executable_node()
-      if node then
-        local code = analyzer.get_node_text(node)
-        local start_row, _, end_row, _ = node:range()
-        repl.send_to_repl(code, start_row + 1, end_row + 1, 'smart')
-      end
-    end
-    -- No message is printed for empty lines
-  end
-end
-
-M.smart_execute_and_move = function()
-  if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
-    -- Visual mode: send selected text and move to end of selection
-    local start_line = vim.fn.line "'<"
-    local end_line = vim.fn.line "'>"
-    local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-    local code = table.concat(lines, '\n')
-    repl.send_to_repl(code, start_line, end_line, 'visual')
-    vim.api.nvim_input '<Esc>`>'
-  else
-    -- Normal mode: existing logic
-    if is_current_line_empty() then
-      local row, col = ensure_valid_cursor_position(vim.fn.line '.' + 1, 0)
-      vim.api.nvim_win_set_cursor(0, { row, col })
-    else
-      local node = analyzer.get_executable_node()
-      if node then
-        local code = analyzer.get_node_text(node)
-        local start_row, _, end_row, _ = node:range()
-        repl.send_to_repl(code, start_row + 1, end_row + 1, 'smart')
-
-        -- Move to the line after the executed block
-        local row, col = ensure_valid_cursor_position(end_row + 2, 0)
-        vim.api.nvim_win_set_cursor(0, { row, col })
-      end
-    end
-  end
 end
 
 M.execute_file = function()

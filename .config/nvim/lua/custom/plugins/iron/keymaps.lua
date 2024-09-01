@@ -1,14 +1,10 @@
 -- File: lua/custom/plugins/iron/keymaps.lua
 local M = {}
 
-M.setup = function(iron, executor, cells)
+M.setup = function(iron, executor)
   -- Create user commands
-  vim.api.nvim_create_user_command('IronExecuteCell', executor.execute_cell, {})
-  vim.api.nvim_create_user_command('IronExecuteAndMove', executor.execute_cell_and_move, {})
   vim.api.nvim_create_user_command('IronExecuteLineAndMove', executor.execute_line_and_move, {})
   vim.api.nvim_create_user_command('IronExecuteLine', executor.execute_line, {})
-  vim.api.nvim_create_user_command('IronCreateCellBelow', cells.create_cell_below, {})
-  vim.api.nvim_create_user_command('IronRemoveCurrentCell', cells.remove_current_cell, {})
   vim.api.nvim_create_user_command('IronSmartExecute', executor.smart_execute, {})
   vim.api.nvim_create_user_command('IronSmartExecuteAndMove', executor.smart_execute_and_move, {})
   vim.api.nvim_create_user_command('IronExecuteFile', executor.execute_file, {})
