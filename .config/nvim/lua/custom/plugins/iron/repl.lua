@@ -7,6 +7,10 @@ local M = {}
 -- Create a custom highlight group for executed code
 vim.api.nvim_command 'highlight IronExecutedCode guibg=#2ecc71 guifg=black'
 
+-- New variables for highlight management
+local highlight_timer = nil
+local current_highlight_ns = nil
+
 M.custom_repl_open_cmd = function(bufnr)
   local width = math.floor(vim.o.columns * 0.3)
   vim.cmd('silent! botright vertical ' .. width .. 'split')
@@ -37,20 +41,33 @@ M.send_to_repl = function(code, start_line, end_line, execution_type)
 
   -- Highlight the executed code
   if start_line and end_line then
-    local ns_id = vim.api.nvim_create_namespace 'iron_highlight'
+    -- Clear any existing timer
+    if highlight_timer then
+      vim.fn.timer_stop(highlight_timer)
+    end
 
-    -- Clear any existing highlights in this namespace
-    vim.api.nvim_buf_clear_namespace(current_buf, ns_id, 0, -1)
+    -- Clear existing highlight if any
+    if current_highlight_ns then
+      vim.api.nvim_buf_clear_namespace(current_buf, current_highlight_ns, 0, -1)
+    end
+
+    -- Create a new namespace for this highlight
+    current_highlight_ns = vim.api.nvim_create_namespace('iron_highlight_' .. os.time())
 
     -- Add highlight to each line in the range
     for i = start_line - 1, end_line - 1 do
-      vim.api.nvim_buf_add_highlight(current_buf, ns_id, 'IronExecutedCode', i, 0, -1)
+      vim.api.nvim_buf_add_highlight(current_buf, current_highlight_ns, 'IronExecutedCode', i, 0, -1)
     end
 
-    -- Clear the highlight after a short delay
-    vim.defer_fn(function()
-      vim.api.nvim_buf_clear_namespace(current_buf, ns_id, 0, -1)
-    end, 200) -- 200ms delay, adjust as needed
+    -- Set a new timer to clear the highlight
+    highlight_timer = vim.fn.timer_start(1000, function()
+      vim.schedule(function()
+        if current_highlight_ns then
+          vim.api.nvim_buf_clear_namespace(current_buf, current_highlight_ns, 0, -1)
+          current_highlight_ns = nil
+        end
+      end)
+    end)
   end
 end
 
