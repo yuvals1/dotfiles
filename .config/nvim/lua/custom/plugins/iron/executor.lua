@@ -122,6 +122,15 @@ M.execute_until_cursor = function()
   for _, block in ipairs(blocks_to_execute) do
     repl.send_to_repl(block.code, block.start, block.end_line, 'smart')
   end
+
+  -- Move to the next line after the last executed block
+  local last_executed_block = blocks_to_execute[#blocks_to_execute]
+  local created_new_line = ensure_next_line()
+  if created_new_line then
+    vim.api.nvim_win_set_cursor(0, { last_executed_block.end_line + 1, 0 })
+  else
+    vim.api.nvim_win_set_cursor(0, { math.min(last_executed_block.end_line + 1, vim.fn.line '$'), 0 })
+  end
 end
 
 M.smart_execute = function()
