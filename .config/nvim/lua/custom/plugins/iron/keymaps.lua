@@ -25,7 +25,7 @@ M.setup = function(iron, executor)
 
   -- New keymaps for execute file and execute until cursor
   vim.keymap.set('n', '<space>jf', executor.execute_file, { noremap = true, silent = true, desc = 'Execute entire file' })
-  vim.keymap.set('n', '<space>ju', executor.execute_until_cursor, { noremap = true, silent = true, desc = 'Execute until cursor' })
+  vim.keymap.set('n', '<Tab>', executor.execute_until_cursor, { noremap = true, silent = true, desc = 'Execute until cursor' })
 
   -- New keymapping for clearing signs and restarting REPL
   vim.keymap.set('n', '<space>jr', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
