@@ -4,30 +4,6 @@ local iron = require 'iron.core'
 
 local M = {}
 
--- New function to ensure valid cursor position
-local function ensure_valid_cursor_position(row, col)
-  local line_count = vim.api.nvim_buf_line_count(0)
-  if row > line_count then
-    -- Append new lines as needed
-    local lines_to_append = row - line_count
-    local empty_lines = {}
-    for _ = 1, lines_to_append do
-      table.insert(empty_lines, '')
-    end
-    vim.api.nvim_buf_set_lines(0, -1, -1, false, empty_lines)
-  end
-  -- Ensure column is within bounds
-  local line = vim.api.nvim_buf_get_lines(0, row - 1, row, true)[1] or ''
-  col = math.min(col, #line)
-  return row, col
-end
-
--- Helper function to check if the current line is empty
-local function is_current_line_empty()
-  local current_line = vim.api.nvim_get_current_line()
-  return current_line:match '^%s*$' ~= nil
-end
-
 -- Helper function to ensure there's a line to move to
 local function ensure_next_line()
   local last_line = vim.fn.line '$'
