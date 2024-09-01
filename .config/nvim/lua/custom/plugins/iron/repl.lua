@@ -86,7 +86,7 @@ M.clear_and_restart = function()
   -- Dismiss Noice notification
   vim.defer_fn(function()
     require('noice').cmd 'dismiss'
-  end, 10) -- Small delay to ensure the restart message appears before dismissing
+  end, 50) -- Small delay to ensure the restart message appears before dismissing
 end
 
 return M
