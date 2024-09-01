@@ -35,21 +35,7 @@ M.execute_file = function()
   repl.send_to_repl(code, 1, #lines, 'file')
 end
 
-M.execute_until_cursor = function()
-  local cursor_line = vim.fn.line '.'
-  local start_line = execution_tracker.get_first_non_executed_line()
-
-  if start_line > cursor_line then
-    print 'All lines up to the cursor have already been executed.'
-    return
-  end
-
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, cursor_line, false)
-  local code = table.concat(lines, '\n')
-  repl.send_to_repl(code, start_line, cursor_line, 'until_cursor')
-end
-
--- New function for smart execution
+-- Helper function to execute Python extractor
 local function execute_python_extractor(line_number, command)
   local python_path = vim.g.python3_host_prog
   local script_path = vim.fn.expand '~/.config/nvim/lua/custom/plugins/iron/code_block_extractor.py'
@@ -70,6 +56,72 @@ local function execute_python_extractor(line_number, command)
 
   os.remove(tmp_file)
   return output
+end
+
+-- Helper function to check if a block is executed
+local function is_block_executed(start_line, end_line)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local signs = vim.fn.sign_getplaced(bufnr, { group = 'IronExecutionGroup' })[1].signs
+  for _, sign in ipairs(signs) do
+    if sign.lnum >= start_line and sign.lnum <= end_line then
+      return true
+    end
+  end
+  return false
+end
+
+-- Helper function to get all blocks up to the cursor
+local function get_blocks_up_to_cursor(cursor_line)
+  local blocks = {}
+  local line = 1
+  while line <= cursor_line do
+    local range = execute_python_extractor(line, 'range')
+    local start, end_line = range:match '(%d+),(%d+)'
+    start, end_line = tonumber(start), tonumber(end_line)
+    table.insert(blocks, { start = start, end_line = end_line, code = execute_python_extractor(line, 'block') })
+    line = end_line + 1
+  end
+  return blocks
+end
+
+M.execute_until_cursor = function()
+  if vim.bo.filetype ~= 'python' then
+    print 'This function is only for Python files.'
+    return
+  end
+
+  local cursor_line = vim.fn.line '.'
+  local blocks = get_blocks_up_to_cursor(cursor_line)
+
+  local blocks_to_execute = {}
+  local current_block_index = 0
+
+  for i, block in ipairs(blocks) do
+    if cursor_line >= block.start and cursor_line <= block.end_line then
+      current_block_index = i
+      break
+    end
+  end
+
+  if current_block_index == 0 then
+    print 'Cursor is not in a valid code block.'
+    return
+  end
+
+  if is_block_executed(blocks[current_block_index].start, blocks[current_block_index].end_line) then
+    print 'The current block has already been executed.'
+    return
+  end
+
+  for i = 1, current_block_index do
+    if not is_block_executed(blocks[i].start, blocks[i].end_line) then
+      table.insert(blocks_to_execute, blocks[i])
+    end
+  end
+
+  for _, block in ipairs(blocks_to_execute) do
+    repl.send_to_repl(block.code, block.start, block.end_line, 'smart')
+  end
 end
 
 M.smart_execute = function()
