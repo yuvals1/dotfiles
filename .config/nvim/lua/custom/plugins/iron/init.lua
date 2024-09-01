@@ -56,12 +56,29 @@ return {
       repl.send_to_repl(code_block, tonumber(start_line), tonumber(end_line), 'smart')
     end
 
+    -- Helper function to ensure there's a line to move to
+    local function ensure_next_line()
+      local last_line = vim.fn.line '$'
+      if vim.fn.line '.' == last_line then
+        vim.fn.append(last_line, '')
+        return true
+      end
+      return false
+    end
+
     -- Modify the executor.smart_execute_and_move function
     executor.smart_execute_and_move = function()
       executor.smart_execute()
       local range = execute_python_extractor(vim.fn.line '.', 'range')
       local _, end_line = range:match '(%d+),(%d+)'
-      vim.api.nvim_win_set_cursor(0, { tonumber(end_line) + 1, 0 })
+      end_line = tonumber(end_line)
+
+      local created_new_line = ensure_next_line()
+      if created_new_line then
+        vim.api.nvim_win_set_cursor(0, { end_line + 1, 0 })
+      else
+        vim.api.nvim_win_set_cursor(0, { math.min(end_line + 1, vim.fn.line '$'), 0 })
+      end
     end
 
     iron.setup {
