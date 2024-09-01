@@ -73,58 +73,42 @@ local function get_language(file)
 	return "text"
 end
 
-local function find_common_ancestor(paths)
+local function get_common_prefix(paths)
 	if #paths == 0 then
 		return ""
 	end
-	if #paths == 1 then
-		return ya.parent_path(paths[1])
-	end
-
-	local parts = {}
-	for _, path in ipairs(paths) do
-		local path_parts = {}
-		for part in path:gmatch("[^/]+") do
-			table.insert(path_parts, part)
+	local shortest = paths[1]
+	for i = 2, #paths do
+		if #paths[i] < #shortest then
+			shortest = paths[i]
 		end
-		table.insert(parts, path_parts)
 	end
-
-	local common = {}
-	for i = 1, #parts[1] do
-		local part = parts[1][i]
-		local is_common = true
-		for j = 2, #parts do
-			if parts[j][i] ~= part then
-				is_common = false
-				break
+	local common_prefix = ""
+	for i = 1, #shortest do
+		local char = shortest:sub(i, i)
+		for j = 1, #paths do
+			if paths[j]:sub(i, i) ~= char then
+				return common_prefix
 			end
 		end
-		if is_common then
-			table.insert(common, part)
-		else
-			break
-		end
+		common_prefix = common_prefix .. char
 	end
-
-	return "/" .. table.concat(common, "/")
+	return common_prefix:match("(.*/)") or ""
 end
 
-local function get_relative_path(file_path, common_ancestor)
-	return file_path:sub(#common_ancestor + 2) -- +2 to remove leading '/'
+local function get_relative_path(file_path, common_prefix)
+	return file_path:sub(#common_prefix + 1)
 end
 
 return {
 	entry = function()
 		local selected_files = safe_access(get_selected_files, {})
-
 		if #selected_files == 0 then
 			return info("No files selected")
 		end
 
-		local common_ancestor = find_common_ancestor(selected_files)
-
-		local content = "# Common ancestor: " .. common_ancestor .. "\n\n"
+		local common_prefix = get_common_prefix(selected_files)
+		local content = "# Common prefix: " .. common_prefix .. "\n\n"
 		local error_messages = {}
 		local file_count = 0
 		local total_lines = 0
@@ -132,7 +116,7 @@ return {
 		for _, file_path in ipairs(selected_files) do
 			local file_content, err = get_file_content(file_path)
 			if file_content then
-				local relative_path = get_relative_path(file_path, common_ancestor)
+				local relative_path = get_relative_path(file_path, common_prefix)
 				local language = get_language(file_path)
 				content = content .. "## " .. relative_path .. "\n"
 				content = content .. "````" .. language .. "\n"
