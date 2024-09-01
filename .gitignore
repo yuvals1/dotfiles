@@ -6,3 +6,7 @@
 .tmux/plugins/*
 .api_key.txt
 .zsh_secrets
+
+# Ignore all __pycache__ directories
+__pycache__/
+*.py[cod]
