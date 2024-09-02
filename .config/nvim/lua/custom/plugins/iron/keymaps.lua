@@ -13,7 +13,10 @@ M.setup = function(iron, executor)
   -- Set up keymaps
   vim.keymap.set('n', '<BS>', function()
     iron.repl_for(vim.bo.filetype)
-  end, { noremap = true, silent = true, desc = 'Toggle REPL' })
+    -- Switch to normal mode
+    vim.cmd 'stopinsert'
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
+  end, { noremap = true, silent = true, desc = 'Toggle REPL and switch to normal mode' })
 
   vim.keymap.set('n', '<C-y>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
   vim.keymap.set('n', '<CR>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
