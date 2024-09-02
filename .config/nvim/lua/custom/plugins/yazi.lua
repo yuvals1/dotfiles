@@ -14,8 +14,8 @@ return {
       }
 
       -- Open yazi at the current file
-      vim.keymap.set('n', '<leader>-', '<CMD>Yazi<CR>', { desc = 'Open yazi at the current file' })
-      vim.keymap.set('n', 'S-', '<CMD>Yazi<CR>', { desc = 'Open yazi at the current file' })
+      vim.keymap.set('n', '-', '<CMD>Yazi<CR>', { desc = 'Open yazi at the current file' })
+      vim.keymap.set('n', '<S->', '<CMD>Yazi<CR>', { desc = 'Open yazi at the current file' })
 
       -- Open the file manager in nvim's working directory
       vim.keymap.set('n', '<leader>cw', '<CMD>Yazi cwd<CR>', { desc = 'Open yazi in working directory' })
