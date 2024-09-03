@@ -280,3 +280,6 @@ cpc() {
         fi
     fi
 }
+
+# Alias to checkout Git commit by PR/issue number
+alias gpr='f() { git checkout $(git rev-list -n 1 --grep="#$1" HEAD) }; f'
