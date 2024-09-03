@@ -143,11 +143,24 @@ install_tree() {
     fi
 }
 
+# Install bpytop using Homebrew
+install_bpytop() {
+    if ! command -v bpytop &> /dev/null; then
+        if command -v brew &> /dev/null; then
+            echo "Installing bpytop using Homebrew..."
+            brew install bpytop
+        else
+            echo "Homebrew not found. Please install Homebrew or bpytop manually."
+        fi
+    fi
+}
+
 # Run the setup
 ensure_cargo_installed
 install_eza
 setup_eza_aliases
 install_tree
+install_bpytop
 
 # Install and configure bat
 zinit ice from"gh-r" as"command" mv"bat* -> bat" pick"bat/bat"
@@ -191,6 +204,9 @@ alias y='yazi'
 alias n='nvim'
 alias cd='z'
 alias sc='sesh connect $(sesh list | fzf)'
+
+# bpytop alias
+alias btop='bpytop'
 
 . "$HOME/.cargo/env"
 
