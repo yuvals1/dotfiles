@@ -60,7 +60,7 @@ M.send_to_repl = function(code, start_line, end_line, execution_type)
     end
 
     -- Set a new timer to clear the highlight
-    highlight_timer = vim.fn.timer_start(1000, function()
+    highlight_timer = vim.fn.timer_start(400, function()
       vim.schedule(function()
         if current_highlight_ns then
           vim.api.nvim_buf_clear_namespace(current_buf, current_highlight_ns, 0, -1)
