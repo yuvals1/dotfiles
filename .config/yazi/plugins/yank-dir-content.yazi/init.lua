@@ -76,6 +76,8 @@ local function generate_tree(dir_url)
 		:arg("-L")
 		:arg("3") -- Limit depth to 3 levels, adjust as needed
 		:arg("--charset=ascii") -- Use ASCII characters for compatibility
+		:arg("-I")
+		:arg(".venv") -- Ignore .venv directories
 		:arg(tostring(dir_url))
 		:output()
 
@@ -104,7 +106,12 @@ return {
 		-- Generate ASCII tree
 		local tree_content = generate_tree(dir_url)
 
-		local output, err = Command("find"):arg(tostring(dir_url)):output()
+		local output, err = Command("find")
+			:arg(tostring(dir_url))
+			:arg("-not")
+			:arg("-path")
+			:arg("*/.venv/*") -- Exclude .venv directories
+			:output()
 		if not output then
 			return info("Failed to list directory contents, error: " .. err)
 		end
@@ -127,6 +134,11 @@ return {
 			local is_file = ya.sync(function()
 				return not fs.stat(path).is_dir
 			end)
+
+			-- Skip .venv directories
+			if formatted_path:match("^%.venv") or formatted_path:match("/%.venv") then
+				goto continue
+			end
 
 			-- Output headers for new directories
 			for i = 1, #parts do
@@ -159,6 +171,7 @@ return {
 			end
 
 			prev_parts = parts
+			::continue::
 		end
 
 		ya.clipboard(content)
