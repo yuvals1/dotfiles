@@ -266,10 +266,26 @@ else
     echo "Warning: ~/.zsh_secrets file not found. API keys may not be set."
 fi
 
+set_clipboard_command() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        clipboard_cmd="pbcopy"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if command -v xclip &> /dev/null; then
+            clipboard_cmd="xclip -selection clipboard"
+        else
+            echo "xclip is not installed. Please install it using: sudo apt-get install xclip"
+            return 1
+        fi
+    else
+        echo "Unsupported operating system"
+        return 1
+    fi
+}
+# Function to copy directory tree to clipboard
 treecopy() {
+    set_clipboard_command || return 1
     local dir_name
     local tree_output
-
     if [ $# -eq 0 ]; then
         dir_name="current directory"
         tree_output=$(tree)
@@ -282,20 +298,19 @@ treecopy() {
             return 1
         fi
     fi
-
-    echo "$tree_output" | pbcopy
+    echo "$tree_output" | $clipboard_cmd
     line_count=$(echo "$tree_output" | wc -l | tr -d ' ')
     echo "ASCII tree of $dir_name copied to clipboard ($line_count lines)"
 }
-
 # Function to copy file content to clipboard
 cpc() {
+    set_clipboard_command || return 1
     if [ $# -eq 0 ]; then
         echo "Usage: cpc <filename>"
     else
         if [ -f "$1" ]; then
             content=$(cat "$1")
-            echo "$content" | pbcopy
+            echo "$content" | $clipboard_cmd
             line_count=$(echo "$content" | wc -l | tr -d ' ')
             echo "Content of '$1' copied to clipboard ($line_count lines)"
         else
