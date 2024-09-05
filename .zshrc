@@ -242,3 +242,41 @@ if [ -f "$HOME/.zsh_secrets" ]; then
 else
     echo "Warning: ~/.zsh_secrets file not found. API keys may not be set."
 fi
+
+treecopy() {
+    local dir_name
+    local tree_output
+
+    if [ $# -eq 0 ]; then
+        dir_name="current directory"
+        tree_output=$(tree)
+    else
+        if [ -d "$1" ]; then
+            dir_name="$1"
+            tree_output=$(tree "$1")
+        else
+            echo "Error: '$1' is not a valid directory"
+            return 1
+        fi
+    fi
+
+    echo "$tree_output" | pbcopy
+    line_count=$(echo "$tree_output" | wc -l | tr -d ' ')
+    echo "ASCII tree of $dir_name copied to clipboard ($line_count lines)"
+}
+
+# Function to copy file content to clipboard
+cpc() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: cpc <filename>"
+    else
+        if [ -f "$1" ]; then
+            content=$(cat "$1")
+            echo "$content" | pbcopy
+            line_count=$(echo "$content" | wc -l | tr -d ' ')
+            echo "Content of '$1' copied to clipboard ($line_count lines)"
+        else
+            echo "Error: '$1' is not a valid file"
+        fi
+    fi
+}
