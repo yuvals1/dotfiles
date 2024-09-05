@@ -22,6 +22,8 @@ def get_block_info(code: str, line_number: int) -> Tuple[Optional[ast.AST], int,
                         ast.Assign,
                         ast.Expr,
                         ast.Call,
+                        ast.Import,
+                        ast.ImportFrom,
                     ),
                 ):
                     return node, node.lineno, node.end_lineno
@@ -35,7 +37,24 @@ def get_block_for_line(code: str, line_number: int) -> str:
     if node:
         return ast.unparse(node)
     else:
-        return code.split("\n")[line_number - 1]
+        # If no specific block is found, return the entire import statement
+        lines = code.split("\n")
+        current_line = lines[line_number - 1]
+        if current_line.strip().startswith("from") or current_line.strip().startswith(
+            "import"
+        ):
+            import_lines = [current_line]
+            for line in lines[line_number:]:
+                if line.strip().endswith(")"):
+                    import_lines.append(line)
+                    break
+                elif not line.strip() or not line.strip().startswith(
+                    ("from", "import")
+                ):
+                    break
+                import_lines.append(line)
+            return "\n".join(import_lines)
+        return current_line
 
 
 def get_block_range(code: str, line_number: int) -> str:

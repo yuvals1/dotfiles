@@ -123,3 +123,15 @@ if __name__ == "__main__":
     check_number(5)
     result = complex_function(1, 2, 3, d=4, e=5)
     print(f"Result: {result}")
+
+
+from utils.utils import (
+    create_partitioner,
+    draw_boxes,
+    ensure_cache_dir,
+    get_pdf_files,
+    partition_docs,
+    process_or_load,
+    read_binary,
+    split_docs,
+)
