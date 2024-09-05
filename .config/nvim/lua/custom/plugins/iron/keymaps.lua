@@ -31,7 +31,6 @@ M.setup = function(iron, executor)
 
   -- New keymapping for clearing signs and restarting REPL
   vim.keymap.set('n', '<C-c>', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
-  vim.keymap.set('n', '<C-/>', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
   vim.keymap.set('n', '<leader>jr', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
 
   vim.keymap.set('n', '<leader>wo', '<C-w>p', { noremap = true, silent = true, desc = 'Go to previous (last accessed) window' })
