@@ -589,8 +589,15 @@ require('lazy').setup({
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
         --
+        bashls = {
+          settings = {
+            filetypes = { 'sh', 'zsh' },
+          },
+        },
         jsonls = {},
         marksman = {}, -- Add this line for Markdown LSP support
+        lemminx = {},
+        yamlls = {},
 
         lua_ls = {
           -- cmd = {...},
