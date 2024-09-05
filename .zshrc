@@ -10,6 +10,15 @@ if [[ -f "/opt/homebrew/bin/brew" ]] then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
+# check if the directory exists
+if [ -d "/Users/yuvals1/.local/bin" ]; then
+    # Created by `pipx` on 2024-08-21 15:29:07
+    export PATH="/Users/yuvals1/.local/bin:$PATH"
+fi
+# Check if the system is Linux
+if [[ "$(uname)" == "Linux" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -249,8 +258,6 @@ function nvims() {
 
 bindkey -s ^a "nvims\n"
 
-# Created by `pipx` on 2024-08-21 15:29:07
-export PATH="$PATH:/Users/yuvals1/.local/bin"
 
 # Load secrets file if it exists
 if [ -f "$HOME/.zsh_secrets" ]; then
