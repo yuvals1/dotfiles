@@ -590,6 +590,7 @@ require('lazy').setup({
         -- tsserver = {},
         --
         jsonls = {},
+        marksman = {}, -- Add this line for Markdown LSP support
 
         lua_ls = {
           -- cmd = {...},
