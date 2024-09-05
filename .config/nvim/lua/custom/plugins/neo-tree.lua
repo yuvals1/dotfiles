@@ -31,7 +31,7 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
-          ['-'] = 'close_window', -- Added this line
+          ['<leader>-'] = 'close_window', -- Added this line
         },
       },
     },
