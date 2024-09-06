@@ -1028,3 +1028,33 @@ vim.api.nvim_create_autocmd('BufReadCmd', {
     vim.cmd 'bdelete'
   end,
 })
+
+-- Command to copy relative path
+vim.api.nvim_create_user_command('CopyRelPath', function()
+  local relative_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
+  vim.fn.setreg('+', relative_path)
+  print('Relative path copied to clipboard: ' .. relative_path)
+end, {})
+
+-- Command to copy full path
+vim.api.nvim_create_user_command('CopyFullPath', function()
+  local full_path = vim.fn.expand '%:p'
+  vim.fn.setreg('+', full_path)
+  print('Full path copied to clipboard: ' .. full_path)
+end, {})
+
+-- Command to copy parent folder path
+vim.api.nvim_create_user_command('CopyParentPath', function()
+  local parent_path = vim.fn.fnamemodify(vim.fn.expand '%:p', ':h')
+  vim.fn.setreg('+', parent_path)
+  print('Parent folder path copied to clipboard: ' .. parent_path)
+end, {})
+
+-- Keymapping for CopyRelPath
+vim.api.nvim_set_keymap('n', '<leader>cr', ':CopyRelPath<CR>', { noremap = true, silent = true })
+
+-- Keymapping for CopyFullPath
+vim.api.nvim_set_keymap('n', '<leader>cf', ':CopyFullPath<CR>', { noremap = true, silent = true })
+
+-- Keymapping for CopyParentPath
+vim.api.nvim_set_keymap('n', '<leader>cp', ':CopyParentPath<CR>', { noremap = true, silent = true })
