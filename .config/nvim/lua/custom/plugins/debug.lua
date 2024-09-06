@@ -5,7 +5,6 @@
 -- Primarily focused on configuring the debugger for Go, but can
 -- be extended to other languages as well. That's why it's called
 -- kickstart.nvim and not kitchen-sink.nvim ;)
-
 return {
   -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
@@ -13,27 +12,25 @@ return {
   dependencies = {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
-
     -- Required dependency for nvim-dap-ui
     'nvim-neotest/nvim-nio',
-
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
-
     -- Add your own debuggers here
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python', -- Added for Python debugging
   },
   keys = function(_, keys)
     local dap = require 'dap'
     local dapui = require 'dapui'
     return {
       -- Basic debugging keymaps, feel free to change to your liking!
-      { '<F5>', dap.continue, desc = 'Debug: Start/Continue' },
-      { '<F1>', dap.step_into, desc = 'Debug: Step Into' },
-      { '<F2>', dap.step_over, desc = 'Debug: Step Over' },
-      { '<F3>', dap.step_out, desc = 'Debug: Step Out' },
-      { '<leader>b', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
+      { '<leader>dc', dap.continue, desc = 'Debug: Start/Continue' },
+      { '<leader>di', dap.step_into, desc = 'Debug: Step Into' },
+      { '<leader>do', dap.step_over, desc = 'Debug: Step Over' },
+      { '<leader>dx', dap.step_out, desc = 'Debug: Step Out' },
+      { '<leader>db', dap.toggle_breakpoint, desc = 'Debug: Toggle Breakpoint' },
       {
         '<leader>B',
         function()
@@ -43,30 +40,42 @@ return {
       },
       -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
       { '<F7>', dapui.toggle, desc = 'Debug: See last session result.' },
+      -- Python-specific keymaps
+      {
+        '<leader>dpr',
+        function()
+          require('dap-python').test_method()
+        end,
+        desc = 'Debug: Python Test Method',
+      },
+      {
+        '<leader>dpc',
+        function()
+          require('dap-python').test_class()
+        end,
+        desc = 'Debug: Python Test Class',
+      },
       unpack(keys),
     }
   end,
   config = function()
     local dap = require 'dap'
     local dapui = require 'dapui'
-
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
       automatic_installation = true,
-
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
       handlers = {},
-
       -- You'll need to check that you have the required things installed
       -- online, please don't ask me how to install them :)
       ensure_installed = {
         -- Update this to ensure that you have the debuggers for the langs you want
         'delve',
+        'debugpy', -- Added for Python debugging
       },
     }
-
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
@@ -88,11 +97,9 @@ return {
         },
       },
     }
-
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
-
     -- Install golang specific config
     require('dap-go').setup {
       delve = {
@@ -101,5 +108,19 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+
+    -- Python configuration
+    require('dap-python').setup '~/.local/share/nvim/mason/packages/debugpy/venv/bin/python'
+
+    -- Optional: Set up additional Python configurations
+    table.insert(dap.configurations.python, {
+      type = 'python',
+      request = 'launch',
+      name = 'Python: Current File',
+      program = '${file}',
+      pythonPath = function()
+        return 'python' -- You can use a more specific path or a virtual environment
+      end,
+    })
   end,
 }
