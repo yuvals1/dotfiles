@@ -74,11 +74,6 @@ def my_decorator(func):
     return wrapper
 
 
-@my_decorator
-def say_hello():
-    print("Hello!")
-
-
 # Test case 10: Multi-line string
 long_string = """
 This is a multi-line string.
@@ -135,3 +130,14 @@ from utils.utils import (
     read_binary,
     split_docs,
 )
+
+
+@my_decorator
+def say_hello():
+    print("Hello!")
+
+
+@something.remote
+def my_task(n):
+    time.sleep(1)
+    return n * n
