@@ -1,3 +1,8 @@
+# Function to unset DOCKER_HOST
+unset_docker_host() {
+    unset DOCKER_HOST
+}
+
 # Install and setup Colima only on macOS
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # Install Colima
@@ -42,6 +47,7 @@ else
         fi
     }
 
-    # Call the function to ensure Docker is running
+    # Call the function to ensure Docker is running and unset DOCKER_HOST
     ensure_docker_running
+    unset_docker_host
 fi
