@@ -1,0 +1,6 @@
+keybinding:
+  universal:
+    prevBlock: "<c-p>"
+    prevBlock-alt: "<left>"
+    nextBlock: "<c-n>"
+    nextBlock-alt: "<right>"
