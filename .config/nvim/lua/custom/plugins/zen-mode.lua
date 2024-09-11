@@ -1,0 +1,68 @@
+-- File: ~/.config/nvim/lua/plugins/zen-mode.lua
+
+return {
+  -- 'folke/zen-mode.nvim',
+  -- lazy = true,
+  -- opts = {
+  --   window = {
+  --     backdrop = 0.95,
+  --     width = 120,
+  --     height = 1,
+  --     options = {
+  --       -- Uncomment any of these options to apply them
+  --       -- signcolumn = "no",
+  --       -- number = false,
+  --       -- relativenumber = false,
+  --       -- cursorline = false,
+  --       -- cursorcolumn = false,
+  --       -- foldcolumn = "0",
+  --       -- list = false,
+  --     },
+  --   },
+  --   plugins = {
+  --     options = {
+  --       enabled = true,
+  --       ruler = false,
+  --       showcmd = false,
+  --       laststatus = 0,
+  --     },
+  --     twilight = { enabled = true },
+  --     gitsigns = { enabled = false },
+  --     tmux = { enabled = false },
+  --     kitty = {
+  --       enabled = false,
+  --       font = '+4',
+  --     },
+  --     alacritty = {
+  --       enabled = false,
+  --       font = '14',
+  --     },
+  --     wezterm = {
+  --       enabled = false,
+  --       font = '+4',
+  --     },
+  --     neovide = {
+  --       enabled = false,
+  --       scale = 1.2,
+  --       disable_animations = {
+  --         neovide_animation_length = 0,
+  --         neovide_cursor_animate_command_line = false,
+  --         neovide_scroll_animation_length = 0,
+  --         neovide_position_animation_length = 0,
+  --         neovide_cursor_animation_length = 0,
+  --         neovide_cursor_vfx_mode = '',
+  --       },
+  --     },
+  --   },
+  --   -- Callbacks
+  --   on_open = function(win)
+  --     -- Add any custom code to run when Zen Mode opens
+  --   end,
+  --   on_close = function()
+  --     -- Add any custom code to run when Zen Mode closes
+  --   end,
+  -- },
+  -- keys = {
+  --   { '<leader>z', '<cmd>ZenMode<cr>', desc = 'Toggle Zen Mode' },
+  -- },
+}
