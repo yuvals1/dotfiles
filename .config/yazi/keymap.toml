@@ -155,6 +155,7 @@ keymap = [
 	{on   = ["F", "y"], run = "plugin yank-selected-content", desc = "Yank the content of the selected file"},
 	{on   = ["F", "d"], run = "plugin diff", desc = "Diff the selected files"},
 	{on   = ["F", "t"], run = "plugin tree-to-clipboard", desc = "Copy the tree of the selected directory to the clipboard"},
+	{on   = "T", run = "plugin --sync max-preview", desc = "maximize or restore the preview"},
 	# {on   = ["F", "g"], run = "plugin my-debug-selected", desc = "Yank the content of the selected files"},
 	# {on   = ["F", "f"], run = "plugin my-debug", desc = "debug the current location"},
 
