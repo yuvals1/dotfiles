@@ -19,6 +19,20 @@ return {
     vim.api.nvim_create_user_command('IronCleanSigns', execution_tracker.clean_execution_marks, {})
     vim.api.nvim_create_user_command('IronClearAndRestart', repl.clear_and_restart, {})
 
+    -- Add a new configuration option
+    vim.g.iron_repl_position = vim.g.iron_repl_position or 'right' -- Default to right
+
+    -- Add a command to toggle REPL position
+    vim.api.nvim_create_user_command('IronToggleREPLPosition', function()
+      if vim.g.iron_repl_position == 'right' then
+        vim.g.iron_repl_position = 'bottom'
+        print 'REPL position set to bottom'
+      else
+        vim.g.iron_repl_position = 'right'
+        print 'REPL position set to right'
+      end
+    end, {})
+
     iron.setup {
       config = {
         scratch_repl = true,

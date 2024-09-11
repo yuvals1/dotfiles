@@ -12,8 +12,18 @@ local highlight_timer = nil
 local current_highlight_ns = nil
 
 M.custom_repl_open_cmd = function(bufnr)
-  local width = math.floor(vim.o.columns * 0.3)
-  vim.cmd('silent! botright vertical ' .. width .. 'split')
+  local position = vim.g.iron_repl_position
+  local cmd
+
+  if position == 'bottom' then
+    local height = math.floor(vim.o.lines * 0.2)
+    cmd = 'silent! botright ' .. height .. 'split'
+  else
+    local width = math.floor(vim.o.columns * 0.3)
+    cmd = 'silent! botright vertical ' .. width .. 'split'
+  end
+
+  vim.cmd(cmd)
   vim.api.nvim_win_set_buf(0, bufnr)
   local win = vim.api.nvim_get_current_win()
   vim.wo[win].number = false
