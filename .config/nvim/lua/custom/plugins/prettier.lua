@@ -17,7 +17,7 @@ return {
   },
   config = function()
     -- Enable auto formatting on save
-    vim.g['prettier#autoformat'] = 1
+    vim.g['prettier#autoformat'] = 0
     vim.g['prettier#autoformat_require_pragma'] = 0
 
     -- Set Prettier CLI options
