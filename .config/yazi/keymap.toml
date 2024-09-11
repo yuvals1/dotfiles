@@ -71,7 +71,7 @@ keymap = [
   { on = "-", run = "link", desc = "Symlink the absolute path of yanked files" },
   { on = "_", run = "link --relative", desc = "Symlink the relative path of yanked files" },
   { on = "<C-->", run = "hardlink", desc = "Hardlink yanked files" },
-  { on = "Y", run = "unyank", desc = "Cancel the yank status" },
+  # { on = "Y", run = "unyank", desc = "Cancel the yank status" },
   { on = "X", run = "unyank", desc = "Cancel the yank status" },
   { on = "d", run = "remove", desc = "Trash selected files" },
   { on = "D", run = "remove --permanently", desc = "Permanently delete selected files" },
@@ -137,6 +137,7 @@ keymap = [
   # Filter
   # { on = "f", run = "filter --smart", desc = "Filter files" },
   { on = "f", run = "plugin jump-to-char", desc = "Jump to a character" },
+  { on = "F", run = "plugin smart-filter", desc = "Smart filter" },
 
   # Find
   { on = "/", run = "find --smart", desc = "Find next file" },
@@ -260,29 +261,26 @@ keymap = [
   { on = "~", run = "help", desc = "Open help" },
   { on = "<F1>", run = "help", desc = "Open help" },
   { on = [
-    "F",
+    "Y",
     "f",
   ], run = "plugin yank-dir-content", desc = "Yank the content of the selected directory" },
   { on = [
-    "F",
+    "Y",
     "u",
   ], run = "plugin yank-file", desc = "Yank the content of the selected directory" },
   { on = [
-    "F",
+    "Y",
     "y",
   ], run = "plugin yank-selected-content", desc = "Yank the content of the selected file" },
   { on = [
-    "F",
+    "Y",
     "d",
   ], run = "plugin diff", desc = "Diff the selected files" },
   { on = [
-    "F",
+    "Y",
     "t",
   ], run = "plugin tree-to-clipboard", desc = "Copy the tree of the selected directory to the clipboard" },
   { on = "T", run = "plugin --sync max-preview", desc = "maximize or restore the preview" },
-  # {on   = ["F", "g"], run = "plugin my-debug-selected", desc = "Yank the content of the selected files"},
-  # {on   = ["F", "f"], run = "plugin my-debug", desc = "debug the current location"},
-
 ]
 
 [tasks]
