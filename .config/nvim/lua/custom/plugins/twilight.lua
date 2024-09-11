@@ -21,6 +21,19 @@ return {
       'if_statement',
     },
     exclude = {}, -- exclude these filetypes
+
+    -- Additional options:
+    alt_mode = 'all', -- alternatives: 'cursor', 'all'. When cursor, only the focused line is dimmed
+    sync_git_blame = false, -- when true, the dimming will be synchronized with git blame information
+    before = {}, -- table of lua functions to run before twilight starts
+    after = {}, -- table of lua functions to run after twilight ends
+    ignore = {}, -- list of file types to ignore (e.g., {"help", "NvimTree"})
+    disable_diagnostics = false, -- when true, LSP and other diagnostics will be disabled in dimmed regions
+    disable_telescope = false, -- when true, Telescope will be disabled in dimmed regions
+    disable_git_blame = false, -- when true, git blame will be disabled in dimmed regions
+    disable_cmp = false, -- when true, nvim-cmp will be disabled in dimmed regions
+    disable_lsp = false, -- when true, LSP will be disabled in dimmed regions
+    disable_treesitter = false, -- when true, TreeSitter will be disabled in dimmed regions
   },
   keys = {
     { '<leader>tt', '<cmd>Twilight<cr>', desc = 'Toggle Twilight' },
