@@ -111,6 +111,10 @@ keymap = [
     "m",
     "n",
   ], run = "linemode none", desc = "Set linemode to none" },
+  { on = [
+    "m",
+    "x",
+  ], run = "plugin chmod", desc = "chmod the selected files" },
 
   # Copy
   { on = [
