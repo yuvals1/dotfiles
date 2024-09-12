@@ -33,6 +33,7 @@ local function get_language(file)
 			sql = "sql",
 			xml = "xml",
 			rs = "rst",
+			go = "go",
 			-- Add more as needed
 		}
 		return extensions[ext]
