@@ -32,7 +32,7 @@ local function get_language(file)
 			zsh = "bash",
 			sql = "sql",
 			xml = "xml",
-			rst = "rst",
+			rs = "rst",
 			-- Add more as needed
 		}
 		return extensions[ext]

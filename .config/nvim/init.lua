@@ -899,6 +899,7 @@ require('lazy').setup({
         'javascript',
         'python',
         'toml',
+        'rust',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
