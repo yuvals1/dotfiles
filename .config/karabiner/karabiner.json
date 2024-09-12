@@ -437,7 +437,7 @@
               {
                 "type": "basic",
                 "from": {
-                  "key_code": "b",
+                  "key_code": "s",
                   "modifiers": {
                     "mandatory": [
                       "control",
