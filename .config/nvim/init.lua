@@ -1032,3 +1032,8 @@ vim.api.nvim_create_user_command('GoToFile', go_to_file, {})
 
 -- Map the function to gf
 vim.api.nvim_set_keymap('n', 'gf', ':GoToFile<CR>', { noremap = true, silent = true })
+
+vim.cmd [[
+  autocmd VimEnter * silent !/Library/Application\ Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli --set-variables '{"nvim_mode":1}'
+  autocmd VimLeave * silent !/Library/Application\ Support/org.pqrs/Karabiner-Elements/bin/karabiner_cli --set-variables '{"nvim_mode":0}'
+]]

@@ -489,6 +489,13 @@
                   {
                     "key_code": "down_arrow"
                   }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "nvim_mode",
+                    "value": 0
+                  }
                 ]
               },
               {
@@ -507,6 +514,13 @@
                 "to": [
                   {
                     "key_code": "up_arrow"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "nvim_mode",
+                    "value": 0
                   }
                 ]
               },
