@@ -119,7 +119,7 @@ return {
 		end
 
 		local common_prefix = get_common_prefix(selected_files)
-		local content = "# Common prefix: " .. common_prefix .. "\n\n"
+		local content = "# base path: " .. common_prefix .. "\n\n"
 		local error_messages = {}
 		local file_count = 0
 		local total_lines = 0
