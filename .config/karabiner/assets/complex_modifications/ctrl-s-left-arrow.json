@@ -1,0 +1,29 @@
+{
+  "title": "Ctrl+S to Left Arrow",
+  "rules": [
+    {
+      "description": "Ctrl+S to Left Arrow",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "s",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

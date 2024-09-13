@@ -1,0 +1,26 @@
+{
+	"title": "Caps Lock to Ctrl",
+	"rules": [
+		{
+			"description": "Caps Lock to Ctrl",
+			"manipulators": [
+				{
+					"from": {
+						"key_code": "caps_lock",
+						"modifiers": {
+							"optional": [
+								"any"
+							]
+						}
+					},
+					"to": [
+						{
+							"key_code": "left_control"
+						}
+					],
+					"type": "basic"
+				}
+			]
+		}
+	]
+}
