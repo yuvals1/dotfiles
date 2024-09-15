@@ -1,5 +1,4 @@
 local M = {}
-
 M.setup = function()
   vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -7,7 +6,6 @@ M.setup = function()
       local map = function(keys, func, desc)
         vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
       end
-
       map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
       map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
       map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -28,7 +26,6 @@ M.setup = function()
       if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
         require('custom.plugins.lsp.highlight').setup(event)
       end
-
       if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
         map('<leader>th', function()
           vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
@@ -37,5 +34,4 @@ M.setup = function()
     end,
   })
 end
-
 return M
