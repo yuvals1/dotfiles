@@ -1,3 +1,6 @@
+-- Load options
+require("options")
+
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = " "
 
