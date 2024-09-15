@@ -143,3 +143,25 @@ yank-line-to-clipboard() {
 }
 zle -N yank-line-to-clipboard
 
+# rename files with hyphens to underscores
+rename_hyphens_to_underscores() {
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: rename_hyphens_to_underscores <filename>"
+        return 1
+    fi
+
+    local old_name="$1"
+    local new_name="${old_name//-/_}"
+
+    if [[ "$old_name" == "$new_name" ]]; then
+        echo "No changes needed for $old_name"
+        return 0
+    fi
+
+    mv -i "$old_name" "$new_name"
+    echo "Renamed: $old_name -> $new_name"
+}
+
+alias rhu='rename_hyphens_to_underscores'
+
+
