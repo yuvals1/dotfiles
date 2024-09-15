@@ -18,6 +18,12 @@ M.setup = function()
       map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
       map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+      -- New mappings
+      map('d]', vim.diagnostic.goto_next, 'Go to next diagnostic')
+      map('d[', vim.diagnostic.goto_prev, 'Go to prev diagnostic')
+      map('d/', vim.diagnostic.setloclist, 'Send diagnostics to loc list')
+      map('de', vim.diagnostic.open_float, 'Show diagnostic in floating window')
+
       local client = vim.lsp.get_client_by_id(event.data.client_id)
       if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
         require('custom.plugins.lsp.highlight').setup(event)
