@@ -1,6 +1,6 @@
 -- adding the first 7 lines the first 7 lines to the original repro.lua file makes yazi bugs appear
 -- Prepend your custom config directory to the runtime path
-vim.opt.runtimepath:prepend '/Users/yuvals1/dotfiles/.config/new-nvim'
+vim.opt.runtimepath:prepend '/Users/yuvals1/dotfiles/.config/nvim'
 
 -- Adjust Lua's package.path
 local lua_path = '/Users/yuvals1/dotfiles/.config/new-nvim/lua/?.lua'
@@ -8,7 +8,7 @@ local lua_path_init = '/Users/yuvals1/dotfiles/.config/new-nvim/lua/?/init.lua'
 package.path = package.path .. ';' .. lua_path .. ';' .. lua_path_init
 
 -- Load custom configurations
-require 'custom.configs'
+require 'custom.config'
 
 -- Original repro.lua content starts here
 local root = vim.fn.fnamemodify('./.repro', ':p')
