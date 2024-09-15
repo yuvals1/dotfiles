@@ -54,7 +54,6 @@ function M.setup()
   })
 
   vim.g.python3_host_prog = vim.fn.expand '~/.virtualenvs/neovim311/bin/python3'
-  require('custom.cursor_movement').setup()
 
   -- Open PDF files with Preview
   vim.api.nvim_create_autocmd('BufReadCmd', {
