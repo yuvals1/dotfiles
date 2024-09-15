@@ -1,6 +1,8 @@
 -- Load options
 require("options")
 require("autocmds")
+require("keymaps")
+require("file-cmds")
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = " "
