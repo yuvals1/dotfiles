@@ -60,7 +60,7 @@ zinit light junegunn/fzf
 
 # Set FZF options for default behavior and history search
 export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down   --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
-export FZF_CTRL_R_OPTS="--reverse"
+# export FZF_CTRL_R_OPTS="--reverse"
 
 # Source fzf keybindings and completion
 zinit snippet 'https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh'
