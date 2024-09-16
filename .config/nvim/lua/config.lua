@@ -4,6 +4,7 @@ require 'autocmds'
 require 'keymaps'
 require 'file-cmds'
 require 'python'
+require 'cursor-movement'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
