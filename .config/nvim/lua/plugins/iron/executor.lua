@@ -1,7 +1,6 @@
--- File: lua/custom/plugins/iron/executor.lua
-local repl = require 'custom.plugins.iron.repl'
+local repl = require 'plugins.iron.repl'
 local iron = require 'iron.core'
-local execution_tracker = require 'custom.plugins.iron.execution_tracker'
+local execution_tracker = require 'plugins.iron.execution_tracker'
 
 local M = {}
 
@@ -38,7 +37,7 @@ end
 -- Helper function to execute Python extractor
 local function execute_python_extractor(line_number, command)
   local python_path = vim.g.python3_host_prog
-  local script_path = vim.fn.expand '~/.config/nvim/lua/custom/plugins/iron/code_block_extractor.py'
+  local script_path = vim.fn.expand '~/.config/nvim/lua/plugins/iron/code_block_extractor.py'
 
   if vim.fn.filereadable(script_path) == 0 then
     vim.api.nvim_echo({ { string.format('Error: Script not found at %s', script_path), 'ErrorMsg' } }, false, {})

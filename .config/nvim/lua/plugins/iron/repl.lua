@@ -1,6 +1,6 @@
--- File: lua/custom/plugins/iron/repl.lua
+-- File: lua/plugins/iron/repl.lua
 local iron_core = require 'iron.core'
-local execution_tracker = require 'custom.plugins.iron.execution_tracker'
+local execution_tracker = require 'plugins.iron.execution_tracker'
 
 local M = {}
 

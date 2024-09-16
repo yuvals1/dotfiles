@@ -1,4 +1,4 @@
--- File: lua/custom/plugins/iron/init.lua
+-- File: lua/plugins/iron/init.lua
 
 return {
   'Vigemus/iron.nvim',
@@ -8,11 +8,11 @@ return {
     local view = require 'iron.view'
     local fts = require 'iron.fts'
 
-    local repl = require 'custom.plugins.iron.repl'
-    local executor = require 'custom.plugins.iron.executor'
-    local keymaps = require 'custom.plugins.iron.keymaps'
-    local autocmds = require 'custom.plugins.iron.autocmds'
-    local execution_tracker = require 'custom.plugins.iron.execution_tracker'
+    local repl = require 'plugins.iron.repl'
+    local executor = require 'plugins.iron.executor'
+    local keymaps = require 'plugins.iron.keymaps'
+    local autocmds = require 'plugins.iron.autocmds'
+    local execution_tracker = require 'plugins.iron.execution_tracker'
 
     vim.api.nvim_command 'highlight IronExecutedSign guifg=#2ecc71'
 
