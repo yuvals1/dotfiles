@@ -3,7 +3,7 @@ local M = {}
 M.setup = function()
   require('mason').setup()
 
-  local ensure_installed = vim.tbl_keys(require('custom.plugins.lsp.servers').servers or {})
+  local ensure_installed = vim.tbl_keys(require('plugins.lsp.servers').servers or {})
   vim.list_extend(ensure_installed, {
     'stylua',
   })
@@ -12,7 +12,7 @@ M.setup = function()
   require('mason-lspconfig').setup {
     handlers = {
       function(server_name)
-        local server = require('custom.plugins.lsp.servers').servers[server_name] or {}
+        local server = require('plugins.lsp.servers').servers[server_name] or {}
         require('lspconfig')[server_name].setup(server)
       end,
     },
