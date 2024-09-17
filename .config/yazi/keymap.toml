@@ -519,3 +519,8 @@ desc = "Tag selected files with orange"
 on = ["b", "O"]
 run = 'plugin mactag --args="remove Orange"'
 desc = "Remove orange tag from selected files"
+
+[[manager.prepend_keymap]]
+on = "R"
+run = "plugin rsync"
+desc = "Copy files using rsync"
