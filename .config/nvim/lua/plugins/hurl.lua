@@ -38,8 +38,21 @@ return {
     },
     keys = {
       -- Run API request
-      { '<leader>A', '<cmd>HurlRunner<CR>', desc = 'Run All requests' },
-      { '<leader>a', '<cmd>HurlRunnerAt<CR>', desc = 'Run Api request' },
+      {
+        '<leader>a',
+        function()
+          vim.cmd 'HurlRunnerAt --file-root /Users/yuvals1/data'
+        end,
+        desc = 'Run Api request',
+      },
+      {
+        '<leader>A',
+        function()
+          vim.cmd 'HurlRunner --file-root /Users/yuvals1/data'
+        end,
+        desc = 'Run All requests',
+      },
+
       { '<leader>te', '<cmd>HurlRunnerToEntry<CR>', desc = 'Run Api request to entry' },
       { '<leader>tm', '<cmd>HurlToggleMode<CR>', desc = 'Hurl Toggle Mode' },
       { '<leader>tv', '<cmd>HurlVerbose<CR>', desc = 'Run Api in verbose mode' },
