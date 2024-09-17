@@ -1,5 +1,4 @@
 return { -- Autoformat
-
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
   cmd = { 'ConformInfo' },
@@ -30,10 +29,28 @@ return { -- Autoformat
       -- Conform can also run multiple formatters sequentially
       python = { 'isort', 'black' },
       toml = { 'taplo' }, -- Add this line for TOML formatting
-
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+    },
+    -- Add the new formatting rules here
+    formatters = {
+      stylua = {
+        prepend_args = {
+          '--column-width',
+          '160',
+          '--line-endings',
+          'Unix',
+          '--indent-type',
+          'Spaces',
+          '--indent-width',
+          '2',
+          '--quote-style',
+          'AutoPreferSingle',
+          '--call-parentheses',
+          'None',
+        },
+      },
     },
   },
 }
