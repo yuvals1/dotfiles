@@ -12,3 +12,4 @@ require('mactag'):setup {
     Gray = '#b5b5b9',
   },
 }
+require('starship'):setup()
