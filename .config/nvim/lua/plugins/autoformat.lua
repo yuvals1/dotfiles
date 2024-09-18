@@ -31,6 +31,16 @@ return { -- Autoformat
       toml = { 'taplo' },
       -- Add Makefile formatting
       make = { 'checkmake' },
+      -- Add TypeScript and JavaScript formatting with Prettier
+      typescript = { 'prettier' },
+      javascript = { 'prettier' },
+      typescriptreact = { 'prettier' },
+      javascriptreact = { 'prettier' },
+      json = { 'prettier' },
+      html = { 'prettier' },
+      css = { 'prettier' },
+      scss = { 'prettier' },
+      markdown = { 'prettier' },
     },
     -- Add the new formatting rules here
     formatters = {
@@ -55,6 +65,20 @@ return { -- Autoformat
         command = 'checkmake',
         args = { "--format='{line}:{col} {severity}: {message}'" },
         stdin = false,
+      },
+      -- Add Prettier configuration
+      prettier = {
+        command = 'prettier',
+        args = {
+          '--stdin-filepath',
+          '$FILENAME',
+          '--single-quote',
+          '--trailing-comma',
+          'es5',
+          '--print-width',
+          '100',
+        },
+        stdin = true,
       },
     },
   },
