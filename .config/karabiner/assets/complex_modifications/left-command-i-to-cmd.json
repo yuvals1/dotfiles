@@ -1,0 +1,25 @@
+{
+  "title": "Left Command+I to F12 (Inspect)",
+  "rules": [
+    {
+      "description": "Left Command+I to F12 (Inspect)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": ["left_command"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f12"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
