@@ -66,18 +66,28 @@ return { -- Autoformat
         args = { "--format='{line}:{col} {severity}: {message}'" },
         stdin = false,
       },
-      -- Add Prettier configuration
+      -- Updated Prettier configuration
       prettier = {
         command = 'prettier',
-        args = {
-          '--stdin-filepath',
-          '$FILENAME',
-          '--single-quote',
-          '--trailing-comma',
-          'es5',
-          '--print-width',
-          '100',
-        },
+        args = function(self, ctx)
+          local args = { '--stdin-filepath', '$FILENAME' }
+          -- Check if .prettierrc exists in the project root
+          local prettier_config = vim.fn.findfile('.prettierrc', vim.fn.getcwd() .. ';')
+          if prettier_config ~= '' then
+            table.insert(args, '--config')
+            table.insert(args, prettier_config)
+          else
+            -- Fallback to default options if .prettierrc is not found
+            vim.list_extend(args, {
+              '--single-quote',
+              '--trailing-comma',
+              'es5',
+              '--print-width',
+              '130',
+            })
+          end
+          return args
+        end,
         stdin = true,
       },
     },
