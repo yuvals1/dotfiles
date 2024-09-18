@@ -6,13 +6,20 @@ alias gdshow='git diff'
 alias gdscopy='git diff --staged | pbcopy'
 alias gdsshow='git diff --staged'
 gdpcopy() {
-  local commits=${1:-1}
-  git diff HEAD~$commits HEAD | pbcopy
-  echo "Copied diff of last $commits commit(s) to clipboard"
+  if [ $# -eq 0 ]; then
+    git diff HEAD~1 HEAD | pbcopy
+    echo "Copied diff of the last commit to clipboard"
+  else
+    git diff HEAD~$1 HEAD | pbcopy
+    echo "Copied diff of last $1 commit(s) to clipboard"
+  fi
 }
 gdpshow() {
-  local commits=${1:-1}
-  git diff HEAD~$commits HEAD
+  if [ $# -eq 0 ]; then
+    git diff HEAD~1 HEAD
+  else
+    git diff HEAD~$1 HEAD
+  fi
 }
 
 # Changed files names utilities
@@ -21,13 +28,20 @@ alias gfshow='git diff --name-only'
 alias gfscopy='git diff --staged --name-only | pbcopy'
 alias gfsshow='git diff --staged --name-only'
 gfpcopy() {
-  local commits=${1:-1}
-  git diff --name-only HEAD~$commits HEAD | pbcopy
-  echo "Copied names of files changed in last $commits commit(s) to clipboard"
+  if [ $# -eq 0 ]; then
+    git diff --name-only HEAD~1 HEAD | pbcopy
+    echo "Copied names of files changed in the last commit to clipboard"
+  else
+    git diff --name-only HEAD~$1 HEAD | pbcopy
+    echo "Copied names of files changed in last $1 commit(s) to clipboard"
+  fi
 }
 gfpshow() {
-  local commits=${1:-1}
-  git diff --name-only HEAD~$commits HEAD
+  if [ $# -eq 0 ]; then
+    git diff --name-only HEAD~1 HEAD
+  else
+    git diff --name-only HEAD~$1 HEAD
+  fi
 }
 
 # Full content of changed files utilities
@@ -46,11 +60,18 @@ gcsshow() {
   git diff --staged --name-only | xargs cat
 }
 gcpcopy() {
-  local commits=${1:-1}
-  git diff --name-only HEAD~$commits HEAD | xargs cat | pbcopy
-  echo "Copied content of files changed in last $commits commit(s) to clipboard"
+  if [ $# -eq 0 ]; then
+    git diff --name-only HEAD~1 HEAD | xargs cat | pbcopy
+    echo "Copied content of files changed in the last commit to clipboard"
+  else
+    git diff --name-only HEAD~$1 HEAD | xargs cat | pbcopy
+    echo "Copied content of files changed in last $1 commit(s) to clipboard"
+  fi
 }
 gcpshow() {
-  local commits=${1:-1}
-  git diff --name-only HEAD~$commits HEAD | xargs cat
+  if [ $# -eq 0 ]; then
+    git diff --name-only HEAD~1 HEAD | xargs cat
+  else
+    git diff --name-only HEAD~$1 HEAD | xargs cat
+  fi
 }
