@@ -12,8 +12,11 @@ alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
 alias gpr='f() { git checkout $(git rev-list -n 1 --grep="#$1" HEAD) }; f'
 alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
-# Add this to your .zshrc file
+# git diff to clipboard
 alias gdcopy='git diff | pbcopy'
-
-# Optional: alias for copying staged changes
 alias gdscopy='git diff --staged | pbcopy'
+gdpcopy() {
+  local commits=${1:-1}
+  git diff HEAD~$commits HEAD | pbcopy
+  echo "Copied diff of last $commits commit(s) to clipboard"
+}
