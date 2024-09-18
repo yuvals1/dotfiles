@@ -31,6 +31,11 @@ M.setup = function()
           vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
         end, '[T]oggle Inlay [H]ints')
       end
+      vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+          vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf, silent = true })
+        end,
+      })
     end,
   })
 end
