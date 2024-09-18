@@ -17,7 +17,10 @@ local function get_language(file)
 		ext = ext:lower()
 		local extensions = {
 			py = "python",
+			ts = "typescript",
+			tsx = "typescript",
 			js = "javascript",
+			jsx = "javascript",
 			html = "html",
 			css = "css",
 			lua = "lua",
