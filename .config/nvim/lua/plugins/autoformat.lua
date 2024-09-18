@@ -28,10 +28,9 @@ return { -- Autoformat
       lua = { 'stylua' },
       -- Conform can also run multiple formatters sequentially
       python = { 'isort', 'black' },
-      toml = { 'taplo' }, -- Add this line for TOML formatting
-      --
-      -- You can use 'stop_after_first' to run the first available formatter from the list
-      -- javascript = { "prettierd", "prettier", stop_after_first = true },
+      toml = { 'taplo' },
+      -- Add Makefile formatting
+      make = { 'checkmake' },
     },
     -- Add the new formatting rules here
     formatters = {
@@ -50,6 +49,12 @@ return { -- Autoformat
           '--call-parentheses',
           'None',
         },
+      },
+      -- Add checkmake configuration
+      checkmake = {
+        command = 'checkmake',
+        args = { "--format='{line}:{col} {severity}: {message}'" },
+        stdin = false,
       },
     },
   },
