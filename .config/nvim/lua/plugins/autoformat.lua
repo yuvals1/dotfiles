@@ -37,6 +37,7 @@ return { -- Autoformat
       typescriptreact = { 'prettier' },
       javascriptreact = { 'prettier' },
       json = { 'prettier' },
+      jsonc = { 'prettier' },
       html = { 'prettier' },
       css = { 'prettier' },
       scss = { 'prettier' },
@@ -86,6 +87,13 @@ return { -- Autoformat
               '130',
             })
           end
+
+          -- Add parser for JSON files
+          if ctx.filename:match '%.json$' then
+            table.insert(args, '--parser')
+            table.insert(args, 'json')
+          end
+
           return args
         end,
         stdin = true,
