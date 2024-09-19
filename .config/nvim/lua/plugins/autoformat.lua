@@ -26,12 +26,10 @@ return { -- Autoformat
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- Conform can also run multiple formatters sequentially
+      -- Update Python formatting to use isort and black
       python = { 'isort', 'black' },
       toml = { 'taplo' },
-      -- Add Makefile formatting
       make = { 'checkmake' },
-      -- Add TypeScript and JavaScript formatting with Prettier
       typescript = { 'prettier' },
       javascript = { 'prettier' },
       typescriptreact = { 'prettier' },
@@ -43,7 +41,6 @@ return { -- Autoformat
       scss = { 'prettier' },
       markdown = { 'prettier' },
     },
-    -- Add the new formatting rules here
     formatters = {
       stylua = {
         prepend_args = {
@@ -61,24 +58,20 @@ return { -- Autoformat
           'None',
         },
       },
-      -- Add checkmake configuration
       checkmake = {
         command = 'checkmake',
         args = { "--format='{line}:{col} {severity}: {message}'" },
         stdin = false,
       },
-      -- Updated Prettier configuration
       prettier = {
         command = 'prettier',
         args = function(self, ctx)
           local args = { '--stdin-filepath', '$FILENAME' }
-          -- Check if .prettierrc exists in the project root
           local prettier_config = vim.fn.findfile('.prettierrc', vim.fn.getcwd() .. ';')
           if prettier_config ~= '' then
             table.insert(args, '--config')
             table.insert(args, prettier_config)
           else
-            -- Fallback to default options if .prettierrc is not found
             vim.list_extend(args, {
               '--single-quote',
               '--trailing-comma',
@@ -87,13 +80,54 @@ return { -- Autoformat
               '130',
             })
           end
-
-          -- Add parser for JSON files
           if ctx.filename:match '%.json$' then
             table.insert(args, '--parser')
             table.insert(args, 'json')
           end
-
+          return args
+        end,
+        stdin = true,
+      },
+      -- Add black configuration
+      black = {
+        command = 'black',
+        args = function(self, ctx)
+          local args = { '--quiet', '-' }
+          -- Check for pyproject.toml in the project root
+          local pyproject = vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';')
+          if pyproject ~= '' then
+            table.insert(args, '--config')
+            table.insert(args, pyproject)
+          else
+            -- Fallback to default options if pyproject.toml is not found
+            table.insert(args, '--line-length')
+            table.insert(args, '100')
+          end
+          return args
+        end,
+        stdin = true,
+      },
+      -- Add isort configuration
+      isort = {
+        command = 'isort',
+        args = function(self, ctx)
+          local args = { '--quiet', '-' }
+          -- Check for .isort.cfg or pyproject.toml in the project root
+          local isort_config = vim.fn.findfile('.isort.cfg', vim.fn.getcwd() .. ';')
+          local pyproject = vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';')
+          if isort_config ~= '' then
+            table.insert(args, '--settings-file')
+            table.insert(args, isort_config)
+          elseif pyproject ~= '' then
+            table.insert(args, '--settings-file')
+            table.insert(args, pyproject)
+          else
+            -- Fallback to default options if no config is found
+            table.insert(args, '--profile')
+            table.insert(args, 'black')
+            table.insert(args, '--line-length')
+            table.insert(args, '100')
+          end
           return args
         end,
         stdin = true,
