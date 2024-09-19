@@ -121,6 +121,27 @@
           ]
         }
       ]
+    },
+    {
+      "description": "Ctrl+' to Shift+Enter",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "return_or_enter",
+              "modifiers": ["shift"]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
