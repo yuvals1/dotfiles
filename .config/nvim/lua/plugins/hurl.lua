@@ -39,14 +39,14 @@ return {
     keys = {
       -- Run API request
       {
-        '<leader>a',
+        '<leader>a1',
         function()
           vim.cmd 'HurlRunnerAt --file-root /Users/yuvals1/data'
         end,
         desc = 'Run Api request',
       },
       {
-        '<leader>A',
+        '<leader>a2',
         function()
           vim.cmd 'HurlRunner --file-root /Users/yuvals1/data'
         end,
