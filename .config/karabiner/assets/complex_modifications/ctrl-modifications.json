@@ -9,12 +9,8 @@
           "from": {
             "key_code": "semicolon",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [
@@ -33,12 +29,8 @@
           "from": {
             "key_code": "comma",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [
@@ -57,12 +49,8 @@
           "from": {
             "key_code": "period",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [
@@ -81,12 +69,8 @@
           "from": {
             "key_code": "slash",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [
@@ -105,20 +89,14 @@
           "from": {
             "key_code": "w",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "delete_or_backspace",
-              "modifiers": [
-                "option"
-              ]
+              "modifiers": ["option"]
             }
           ]
         }
@@ -132,12 +110,8 @@
           "from": {
             "key_code": "m",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [

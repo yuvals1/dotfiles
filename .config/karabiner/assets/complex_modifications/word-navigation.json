@@ -9,31 +9,20 @@
           "from": {
             "key_code": "f",
             "modifiers": {
-              "mandatory": [
-                "control",
-                "shift"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "f",
-              "modifiers": [
-                "command"
-              ]
+              "modifiers": ["command"]
             }
           ],
           "conditions": [
             {
               "type": "frontmost_application_if",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
+              "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$", "^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
             }
           ]
         },
@@ -42,31 +31,20 @@
           "from": {
             "key_code": "f",
             "modifiers": {
-              "mandatory": [
-                "control",
-                "shift"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "right_arrow",
-              "modifiers": [
-                "option"
-              ]
+              "modifiers": ["option"]
             }
           ],
           "conditions": [
             {
               "type": "frontmost_application_unless",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
+              "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$", "^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
             }
           ]
         }
@@ -80,31 +58,20 @@
           "from": {
             "key_code": "b",
             "modifiers": {
-              "mandatory": [
-                "control",
-                "shift"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "b",
-              "modifiers": [
-                "command"
-              ]
+              "modifiers": ["command"]
             }
           ],
           "conditions": [
             {
               "type": "frontmost_application_if",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
+              "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$", "^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
             }
           ]
         },
@@ -113,31 +80,20 @@
           "from": {
             "key_code": "b",
             "modifiers": {
-              "mandatory": [
-                "control",
-                "shift"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "left_arrow",
-              "modifiers": [
-                "option"
-              ]
+              "modifiers": ["option"]
             }
           ],
           "conditions": [
             {
               "type": "frontmost_application_unless",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
+              "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$", "^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
             }
           ]
         }
@@ -151,31 +107,20 @@
           "from": {
             "key_code": "s",
             "modifiers": {
-              "mandatory": [
-                "control",
-                "shift"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "b",
-              "modifiers": [
-                "command"
-              ]
+              "modifiers": ["command"]
             }
           ],
           "conditions": [
             {
               "type": "frontmost_application_if",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
+              "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$", "^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
             }
           ]
         },
@@ -184,31 +129,20 @@
           "from": {
             "key_code": "s",
             "modifiers": {
-              "mandatory": [
-                "control",
-                "shift"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control", "shift"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "left_arrow",
-              "modifiers": [
-                "option"
-              ]
+              "modifiers": ["option"]
             }
           ],
           "conditions": [
             {
               "type": "frontmost_application_unless",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
+              "bundle_identifiers": ["^net\\.kovidgoyal\\.kitty$", "^com\\.apple\\.Terminal$", "^com\\.googlecode\\.iterm2$"]
             }
           ]
         }

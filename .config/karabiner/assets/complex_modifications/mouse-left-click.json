@@ -1,29 +1,25 @@
 {
-	"title": "Option+V to Left Click",
-	"rules": [
-		{
-			"description": "Option+v triggers a left mouse click",
-			"manipulators": [
-				{
-					"type": "basic",
-					"from": {
-						"key_code": "v",
-						"modifiers": {
-							"mandatory": [
-								"option"
-							],
-							"optional": [
-								"any"
-							]
-						}
-					},
-					"to": [
-						{
-							"pointing_button": "button1"
-						}
-					]
-				}
-			]
-		}
-	]
+  "title": "Option+V to Left Click",
+  "rules": [
+    {
+      "description": "Option+v triggers a left mouse click",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "v",
+            "modifiers": {
+              "mandatory": ["option"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

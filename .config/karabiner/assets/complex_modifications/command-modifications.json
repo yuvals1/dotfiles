@@ -9,20 +9,14 @@
           "from": {
             "key_code": "comma",
             "modifiers": {
-              "mandatory": [
-                "command"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["command"],
+              "optional": ["any"]
             }
           },
           "to": [
             {
               "key_code": "return_or_enter",
-              "modifiers": [
-                "shift"
-              ]
+              "modifiers": ["shift"]
             }
           ]
         }

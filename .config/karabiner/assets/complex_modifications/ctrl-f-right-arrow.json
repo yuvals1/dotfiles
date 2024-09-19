@@ -9,12 +9,8 @@
           "from": {
             "key_code": "f",
             "modifiers": {
-              "mandatory": [
-                "control"
-              ],
-              "optional": [
-                "any"
-              ]
+              "mandatory": ["control"],
+              "optional": ["any"]
             }
           },
           "to": [
