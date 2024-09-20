@@ -18,15 +18,15 @@ M.setup = function(iron, executor)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<Esc>', true, false, true), 'n', true)
   end, { noremap = true, silent = true, desc = 'Toggle REPL and switch to normal mode' })
 
-  vim.keymap.set('n', '<C-y>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
-  vim.keymap.set('n', '<CR>', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
+  -- vim.keymap.set('n', '<C-y>', executor.smart_execute, { noremap = true, silent = true, desc = 'Smart execute Python construct' })
+  vim.keymap.set('n', 'F', executor.smart_execute_and_move, { noremap = true, silent = true, desc = 'Smart execute Python construct and move' })
 
   -- New keymaps for execute file and execute until cursor
   vim.keymap.set('n', '<space>jf', executor.execute_file, { noremap = true, silent = true, desc = 'Execute entire file' })
   vim.keymap.set('n', '<leader>jj', executor.execute_until_cursor, { noremap = true, silent = true, desc = 'Execute until cursor' })
 
   -- New keymapping for clearing signs and restarting REPL
-  vim.keymap.set('n', '<C-c>', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
+  vim.keymap.set('n', '<leader>jc', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
   vim.keymap.set('n', '<leader>jr', ':IronClearAndRestart<CR>', { noremap = true, silent = true, desc = 'Clear signs and restart REPL' })
 
   vim.keymap.set('n', '<leader>wo', '<C-w>p', { noremap = true, silent = true, desc = 'Go to previous (last accessed) window' })
