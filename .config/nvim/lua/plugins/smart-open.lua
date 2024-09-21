@@ -6,7 +6,7 @@ return {
       require('telescope').load_extension 'smart_open'
 
       -- Set up the mapping
-      vim.keymap.set('n', '<leader><leader>', function()
+      vim.keymap.set('n', '<leader>so', function()
         require('telescope').extensions.smart_open.smart_open()
       end, { noremap = true, silent = true, desc = 'Smart Open' })
     end,
