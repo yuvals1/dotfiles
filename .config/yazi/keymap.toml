@@ -504,3 +504,8 @@ desc = "Rename bookmark by key"
 on = ["u", "R"]
 run = "plugin yamb --args=rename_by_fzf"
 desc = "Rename bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = "<C-t>"
+run = 'shell "$SHELL" --block --confirm'
+desc = "Open shell here"
