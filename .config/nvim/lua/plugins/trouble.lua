@@ -36,7 +36,7 @@ return {
 
     {
       '<leader>xt',
-      '<cmd>Trouble todo<cr>',
+      '<cmd>Trouble todo focus<cr>',
       desc = 'Todo (Trouble)',
     },
   },
