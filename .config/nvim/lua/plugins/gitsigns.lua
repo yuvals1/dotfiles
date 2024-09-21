@@ -17,18 +17,18 @@ return {
           vim.keymap.set(mode, l, r, opts)
         end
 
-        -- Define a function to find the hunk at the cursor
+        -- Function to find the hunk at the cursor
         local function find_hunk(lnum, hunks)
           for _, hunk in ipairs(hunks) do
-            local hunk_start = math.min(hunk.added.start, hunk.removed.start)
-            local hunk_end = math.max(hunk.added.start + hunk.added.count - 1, hunk.removed.start + hunk.removed.count - 1)
+            local hunk_start = hunk.added.start
+            local hunk_end = hunk.added.start + hunk.added.count - 1
             if lnum >= hunk_start and lnum <= hunk_end then
-              return hunk, hunk_start, hunk_end
+              return hunk
             end
           end
         end
 
-        -- Define the custom function to copy the hunk
+        -- Function to copy the hunk to the clipboard
         local function copy_hunk()
           local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
           local hunks = gitsigns.get_hunks(bufnr)
@@ -37,8 +37,9 @@ return {
             return
           end
 
-          local hunk, _, _ = find_hunk(cursor_line, hunks)
+          local hunk = find_hunk(cursor_line, hunks)
           if hunk then
+            -- Copy the hunk lines (with '+' and '-' prefixes)
             vim.fn.setreg('+', table.concat(hunk.lines, '\n'))
             print 'Hunk copied to clipboard'
           else
@@ -46,7 +47,32 @@ return {
           end
         end
 
-        -- Define the custom function to copy the full diff of the file
+        -- Function to append the hunk to the clipboard
+        local function append_hunk_to_clipboard()
+          local cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+          local hunks = gitsigns.get_hunks(bufnr)
+          if not hunks then
+            print 'No hunks available'
+            return
+          end
+
+          local hunk = find_hunk(cursor_line, hunks)
+          if hunk then
+            local hunk_text = table.concat(hunk.lines, '\n')
+            local current_clipboard = vim.fn.getreg '+'
+            if current_clipboard ~= '' then
+              current_clipboard = current_clipboard .. '\n' .. hunk_text
+            else
+              current_clipboard = hunk_text
+            end
+            vim.fn.setreg('+', current_clipboard)
+            print 'Hunk appended to clipboard'
+          else
+            print 'No hunk found at cursor position'
+          end
+        end
+
+        -- Function to copy the full diff of the file
         local function copy_file_diff()
           local filepath = vim.api.nvim_buf_get_name(bufnr)
           if filepath == '' then
@@ -93,29 +119,39 @@ return {
           print 'File diff copied to clipboard'
         end
 
+        -- Function to clear the clipboard
+        local function clear_clipboard()
+          vim.fn.setreg('+', '')
+          print 'Clipboard cleared'
+        end
+
         -- Navigation
         map('n', 'L', function()
           if vim.wo.diff then
             vim.cmd.normal { ']c', bang = true }
           else
-            gitsigns.nav_hunk 'next'
+            gitsigns.next_hunk()
           end
         end, { desc = 'Jump to next git hunk' })
         map('n', 'H', function()
           if vim.wo.diff then
             vim.cmd.normal { '[c', bang = true }
           else
-            gitsigns.nav_hunk 'prev'
+            gitsigns.prev_hunk()
           end
         end, { desc = 'Jump to previous git hunk' })
 
         -- Actions
         -- Visual mode
         map('v', '<leader>hs', function()
-          gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          local start_line = vim.fn.line 'v'
+          local end_line = vim.fn.line '.'
+          gitsigns.stage_hunk { math.min(start_line, end_line), math.max(start_line, end_line) }
         end, { desc = 'Stage git hunk' })
         map('v', '<leader>hr', function()
-          gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
+          local start_line = vim.fn.line 'v'
+          local end_line = vim.fn.line '.'
+          gitsigns.reset_hunk { math.min(start_line, end_line), math.max(start_line, end_line) }
         end, { desc = 'Reset git hunk' })
 
         -- Normal mode
@@ -130,14 +166,20 @@ return {
         map('n', '<leader>hb', gitsigns.blame_line, { desc = 'Git blame line' })
         map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Git diff against index' })
         map('n', '<leader>hD', function()
-          gitsigns.diffthis '@'
+          gitsigns.diffthis '~'
         end, { desc = 'Git diff against last commit' })
 
         -- Copy hunk to clipboard
         map('n', '<leader>hc', copy_hunk, { desc = 'Copy hunk to clipboard' })
 
+        -- Append hunk to clipboard
+        map('n', '<leader>ha', append_hunk_to_clipboard, { desc = 'Append hunk to clipboard' })
+
         -- Copy file diff to clipboard
         map('n', '<leader>hC', copy_file_diff, { desc = 'Copy file diff to clipboard' })
+
+        -- Clear clipboard
+        map('n', '<leader>hx', clear_clipboard, { desc = 'Clear clipboard' })
 
         -- Toggles
         map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = 'Toggle git blame line' })
