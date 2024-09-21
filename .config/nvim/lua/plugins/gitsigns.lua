@@ -39,7 +39,6 @@ return {
 
           local hunk = find_hunk(cursor_line, hunks)
           if hunk then
-            -- Copy the hunk lines (with '+' and '-' prefixes)
             vim.fn.setreg('+', table.concat(hunk.lines, '\n'))
             print 'Hunk copied to clipboard'
           else
@@ -81,7 +80,8 @@ return {
           end
 
           -- Get the Git root directory
-          local git_root = vim.fn.trim(vim.fn.system('git -C "' .. vim.fn.fnamemodify(filepath, ':h') .. '" rev-parse --show-toplevel'))
+          local git_root_cmd = 'git -C "' .. vim.fn.fnamemodify(filepath, ':h') .. '" rev-parse --show-toplevel'
+          local git_root = vim.fn.trim(vim.fn.system(git_root_cmd))
           if git_root == '' then
             print 'Not inside a Git repository'
             return
@@ -117,6 +117,54 @@ return {
 
           vim.fn.setreg('+', table.concat(result, '\n'))
           print 'File diff copied to clipboard'
+        end
+
+        -- Function to copy the staged diff of the file
+        local function copy_staged_diff()
+          local filepath = vim.api.nvim_buf_get_name(bufnr)
+          if filepath == '' then
+            print 'No file name available'
+            return
+          end
+
+          -- Get the Git root directory
+          local git_root_cmd = 'git -C "' .. vim.fn.fnamemodify(filepath, ':h') .. '" rev-parse --show-toplevel'
+          local git_root = vim.fn.trim(vim.fn.system(git_root_cmd))
+          if git_root == '' then
+            print 'Not inside a Git repository'
+            return
+          end
+
+          -- Get the relative path of the file to the Git root
+          local uv = vim.loop
+          local real_filepath = uv.fs_realpath(filepath)
+          local real_git_root = uv.fs_realpath(git_root)
+          if not real_filepath or not real_git_root then
+            print 'Failed to resolve paths'
+            return
+          end
+
+          if not real_filepath:find('^' .. real_git_root) then
+            print 'File is not inside the Git repository'
+            return
+          end
+
+          local relpath = real_filepath:sub(#real_git_root + 2)
+          local cmd = { 'git', '-C', real_git_root, 'diff', '--cached', '--', relpath }
+          local result = vim.fn.systemlist(cmd)
+
+          if vim.v.shell_error ~= 0 then
+            print 'Failed to get staged diff'
+            return
+          end
+
+          if #result == 0 then
+            print 'No staged changes to copy'
+            return
+          end
+
+          vim.fn.setreg('+', table.concat(result, '\n'))
+          print 'Staged diff copied to clipboard'
         end
 
         -- Function to clear the clipboard
@@ -158,7 +206,6 @@ return {
         map('n', 'M', gitsigns.stage_hunk, { desc = 'Git stage hunk' })
         map('n', 'R', gitsigns.reset_hunk, { desc = 'Git reset hunk' })
         map('n', 'P', gitsigns.preview_hunk, { desc = 'Git preview hunk' })
-        map('n', '<leader>hs', gitsigns.stage_buffer, { desc = 'Git stage buffer' })
         map('n', '<leader>hm', gitsigns.stage_buffer, { desc = 'Git stage buffer' })
         map('n', '<leader>hu', gitsigns.undo_stage_hunk, { desc = 'Git undo stage hunk' })
         map('n', '<leader>hr', gitsigns.reset_buffer, { desc = 'Git reset buffer' })
@@ -177,6 +224,9 @@ return {
 
         -- Copy file diff to clipboard
         map('n', '<leader>hC', copy_file_diff, { desc = 'Copy file diff to clipboard' })
+
+        -- Copy staged diff to clipboard
+        map('n', '<leader>hs', copy_staged_diff, { desc = 'Copy staged diff to clipboard' })
 
         -- Clear clipboard
         map('n', '<leader>hx', clear_clipboard, { desc = 'Clear clipboard' })
