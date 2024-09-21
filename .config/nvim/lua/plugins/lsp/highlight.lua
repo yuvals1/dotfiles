@@ -23,9 +23,4 @@ M.setup = function(event)
   })
 end
 
-
-
-
-
 return M
-

@@ -13,8 +13,5 @@ return {
       require('plugins.lsp.servers').setup()
       require('plugins.lsp.mason_setup').setup()
     end,
-
-
-
-  }
+  },
 }
