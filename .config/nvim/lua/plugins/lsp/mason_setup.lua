@@ -13,6 +13,11 @@ M.setup = function()
     'stylua',
     'ruff',
     'mypy',
+    'markdownlint',
+    'isort',
+    'stylua',
+    'taplo',
+    'marksman',
   })
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
   require('mason-lspconfig').setup {
