@@ -45,6 +45,54 @@ return {
             print 'No hunk found at cursor position'
           end
         end
+
+        -- Define the custom function to copy the full diff of the file
+        local function copy_file_diff()
+          local filepath = vim.api.nvim_buf_get_name(bufnr)
+          if filepath == '' then
+            print 'No file name available'
+            return
+          end
+
+          -- Get the Git root directory
+          local git_root = vim.fn.trim(vim.fn.system('git -C "' .. vim.fn.fnamemodify(filepath, ':h') .. '" rev-parse --show-toplevel'))
+          if git_root == '' then
+            print 'Not inside a Git repository'
+            return
+          end
+
+          -- Get the relative path of the file to the Git root
+          local uv = vim.loop
+          local real_filepath = uv.fs_realpath(filepath)
+          local real_git_root = uv.fs_realpath(git_root)
+          if not real_filepath or not real_git_root then
+            print 'Failed to resolve paths'
+            return
+          end
+
+          if not real_filepath:find('^' .. real_git_root) then
+            print 'File is not inside the Git repository'
+            return
+          end
+
+          local relpath = real_filepath:sub(#real_git_root + 2)
+          local cmd = { 'git', '-C', real_git_root, 'diff', '--', relpath }
+          local result = vim.fn.systemlist(cmd)
+
+          if vim.v.shell_error ~= 0 then
+            print 'Failed to get diff'
+            return
+          end
+
+          if #result == 0 then
+            print 'No changes to copy'
+            return
+          end
+
+          vim.fn.setreg('+', table.concat(result, '\n'))
+          print 'File diff copied to clipboard'
+        end
+
         -- Navigation
         map('n', 'L', function()
           if vim.wo.diff then
@@ -52,14 +100,14 @@ return {
           else
             gitsigns.nav_hunk 'next'
           end
-        end, { desc = 'Jump to next git [c]hange' })
+        end, { desc = 'Jump to next git hunk' })
         map('n', 'H', function()
           if vim.wo.diff then
             vim.cmd.normal { '[c', bang = true }
           else
             gitsigns.nav_hunk 'prev'
           end
-        end, { desc = 'Jump to previous git [c]hange' })
+        end, { desc = 'Jump to previous git hunk' })
 
         -- Actions
         -- Visual mode
@@ -87,6 +135,9 @@ return {
 
         -- Copy hunk to clipboard
         map('n', '<leader>hc', copy_hunk, { desc = 'Copy hunk to clipboard' })
+
+        -- Copy file diff to clipboard
+        map('n', '<leader>hC', copy_file_diff, { desc = 'Copy file diff to clipboard' })
 
         -- Toggles
         map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = 'Toggle git blame line' })
