@@ -1,57 +1,42 @@
 return {
-  'catppuccin/nvim',
-  name = 'catppuccin',
+  'folke/tokyonight.nvim',
+  lazy = false,
   priority = 1000,
   config = function()
-    require('catppuccin').setup {
-      flavour = 'auto', -- latte, frappe, macchiato, mocha
-      background = { -- :h background
-        light = 'latte',
-        dark = 'frappe',
-      },
-      transparent_background = false, -- disables setting the background color.
-      show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-      term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
-      dim_inactive = {
-        enabled = false, -- dims the background color of inactive window
-        shade = 'dark',
-        percentage = 0.15, -- percentage of the shade to apply to the inactive window
-      },
-      no_italic = false, -- Force no italic
-      no_bold = false, -- Force no bold
-      no_underline = false, -- Force no underline
-      styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-        comments = { 'italic' }, -- Change the style of comments
-        conditionals = { 'italic' },
-        loops = {},
+    require('tokyonight').setup {
+      -- Choose between "storm", "moon", "night", and "day"
+      style = 'storm',
+      light_style = 'day',
+      transparent = false,
+      terminal_colors = true,
+      styles = {
+        comments = { italic = true },
+        keywords = { italic = true },
         functions = {},
-        keywords = {},
-        strings = {},
         variables = {},
-        numbers = {},
-        booleans = {},
-        properties = {},
-        types = {},
-        operators = {},
-        -- miscs = {}, -- Uncomment to turn off hard-coded styles
+        sidebars = 'dark',
+        floats = 'dark',
       },
-      color_overrides = {},
-      custom_highlights = {},
-      integrations = {
+      sidebars = { 'qf', 'help' },
+      day_brightness = 0.3,
+      dim_inactive = false,
+      lualine_bold = false,
+
+      -- Remove the on_colors and on_highlights functions if you don't need them
+      -- on_colors = function(colors) end,
+      -- on_highlights = function(highlights, colors) end,
+
+      -- Plugin integrations
+      plugins = {
         cmp = true,
         gitsigns = true,
-        nvimtree = true,
+        nvim_tree = true,
         treesitter = true,
         notify = false,
-        mini = {
-          enabled = true,
-          indentscope_color = '',
-        },
-        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+        mini = true,
       },
     }
 
-    -- Your custom configurations
-    vim.cmd.colorscheme 'catppuccin'
+    vim.cmd [[colorscheme tokyonight]]
   end,
 }
