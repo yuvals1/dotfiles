@@ -10,12 +10,12 @@ end
 -- Attempt to load the main configuration
 load_module 'config'
 
--- If the above fails, try loading directly with dofile
-if not package.loaded.config then
-  local config_path = yazi_nvim_path .. '/lua/config.lua'
-  if vim.fn.filereadable(config_path) == 1 then
-    dofile(config_path)
-  else
-    print('Config file not found at: ' .. config_path)
-  end
-end
+-- -- If the above fails, try loading directly with dofile
+-- if not package.loaded.config then
+--   local config_path = yazi_nvim_path .. '/lua/config.lua'
+--   if vim.fn.filereadable(config_path) == 1 then
+--     dofile(config_path)
+--   else
+--     print('Config file not found at: ' .. config_path)
+--   end
+-- end
