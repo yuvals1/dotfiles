@@ -7,8 +7,9 @@ deps = [
   { use = "yazi-rs/plugins:chmod", rev = "549d766" },
   { use = "yazi-rs/plugins:full-border", rev = "549d766" },
   { use = "yazi-rs/plugins:smart-filter", rev = "549d766" },
-  { use = "yazi-rs/plugins:mactag", rev = "49137fe" },
-  { use = "Rolv-Apneseth/starship", rev = "20d5a4d" }, { use = "GianniBYoung/rsync", rev = "3f431aa" }, { use = "h-hg/yamb", rev = "0598b8d" },
+  { use = "Rolv-Apneseth/starship", rev = "20d5a4d" },
+  { use = "GianniBYoung/rsync", rev = "3f431aa" },
+  { use = "h-hg/yamb", rev = "0598b8d" },
 ]
 
 [flavor]
