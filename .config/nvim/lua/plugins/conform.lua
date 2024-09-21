@@ -26,8 +26,8 @@ return { -- Autoformat
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- Update Python formatting to use isort and black
-      python = { 'isort', 'black' },
+      -- Update Python formatting to use isort and ruff
+      python = { 'isort', 'ruff' },
       toml = { 'taplo' },
       make = { 'checkmake' },
       typescript = { 'prettier' },
@@ -88,11 +88,11 @@ return { -- Autoformat
         end,
         stdin = true,
       },
-      -- Add black configuration
-      black = {
-        command = 'black',
+      -- Replace black configuration with ruff configuration
+      ruff = {
+        command = 'ruff',
         args = function(self, ctx)
-          local args = { '--quiet', '-' }
+          local args = { 'format', '--stdin-filename', '$FILENAME', '-' }
           -- Check for pyproject.toml in the project root
           local pyproject = vim.fn.findfile('pyproject.toml', vim.fn.getcwd() .. ';')
           if pyproject ~= '' then
@@ -107,7 +107,7 @@ return { -- Autoformat
         end,
         stdin = true,
       },
-      -- Add isort configuration
+      -- Keep isort configuration
       isort = {
         command = 'isort',
         args = function(self, ctx)
