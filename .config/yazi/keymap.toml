@@ -471,7 +471,7 @@ run = "plugin yamb --args=save"
 desc = "Add bookmark"
 
 [[manager.prepend_keymap]]
-on = ["u", "g"]
+on = ["u", "u"]
 run = "plugin yamb --args=jump_by_key"
 desc = "Jump bookmark by key"
 
@@ -479,7 +479,7 @@ desc = "Jump bookmark by key"
 on = ["u", "G"]
 run = "plugin yamb --args=jump_by_fzf"
 desc = "Jump bookmark by fzf"
-
+#
 [[manager.prepend_keymap]]
 on = ["u", "d"]
 run = "plugin yamb --args=delete_by_key"
