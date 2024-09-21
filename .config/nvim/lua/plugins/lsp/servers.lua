@@ -1,3 +1,6 @@
+-- TODO: integrate servers and mason setup to work togheter, right there is duplicated of lsp that are defined
+-- TODO: understand the meaning of  vim.lsp.protocol.make_client_capabilities() as can be shown in https://www.reddit.com/r/neovim/comments/1f3vl5h/how_to_set_up_python_with_static_type_checking/
+
 local M = {}
 
 M.setup = function()
