@@ -11,6 +11,8 @@ M.setup = function()
     'lua-language-server',
     'jedi-language-server',
     'stylua',
+    'ruff',
+    'mypy',
   })
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
   require('mason-lspconfig').setup {
