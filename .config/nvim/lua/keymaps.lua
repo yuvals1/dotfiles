@@ -1,3 +1,6 @@
+-- Initialize a Lua table to store file paths
+local clipboard_file_paths = {}
+
 -- Yank entire file (remapped to avoid conflict)
 vim.keymap.set('n', 'yaf', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
 
@@ -8,16 +11,34 @@ local function copy_file_path_and_content()
   local file_content = table.concat(lines, '\n')
   local clipboard_content = string.format('# %s\n%s', file_path, file_content)
   vim.fn.setreg('+', clipboard_content)
+
+  -- Add the file path to the table
+  clipboard_file_paths = { file_path }
   return #lines
 end
 
 -- Function to append file path and content to clipboard
 local function append_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
+
+  -- Check if the file has already been copied
+  local already_copied = false
+  for _, path in ipairs(clipboard_file_paths) do
+    if path == file_path then
+      already_copied = true
+      break
+    end
+  end
+
+  if already_copied then
+    return 0, #vim.split(vim.fn.getreg '+', '\n'), true -- Indicate that the file was already copied
+  end
+
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local file_content = table.concat(lines, '\n')
   local clipboard_content = string.format('# %s\n%s', file_path, file_content)
   local current_clipboard = vim.fn.getreg '+'
+
   if current_clipboard == nil or current_clipboard == '' then
     -- Clipboard is empty, set the new content
     vim.fn.setreg('+', clipboard_content)
@@ -25,15 +46,19 @@ local function append_file_path_and_content()
     -- Append to existing clipboard content
     vim.fn.setreg('+', current_clipboard .. '\n\n' .. clipboard_content)
   end
-  return #lines, #vim.split(vim.fn.getreg '+', '\n')
+
+  -- Add the file path to the table
+  table.insert(clipboard_file_paths, 1, file_path)
+
+  return #lines, #vim.split(vim.fn.getreg '+', '\n'), false
 end
 
--- Updated Function to clear the clipboard
+-- Function to clear the clipboard
 local function clear_clipboard()
   local current_clipboard = vim.fn.getreg '+'
   local lines_cleared = #vim.split(current_clipboard, '\n')
 
-  -- Detect operating system
+  -- Clear the system clipboard using external commands
   local uname = vim.loop.os_uname()
   if uname.sysname == 'Darwin' then
     -- macOS
@@ -48,6 +73,9 @@ local function clear_clipboard()
     -- Unsupported OS
     vim.fn.setreg('+', ' ', 'c') -- Fallback to setting a space
   end
+
+  -- Clear the file paths register
+  clipboard_file_paths = {}
 
   return lines_cleared
 end
@@ -75,18 +103,39 @@ end
 vim.keymap.set('n', 'yac', function()
   local lines_yanked = copy_file_path_and_content()
   highlight_entire_buffer()
-  print(string.format('File path and content copied to clipboard (%d lines)', lines_yanked))
+
+  -- Build the message
+  local message = string.format('File path and content copied to clipboard (%d lines)\nFile:\n%s', lines_yanked, clipboard_file_paths[1])
+
+  -- Use vim.notify to display the message
+  vim.notify(message, vim.log.levels.INFO)
 end, { noremap = true, silent = true, desc = 'Copy file path and content to clipboard' })
 
 -- Keymap to append file path and content to clipboard
 vim.keymap.set('n', 'yaa', function()
-  local lines_added, total_lines = append_file_path_and_content()
-  highlight_entire_buffer()
-  print(string.format('File path and content appended to clipboard (%d lines added, %d lines total)', lines_added, total_lines))
+  local lines_added, total_lines, already_copied = append_file_path_and_content()
+
+  if already_copied then
+    -- Notify that the file has already been copied
+    vim.notify('This file has already been copied to the clipboard.\nFiles:\n' .. table.concat(clipboard_file_paths, '\n'), vim.log.levels.WARN)
+  else
+    highlight_entire_buffer()
+
+    -- Build the file paths message from newest to oldest
+    local file_paths_message = table.concat(clipboard_file_paths, '\n')
+
+    -- Build the full message
+    local message =
+      string.format('File path and content appended to clipboard (%d lines added, %d lines total)\nFiles:\n%s', lines_added, total_lines, file_paths_message)
+
+    -- Use vim.notify to display the message
+    vim.notify(message, vim.log.levels.INFO)
+  end
 end, { noremap = true, silent = true, desc = 'Append file path and content to clipboard' })
 
 -- Keymap to clear the clipboard
 vim.keymap.set('n', 'ycc', function()
   local lines_cleared = clear_clipboard()
-  print(string.format('Clipboard cleared (%d lines)', lines_cleared))
+  -- Use vim.notify to display the message
+  vim.notify(string.format('Clipboard cleared (%d lines)', lines_cleared), vim.log.levels.INFO)
 end, { noremap = true, silent = true, desc = 'Clear clipboard' })
