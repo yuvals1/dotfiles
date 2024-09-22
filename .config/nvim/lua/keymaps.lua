@@ -28,11 +28,27 @@ local function append_file_path_and_content()
   return #lines, #vim.split(vim.fn.getreg '+', '\n')
 end
 
--- Function to clear the clipboard
+-- Updated Function to clear the clipboard
 local function clear_clipboard()
   local current_clipboard = vim.fn.getreg '+'
   local lines_cleared = #vim.split(current_clipboard, '\n')
-  vim.fn.setreg('+', '')
+
+  -- Detect operating system
+  local uname = vim.loop.os_uname()
+  if uname.sysname == 'Darwin' then
+    -- macOS
+    vim.fn.system 'pbcopy < /dev/null'
+  elseif uname.sysname == 'Linux' then
+    -- Linux
+    vim.fn.system 'xclip -selection clipboard /dev/null'
+  elseif uname.sysname == 'Windows_NT' then
+    -- Windows
+    vim.fn.system 'echo off | clip'
+  else
+    -- Unsupported OS
+    vim.fn.setreg('+', ' ', 'c') -- Fallback to setting a space
+  end
+
   return lines_cleared
 end
 
