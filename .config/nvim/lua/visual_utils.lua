@@ -25,13 +25,15 @@ end
 function M.highlight_selection()
   local ns_id = vim.api.nvim_create_namespace 'highlight_yav'
   local bufnr = vim.api.nvim_get_current_buf()
-  local start_pos = vim.api.nvim_buf_get_mark(bufnr, '<')
-  local end_pos = vim.api.nvim_buf_get_mark(bufnr, '>')
 
-  local start_line = start_pos[1] - 1 -- Convert to 0-based indexing
-  local start_col = start_pos[2]
-  local end_line = end_pos[1] - 1
-  local end_col = end_pos[2]
+  -- Get the start and end positions
+  local start_pos = vim.fn.getpos "'<"
+  local end_pos = vim.fn.getpos "'>"
+
+  local start_line = start_pos[2] - 1 -- Convert to 0-based indexing
+  local start_col = start_pos[3] - 1 -- Convert to 0-based indexing
+  local end_line = end_pos[2] - 1
+  local end_col = end_pos[3]
 
   vim.highlight.range(bufnr, ns_id, 'IncSearch', { start_line, start_col }, { end_line, end_col }, { inclusive = true })
 

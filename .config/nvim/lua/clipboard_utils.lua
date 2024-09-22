@@ -90,6 +90,42 @@ function M.append_file_path_and_content()
   end
 end
 
+-- Function to get visual selection content
+function M.get_visual_selection()
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  local start_pos = vim.fn.getpos "'<"
+  local end_pos = vim.fn.getpos "'>"
+
+  local start_line = start_pos[2]
+  local start_col = start_pos[3]
+  local end_line = end_pos[2]
+  local end_col = end_pos[3]
+
+  if start_line > end_line or (start_line == end_line and start_col > end_col) then
+    -- Swap the positions
+    start_line, end_line = end_line, start_line
+    start_col, end_col = end_col, start_col
+  end
+
+  local lines = vim.fn.getline(start_line, end_line)
+
+  if #lines == 0 then
+    return ''
+  end
+
+  if #lines == 1 then
+    lines[1] = string.sub(lines[1], start_col, end_col)
+  else
+    -- Adjust the first line
+    lines[1] = string.sub(lines[1], start_col)
+    -- Adjust the last line
+    lines[#lines] = string.sub(lines[#lines], 1, end_col)
+  end
+
+  return table.concat(lines, '\n')
+end
+
 -- Function to append visual selection as snippet to the temporary files and update clipboard
 function M.append_visual_selection()
   -- Get visual selection content
@@ -129,36 +165,6 @@ function M.append_visual_selection()
   vim.fn.setreg('+', full_content)
 
   return snippet_number, line_count
-end
-
--- Function to get visual selection content
-function M.get_visual_selection()
-  local bufnr = vim.api.nvim_get_current_buf()
-
-  -- Get the start and end positions
-  local start_pos = vim.api.nvim_buf_get_mark(bufnr, '<')
-  local end_pos = vim.api.nvim_buf_get_mark(bufnr, '>')
-
-  local start_line = start_pos[1] - 1 -- Convert to 0-based index
-  local start_col = start_pos[2]
-  local end_line = end_pos[1] - 1
-  local end_col = end_pos[2]
-
-  if start_line > end_line or (start_line == end_line and start_col > end_col) then
-    start_line, end_line = end_line, start_line
-    start_col, end_col = end_col, start_col
-  end
-
-  local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, end_line + 1, false)
-  if #lines == 0 then
-    return ''
-  end
-
-  -- Adjust the first and last lines
-  lines[1] = string.sub(lines[1], start_col + 1)
-  lines[#lines] = string.sub(lines[#lines], 1, end_col)
-
-  return table.concat(lines, '\n')
 end
 
 -- Function to get the next snippet number

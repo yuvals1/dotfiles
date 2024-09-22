@@ -74,9 +74,10 @@ vim.keymap.set('n', 'yaa', function()
   end
 end, { noremap = true, silent = true, desc = 'Append file path and content to temp file' })
 
--- Keymap to append visual selection as snippet to temporary files
-vim.keymap.set('v', 'yav', function()
+-- Define a custom command that operates over a range
+vim.api.nvim_create_user_command('AppendVisualSelection', function(opts)
   local snippet_number, lines_added = clipboard_utils.append_visual_selection()
+
   if snippet_number then
     -- Get metadata entries
     local entries = clipboard_utils.get_metadata_entries()
@@ -106,10 +107,18 @@ vim.keymap.set('v', 'yav', function()
 
     -- Use vim.notify to display the message
     vim.notify(message, vim.log.levels.INFO)
+
     -- Highlight the selection
     visual_utils.highlight_selection()
   end
-end, { noremap = true, silent = true, desc = 'Append visual selection as snippet to temp file' })
+end, { range = true })
+
+-- Keymap to append visual selection as snippet to temporary files
+vim.keymap.set('v', 'yav', ':<C-U>AppendVisualSelection<CR>', {
+  noremap = true,
+  silent = true,
+  desc = 'Append visual selection as snippet to temp file',
+})
 
 -- Keymap to clear the temporary files
 vim.keymap.set('n', 'ycc', function()
