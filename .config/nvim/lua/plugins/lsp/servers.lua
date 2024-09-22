@@ -5,10 +5,11 @@ local M = {}
 M.setup = function()
   -- Import necessary modules
   local lspconfig = require 'lspconfig'
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  local cmp_nvim_lsp = require 'cmp_nvim_lsp'
 
-  -- Integrate cmp_nvim_lsp capabilities for better autocompletion support
-  capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+  -- Default capabilities for LSP servers with cmp_nvim_lsp integration
+  local default_capabilities = vim.lsp.protocol.make_client_capabilities()
+  default_capabilities = vim.tbl_deep_extend('force', default_capabilities, cmp_nvim_lsp.default_capabilities())
 
   -- Function to determine the Python executable based on the active virtual environment
   local function get_python_path()
@@ -27,37 +28,32 @@ M.setup = function()
   M.servers = {
     -- Bash Language Server
     bashls = {
-      -- Add specific settings for bashls if needed
       settings = {},
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- JSON Language Server
     jsonls = {
-      -- Add specific settings for jsonls if needed
       settings = {},
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- Markdown Language Server
     marksman = {
-      -- Add specific settings for marksman if needed
       settings = {},
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- XML Language Server
     lemminx = {
-      -- Add specific settings for lemminx if needed
       settings = {},
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- YAML Language Server
     yamlls = {
-      -- Add specific settings for yamlls if needed
       settings = {},
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- Lua Language Server
@@ -82,7 +78,7 @@ M.setup = function()
           },
         },
       },
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- Python Language Server (pylsp)
@@ -149,7 +145,7 @@ M.setup = function()
           },
         },
       },
-      capabilities = capabilities,
+      capabilities = default_capabilities,
       flags = {
         debounce_text_changes = 200, -- Adjust debounce time (milliseconds)
       },
@@ -157,9 +153,8 @@ M.setup = function()
 
     -- TOML Language Server
     taplo = {
-      -- Add specific settings for taplo if needed
       settings = {},
-      capabilities = capabilities,
+      capabilities = default_capabilities,
     },
 
     -- Pyright Language Server (for hover only)
@@ -168,17 +163,17 @@ M.setup = function()
         python = {
           pythonPath = get_python_path(),
           analysis = {
-            typeCheckingMode = 'strict', -- or 'basic' based on preference
+            typeCheckingMode = 'off', -- Disable type checking to prevent diagnostics
             autoSearchPaths = true,
             useLibraryCodeForTypes = true,
           },
         },
       },
-      capabilities = vim.tbl_deep_extend('force', capabilities, {
+      capabilities = {
         textDocument = {
-          hover = capabilities.textDocument.hover, -- Enable hover
+          hover = default_capabilities.textDocument.hover, -- Enable hover
         },
-      }),
+      },
       flags = {
         debounce_text_changes = 200, -- Match pylsp's debounce time
       },
