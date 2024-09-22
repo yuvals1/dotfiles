@@ -239,4 +239,44 @@ function M.clear_clipboard()
   return lines_cleared
 end
 
+-- Function to delete the last addition
+function M.delete_last_addition()
+  local metadata_entries = M.get_metadata_entries()
+
+  if #metadata_entries == 0 then
+    return nil, 'No entries to delete'
+  end
+
+  -- Remove the last entry
+  local last_entry = table.remove(metadata_entries)
+
+  -- Update the metadata file
+  M.write_metadata_entries(metadata_entries)
+
+  -- Update the content file
+  local content_file = io.open(tmp_content_file, 'r')
+  local content = content_file:read '*a'
+  content_file:close()
+
+  -- Remove the last addition from the content
+  local pattern
+  if last_entry.type == 'file' then
+    pattern = '\n\n# ' .. last_entry.path .. '.*$'
+  elseif last_entry.type == 'snippet' then
+    pattern = '\n\n## Snippet ' .. last_entry.number .. ' in ' .. last_entry.path .. '.*$'
+  end
+
+  content = content:gsub(pattern, '')
+
+  -- Write the updated content back to the file
+  content_file = io.open(tmp_content_file, 'w')
+  content_file:write(content)
+  content_file:close()
+
+  -- Update the clipboard
+  vim.fn.setreg('+', content)
+
+  return last_entry, nil
+end
+
 return M

@@ -126,3 +126,60 @@ vim.keymap.set('n', 'ycc', function()
   -- Use vim.notify to display the message
   vim.notify(string.format('Temporary files cleared (%d lines)', lines_cleared), vim.log.levels.INFO)
 end, { noremap = true, silent = true, desc = 'Clear temporary files' })
+
+-- Keymap to delete the last addition
+vim.keymap.set('n', 'ycd', function()
+  local deleted_entry, error = clipboard_utils.delete_last_addition()
+
+  if error then
+    vim.notify(error, vim.log.levels.WARN)
+  else
+    local entries = clipboard_utils.get_metadata_entries()
+
+    -- Calculate total lines
+    local total_lines = 0
+    for _, entry in ipairs(entries) do
+      total_lines = total_lines + entry.lines
+    end
+
+    -- Build the entries message
+    local entries_message = ''
+    for i = #entries, 1, -1 do -- Newest to oldest
+      local entry = entries[i]
+      if entry.type == 'file' then
+        entries_message = entries_message .. string.format('%s (%d)\n', entry.path, entry.lines)
+      elseif entry.type == 'snippet' then
+        entries_message = entries_message .. string.format('snippet %d in %s (%d)\n', entry.number, entry.path, entry.lines)
+      end
+    end
+    -- Indicate newest and oldest
+    if #entries > 0 then
+      entries_message = entries_message:gsub('^(.-)\n', '%1 <- this is the newest\n', 1)
+      entries_message = entries_message:gsub('([^\n]+)$', '%1 <- this is the oldest')
+    end
+
+    -- Build the full message
+    local message
+    if deleted_entry.type == 'file' then
+      message = string.format(
+        'Deleted last addition: %s (%d lines)\nRemaining (%d lines total):\n%s',
+        deleted_entry.path,
+        deleted_entry.lines,
+        total_lines,
+        entries_message
+      )
+    else
+      message = string.format(
+        'Deleted last addition: snippet %d in %s (%d lines)\nRemaining (%d lines total):\n%s',
+        deleted_entry.number,
+        deleted_entry.path,
+        deleted_entry.lines,
+        total_lines,
+        entries_message
+      )
+    end
+
+    -- Use vim.notify to display the message
+    vim.notify(message, vim.log.levels.INFO)
+  end
+end, { noremap = true, silent = true, desc = 'Delete last addition from temp files' })
