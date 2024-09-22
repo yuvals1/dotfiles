@@ -136,8 +136,7 @@ vim.keymap.set('n', 'yaa', function()
     end
 
     -- Build the full message
-    local message =
-      string.format('File path and content appended to clipboard (%d lines added, %d lines total)\nFiles:\n%s', lines_added, total_lines, file_paths_message)
+    local message = string.format('File path and content appended to clipboard (%d lines total)\nFiles:\n%s', total_lines, file_paths_message)
 
     -- Use vim.notify to display the message
     vim.notify(message, vim.log.levels.INFO)
