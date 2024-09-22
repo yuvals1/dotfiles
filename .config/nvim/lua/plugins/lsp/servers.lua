@@ -7,22 +7,33 @@ M.setup = function()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+  -- Function to get Python executable from virtual environment or default
+  local function get_python_path()
+    -- Use activated virtualenv
+    if vim.env.VIRTUAL_ENV then
+      return vim.env.VIRTUAL_ENV .. '/bin/python'
+    else
+      -- Fallback to system Python (adjust as necessary)
+      return '/usr/bin/python'
+    end
+  end
+
   -- Define LSP servers and their settings
   M.servers = {
     bashls = {
-      -- You can add specific settings for bashls here if needed
+      -- Add any specific settings for bashls here
     },
     jsonls = {
-      -- You can add specific settings for jsonls here if needed
+      -- Add any specific settings for jsonls here
     },
     marksman = {
-      -- You can add specific settings for marksman here if needed
+      -- Add any specific settings for marksman here
     },
     lemminx = {
-      -- You can add specific settings for lemminx here if needed
+      -- Add any specific settings for lemminx here
     },
     yamlls = {
-      -- You can add specific settings for yamlls here if needed
+      -- Add any specific settings for yamlls here
     },
     lua_ls = {
       settings = {
@@ -47,15 +58,21 @@ M.setup = function()
       },
     },
     pylsp = {
+      cmd_env = {
+        VIRTUAL_ENV = vim.env.VIRTUAL_ENV or '',
+        PATH = vim.env.PATH,
+        PYTHONPATH = vim.env.PYTHONPATH or '',
+      },
       settings = {
         pylsp = {
-          configurationSources = { 'pylsp_mypy' }, -- Use pylsp_mypy for diagnostics
+          configurationSources = { 'pylsp_mypy' },
           plugins = {
             pylsp_mypy = {
               enabled = true,
-              live_mode = false, -- Set to true for real-time checking (may affect performance)
+              live_mode = false,
               strict = true,
-              report_progress = true, -- Optional: shows progress in the status line
+              report_progress = true,
+              overrides = { '--python-executable', get_python_path(), true },
             },
             pylsp_rope = {
               enabled = true,
@@ -63,7 +80,7 @@ M.setup = function()
             pylsp_black = {
               enabled = true,
             },
-            pylsp_isort = { -- Corrected from 'pyls_isort' to 'pylsp_isort'
+            pylsp_isort = {
               enabled = true,
             },
             pylsp_pyflakes = {
@@ -78,13 +95,23 @@ M.setup = function()
             pylsp_hover = {
               enabled = true,
             },
+            jedi_completion = {
+              enabled = true,
+              fuzzy = true,
+            },
+            jedi = {
+              environment = get_python_path(),
+            },
           },
         },
       },
       capabilities = capabilities,
+      flags = {
+        debounce_text_changes = 200,
+      },
     },
     taplo = {
-      -- You can add specific settings for taplo here if needed
+      -- Add any specific settings for taplo here
     },
   }
 
