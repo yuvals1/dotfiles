@@ -1,5 +1,3 @@
--- File: lua/plugins/gitsigns/init.lua
-
 return {
   {
     'lewis6991/gitsigns.nvim',

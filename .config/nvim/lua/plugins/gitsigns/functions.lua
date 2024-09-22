@@ -1,5 +1,3 @@
--- File: lua/plugins/gitsigns/functions.lua
-
 local M = {}
 
 local gitsigns = require 'gitsigns'

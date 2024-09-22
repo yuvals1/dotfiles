@@ -1,5 +1,3 @@
--- File: lua/plugins/gitsigns/keymaps.lua
-
 local M = {}
 
 function M.setup(bufnr)
