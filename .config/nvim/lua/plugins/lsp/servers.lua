@@ -1,22 +1,29 @@
--- TODO: integrate servers and mason setup to work togheter, right there is duplicated of lsp that are defined
--- TODO: understand the meaning of  vim.lsp.protocol.make_client_capabilities() as can be shown in https://www.reddit.com/r/neovim/comments/1f3vl5h/how_to_set_up_python_with_static_type_checking/
+-- servers.lua
 
 local M = {}
 
 M.setup = function()
+  -- Create default capabilities
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+  -- Define LSP servers and their settings
   M.servers = {
     bashls = {
-      settings = {
-        filetypes = { 'sh', 'zsh' },
-      },
+      -- You can add specific settings for bashls here if needed
     },
-    jsonls = {},
-    marksman = {},
-    lemminx = {},
-    yamlls = {},
+    jsonls = {
+      -- You can add specific settings for jsonls here if needed
+    },
+    marksman = {
+      -- You can add specific settings for marksman here if needed
+    },
+    lemminx = {
+      -- You can add specific settings for lemminx here if needed
+    },
+    yamlls = {
+      -- You can add specific settings for yamlls here if needed
+    },
     lua_ls = {
       settings = {
         Lua = {
@@ -39,27 +46,49 @@ M.setup = function()
         },
       },
     },
-    jedi_language_server = {
-      init_options = {
-        completion = {
-          disableSnippets = false,
-          resolveEagerly = false,
-          ignorePatterns = {},
+    pylsp = {
+      settings = {
+        pylsp = {
+          configurationSources = { 'pylsp_mypy' }, -- Use pylsp_mypy for diagnostics
+          plugins = {
+            pylsp_mypy = {
+              enabled = true,
+              live_mode = false, -- Set to true for real-time checking (may affect performance)
+              strict = true,
+              report_progress = true, -- Optional: shows progress in the status line
+            },
+            pylsp_rope = {
+              enabled = true,
+            },
+            pylsp_black = {
+              enabled = true,
+            },
+            pylsp_isort = { -- Corrected from 'pyls_isort' to 'pylsp_isort'
+              enabled = true,
+            },
+            pylsp_pyflakes = {
+              enabled = false,
+            },
+            pylsp_mccabe = {
+              enabled = false,
+            },
+            pylsp_pylint = {
+              enabled = false,
+            },
+            pylsp_hover = {
+              enabled = true,
+            },
+          },
         },
-        diagnostics = {
-          enable = true,
-          didOpen = true,
-          didChange = true,
-          didSave = true,
-        },
-        hover = {
-          enable = true,
-        },
-        markupKindPreferred = 'markdown',
       },
+      capabilities = capabilities,
+    },
+    taplo = {
+      -- You can add specific settings for taplo here if needed
     },
   }
 
+  -- Set up each server using lspconfig
   for server_name, server in pairs(M.servers) do
     server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
     require('lspconfig')[server_name].setup(server)
