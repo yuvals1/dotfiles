@@ -27,7 +27,7 @@ return { -- Autoformat
     formatters_by_ft = {
       lua = { 'stylua' },
       -- Update Python formatting to use isort and ruff
-      python = { 'isort', 'ruff' },
+      python = {},
       toml = { 'taplo' },
       make = { 'checkmake' },
       typescript = { 'prettier' },
