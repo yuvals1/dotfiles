@@ -1,29 +1,40 @@
--- test_clipboard_clear.lua
+-- test_clipboard_visual_append.lua
 
 local clipboard_utils = require 'clipboard_utils'
 
-local function test_clear_clipboard()
-  -- Simulate copying content
-  clipboard_utils.copy_file_path_and_content()
-  clipboard_utils.append_file_path_and_content()
-
-  -- Ensure temporary files exist
+local function test_append_visual_selection()
+  -- Simulate visual selection
+  local test_content = 'This is a test snippet'
   local tmp_content_file = '/tmp/clipboard_content.txt'
-  local tmp_metadata_file = '/tmp/clipboard_metadata.txt'
 
-  assert(vim.loop.fs_stat(tmp_content_file), 'Content file does not exist before clearing')
-  assert(vim.loop.fs_stat(tmp_metadata_file), 'Metadata file does not exist before clearing')
+  -- Clear any existing temp file
+  os.remove(tmp_content_file)
 
-  -- Call the clear_clipboard function
-  local lines_cleared = clipboard_utils.clear_clipboard()
+  -- Mock the get_visual_selection function
+  local original_get_visual_selection = clipboard_utils.get_visual_selection
+  clipboard_utils.get_visual_selection = function()
+    return test_content
+  end
 
-  -- Check if temporary files are deleted
-  assert(not vim.loop.fs_stat(tmp_content_file), 'Content file still exists after clearing')
-  assert(not vim.loop.fs_stat(tmp_metadata_file), 'Metadata file still exists after clearing')
+  -- Call the append_visual_selection function
+  local snippet_number = clipboard_utils.append_visual_selection()
 
-  print 'Clipboard clear test passed successfully!'
-  print('Lines cleared: ' .. lines_cleared)
+  -- Restore the original function
+  clipboard_utils.get_visual_selection = original_get_visual_selection
+
+  -- Verify that the snippet was appended
+  local content_file = io.open(tmp_content_file, 'r')
+  assert(content_file, 'Content file does not exist after appending snippet')
+  local content = content_file:read '*a'
+  content_file:close()
+  assert(content:find(test_content), 'Snippet content not found in content file')
+
+  -- Verify snippet number
+  assert(snippet_number == 1, 'Snippet number is not 1 as expected')
+
+  print 'Visual snippet append test passed successfully!'
+  print('Snippet number: ' .. snippet_number)
 end
 
 -- Run the test
-test_clear_clipboard()
+test_append_visual_selection()
