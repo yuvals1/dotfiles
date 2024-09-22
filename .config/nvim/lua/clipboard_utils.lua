@@ -1,84 +1,135 @@
+-- clipboard_utils.lua
+
 local M = {}
 
--- Initialize a list to store files with their line counts
-M.clipboard_files = {}
+-- Paths to temporary files
+local tmp_content_file = '/tmp/clipboard_content.txt'
+local tmp_metadata_file = '/tmp/clipboard_metadata.txt'
 
--- Function to copy file path and content to clipboard
+-- Function to copy file path and content to a temporary file and clipboard
 function M.copy_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local line_count = #lines
   local file_content = table.concat(lines, '\n')
-  local clipboard_content = string.format('# %s\n%s', file_path, file_content)
-  vim.fn.setreg('+', clipboard_content)
+  local content = string.format('# %s\n%s', file_path, file_content)
 
-  -- Update the clipboard_files list
-  M.clipboard_files = { { path = file_path, lines = line_count } }
+  -- Write content to the temporary content file
+  local content_file = io.open(tmp_content_file, 'w')
+  content_file:write(content)
+  content_file:close()
+
+  -- Write metadata to the temporary metadata file
+  local metadata = string.format('%s|%d\n', file_path, line_count)
+  local metadata_file = io.open(tmp_metadata_file, 'w')
+  metadata_file:write(metadata)
+  metadata_file:close()
+
+  -- Yank the full content into the clipboard
+  vim.fn.setreg('+', content)
+
   return line_count
 end
 
--- Function to append file path and content to clipboard
+-- Function to append file path and content to the temporary files and update clipboard
 function M.append_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local line_count = #lines
 
-  -- Check if the file has already been copied
-  local already_copied = false
-  for _, file in ipairs(M.clipboard_files) do
-    if file.path == file_path then
-      already_copied = true
-      break
+  -- Read existing metadata
+  local metadata_entries = {}
+  local metadata_file = io.open(tmp_metadata_file, 'r')
+  if metadata_file then
+    for line in metadata_file:lines() do
+      local path, count = line:match '^(.*)|(%d+)$'
+      metadata_entries[path] = tonumber(count)
     end
+    metadata_file:close()
   end
 
-  if already_copied then
-    return 0, #vim.split(vim.fn.getreg '+', '\n'), true -- Indicate that the file was already copied
+  -- Check if the file has already been copied
+  if metadata_entries[file_path] then
+    -- File already copied
+    -- Calculate total lines
+    local total_lines = 0
+    for _, count in pairs(metadata_entries) do
+      total_lines = total_lines + count
+    end
+
+    -- Read the full content file and yank it into the clipboard
+    local content_file = io.open(tmp_content_file, 'r')
+    local full_content = content_file:read '*a'
+    content_file:close()
+    vim.fn.setreg('+', full_content)
+
+    return 0, total_lines, true
   end
 
-  local file_content = table.concat(lines, '\n')
-  local clipboard_content = string.format('# %s\n%s', file_path, file_content)
-  local current_clipboard = vim.fn.getreg '+'
+  -- Append content to the temporary content file
+  local content = string.format('\n\n# %s\n%s', file_path, table.concat(lines, '\n'))
+  local content_file = io.open(tmp_content_file, 'a')
+  content_file:write(content)
+  content_file:close()
 
-  if current_clipboard == nil or current_clipboard == '' then
-    -- Clipboard is empty, set the new content
-    vim.fn.setreg('+', clipboard_content)
-  else
-    -- Append to existing clipboard content
-    vim.fn.setreg('+', current_clipboard .. '\n\n' .. clipboard_content)
+  -- Update metadata
+  metadata_entries[file_path] = line_count
+  metadata_file = io.open(tmp_metadata_file, 'w')
+  for path, count in pairs(metadata_entries) do
+    metadata_file:write(string.format('%s|%d\n', path, count))
+  end
+  metadata_file:close()
+
+  -- Read the full content file and yank it into the clipboard
+  content_file = io.open(tmp_content_file, 'r')
+  local full_content = content_file:read '*a'
+  content_file:close()
+  vim.fn.setreg('+', full_content)
+
+  -- Calculate total lines
+  local total_lines = 0
+  for _, count in pairs(metadata_entries) do
+    total_lines = total_lines + count
   end
 
-  -- Add the file with its line count to the beginning of the list
-  table.insert(M.clipboard_files, 1, { path = file_path, lines = line_count })
-
-  return line_count, #vim.split(vim.fn.getreg '+', '\n'), false
+  return line_count, total_lines, false
 end
 
--- Function to clear the clipboard
+-- Function to clear the temporary files and clear the clipboard
 function M.clear_clipboard()
-  local current_clipboard = vim.fn.getreg '+'
-  local lines_cleared = #vim.split(current_clipboard, '\n')
+  local lines_cleared = 0
 
-  -- Clear the system clipboard using external commands
-  local uname = vim.loop.os_uname()
-  if uname.sysname == 'Darwin' then
-    -- macOS
-    vim.fn.system 'pbcopy < /dev/null'
-  elseif uname.sysname == 'Linux' then
-    -- Linux
-    vim.fn.system 'xclip -selection clipboard /dev/null'
-  elseif uname.sysname == 'Windows_NT' then
-    -- Windows
-    vim.fn.system 'echo off | clip'
-  else
-    -- Unsupported OS
-    vim.fn.setreg('+', ' ', 'c') -- Fallback to setting a space
+  -- Count the number of lines before clearing
+  local content_file = io.open(tmp_content_file, 'r')
+  if content_file then
+    for _ in content_file:lines() do
+      lines_cleared = lines_cleared + 1
+    end
+    content_file:close()
   end
 
-  -- Clear the clipboard_files list
-  M.clipboard_files = {}
+  -- Delete the temporary files
+  os.remove(tmp_content_file)
+  os.remove(tmp_metadata_file)
+
+  -- Clear the clipboard
+  vim.fn.setreg('+', '')
 
   return lines_cleared
+end
+
+-- Function to get metadata entries
+function M.get_clipboard_files()
+  local metadata_entries = {}
+  local metadata_file = io.open(tmp_metadata_file, 'r')
+  if metadata_file then
+    for line in metadata_file:lines() do
+      local path, count = line:match '^(.*)|(%d+)$'
+      table.insert(metadata_entries, { path = path, lines = tonumber(count) })
+    end
+    metadata_file:close()
+  end
+  return metadata_entries
 end
 
 return M
