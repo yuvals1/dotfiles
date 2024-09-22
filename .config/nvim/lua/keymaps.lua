@@ -1,5 +1,5 @@
--- Initialize a Lua table to store file paths
-local clipboard_file_paths = {}
+-- Initialize a list to store files with their line counts
+local clipboard_files = {}
 
 -- Yank entire file (remapped to avoid conflict)
 vim.keymap.set('n', 'yaf', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
@@ -8,23 +8,26 @@ vim.keymap.set('n', 'yaf', ':%y<CR>', { noremap = true, silent = true, desc = 'Y
 local function copy_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local line_count = #lines
   local file_content = table.concat(lines, '\n')
   local clipboard_content = string.format('# %s\n%s', file_path, file_content)
   vim.fn.setreg('+', clipboard_content)
 
-  -- Add the file path to the table
-  clipboard_file_paths = { file_path }
-  return #lines
+  -- Update the clipboard_files list
+  clipboard_files = { { path = file_path, lines = line_count } }
+  return line_count
 end
 
 -- Function to append file path and content to clipboard
 local function append_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local line_count = #lines
 
   -- Check if the file has already been copied
   local already_copied = false
-  for _, path in ipairs(clipboard_file_paths) do
-    if path == file_path then
+  for _, file in ipairs(clipboard_files) do
+    if file.path == file_path then
       already_copied = true
       break
     end
@@ -34,7 +37,6 @@ local function append_file_path_and_content()
     return 0, #vim.split(vim.fn.getreg '+', '\n'), true -- Indicate that the file was already copied
   end
 
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local file_content = table.concat(lines, '\n')
   local clipboard_content = string.format('# %s\n%s', file_path, file_content)
   local current_clipboard = vim.fn.getreg '+'
@@ -47,10 +49,10 @@ local function append_file_path_and_content()
     vim.fn.setreg('+', current_clipboard .. '\n\n' .. clipboard_content)
   end
 
-  -- Add the file path to the table
-  table.insert(clipboard_file_paths, 1, file_path)
+  -- Add the file with its line count to the beginning of the list
+  table.insert(clipboard_files, 1, { path = file_path, lines = line_count })
 
-  return #lines, #vim.split(vim.fn.getreg '+', '\n'), false
+  return line_count, #vim.split(vim.fn.getreg '+', '\n'), false
 end
 
 -- Function to clear the clipboard
@@ -74,8 +76,8 @@ local function clear_clipboard()
     vim.fn.setreg('+', ' ', 'c') -- Fallback to setting a space
   end
 
-  -- Clear the file paths register
-  clipboard_file_paths = {}
+  -- Clear the clipboard_files list
+  clipboard_files = {}
 
   return lines_cleared
 end
@@ -105,7 +107,8 @@ vim.keymap.set('n', 'yac', function()
   highlight_entire_buffer()
 
   -- Build the message
-  local message = string.format('File path and content copied to clipboard (%d lines)\nFile:\n%s', lines_yanked, clipboard_file_paths[1])
+  local message =
+    string.format('File path and content copied to clipboard (%d lines)\nFile:\n%s (%d)', lines_yanked, clipboard_files[1].path, clipboard_files[1].lines)
 
   -- Use vim.notify to display the message
   vim.notify(message, vim.log.levels.INFO)
@@ -116,13 +119,21 @@ vim.keymap.set('n', 'yaa', function()
   local lines_added, total_lines, already_copied = append_file_path_and_content()
 
   if already_copied then
+    -- Build the file paths message with line counts
+    local file_paths_message = ''
+    for _, file in ipairs(clipboard_files) do
+      file_paths_message = file_paths_message .. string.format('%s (%d)\n', file.path, file.lines)
+    end
     -- Notify that the file has already been copied
-    vim.notify('This file has already been copied to the clipboard.\nFiles:\n' .. table.concat(clipboard_file_paths, '\n'), vim.log.levels.WARN)
+    vim.notify('This file has already been copied to the clipboard.\nFiles:\n' .. file_paths_message, vim.log.levels.WARN)
   else
     highlight_entire_buffer()
 
-    -- Build the file paths message from newest to oldest
-    local file_paths_message = table.concat(clipboard_file_paths, '\n')
+    -- Build the file paths message with line counts
+    local file_paths_message = ''
+    for _, file in ipairs(clipboard_files) do
+      file_paths_message = file_paths_message .. string.format('%s (%d)\n', file.path, file.lines)
+    end
 
     -- Build the full message
     local message =
