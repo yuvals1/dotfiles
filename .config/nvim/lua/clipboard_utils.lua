@@ -2,13 +2,15 @@
 
 local M = {}
 
--- Path to the temporary content file
+-- Paths to temporary files
 local tmp_content_file = '/tmp/clipboard_content.txt'
+local tmp_metadata_file = '/tmp/clipboard_metadata.txt'
 
 -- Function to copy file path and content to a temporary file and clipboard
 function M.copy_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local line_count = #lines
   local file_content = table.concat(lines, '\n')
   local content = string.format('# %s\n%s', file_path, file_content)
 
@@ -17,34 +19,78 @@ function M.copy_file_path_and_content()
   content_file:write(content)
   content_file:close()
 
+  -- Write metadata to the temporary metadata file
+  local metadata = string.format('[file]%s|%d\n', file_path, line_count)
+  local metadata_file = io.open(tmp_metadata_file, 'w')
+  metadata_file:write(metadata)
+  metadata_file:close()
+
   -- Yank the full content into the clipboard
   vim.fn.setreg('+', content)
 
-  return #lines
+  return line_count
 end
 
--- Function to append file path and content to the temporary file and update clipboard
+-- Function to append file path and content to the temporary files and update clipboard
 function M.append_file_path_and_content()
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  local file_content = table.concat(lines, '\n')
-  local content = string.format('\n\n# %s\n%s', file_path, file_content)
+  local line_count = #lines
 
-  -- Append content to the temporary content file
-  local content_file = io.open(tmp_content_file, 'a')
-  content_file:write(content)
-  content_file:close()
+  -- Read existing metadata
+  local metadata_entries = M.get_metadata_entries()
+  local already_copied = false
+  for _, entry in ipairs(metadata_entries) do
+    if entry.type == 'file' and entry.path == file_path then
+      already_copied = true
+      break
+    end
+  end
 
-  -- Read the full content file and yank it into the clipboard
-  content_file = io.open(tmp_content_file, 'r')
-  local full_content = content_file:read '*a'
-  content_file:close()
-  vim.fn.setreg('+', full_content)
+  -- Calculate total lines before adding new content
+  local total_lines = 0
+  for _, entry in ipairs(metadata_entries) do
+    total_lines = total_lines + entry.lines
+  end
 
-  return #lines
+  if already_copied then
+    -- File already copied
+    -- Read the full content file and yank it into the clipboard
+    local content_file = io.open(tmp_content_file, 'r')
+    local full_content = content_file:read '*a'
+    content_file:close()
+    vim.fn.setreg('+', full_content)
+
+    return 0, total_lines, true
+  else
+    -- Append content to the temporary content file
+    local content = string.format('\n\n# %s\n%s', file_path, table.concat(lines, '\n'))
+    local content_file = io.open(tmp_content_file, 'a')
+    content_file:write(content)
+    content_file:close()
+
+    -- Update metadata
+    table.insert(metadata_entries, {
+      type = 'file',
+      path = file_path,
+      lines = line_count,
+    })
+    M.write_metadata_entries(metadata_entries)
+
+    -- Read the full content file and yank it into the clipboard
+    content_file = io.open(tmp_content_file, 'r')
+    local full_content = content_file:read '*a'
+    content_file:close()
+    vim.fn.setreg('+', full_content)
+
+    -- Update total_lines by adding the new lines
+    total_lines = total_lines + line_count
+
+    return line_count, total_lines, false
+  end
 end
 
--- Function to append visual selection as snippet to the temporary file and update clipboard
+-- Function to append visual selection as snippet to the temporary files and update clipboard
 function M.append_visual_selection()
   -- Get visual selection content
   local snippet_content = M.get_visual_selection()
@@ -54,6 +100,8 @@ function M.append_visual_selection()
   end
 
   local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
+  local lines = vim.split(snippet_content, '\n')
+  local line_count = #lines
 
   -- Determine the next snippet number
   local snippet_number = M.get_next_snippet_number()
@@ -64,13 +112,23 @@ function M.append_visual_selection()
   content_file:write(content)
   content_file:close()
 
+  -- Update metadata
+  local metadata_entries = M.get_metadata_entries()
+  table.insert(metadata_entries, {
+    type = 'snippet',
+    number = snippet_number,
+    path = file_path,
+    lines = line_count,
+  })
+  M.write_metadata_entries(metadata_entries)
+
   -- Read the full content file and yank it into the clipboard
   content_file = io.open(tmp_content_file, 'r')
   local full_content = content_file:read '*a'
   content_file:close()
   vim.fn.setreg('+', full_content)
 
-  return snippet_number, #vim.split(snippet_content, '\n')
+  return snippet_number, line_count
 end
 
 -- Function to get visual selection content
@@ -106,70 +164,53 @@ end
 -- Function to get the next snippet number
 function M.get_next_snippet_number()
   local snippet_number = 1
-  local content_file = io.open(tmp_content_file, 'r')
-  if content_file then
-    for line in content_file:lines() do
-      local num = line:match '^## Snippet (%d+) in'
-      if num then
-        num = tonumber(num)
-        if num and num >= snippet_number then
-          snippet_number = num + 1
-        end
-      end
+  local metadata_entries = M.get_metadata_entries()
+  for _, entry in ipairs(metadata_entries) do
+    if entry.type == 'snippet' and entry.number >= snippet_number then
+      snippet_number = entry.number + 1
     end
-    content_file:close()
   end
   return snippet_number
 end
 
--- Function to parse the temporary content file and get entries
-function M.get_content_entries()
-  local entries = {}
-  local content_file = io.open(tmp_content_file, 'r')
-  if content_file then
-    local lines = {}
-    for line in content_file:lines() do
-      table.insert(lines, line)
-    end
-    content_file:close()
-
-    -- Now parse lines to extract entries
-    local i = 1
-    while i <= #lines do
-      local line = lines[i]
-      if line:match '^# ' then
-        -- It's a file entry
-        local file_path = line:sub(3)
-        local content_lines = {}
-        i = i + 1
-        while i <= #lines and not lines[i]:match '^#' and not lines[i]:match '^##' do
-          table.insert(content_lines, lines[i])
-          i = i + 1
-        end
-        local line_count = #content_lines
-        table.insert(entries, { type = 'file', path = file_path, lines = line_count })
-      elseif line:match '^## Snippet (%d+) in (.+)' then
-        -- It's a snippet entry
-        local snippet_number, file_path = line:match '^## Snippet (%d+) in (.+)'
-        snippet_number = tonumber(snippet_number)
-        local content_lines = {}
-        i = i + 1
-        while i <= #lines and not lines[i]:match '^#' and not lines[i]:match '^##' do
-          table.insert(content_lines, lines[i])
-          i = i + 1
-        end
-        local line_count = #content_lines
-        table.insert(entries, { type = 'snippet', number = snippet_number, path = file_path, lines = line_count })
-      else
-        -- Other lines, skip
-        i = i + 1
+-- Function to get metadata entries
+function M.get_metadata_entries()
+  local metadata_entries = {}
+  local metadata_file = io.open(tmp_metadata_file, 'r')
+  if metadata_file then
+    for line in metadata_file:lines() do
+      if line:match '^%[file%]' then
+        local path, count = line:match '^%[file%](.-)|(%d+)$'
+        table.insert(metadata_entries, { type = 'file', path = path, lines = tonumber(count) })
+      elseif line:match '^%[snippet%]' then
+        local number, path, count = line:match '^%[snippet%](%d+)|(.-)|(%d+)$'
+        table.insert(metadata_entries, {
+          type = 'snippet',
+          number = tonumber(number),
+          path = path,
+          lines = tonumber(count),
+        })
       end
     end
+    metadata_file:close()
   end
-  return entries
+  return metadata_entries
 end
 
--- Function to clear the temporary file and clear the clipboard
+-- Function to write metadata entries
+function M.write_metadata_entries(entries)
+  local metadata_file = io.open(tmp_metadata_file, 'w')
+  for _, entry in ipairs(entries) do
+    if entry.type == 'file' then
+      metadata_file:write(string.format('[file]%s|%d\n', entry.path, entry.lines))
+    elseif entry.type == 'snippet' then
+      metadata_file:write(string.format('[snippet]%d|%s|%d\n', entry.number, entry.path, entry.lines))
+    end
+  end
+  metadata_file:close()
+end
+
+-- Function to clear the temporary files and clear the clipboard
 function M.clear_clipboard()
   local lines_cleared = 0
 
@@ -182,8 +223,9 @@ function M.clear_clipboard()
     content_file:close()
   end
 
-  -- Delete the temporary file
+  -- Delete the temporary files
   os.remove(tmp_content_file)
+  os.remove(tmp_metadata_file)
 
   -- Clear the clipboard
   vim.fn.setreg('+', '')
