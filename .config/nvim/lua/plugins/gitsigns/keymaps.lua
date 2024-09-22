@@ -4,6 +4,7 @@ function M.setup(bufnr)
   local gitsigns = require 'gitsigns'
   local clipboard = require 'plugins.gitsigns.functions.clipboard'
   local diff_utils = require 'plugins.gitsigns.functions.diff_utils'
+  local toggle = require 'plugins.gitsigns.functions.toggle'
 
   local function map(mode, lhs, rhs, opts)
     opts = opts or {}
@@ -28,27 +29,31 @@ function M.setup(bufnr)
     end
   end, { desc = 'Jump to previous git hunk' })
 
-  -- Actions
+  -- Actions in Visual Mode
   map('v', '<leader>hs', function()
     local s = vim.fn.line 'v'
     local e = vim.fn.line '.'
     gitsigns.stage_hunk { math.min(s, e), math.max(s, e) }
-  end, { desc = 'Stage hunk' })
+  end, { desc = 'Stage selected hunk' })
 
   map('v', '<leader>hr', function()
     local s = vim.fn.line 'v'
     local e = vim.fn.line '.'
     gitsigns.reset_hunk { math.min(s, e), math.max(s, e) }
-  end, { desc = 'Reset hunk' })
+  end, { desc = 'Reset selected hunk' })
 
-  map('n', 'M', gitsigns.stage_hunk, { desc = 'Stage hunk' })
-  map('n', 'R', gitsigns.reset_hunk, { desc = 'Reset hunk' })
-  map('n', 'P', gitsigns.preview_hunk, { desc = 'Preview hunk' })
-  map('n', '<leader>hm', gitsigns.stage_buffer, { desc = 'Stage buffer' })
-  map('n', '<leader>hu', gitsigns.undo_stage_hunk, { desc = 'Undo stage hunk' })
+  -- Actions in Normal Mode
+  map('n', 'M', gitsigns.stage_hunk, { desc = 'Stage current hunk' })
+  map('n', 'R', gitsigns.reset_hunk, { desc = 'Reset current hunk' })
+  map('n', 'P', gitsigns.preview_hunk, { desc = 'Preview current hunk' })
+
+  -- Toggle Stage/Unstage Buffer
+  map('n', '<leader>hm', toggle.toggle_stage_buffer, { desc = 'Toggle stage/unstage buffer' })
+
+  map('n', '<leader>hu', gitsigns.undo_stage_hunk, { desc = 'Undo last stage hunk' })
   map('n', '<leader>hr', gitsigns.reset_buffer, { desc = 'Reset buffer' })
   map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'Preview hunk' })
-  map('n', '<leader>hb', gitsigns.blame_line, { desc = 'Blame line' })
+  map('n', '<leader>hb', gitsigns.blame_line, { desc = 'Blame current line' })
   map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Diff against index' })
   map('n', '<leader>hD', function()
     gitsigns.diffthis '~'
