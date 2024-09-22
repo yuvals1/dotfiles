@@ -4,7 +4,7 @@ local clipboard_utils = require 'clipboard_utils'
 
 local function test_append_visual_selection()
   -- Simulate visual selection
-  local test_content = 'This is a test snippet'
+  local test_content = 'This is a test snippet\nWith multiple lines'
   local tmp_content_file = '/tmp/clipboard_content.txt'
 
   -- Clear any existing temp file
@@ -17,7 +17,7 @@ local function test_append_visual_selection()
   end
 
   -- Call the append_visual_selection function
-  local snippet_number = clipboard_utils.append_visual_selection()
+  local snippet_number, lines_added = clipboard_utils.append_visual_selection()
 
   -- Restore the original function
   clipboard_utils.get_visual_selection = original_get_visual_selection
@@ -31,6 +31,9 @@ local function test_append_visual_selection()
 
   -- Verify snippet number
   assert(snippet_number == 1, 'Snippet number is not 1 as expected')
+
+  -- Verify lines added
+  assert(lines_added == 2, 'Snippet line count is incorrect')
 
   print 'Visual snippet append test passed successfully!'
   print('Snippet number: ' .. snippet_number)

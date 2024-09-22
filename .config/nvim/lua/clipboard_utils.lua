@@ -2,12 +2,12 @@
 
 local M = {}
 
--- Paths to temporary files
+-- Path to the temporary content file
 local tmp_content_file = '/tmp/clipboard_content.txt'
 
 -- Function to copy file path and content to a temporary file and clipboard
 function M.copy_file_path_and_content()
-  local file_path = vim.fn.expand '%:p'
+  local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local file_content = table.concat(lines, '\n')
   local content = string.format('# %s\n%s', file_path, file_content)
@@ -25,7 +25,7 @@ end
 
 -- Function to append file path and content to the temporary file and update clipboard
 function M.append_file_path_and_content()
-  local file_path = vim.fn.expand '%:p'
+  local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local file_content = table.concat(lines, '\n')
   local content = string.format('\n\n# %s\n%s', file_path, file_content)
@@ -53,7 +53,7 @@ function M.append_visual_selection()
     return
   end
 
-  local file_path = vim.fn.expand '%:p'
+  local file_path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
 
   -- Determine the next snippet number
   local snippet_number = M.get_next_snippet_number()
@@ -70,7 +70,7 @@ function M.append_visual_selection()
   content_file:close()
   vim.fn.setreg('+', full_content)
 
-  return snippet_number
+  return snippet_number, #vim.split(snippet_content, '\n')
 end
 
 -- Function to get visual selection content
@@ -112,7 +112,7 @@ function M.get_next_snippet_number()
       local num = line:match '^## Snippet (%d+) in'
       if num then
         num = tonumber(num)
-        if num >= snippet_number then
+        if num and num >= snippet_number then
           snippet_number = num + 1
         end
       end
@@ -120,6 +120,53 @@ function M.get_next_snippet_number()
     content_file:close()
   end
   return snippet_number
+end
+
+-- Function to parse the temporary content file and get entries
+function M.get_content_entries()
+  local entries = {}
+  local content_file = io.open(tmp_content_file, 'r')
+  if content_file then
+    local lines = {}
+    for line in content_file:lines() do
+      table.insert(lines, line)
+    end
+    content_file:close()
+
+    -- Now parse lines to extract entries
+    local i = 1
+    while i <= #lines do
+      local line = lines[i]
+      if line:match '^# ' then
+        -- It's a file entry
+        local file_path = line:sub(3)
+        local content_lines = {}
+        i = i + 1
+        while i <= #lines and not lines[i]:match '^#' and not lines[i]:match '^##' do
+          table.insert(content_lines, lines[i])
+          i = i + 1
+        end
+        local line_count = #content_lines
+        table.insert(entries, { type = 'file', path = file_path, lines = line_count })
+      elseif line:match '^## Snippet (%d+) in (.+)' then
+        -- It's a snippet entry
+        local snippet_number, file_path = line:match '^## Snippet (%d+) in (.+)'
+        snippet_number = tonumber(snippet_number)
+        local content_lines = {}
+        i = i + 1
+        while i <= #lines and not lines[i]:match '^#' and not lines[i]:match '^##' do
+          table.insert(content_lines, lines[i])
+          i = i + 1
+        end
+        local line_count = #content_lines
+        table.insert(entries, { type = 'snippet', number = snippet_number, path = file_path, lines = line_count })
+      else
+        -- Other lines, skip
+        i = i + 1
+      end
+    end
+  end
+  return entries
 end
 
 -- Function to clear the temporary file and clear the clipboard
