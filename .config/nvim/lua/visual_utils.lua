@@ -26,16 +26,21 @@ function M.highlight_selection()
   local ns_id = vim.api.nvim_create_namespace 'highlight_yav'
   local bufnr = vim.api.nvim_get_current_buf()
 
-  -- Get the start and end positions
-  local start_pos = vim.fn.getpos "'<"
-  local end_pos = vim.fn.getpos "'>"
+  -- Get the start and end positions of the visual selection
+  local start_line, start_col = unpack(vim.api.nvim_buf_get_mark(bufnr, '<'))
+  local end_line, end_col = unpack(vim.api.nvim_buf_get_mark(bufnr, '>'))
 
-  local start_line = start_pos[2] - 1 -- Convert to 0-based indexing
-  local start_col = start_pos[3] - 1 -- Convert to 0-based indexing
-  local end_line = end_pos[2] - 1
-  local end_col = end_pos[3]
+  -- Adjust for Vim's inclusive selection
+  end_col = end_col + 1
 
-  vim.highlight.range(bufnr, ns_id, 'IncSearch', { start_line, start_col }, { end_line, end_col }, { inclusive = true })
+  -- Get the content of the last selected line
+  local last_line_content = vim.api.nvim_buf_get_lines(bufnr, end_line - 1, end_line, false)[1]
+
+  -- Ensure end_col doesn't exceed the length of the last line
+  end_col = math.min(end_col, #last_line_content)
+
+  -- Apply the highlight
+  vim.highlight.range(bufnr, ns_id, 'IncSearch', { start_line - 1, start_col }, { end_line - 1, end_col }, { inclusive = true })
 
   -- Clear the highlight after a timeout
   vim.defer_fn(function()
