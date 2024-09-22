@@ -16,14 +16,14 @@ return {
       mode = 'split',
       -- Default formatter
       formatters = {
-        json = { 'jq' }, -- Make sure you have install jq in your system, e.g: brew install jq
+        json = { 'jq' },
         html = {
-          'prettier', -- Make sure you have install prettier in your system, e.g: npm install -g prettier
+          'prettier',
           '--parser',
           'html',
         },
         xml = {
-          'tidy', -- Make sure you have installed tidy in your system, e.g: brew install tidy-html5
+          'tidy',
           '-xml',
           '-i',
           '-q',
@@ -31,33 +31,31 @@ return {
       },
       -- Default mappings for the response popup or split views
       mappings = {
-        close = 'q', -- Close the response popup or split view
-        next_panel = '<C-n>', -- Move to the next response popup window
-        prev_panel = '<C-p>', -- Move to the previous response popup window
+        close = 'q',
+        next_panel = '<C-n>',
+        prev_panel = '<C-p>',
       },
+      -- Set the environment file to ../.yuval.env
+      env_file = { '../.yuval.env' },
     },
     keys = {
-      -- Run API request
-      -- { '<leader>a', '<cmd>HurlRunnerAt<CR>', desc = 'Run Api request' },
       {
-        '<leader>a',
+        '<leader>A',
         function()
           vim.cmd 'HurlRunnerAt --file-root /Users/yuvals1/data'
         end,
         desc = 'Run Api request',
       },
       {
-        '<leader>A',
+        '<leader>a',
         function()
           vim.cmd 'HurlRunner --file-root /Users/yuvals1/data'
         end,
         desc = 'Run All requests',
       },
-
       { '<leader>te', '<cmd>HurlRunnerToEntry<CR>', desc = 'Run Api request to entry' },
       { '<leader>tm', '<cmd>HurlToggleMode<CR>', desc = 'Hurl Toggle Mode' },
       { '<leader>tv', '<cmd>HurlVerbose<CR>', desc = 'Run Api in verbose mode' },
-      -- Run Hurl request in visual mode
       { '<leader>h', ':HurlRunner<CR>', desc = 'Hurl Runner', mode = 'v' },
     },
   },
