@@ -1,10 +1,10 @@
 -- Load options
 require 'options'
 require 'autocmds'
-require 'keymaps'
 require 'file-cmds'
 require 'python'
 require 'cursor-movement'
+require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
