@@ -114,7 +114,7 @@ vim.api.nvim_create_user_command('AppendVisualSelection', function(opts)
 end, { range = true })
 
 -- Keymap to append visual selection as snippet to temporary files
-vim.keymap.set('v', 'yav', ':<C-U>AppendVisualSelection<CR>', {
+vim.keymap.set('v', 'yaa', ':<C-U>AppendVisualSelection<CR>', {
   noremap = true,
   silent = true,
   desc = 'Append visual selection as snippet to temp file',
