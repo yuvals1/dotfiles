@@ -28,6 +28,7 @@ brew "python"
 brew "node"
 brew "bun"  # Added Bun
 brew "uv"
+brew "go"
 
 # Casks (GUI applications)
 cask "kitty"
