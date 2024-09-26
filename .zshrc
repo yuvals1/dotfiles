@@ -22,4 +22,5 @@ source ~/.zsh/plugins.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-export PATH="/opt/homebrew/bin:$PATH"
+
+export PATH="/usr/local/bin:$PATH"
