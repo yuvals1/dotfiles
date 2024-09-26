@@ -21,6 +21,7 @@ brew "tree"
 brew "bpytop"
 brew "lazygit"
 brew "graphite"
+brew "dust"
 
 # Languages and runtimes
 brew "python"
