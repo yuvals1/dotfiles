@@ -2,6 +2,7 @@
 tap "homebrew/bundle"
 tap "nikitabobko/tap"
 tap "withgraphite/tap"
+tap "oven-sh/bun"  # New tap for Bun
 
 # CLI tools
 brew "git"
@@ -23,6 +24,8 @@ brew "graphite"
 # Languages and runtimes
 brew "python"
 brew "node"
+brew "bun"  # Added Bun
+brew "uv"
 
 # Casks (GUI applications)
 cask "kitty"
