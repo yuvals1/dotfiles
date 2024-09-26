@@ -11,3 +11,4 @@
 __pycache__/
 *.py[cod]
 .repro/
+.config/nvim_bak
