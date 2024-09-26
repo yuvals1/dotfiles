@@ -1,6 +1,6 @@
 return {
   'OXY2DEV/markview.nvim',
-  lazy = false, -- Recommended to not lazy-load this plugin
+  lazy = true, -- Recommended to not lazy-load this plugin
   dependencies = {
     'nvim-treesitter/nvim-treesitter',
     'nvim-tree/nvim-web-devicons',
