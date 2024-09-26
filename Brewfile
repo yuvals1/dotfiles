@@ -1,7 +1,7 @@
 # Taps
 tap "homebrew/bundle"
-tap "homebrew/core"
-tap "homebrew/cask"
+tap "nikitabobko/tap"
+tap "withgraphite/tap"
 
 # CLI tools
 brew "git"
@@ -17,6 +17,8 @@ brew "colima"
 brew "lazydocker"
 brew "tree"
 brew "bpytop"
+brew "lazygit"
+brew "graphite"
 
 # Languages and runtimes
 brew "python"
@@ -27,6 +29,7 @@ cask "kitty"
 cask "karabiner-elements"
 cask "raycast"
 cask "wezterm"
+cask "aerospace"
 
 # Additional tools
 brew "ripgrep"
