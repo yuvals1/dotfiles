@@ -40,6 +40,7 @@ return { -- Autoformat
       css = { 'prettier' },
       scss = { 'prettier' },
       markdown = { 'prettier' },
+      go = { 'gofmt', 'goimports' }, -- Add this line for Golang
     },
     formatters = {
       stylua = {
@@ -130,6 +131,16 @@ return { -- Autoformat
           end
           return args
         end,
+        stdin = true,
+      },
+      gofmt = {
+        command = 'gofmt',
+        args = { '-w' },
+        stdin = true,
+      },
+      goimports = {
+        command = 'goimports',
+        args = { '-w' },
         stdin = true,
       },
     },

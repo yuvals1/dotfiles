@@ -7,6 +7,7 @@ return {
       lint.linters_by_ft = {
         markdown = { 'markdownlint' },
         python = {}, -- Add ruff and mypy here
+        go = { 'golangci_lint' }, -- Add this line for Golang
       }
 
       local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
