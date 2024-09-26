@@ -34,36 +34,20 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
-# Install and configure bat
-zinit ice from"gh-r" as"command" mv"bat* -> bat" pick"bat/bat"
-zinit light sharkdp/bat
-
-# Install and load zoxide
-zinit ice from"gh-r" as"command" pick"zoxide*/zoxide"
-zinit light ajeetdsouza/zoxide
-
 # Install sesh
 zinit ice from"gh-r" as"command" pick"sesh"
 zinit light joshmedeski/sesh
 
-# Install yazi (modern file manager)
-zinit ice from"gh-r" as"command" pick"yazi*/yazi"
-zinit light sxyazi/yazi
-
-# Install fzf
-zinit ice from"gh-r" as"command" pick"fzf"
-zinit light junegunn/fzf
-
-# Install fzf-tmux script
-zinit ice as"command" pick"bin/fzf-tmux"
-zinit light junegunn/fzf
-
 # Set FZF options for default behavior and history search
-export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down   --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
-# export FZF_CTRL_R_OPTS="--reverse"
+export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
 
 # Source fzf keybindings and completion
-zinit snippet 'https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh'
-zinit snippet 'https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh'
+zinit snippet '/usr/local/opt/fzf/shell/key-bindings.zsh'
+zinit snippet '/usr/local/opt/fzf/shell/completion.zsh'
+
+# If you need fzf-tmux, you can add an alias or function like this:
+fzf-tmux() {
+    /usr/local/opt/fzf/bin/fzf-tmux "$@"
+}
 
 zinit cdreplay -q

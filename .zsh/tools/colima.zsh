@@ -5,18 +5,6 @@ unset_docker_host() {
 
 # Install and setup Colima only on macOS
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    # Install Colima
-    install_colima() {
-        if ! command -v colima &> /dev/null; then
-            if command -v brew &> /dev/null; then
-                echo "Installing Colima using Homebrew..."
-                brew install colima
-            else
-                echo "Homebrew not found. Please install Homebrew or Colima manually."
-            fi
-        fi
-    }
-
     # Ensure Colima is running
     ensure_colima_running() {
         if ! colima status &>/dev/null; then
@@ -30,8 +18,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         export DOCKER_HOST="unix://${HOME}/.colima/docker.sock"
     }
 
-    # Call the installation and setup functions
-    install_colima
+    # Call the setup functions
     ensure_colima_running
     setup_colima_env
 else

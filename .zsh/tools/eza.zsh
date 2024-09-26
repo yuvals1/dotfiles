@@ -1,11 +1,3 @@
-# Install eza
-install_eza() {
-    if ! command -v eza &> /dev/null; then
-        echo "Installing eza using Cargo..."
-        cargo install eza
-    fi
-}
-
 # Setup eza aliases
 setup_eza_aliases() {
     if command -v eza &> /dev/null; then
@@ -21,6 +13,5 @@ setup_eza_aliases() {
     fi
 }
 
-# Call the installation and setup functions
-install_eza
+# Call the setup function
 setup_eza_aliases
