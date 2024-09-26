@@ -1,41 +1,38 @@
--- File: ~/.config/nvim/lua/plugins/neogit.lua
-
+-- .config/nvim/lua/plugins/neogit.lua
 return {
   'NeogitOrg/neogit',
+  cmd = 'Neogit',
+  keys = {
+    {
+      '<leader>ng',
+      function()
+        require('neogit').open { cwd = vim.fn.expand '%:p:h' }
+      end,
+      desc = "Neogit (current file's repo)",
+    },
+  },
   dependencies = {
-    'nvim-lua/plenary.nvim',
-    'sindrets/diffview.nvim',
-    'nvim-telescope/telescope.nvim',
+    { 'nvim-lua/plenary.nvim', lazy = true },
+    { 'sindrets/diffview.nvim', lazy = true },
+    { 'nvim-telescope/telescope.nvim', lazy = true },
   },
   config = function()
-    vim.keymap.set('n', '<leader>ng', function()
-      local neogit = require 'neogit'
-      neogit.open { cwd = vim.fn.expand '%:p:h' }
-    end, { desc = "Neogit (current file's repo)" })
     local neogit = require 'neogit'
     neogit.setup {
-      -- Disable hints
       disable_hint = false,
-      -- Disable context highlighting
       disable_context_highlighting = false,
-      -- Disable signs
       disable_signs = false,
-      -- Disable commit message auto-insert
       disable_insert_on_commit = 'auto',
-      -- Enable filewatcher
       filewatcher = {
         interval = 1000,
         enabled = true,
       },
-      -- Set graph style
       graph_style = 'ascii',
-      -- Integrate with Telescope
       integrations = {
         telescope = nil,
         diffview = nil,
         fzf_lua = nil,
       },
-      -- Configure sections
       sections = {
         untracked = {
           folded = false,
@@ -49,9 +46,7 @@ return {
           folded = false,
           hidden = false,
         },
-        -- Add other sections as needed
       },
-      -- Configure mappings
       mappings = {
         status = {
           ['q'] = 'Close',
@@ -76,7 +71,6 @@ return {
           ['}'] = 'GoToNextHunkHeader',
         },
       },
-      -- Add other configurations as needed
     }
   end,
 }

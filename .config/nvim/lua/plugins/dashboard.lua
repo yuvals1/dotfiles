@@ -6,5 +6,10 @@ return {
       -- config
     }
   end,
-  dependencies = { { 'nvim-tree/nvim-web-devicons' } },
+  dependencies = {
+    {
+      'nvim-tree/nvim-web-devicons',
+      lazy = true,
+    },
+  },
 }

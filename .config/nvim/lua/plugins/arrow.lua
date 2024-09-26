@@ -1,5 +1,10 @@
 return {
   'otavioschwanck/arrow.nvim',
+  keys = {
+    { 'mj', desc = 'Arrow next buffer' },
+    { 'mk', desc = 'Arrow previous buffer' },
+    -- Add more keys here if you want to trigger lazy-loading with other keybindings
+  },
   opts = {
     show_icons = true,
     always_show_path = false,
@@ -54,12 +59,6 @@ return {
   config = function(_, opts)
     require('arrow').setup(opts)
 
-    -- Additional keymaps for navigation
-    -- vim.keymap.set('n', 'H', require('arrow.persist').previous)
-    -- vim.keymap.set('n', 'L', require('arrow.persist').next)
-    -- vim.keymap.set('n', '<C-s>', require('arrow.persist').toggle)
-
-    -- Keymaps for buffer bookmarks (assuming these functions exist)
     vim.keymap.set('n', 'mj', function()
       require('arrow.bufferline').next()
     end)

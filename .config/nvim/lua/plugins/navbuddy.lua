@@ -1,11 +1,13 @@
 return {
   'SmiteshP/nvim-navbuddy',
-  dependencies = {
-    'neovim/nvim-lspconfig',
-    'SmiteshP/nvim-navic',
-    'MunifTanjim/nui.nvim',
-    'numToStr/Comment.nvim', -- Optional
-    'nvim-telescope/telescope.nvim', -- Optional
+  keys = {
+    {
+      '<leader>o',
+      function()
+        require('nvim-navbuddy').open()
+      end,
+      desc = 'Open Navbuddy',
+    },
   },
   opts = {
     window = {
@@ -42,8 +44,11 @@ return {
     },
     custom_hl_group = nil,
   },
-  config = function(_, opts)
-    require('nvim-navbuddy').setup(opts)
-    vim.keymap.set('n', '<leader>o', require('nvim-navbuddy').open, { desc = 'Open Navbuddy' })
-  end,
+  dependencies = {
+    'neovim/nvim-lspconfig',
+    'SmiteshP/nvim-navic',
+    'MunifTanjim/nui.nvim',
+    'numToStr/Comment.nvim',
+    'nvim-telescope/telescope.nvim',
+  },
 }

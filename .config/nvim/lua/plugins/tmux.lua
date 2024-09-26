@@ -1,8 +1,8 @@
 return {
   'aserowy/tmux.nvim',
+  event = 'VeryLazy',
   config = function()
     return require('tmux').setup {
-      -- The default configuration is below, modify as needed
       copy_sync = {
         enable = true,
         redirect_to_clipboard = false,

@@ -1,15 +1,78 @@
 return {
   'chrisgrieser/nvim-tinygit',
+  cmd = 'TinyGit',
+  keys = {
+    {
+      '<leader>gs',
+      function()
+        require('tinygit').interactiveStaging()
+      end,
+      desc = 'TinyGit: Interactive Staging',
+    },
+    {
+      '<leader>gc',
+      function()
+        require('tinygit').smartCommit()
+      end,
+      desc = 'TinyGit: Smart Commit',
+    },
+    {
+      '<leader>gp',
+      function()
+        require('tinygit').push()
+      end,
+      desc = 'TinyGit: Push',
+    },
+    {
+      '<leader>gf',
+      function()
+        require('tinygit').searchFileHistory()
+      end,
+      desc = 'TinyGit: Search File History',
+    },
+    {
+      '<leader>gl',
+      function()
+        require('tinygit').lineHistory()
+      end,
+      desc = 'TinyGit: Line History',
+    },
+    {
+      '<leader>gF',
+      function()
+        require('tinygit').functionHistory()
+      end,
+      desc = 'TinyGit: Function History',
+    },
+    {
+      '<leader>ga',
+      function()
+        require('tinygit').amendNoEdit()
+      end,
+      desc = 'TinyGit: Amend (No Edit)',
+    },
+    {
+      '<leader>gA',
+      function()
+        require('tinygit').amendOnlyMsg()
+      end,
+      desc = 'TinyGit: Amend (Only Message)',
+    },
+    {
+      '<leader>gx',
+      function()
+        require('tinygit').fixupCommit()
+      end,
+      desc = 'TinyGit: Fixup Commit',
+    },
+  },
   dependencies = {
-    'stevearc/dressing.nvim',
-    'nvim-telescope/telescope.nvim',
-    'rcarriga/nvim-notify',
+    { 'stevearc/dressing.nvim', lazy = true },
+    { 'nvim-telescope/telescope.nvim', lazy = true },
+    { 'rcarriga/nvim-notify', lazy = true },
   },
   config = function()
-    local tinygit = require 'tinygit'
-
-    -- Setup (customize as needed)
-    tinygit.setup {
+    require('tinygit').setup {
       historySearch = {
         diffPopup = {
           width = 0.8,
@@ -18,16 +81,5 @@ return {
         },
       },
     }
-
-    -- Key mappings for important commands
-    vim.keymap.set('n', '<leader>gs', tinygit.interactiveStaging, { desc = 'TinyGit: Interactive Staging' })
-    vim.keymap.set('n', '<leader>gc', tinygit.smartCommit, { desc = 'TinyGit: Smart Commit' })
-    vim.keymap.set('n', '<leader>gp', tinygit.push, { desc = 'TinyGit: Push' })
-    vim.keymap.set('n', '<leader>gf', tinygit.searchFileHistory, { desc = 'TinyGit: Search File History' })
-    vim.keymap.set('n', '<leader>gl', tinygit.lineHistory, { desc = 'TinyGit: Line History' })
-    vim.keymap.set('n', '<leader>gF', tinygit.functionHistory, { desc = 'TinyGit: Function History' })
-    vim.keymap.set('n', '<leader>ga', tinygit.amendNoEdit, { desc = 'TinyGit: Amend (No Edit)' })
-    vim.keymap.set('n', '<leader>gA', tinygit.amendOnlyMsg, { desc = 'TinyGit: Amend (Only Message)' })
-    vim.keymap.set('n', '<leader>gx', tinygit.fixupCommit, { desc = 'TinyGit: Fixup Commit' })
   end,
 }
