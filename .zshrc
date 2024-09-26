@@ -24,3 +24,6 @@ source ~/.zsh/plugins.zsh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export PATH="/usr/local/bin:$PATH"
+
+kitty +kitten themes --reload-in=all Catppuccin-Frappe
+
