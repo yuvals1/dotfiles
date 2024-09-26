@@ -6,6 +6,7 @@ tap "oven-sh/bun"  # New tap for Bun
 
 # CLI tools
 brew "git"
+brew "git-delta"
 brew "tmux"
 brew "neovim"
 brew "zsh"
