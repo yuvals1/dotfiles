@@ -58,4 +58,4 @@
 	helper = 
 	helper = !/usr/local/bin/gh auth git-credential
 [credential]
-	helper = /opt/homebrew/bin/gh auth git-credential
+	helper = /usr/local/bin/gh auth git-credential
