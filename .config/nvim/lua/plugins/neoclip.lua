@@ -1,61 +1,61 @@
 return {
-  "AckslD/nvim-neoclip.lua",
-  dependencies = {
-    {'nvim-telescope/telescope.nvim'},
-    -- If you want to use fzf-lua, uncomment the following line
-    -- {'ibhagwan/fzf-lua'},
-    -- If you want to enable persistent history
-    {'kkharji/sqlite.lua', module = 'sqlite'},
-  },
-  event = "VeryLazy", -- Load the plugin when an event occurs (e.g., when entering insert mode)
-  config = function()
-    require('neoclip').setup({
-      history = 1000,
-      enable_persistent_history = true,
-      length_limit = 1048576,
-      continuous_sync = false,
-      db_path = vim.fn.stdpath("data") .. "/databases/neoclip.sqlite3",
-      filter = nil,
-      preview = true,
-      prompt = nil,
-      default_register = '"',
-      default_register_macros = 'q',
-      enable_macro_history = true,
-      content_spec_column = false,
-      on_paste = {
-        set_reg = false,
-      },
-      on_replay = {
-        set_reg = false,
-      },
-      keys = {
-        telescope = {
-          i = {
-            select = '<cr>',
-            paste = '<c-p>',
-            paste_behind = '<c-k>',
-            replay = '<c-q>',  -- replay a macro
-            delete = '<c-d>',  -- delete an entry
-            custom = {},
-          },
-          n = {
-            select = '<cr>',
-            paste = 'p',
-            paste_behind = 'P',
-            replay = 'q',
-            delete = 'd',
-            custom = {},
-          },
-        },
-      },
-    })
-
-    -- Load the Telescope extension
-    require('telescope').load_extension('neoclip')
-  end,
-  keys = {
-    -- Keymaps to access neoclip features
-    { "<leader>fn", "<cmd>Telescope neoclip<cr>", desc = "Open Neoclip" },
-    { "<leader>fm", "<cmd>Telescope macroscope<cr>", desc = "Open Macroscope" },
-  },
+  -- "AckslD/nvim-neoclip.lua",
+  -- dependencies = {
+  --   {'nvim-telescope/telescope.nvim'},
+  --   -- If you want to use fzf-lua, uncomment the following line
+  --   -- {'ibhagwan/fzf-lua'},
+  --   -- If you want to enable persistent history
+  --   {'kkharji/sqlite.lua', module = 'sqlite'},
+  -- },
+  -- event = "VeryLazy", -- Load the plugin when an event occurs (e.g., when entering insert mode)
+  -- config = function()
+  --   require('neoclip').setup({
+  --     history = 1000,
+  --     enable_persistent_history = true,
+  --     length_limit = 1048576,
+  --     continuous_sync = false,
+  --     db_path = vim.fn.stdpath("data") .. "/databases/neoclip.sqlite3",
+  --     filter = nil,
+  --     preview = true,
+  --     prompt = nil,
+  --     default_register = '"',
+  --     default_register_macros = 'q',
+  --     enable_macro_history = true,
+  --     content_spec_column = false,
+  --     on_paste = {
+  --       set_reg = false,
+  --     },
+  --     on_replay = {
+  --       set_reg = false,
+  --     },
+  --     keys = {
+  --       telescope = {
+  --         i = {
+  --           select = '<cr>',
+  --           paste = '<c-p>',
+  --           paste_behind = '<c-k>',
+  --           replay = '<c-q>',  -- replay a macro
+  --           delete = '<c-d>',  -- delete an entry
+  --           custom = {},
+  --         },
+  --         n = {
+  --           select = '<cr>',
+  --           paste = 'p',
+  --           paste_behind = 'P',
+  --           replay = 'q',
+  --           delete = 'd',
+  --           custom = {},
+  --         },
+  --       },
+  --     },
+  --   })
+  --
+  --   -- Load the Telescope extension
+  --   require('telescope').load_extension('neoclip')
+  -- end,
+  -- keys = {
+  --   -- Keymaps to access neoclip features
+  --   { "<leader>fn", "<cmd>Telescope neoclip<cr>", desc = "Open Neoclip" },
+  --   { "<leader>fm", "<cmd>Telescope macroscope<cr>", desc = "Open Macroscope" },
+  -- },
 }
