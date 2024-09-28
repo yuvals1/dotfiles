@@ -49,7 +49,7 @@ return { -- Autocompletion
             luasnip.jump(-1)
           end
         end, { 'i', 's' }),
-        ['<A-x>'] = cmp.mapping.abort(),
+        ['<C-x>'] = cmp.mapping.abort(),
       },
       sources = {
         {
