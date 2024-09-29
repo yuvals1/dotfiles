@@ -1,4 +1,3 @@
--- plugins/languages/markdown.lua
 return {
   mason = { 'markdownlint', 'prettier' },
   formatters = {
