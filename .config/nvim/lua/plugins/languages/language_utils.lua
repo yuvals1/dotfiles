@@ -1,40 +1,44 @@
+-- language_utils.lua
 local M = {}
 
 function M.collect_configurations(languages)
   local configs = {
-    mason_packages = {},
     lsp_servers = {},
     formatters = {},
-    linters = {}
+    linters = {},
+    tools = {},
   }
 
   for _, lang in ipairs(languages) do
-    -- Collect Mason packages
+    -- Collect Mason package names (tools)
     if lang.mason then
-      vim.list_extend(configs.mason_packages, lang.mason)
+      vim.list_extend(configs.tools, lang.mason)
     end
-    
+
     -- Collect LSP servers
     if lang.lsp then
       for server, config in pairs(lang.lsp) do
         configs.lsp_servers[server] = config
       end
     end
-    
+
     -- Collect formatters
     if lang.formatters then
-      for ft, formatter in pairs(lang.formatters) do
-        configs.formatters[ft] = formatter
+      for ft, formatters in pairs(lang.formatters) do
+        configs.formatters[ft] = formatters
       end
     end
-    
+
     -- Collect linters
     if lang.linters then
-      for ft, linter in pairs(lang.linters) do
-        configs.linters[ft] = linter
+      for ft, linters in pairs(lang.linters) do
+        configs.linters[ft] = linters
       end
     end
   end
+
+  -- Remove duplicates from tools
+  configs.tools = vim.fn.uniq(configs.tools)
 
   return configs
 end
