@@ -1,6 +1,6 @@
 -- lua.lua
 return {
-  mason = { 'lua-language-server', 'stylua', 'luacheck' }, -- Include all tools here
+  mason = { 'lua-language-server', 'stylua' },
   lsp = {
     lua_ls = {
       settings = {
