@@ -21,6 +21,7 @@ function M.setup(languages)
       vim.api.nvim_create_autocmd('User', {
         pattern = 'MasonToolsCleanupEvent',
         callback = function()
+          vim.cmd 'MasonToolsUpdate'
           vim.cmd 'MasonToolsClean'
           -- print 'MasonToolsClean has been run automatically'
         end,
@@ -29,7 +30,7 @@ function M.setup(languages)
       -- Trigger the cleanup event after a delay
       vim.defer_fn(function()
         vim.cmd 'doautocmd User MasonToolsCleanupEvent'
-      end, 10000) -- 10 second delay
+      end, 5000) -- 5 second delay
     end,
   }
 end
