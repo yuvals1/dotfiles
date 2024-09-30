@@ -6,15 +6,26 @@ function M.setup(languages)
   local configs = language_utils.collect_configurations(languages)
   return {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
-    dependencies = { 'williamboman/mason.nvim' }, -- Ensure mason.nvim loads first
-    -- Remove 'cmd' and 'event' to load at startup
+    dependencies = { 'williamboman/mason.nvim' },
     opts = {
       ensure_installed = configs.tools,
       auto_update = false,
       run_on_start = true,
       start_delay = 3000, -- 3-second delay
-      debounce_hours = 5, -- Optional: Prevent frequent reinstalls
     },
+    config = function(_, opts)
+      require('mason-tool-installer').setup(opts)
+
+      -- Set up autocmd to run MasonToolsClean on startup
+      vim.api.nvim_create_autocmd('VimEnter', {
+        callback = function()
+          vim.schedule(function()
+            vim.cmd 'MasonToolsClean'
+            print 'MasonToolsClean has been run automatically'
+          end)
+        end,
+      })
+    end,
   }
 end
 
