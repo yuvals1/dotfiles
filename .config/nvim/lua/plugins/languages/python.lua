@@ -1,13 +1,12 @@
 return {
-  mason = { 'pyright', 'black', 'flake8' },
+  mason = { 'pyright', 'ruff', 'isort', 'flake8' },
   lsp = {
     pyright = {},
   },
   formatters = {
-    python = { 'black' },
+    python = { 'ruff', 'isort' },
   },
   linters = {
     python = { 'flake8' },
   },
 }
-
