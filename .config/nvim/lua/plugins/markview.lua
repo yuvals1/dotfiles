@@ -1,6 +1,6 @@
 return {
   'OXY2DEV/markview.nvim',
-  lazy = true, -- Recommended to not lazy-load this plugin
+  ft = 'markdown', -- Load only for Markdown files
   dependencies = {
     'nvim-treesitter/nvim-treesitter',
     'nvim-tree/nvim-web-devicons',
@@ -18,8 +18,12 @@ return {
         end,
       },
     }
-
-    -- Optionally, you can enable Markview for all buffers here
-    -- vim.cmd("Markview enableAll")
+    -- Optionally, you can enable Markview for all Markdown buffers here
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'markdown',
+      callback = function()
+        vim.cmd 'Markview enable'
+      end,
+    })
   end,
 }
