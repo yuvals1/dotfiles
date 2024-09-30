@@ -7,24 +7,29 @@ function M.setup(languages)
   return {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     dependencies = { 'williamboman/mason.nvim' },
+    event = { 'BufReadPre', 'BufNewFile' },
+    cmd = { 'MasonToolsInstall', 'MasonToolsUpdate', 'MasonToolsClean' },
     opts = {
       ensure_installed = configs.tools,
       auto_update = false,
-      run_on_start = true,
-      start_delay = 3000, -- 3-second delay
+      run_on_start = false, -- We'll handle this manually
     },
     config = function(_, opts)
       require('mason-tool-installer').setup(opts)
 
-      -- Set up autocmd to run MasonToolsClean on startup
-      vim.api.nvim_create_autocmd('VimEnter', {
+      -- Create a custom event for cleaning
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'MasonToolsCleanupEvent',
         callback = function()
-          vim.schedule(function()
-            vim.cmd 'MasonToolsClean'
-            print 'MasonToolsClean has been run automatically'
-          end)
+          vim.cmd 'MasonToolsClean'
+          -- print 'MasonToolsClean has been run automatically'
         end,
       })
+
+      -- Trigger the cleanup event after a delay
+      vim.defer_fn(function()
+        vim.cmd 'doautocmd User MasonToolsCleanupEvent'
+      end, 10000) -- 10 second delay
     end,
   }
 end
