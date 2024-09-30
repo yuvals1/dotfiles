@@ -7,6 +7,6 @@ return {
     python = { 'black', 'isort' },
   },
   linters = {
-    python = {},
+    python = { 'mypy' },
   },
 }
