@@ -2,7 +2,7 @@
 require 'options'
 require 'autocmds'
 require 'file-cmds'
-require 'python'
+require 'python-host'
 require 'cursor-movement'
 require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
 require 'time-keymaps'
