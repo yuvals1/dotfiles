@@ -29,6 +29,7 @@ brew "node"
 brew "bun"  # Added Bun
 brew "uv"
 brew "go"
+brew "luarocks"
 
 # Casks (GUI applications)
 cask "kitty"
