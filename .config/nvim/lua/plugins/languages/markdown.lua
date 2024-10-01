@@ -1,5 +1,8 @@
 return {
-  mason = { 'markdownlint', 'prettier' },
+  mason = { 'markdownlint', 'prettier', 'marksman' },
+  lsp = {
+    marksman = {},
+  },
   formatters = {
     markdown = { 'prettier' },
   },
@@ -7,4 +10,3 @@ return {
     markdown = { 'markdownlint' },
   },
 }
-
