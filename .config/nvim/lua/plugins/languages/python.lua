@@ -1,5 +1,5 @@
 return {
-  mason = { 'pyright', 'black', 'isort' },
+  mason = { 'pyright', 'black', 'isort', 'mypy' },
   lsp = {
     -- pyright = {},
   },
