@@ -1,1 +1,1 @@
-vim.g.python3_host_prog = vim.fn.expand '~/.virtualenvs/neovim311/bin/python3'
+vim.g.python3_host_prog = vim.fn.expand '~/venvs/neovim312/bin/python3'

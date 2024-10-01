@@ -40,6 +40,7 @@ return {
     indent = { enable = true, disable = { 'ruby' } },
   },
   config = function(_, opts)
+    vim.treesitter.language.register('bash', 'zsh')
     require('nvim-treesitter.configs').setup(opts)
   end,
 }
