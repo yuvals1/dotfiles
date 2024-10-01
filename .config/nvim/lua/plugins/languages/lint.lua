@@ -1,3 +1,4 @@
+-- lint.lua
 local language_utils = require 'plugins.languages.language_utils'
 local M = {}
 
@@ -9,6 +10,13 @@ function M.setup(languages)
     config = function()
       local lint = require 'lint'
       lint.linters_by_ft = configs.linters
+
+      -- Apply linter options
+      for linter_name, options in pairs(configs.linter_options) do
+        if lint.linters[linter_name] then
+          lint.linters[linter_name].args = options.args or lint.linters[linter_name].args
+        end
+      end
 
       -- Create an autocommand group
       local lint_augroup = vim.api.nvim_create_augroup('Linting', { clear = true })

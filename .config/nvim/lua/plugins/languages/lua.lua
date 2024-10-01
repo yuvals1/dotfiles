@@ -16,4 +16,9 @@ return {
   linters = {
     lua = { 'luacheck' },
   },
+  linter_options = {
+    luacheck = {
+      args = { '--globals', 'vim' },
+    },
+  },
 }

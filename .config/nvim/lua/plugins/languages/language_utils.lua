@@ -6,6 +6,7 @@ function M.collect_configurations(languages)
     lsp_servers = {},
     formatters = {},
     linters = {},
+    linter_options = {}, -- Add this line
     tools = {},
   }
 
@@ -33,6 +34,13 @@ function M.collect_configurations(languages)
     if lang.linters then
       for ft, linters in pairs(lang.linters) do
         configs.linters[ft] = linters
+      end
+    end
+
+    -- Collect linter options
+    if lang.linter_options then
+      for linter, options in pairs(lang.linter_options) do
+        configs.linter_options[linter] = options
       end
     end
   end
