@@ -1,0 +1,46 @@
+{
+  "name": "JSON Formatter Test File",
+
+  "version": 1.0,
+
+  "description": "A sample JSON file to test formatting capabilities",
+  "author": {
+    "name": "Test User",
+
+    "email": "testuser@example.com"
+  },
+  "createdAt": "2024-10-01T12:00:00Z",
+  "isActive": true,
+  "tags": ["test", "json", "formatter"],
+  "dataTypes": {
+    "string": "This is a string",
+    "number": 42,
+    "boolean": false,
+    "null": null,
+    "array": [1, 2, 3, 4, 5],
+    "object": {
+      "key1": "value1",
+      "key2": "value2"
+    }
+  },
+  "nestedStructure": {
+    "level1": {
+      "level2": {
+        "level3": {
+          "deep": "This is a deeply nested value"
+        }
+      }
+    }
+  },
+  "longArray": [
+    { "id": 1, "name": "Item 1" },
+    { "id": 2, "name": "Item 2" },
+    { "id": 3, "name": "Item 3" },
+    { "id": 4, "name": "Item 4" },
+    { "id": 5, "name": "Item 5" }
+  ],
+  "specialCharacters": "!@#$%^&*()_+{}[]|\\:;\"'<>,.?/~`",
+  "unicodeCharacters": "こんにちは世界 • Здравствуй, мир • مرحبا بالعالم",
+  "largeNumber": 1234567890123456789,
+  "smallNumber": 0.00000000000000001
+}

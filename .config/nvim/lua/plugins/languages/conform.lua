@@ -20,6 +20,7 @@ function M.setup(languages)
 
     opts = {
       formatters_by_ft = configs.formatters,
+      -- formatters = configs.formatters_options, -- Added this line
       format_on_save = {
         timeout_ms = 500,
         lsp_fallback = true,

@@ -4,6 +4,12 @@ local languages = {
   require 'plugins.languages.lua',
   require 'plugins.languages.python',
   require 'plugins.languages.markdown',
+  require 'plugins.languages.json',
+  require 'plugins.languages.bash',
+  require 'plugins.languages.xml',
+  require 'plugins.languages.yaml',
+  require 'plugins.languages.toml',
+  require 'plugins.languages.javascript',
 }
 
 -- Require the highlight module
