@@ -1,7 +1,7 @@
 return {
   mason = { 'pyright', 'black', 'isort', 'mypy' },
   lsp = {
-    -- pyright = {},
+    pyright = {},
   },
   formatters = {
     python = { 'black', 'isort' },
