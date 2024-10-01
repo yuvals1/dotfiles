@@ -2,13 +2,13 @@
   "entries": {
     "tap": {
       "homebrew/bundle": {
-        "revision": "ea9d90e4a2a986897444fe5abd2a4a968bc8e9cb"
+        "revision": "57e5aed6159a698e6195d30403e6f7aaedf0c81b"
       },
       "nikitabobko/tap": {
         "revision": "1a20b95ff05b9891400802aeeb57d68e51368c3a"
       },
       "withgraphite/tap": {
-        "revision": "3b3df149a22b89fd3e93052a9111445e3dbb65c8"
+        "revision": "52c887ac7c6d57378e446312cbdc60f3a19c4da1"
       },
       "oven-sh/bun": {
         "revision": "4ec25049c3af1c494affbda8b13c188402bbca9e"
@@ -960,7 +960,7 @@
         }
       },
       "graphite": {
-        "version": "1.4.5",
+        "version": "1.4.6",
         "bottle": false
       },
       "bun": {
@@ -1182,7 +1182,7 @@
         }
       },
       "raycast": {
-        "version": "1.83.1",
+        "version": "1.83.2",
         "options": {
           "full_name": "raycast"
         }
@@ -1204,7 +1204,7 @@
   "system": {
     "macos": {
       "sonoma": {
-        "HOMEBREW_VERSION": "4.3.24",
+        "HOMEBREW_VERSION": "4.4.0",
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "api",
         "CLT": "15.3.0.0.1.1708646388",
