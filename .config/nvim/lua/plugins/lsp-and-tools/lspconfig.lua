@@ -1,5 +1,5 @@
-local language_utils = require 'plugins.languages.language_utils'
-local highlight = require 'plugins.languages.highlight'
+local language_utils = require 'plugins.lsp-and-tools.language_utils'
+local highlight = require 'plugins.lsp-and-tools.highlight'
 local M = {}
 
 function M.setup(languages, setup_highlighting)

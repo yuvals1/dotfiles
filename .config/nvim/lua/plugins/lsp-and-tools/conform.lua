@@ -1,4 +1,4 @@
-local language_utils = require 'plugins.languages.language_utils'
+local language_utils = require 'plugins.lsp-and-tools.language_utils'
 local M = {}
 
 function M.setup(languages)
