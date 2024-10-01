@@ -31,6 +31,7 @@ M.plugins = {
   require('plugins.lsp-and-tools.lspconfig').setup(languages, setup_highlighting),
   require('plugins.lsp-and-tools.conform').setup(languages),
   require('plugins.lsp-and-tools.lint').setup(languages),
+  require('plugins.lsp-and-tools.keymaps').setup(),
 }
 
 return M.plugins
