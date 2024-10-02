@@ -2,7 +2,7 @@ return {
   'SmiteshP/nvim-navbuddy',
   keys = {
     {
-      '<leader>o',
+      '<leader>oo',
       function()
         require('nvim-navbuddy').open()
       end,
