@@ -31,6 +31,7 @@ return {
       'python',
       'toml',
       'rust',
+      'ruby',
     },
     auto_install = true,
     highlight = {
@@ -41,6 +42,7 @@ return {
   },
   config = function(_, opts)
     vim.treesitter.language.register('bash', 'zsh')
+    vim.treesitter.language.register('ruby', 'conf')
     require('nvim-treesitter.configs').setup(opts)
   end,
 }
