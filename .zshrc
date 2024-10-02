@@ -27,3 +27,5 @@ export PATH="/usr/local/bin:$PATH"
 
 kitty +kitten themes --reload-in=all Catppuccin-Frappe
 
+export PATH="$HOME/.rbenv/shims:$PATH"
+eval "$(rbenv init -)"
