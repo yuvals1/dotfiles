@@ -26,6 +26,7 @@ brew 'gum'
 brew 'stow'
 brew 'timewarrior'
 brew 'task'
+brew 'taskwarrior-tui'
 
 # Languages and runtimes
 brew 'python'
