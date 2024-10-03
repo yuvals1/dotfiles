@@ -23,6 +23,7 @@ brew 'lazygit'
 brew 'graphite'
 brew 'dust'
 brew 'gum'
+brew 'stow'
 
 # Languages and runtimes
 brew 'python'
