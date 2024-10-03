@@ -24,6 +24,8 @@ brew 'graphite'
 brew 'dust'
 brew 'gum'
 brew 'stow'
+brew 'timewarrior'
+brew 'task'
 
 # Languages and runtimes
 brew 'python'
