@@ -43,6 +43,7 @@ return {
   config = function(_, opts)
     vim.treesitter.language.register('bash', 'zsh')
     vim.treesitter.language.register('ruby', 'conf')
+    vim.treesitter.language.register('ruby', 'cfg')
     require('nvim-treesitter.configs').setup(opts)
   end,
 }
