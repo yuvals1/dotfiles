@@ -36,6 +36,7 @@ brew 'uv'
 brew 'go'
 brew 'luarocks'
 brew 'rbenv'
+brew 'rust'
 
 # Casks (GUI applications)
 cask 'kitty'
