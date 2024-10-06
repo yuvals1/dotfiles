@@ -26,4 +26,6 @@ hooks.location=~/.config/task/hooks
 
 context.learn.read=+learn
 context.learn.write=+learn
+context.break.read=+break
+context.break.write=+break
 timewarrior.taskwarrior=yes
