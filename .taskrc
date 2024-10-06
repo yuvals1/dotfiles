@@ -1,4 +1,4 @@
-# [Created by task 3.1.0 10/3/2024 17:07:50]
+# [Created by task 3.1.0 10/6/2024 22:28:10]
 data.location=/Users/yuvalspiegel/.task
 news.version=3.1.0
 
@@ -24,3 +24,6 @@ news.version=3.1.0
 #include solarized-light-256.theme
 #include no-color.theme
 
+ontext.work.read=project:work
+context.book.read=project:book or +book
+context.work.write=project:work
