@@ -13,5 +13,5 @@ __pycache__/
 .repro/
 .config/nvim_bak
 .config/scivim
-.timewarrior/
+.timewarrior/data
 .taskrc
