@@ -14,3 +14,4 @@ __pycache__/
 .config/nvim_bak
 .config/scivim
 .timewarrior/
+.taskrc
