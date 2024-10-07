@@ -1,36 +1,43 @@
 // ==UserScript==
-// @name         Copy YouTube Video Title
+// @name         Copy YouTube Video Title and Uploader
 // @namespace    http://tampermonkey.net/
-// @version      0.2
-// @description  Copy the current YouTube video title to clipboard using Ctrl+Shift+C
+// @version      0.3
+// @description  Copy the current YouTube video title and uploader name to clipboard using 'Y' key
 // @match        https://www.youtube.com/*
 // @grant        none
 // ==/UserScript==
 
 (function () {
   "use strict";
-
   document.addEventListener("keydown", function (e) {
-    // Use Ctrl+Shift+C combination
+    // Use 'Y' key
     if (e.key === "Y") {
-      let videoTitle = document.querySelector(
+      let videoTitleElement = document.querySelector(
         "h1.ytd-video-primary-info-renderer",
       );
-      if (videoTitle) {
+      let uploaderNameElement = document.querySelector("ytd-channel-name a");
+      if (videoTitleElement && uploaderNameElement) {
+        let videoTitle = videoTitleElement.textContent.trim();
+        let uploaderName = uploaderNameElement.textContent.trim();
+        let textToCopy = `${uploaderName}: ${videoTitle}`;
         navigator.clipboard
-          .writeText(videoTitle.textContent.trim())
+          .writeText(textToCopy)
           .then(() => {
-            console.log("Video title copied to clipboard");
+            console.log("Video title and uploader name copied to clipboard");
             showCopiedMessage();
           })
           .catch((err) => console.error("Failed to copy: ", err));
+      } else {
+        console.error(
+          "Could not find video title or uploader name on the page.",
+        );
       }
     }
   });
 
   function showCopiedMessage() {
     let message = document.createElement("div");
-    message.textContent = "Video title copied!";
+    message.textContent = "Video title and uploader name copied!";
     message.style.cssText = `
             position: fixed;
             top: 20px;
