@@ -1,0 +1,54 @@
+{
+  "title": "Chrome Tab Navigation",
+  "rules": [
+    {
+      "description": "Cmd+] to Cmd+Shift+] and Cmd+[ to Cmd+Shift+[ in Chrome",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "close_bracket",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "close_bracket",
+              "modifiers": ["command", "shift"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "open_bracket",
+              "modifiers": ["command", "shift"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
