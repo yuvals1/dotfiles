@@ -1,17 +1,30 @@
 return {
   'smoka7/hop.nvim',
-  event = 'BufReadPost', -- This will load the plugin when a buffer is read
+  event = 'BufReadPost',
   opts = {
     -- You can add any additional Hop options here
   },
   config = function(_, opts)
-    -- This will be called after the plugin is loaded
-    require('hop').setup(opts)
+    local hop = require 'hop'
+    hop.setup(opts)
 
-    -- Set up keymaps here
-    vim.api.nvim_set_keymap('n', 'S', ':HopNodes<CR>', { noremap = true, silent = true, desc = 'Hop nodes' })
-    vim.api.nvim_set_keymap('n', 'f', ':HopWord<CR>', { noremap = true, silent = true, desc = 'Hop word' })
-    vim.api.nvim_set_keymap('n', 't', ':HopLine<CR>', { noremap = true, silent = true, desc = 'Hop line' })
-    vim.api.nvim_set_keymap('n', 'T', ':HopLineStart<CR>', { noremap = true, silent = true, desc = 'Hop line start' })
+    -- Function to set keymap for both normal and visual modes
+    local function map(modes, lhs, rhs, desc)
+      vim.keymap.set(modes, lhs, rhs, { noremap = true, silent = true, desc = desc })
+    end
+
+    -- Set up keymaps for both normal and visual modes
+    map({ 'n', 'v' }, 'S', function()
+      hop.hint_nodes()
+    end, 'Hop nodes')
+    map({ 'n', 'v' }, 'f', function()
+      hop.hint_words()
+    end, 'Hop word')
+    map({ 'n', 'v' }, 't', function()
+      hop.hint_lines()
+    end, 'Hop line')
+    map({ 'n', 'v' }, 'T', function()
+      hop.hint_lines_skip_whitespace()
+    end, 'Hop line start')
   end,
 }
