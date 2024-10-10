@@ -6,6 +6,7 @@ require 'python-host'
 require 'cursor-movement'
 require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
 require 'time-keymaps'
+require 'brewfile-handling'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
