@@ -14,9 +14,6 @@ return {
     end
 
     -- Set up keymaps for both normal and visual modes
-    map({ 'n', 'v' }, 'S', function()
-      hop.hint_nodes()
-    end, 'Hop nodes')
     map({ 'n', 'v' }, 'f', function()
       hop.hint_words()
     end, 'Hop word')
