@@ -7,6 +7,7 @@ require 'cursor-movement'
 require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
 require 'time-keymaps'
 require 'brewfile-handling'
+require 'select-file'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
