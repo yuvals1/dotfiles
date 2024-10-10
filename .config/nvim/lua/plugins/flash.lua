@@ -3,8 +3,11 @@ return {
   event = 'VeryLazy',
   opts = {},
   config = function(_, opts)
-    -- Enable flash for regular search
+    -- Disable the 'char' mode to prevent overriding 'f', 't', and 'T'
     opts.modes = {
+      char = {
+        enabled = false,
+      },
       search = {
         enabled = true,
         highlight = { backdrop = true },
