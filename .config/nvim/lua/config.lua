@@ -1,6 +1,5 @@
 -- Load options
 require 'options'
-require 'autocmds'
 require 'file-cmds'
 require 'python-host'
 require 'cursor-movement'
@@ -8,6 +7,8 @@ require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
 require 'time-keymaps'
 require 'brewfile-handling'
 require 'select-file'
+require 'highlight-yank'
+require 'open-files'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
