@@ -1,6 +1,6 @@
 return {
   'smoka7/hop.nvim',
-  event = 'BufReadPost',
+  event = { 'BufReadPost', 'BufNewFile', 'VeryLazy' },
   opts = {
     -- You can add any additional Hop options here
   },
