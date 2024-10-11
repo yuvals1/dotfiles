@@ -37,6 +37,10 @@ def get_data_directory():
     home_dir = os.path.expanduser("~")
     # Construct the path to the Timewarrior data directory
     timew_data_dir = os.path.join(home_dir, ".timewarrior", "data")
+
+    # Create the directory if it doesn't exist
+    os.makedirs(timew_data_dir, exist_ok=True)
+
     return timew_data_dir
 
 
