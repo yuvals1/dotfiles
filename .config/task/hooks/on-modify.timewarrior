@@ -37,10 +37,8 @@ def get_data_directory():
     home_dir = os.path.expanduser("~")
     # Construct the path to the Timewarrior data directory
     timew_data_dir = os.path.join(home_dir, ".timewarrior", "data")
-
     # Create the directory if it doesn't exist
     os.makedirs(timew_data_dir, exist_ok=True)
-
     return timew_data_dir
 
 
@@ -64,6 +62,14 @@ def create_table(conn):
     """
     cursor = conn.cursor()
     cursor.execute(create_table_sql)
+    # Create index on task_uuid
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_task_uuid ON time_entries(task_uuid);"
+    )
+    # Create index on start_time
+    cursor.execute(
+        "CREATE INDEX IF NOT EXISTS idx_start_time ON time_entries(start_time);"
+    )
     conn.commit()
 
 
