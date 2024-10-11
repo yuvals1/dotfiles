@@ -10,8 +10,4 @@
 # Ignore all __pycache__ directories
 __pycache__/
 *.py[cod]
-.repro/
-.config/nvim_bak
-.config/scivim
-.timewarrior/data
 .taskrc
