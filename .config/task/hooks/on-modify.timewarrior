@@ -2,174 +2,81 @@
 
 import json
 import os
-import sqlite3
-import subprocess
 import sys
 
-# Hook should extract all the following for use in Timewarrior and SQLite DB:
-#   Project
-#   Tags
-#   Description
-#   UUID
+# Ensure modules in the same directory can be imported
+script_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, script_dir)
 
-try:
-    input_stream = sys.stdin.buffer
-except AttributeError:
-    input_stream = sys.stdin
-
-
-def extract_tags_from(json_obj):
-    # Extract attributes for use as tags, excluding the description.
-    tags = []
-    if "project" in json_obj:
-        tags.append(json_obj["project"])
-    if "tags" in json_obj:
-        if isinstance(json_obj["tags"], str):
-            # Convert string of tags back into a list.
-            tags.extend(json_obj["tags"].split(","))
-        else:
-            tags.extend(json_obj["tags"])
-    return tags
+from db_utils import (connect_db, create_table, get_data_directory,
+                      insert_entry, update_entry_description,
+                      update_entry_end_time, update_entry_tags)
+from task_utils import (extract_description, extract_tags_from, extract_uuid,
+                        has_description_changed, has_task_started,
+                        has_task_stopped, have_tags_changed)
+from timew_utils import (annotate_description, annotate_uuid,
+                         start_time_tracking, stop_time_tracking,
+                         update_timew_tags)
 
 
-def get_data_directory():
-    # Get the HOME directory
-    home_dir = os.path.expanduser("~")
-    # Construct the path to the Timewarrior data directory
-    timew_data_dir = os.path.join(home_dir, ".timewarrior", "data")
-    # Create the directory if it doesn't exist
-    os.makedirs(timew_data_dir, exist_ok=True)
-    return timew_data_dir
+def main():
+    # Read old and new task data
+    try:
+        input_stream = sys.stdin.buffer
+    except AttributeError:
+        input_stream = sys.stdin
 
+    old = json.loads(input_stream.readline().decode("utf-8", errors="replace"))
+    new = json.loads(input_stream.readline().decode("utf-8", errors="replace"))
 
-def connect_db(db_path):
-    # Connect to the SQLite database (it will be created if it doesn't exist)
-    conn = sqlite3.connect(db_path)
-    return conn
+    # Output the new task data
+    print(json.dumps(new))
 
+    # Determine task state changes
+    is_started = has_task_started(old, new)
+    is_stopped = has_task_stopped(old, new)
 
-def create_table(conn):
-    # Create a table to store time tracking data if it doesn't exist
-    create_table_sql = """
-    CREATE TABLE IF NOT EXISTS time_entries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        task_uuid TEXT,
-        description TEXT,
-        start_time TEXT,
-        end_time TEXT,
-        tags TEXT
-    );
-    """
-    cursor = conn.cursor()
-    cursor.execute(create_table_sql)
-    # Create index on task_uuid
-    cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_task_uuid ON time_entries(task_uuid);"
-    )
-    # Create index on start_time
-    cursor.execute(
-        "CREATE INDEX IF NOT EXISTS idx_start_time ON time_entries(start_time);"
-    )
-    conn.commit()
-
-
-def insert_entry(conn, task_uuid, description, start_time, end_time, tags):
-    insert_sql = """
-    INSERT INTO time_entries (task_uuid, description, start_time, end_time, tags)
-    VALUES (?, ?, ?, ?, ?);
-    """
-    cursor = conn.cursor()
-    cursor.execute(insert_sql, (task_uuid, description, start_time, end_time, tags))
-    conn.commit()
-
-
-def update_entry_end_time(conn, task_uuid, end_time):
-    update_sql = """
-    UPDATE time_entries
-    SET end_time = ?
-    WHERE task_uuid = ? AND end_time IS NULL;
-    """
-    cursor = conn.cursor()
-    cursor.execute(update_sql, (end_time, task_uuid))
-    conn.commit()
-
-
-def main(old, new):
-    start_or_stop = ""
-    # Determine if the task has been started or stopped.
-    if "start" in new and "start" not in old:
-        start_or_stop = "start"
-    elif ("start" not in new or "end" in new) and "start" in old:
-        start_or_stop = "stop"
-
-    # Get the Timewarrior data directory
+    # Set up the database
     data_dir = get_data_directory()
-    # Path to the SQLite database
     db_path = os.path.join(data_dir, "time_data.db")
-    # Connect to the database and create the table if necessary
     conn = connect_db(db_path)
     create_table(conn)
 
-    if start_or_stop:
+    if is_started or is_stopped:
         tags = extract_tags_from(new)
-        # Start or stop time tracking with the extracted tags.
-        subprocess.call(["timew", start_or_stop] + tags + [":yes"])
-        # If starting, add the description and UUID as annotations.
-        if start_or_stop == "start":
-            description = new.get("description", "")
-            subprocess.call(["timew", "annotate", "@1", description])
-            uuid = new.get("uuid", "")
-            if uuid:
-                subprocess.call(["timew", "annotate", "@1", "UUID: " + uuid])
-            # Insert a new entry into the database
+        uuid = extract_uuid(new)
+        description = extract_description(new)
+        tags_str = ",".join(tags)
+
+        if is_started:
+            start_time_tracking(tags)
+            annotate_description(description)
+            annotate_uuid(uuid)
             start_time = new.get("start", "")
-            tags_str = ",".join(tags)
             insert_entry(conn, uuid, description, start_time, None, tags_str)
-        elif start_or_stop == "stop":
-            # Update the end_time of the last entry for this UUID
-            uuid = new.get("uuid", "")
+        elif is_stopped:
+            stop_time_tracking()
             end_time = new.get("end", "")
             update_entry_end_time(conn, uuid, end_time)
-    # Handle modifications to a running task.
     elif "start" in new and "start" in old:
+        # Handle modifications to a running task
         old_tags = extract_tags_from(old)
         new_tags = extract_tags_from(new)
-        # Update tags if they have changed.
-        if old_tags != new_tags:
-            subprocess.call(["timew", "untag", "@1"] + old_tags + [":yes"])
-            subprocess.call(["timew", "tag", "@1"] + new_tags + [":yes"])
-            # Update tags in the database
-            uuid = new.get("uuid", "")
-            tags_str = ",".join(new_tags)
-            update_sql = """
-            UPDATE time_entries
-            SET tags = ?
-            WHERE task_uuid = ? AND end_time IS NULL;
-            """
-            cursor = conn.cursor()
-            cursor.execute(update_sql, (tags_str, uuid))
-            conn.commit()
-        # Update the description annotation if it has changed.
-        old_description = old.get("description", "")
-        new_description = new.get("description", "")
-        if old_description != new_description:
-            subprocess.call(["timew", "annotate", "@1", new_description])
-            # Update description in the database
-            uuid = new.get("uuid", "")
-            update_sql = """
-            UPDATE time_entries
-            SET description = ?
-            WHERE task_uuid = ? AND end_time IS NULL;
-            """
-            cursor = conn.cursor()
-            cursor.execute(update_sql, (new_description, uuid))
-            conn.commit()
-    # Close the database connection
+        uuid = extract_uuid(new)
+        tags_str = ",".join(new_tags)
+
+        if have_tags_changed(old_tags, new_tags):
+            update_timew_tags(old_tags, new_tags)
+            update_entry_tags(conn, uuid, tags_str)
+
+        old_description = extract_description(old)
+        new_description = extract_description(new)
+        if has_description_changed(old_description, new_description):
+            annotate_description(new_description)
+            update_entry_description(conn, uuid, new_description)
+
     conn.close()
 
 
 if __name__ == "__main__":
-    old = json.loads(input_stream.readline().decode("utf-8", errors="replace"))
-    new = json.loads(input_stream.readline().decode("utf-8", errors="replace"))
-    print(json.dumps(new))
-    main(old, new)
+    main()
