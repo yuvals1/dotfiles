@@ -12,6 +12,12 @@
       },
       "oven-sh/bun": {
         "revision": "adc3edb632632b4da9db286a55195f3b67a917e6"
+      },
+      "danvergara/tools": {
+        "revision": "7f3bbed2aadc4ffb00c1b4a7a282231dee6e9b01"
+      },
+      "jorgerojas26/lazysql": {
+        "revision": "fe79e03bc82ed2a5dbd2b7a2deed88b39d2417e7"
       }
     },
     "brew": {
@@ -1468,6 +1474,14 @@
             }
           }
         }
+      },
+      "dblab": {
+        "version": "0.26.0",
+        "bottle": false
+      },
+      "lazysql": {
+        "version": "0.2.9",
+        "bottle": false
       }
     },
     "cask": {
