@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import json
+import os
+import sqlite3
 import subprocess
 import sys
 
-# Hook should extract all the following for use in Timewarrior:
+# Hook should extract all the following for use in Timewarrior and SQLite DB:
 #   Project
 #   Tags
 #   Description
@@ -30,6 +32,58 @@ def extract_tags_from(json_obj):
     return tags
 
 
+def get_data_directory():
+    # Get the HOME directory
+    home_dir = os.path.expanduser("~")
+    # Construct the path to the Timewarrior data directory
+    timew_data_dir = os.path.join(home_dir, ".timewarrior", "data")
+    return timew_data_dir
+
+
+def connect_db(db_path):
+    # Connect to the SQLite database (it will be created if it doesn't exist)
+    conn = sqlite3.connect(db_path)
+    return conn
+
+
+def create_table(conn):
+    # Create a table to store time tracking data if it doesn't exist
+    create_table_sql = """
+    CREATE TABLE IF NOT EXISTS time_entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task_uuid TEXT,
+        description TEXT,
+        start_time TEXT,
+        end_time TEXT,
+        tags TEXT
+    );
+    """
+    cursor = conn.cursor()
+    cursor.execute(create_table_sql)
+    conn.commit()
+
+
+def insert_entry(conn, task_uuid, description, start_time, end_time, tags):
+    insert_sql = """
+    INSERT INTO time_entries (task_uuid, description, start_time, end_time, tags)
+    VALUES (?, ?, ?, ?, ?);
+    """
+    cursor = conn.cursor()
+    cursor.execute(insert_sql, (task_uuid, description, start_time, end_time, tags))
+    conn.commit()
+
+
+def update_entry_end_time(conn, task_uuid, end_time):
+    update_sql = """
+    UPDATE time_entries
+    SET end_time = ?
+    WHERE task_uuid = ? AND end_time IS NULL;
+    """
+    cursor = conn.cursor()
+    cursor.execute(update_sql, (end_time, task_uuid))
+    conn.commit()
+
+
 def main(old, new):
     start_or_stop = ""
     # Determine if the task has been started or stopped.
@@ -37,6 +91,14 @@ def main(old, new):
         start_or_stop = "start"
     elif ("start" not in new or "end" in new) and "start" in old:
         start_or_stop = "stop"
+
+    # Get the Timewarrior data directory
+    data_dir = get_data_directory()
+    # Path to the SQLite database
+    db_path = os.path.join(data_dir, "time_data.db")
+    # Connect to the database and create the table if necessary
+    conn = connect_db(db_path)
+    create_table(conn)
 
     if start_or_stop:
         tags = extract_tags_from(new)
@@ -49,6 +111,15 @@ def main(old, new):
             uuid = new.get("uuid", "")
             if uuid:
                 subprocess.call(["timew", "annotate", "@1", "UUID: " + uuid])
+            # Insert a new entry into the database
+            start_time = new.get("start", "")
+            tags_str = ",".join(tags)
+            insert_entry(conn, uuid, description, start_time, None, tags_str)
+        elif start_or_stop == "stop":
+            # Update the end_time of the last entry for this UUID
+            uuid = new.get("uuid", "")
+            end_time = new.get("end", "")
+            update_entry_end_time(conn, uuid, end_time)
     # Handle modifications to a running task.
     elif "start" in new and "start" in old:
         old_tags = extract_tags_from(old)
@@ -57,19 +128,34 @@ def main(old, new):
         if old_tags != new_tags:
             subprocess.call(["timew", "untag", "@1"] + old_tags + [":yes"])
             subprocess.call(["timew", "tag", "@1"] + new_tags + [":yes"])
+            # Update tags in the database
+            uuid = new.get("uuid", "")
+            tags_str = ",".join(new_tags)
+            update_sql = """
+            UPDATE time_entries
+            SET tags = ?
+            WHERE task_uuid = ? AND end_time IS NULL;
+            """
+            cursor = conn.cursor()
+            cursor.execute(update_sql, (tags_str, uuid))
+            conn.commit()
         # Update the description annotation if it has changed.
         old_description = old.get("description", "")
         new_description = new.get("description", "")
         if old_description != new_description:
-            # Remove the old description annotation and add the new one.
-            # Timewarrior doesn't support removing specific annotations,
-            # so we can re-annotate or handle it as per your requirements.
             subprocess.call(["timew", "annotate", "@1", new_description])
-        # Generally, the UUID won't change, but include handling just in case.
-        old_uuid = old.get("uuid", "")
-        new_uuid = new.get("uuid", "")
-        if old_uuid != new_uuid and new_uuid:
-            subprocess.call(["timew", "annotate", "@1", "UUID: " + new_uuid])
+            # Update description in the database
+            uuid = new.get("uuid", "")
+            update_sql = """
+            UPDATE time_entries
+            SET description = ?
+            WHERE task_uuid = ? AND end_time IS NULL;
+            """
+            cursor = conn.cursor()
+            cursor.execute(update_sql, (new_description, uuid))
+            conn.commit()
+    # Close the database connection
+    conn.close()
 
 
 if __name__ == "__main__":
