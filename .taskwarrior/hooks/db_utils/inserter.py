@@ -1,9 +1,17 @@
-def insert_entry(conn, task_uuid, description, start_time, end_time, tags):
+from sqlmodel import Session
+
+from .models import TimeEntry
+
+
+def insert_entry(engine, task_uuid, description, start_time, end_time, tags):
     """Inserts a new time entry into the database."""
-    insert_sql = """
-    INSERT INTO time_entries (task_uuid, description, start_time, end_time, tags)
-    VALUES (?, ?, ?, ?, ?);
-    """
-    cursor = conn.cursor()
-    cursor.execute(insert_sql, (task_uuid, description, start_time, end_time, tags))
-    conn.commit()
+    with Session(engine) as session:
+        time_entry = TimeEntry(
+            task_uuid=task_uuid,
+            description=description,
+            start_time=start_time,
+            end_time=end_time,
+            tags=tags,
+        )
+        session.add(time_entry)
+        session.commit()

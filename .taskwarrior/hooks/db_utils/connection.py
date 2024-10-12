@@ -1,5 +1,6 @@
 import os
-import sqlite3
+
+from sqlmodel import create_engine
 
 
 def get_data_directory():
@@ -11,6 +12,6 @@ def get_data_directory():
 
 
 def connect_db(db_path):
-    """Connects to the SQLite database."""
-    conn = sqlite3.connect(db_path)
-    return conn
+    """Connects to the SQLite database and returns an engine."""
+    engine = create_engine(f"sqlite:///{db_path}", echo=False)
+    return engine
