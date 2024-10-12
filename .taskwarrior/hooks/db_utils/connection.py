@@ -3,15 +3,16 @@ import os
 from sqlmodel import create_engine
 
 
-def get_data_directory():
-    """Retrieves the Timewarrior data directory."""
+def get_taskwarrior_db_path():
+    """Retrieves the Taskwarrior database path."""
     home_dir = os.path.expanduser("~")
-    timew_data_dir = os.path.join(home_dir, ".timewarrior", "data")
-    os.makedirs(timew_data_dir, exist_ok=True)
-    return timew_data_dir
+    taskwarrior_dir = os.path.join(home_dir, ".taskwarrior")
+    db_path = os.path.join(taskwarrior_dir, "taskchampion.sqlite3")
+    return db_path
 
 
-def connect_db(db_path):
-    """Connects to the SQLite database and returns an engine."""
+def connect_db():
+    """Connects to the Taskwarrior SQLite database and returns an engine."""
+    db_path = get_taskwarrior_db_path()
     engine = create_engine(f"sqlite:///{db_path}", echo=False)
     return engine

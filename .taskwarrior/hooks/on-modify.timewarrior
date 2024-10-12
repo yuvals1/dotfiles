@@ -26,9 +26,9 @@ else:
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, script_dir)
 
-from db_utils import (connect_db, create_table, get_data_directory,
-                      insert_entry, update_entry_description,
-                      update_entry_end_time, update_entry_tags)
+from db_utils import (connect_db, create_table, insert_entry,
+                      update_entry_description, update_entry_end_time,
+                      update_entry_tags)
 from task_utils import (extract_description, extract_tags_from, extract_uuid,
                         has_description_changed, has_task_started,
                         has_task_stopped, have_tags_changed)
@@ -54,10 +54,8 @@ def main():
     is_started = has_task_started(old, new)
     is_stopped = has_task_stopped(old, new)
 
-    # Set up the database
-    data_dir = get_data_directory()
-    db_path = os.path.join(data_dir, "timewarrior.sqlite3")  # Changed filename
-    engine = connect_db(db_path)
+    # Set up the database connection
+    engine = connect_db()
     create_table(engine)
 
     if is_started or is_stopped:

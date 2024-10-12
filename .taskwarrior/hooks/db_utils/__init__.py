@@ -1,4 +1,4 @@
-from .connection import connect_db, get_data_directory
+from .connection import connect_db
 from .inserter import insert_entry
 from .models import TimeEntry
 from .schema import create_table
