@@ -6,7 +6,9 @@ import sys
 from datetime import datetime
 
 # Activate the virtual environment
-venv_path = os.path.join(os.path.dirname(__file__), ".venv")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+venv_path = os.path.join(parent_dir, ".venv")
 activate_script = os.path.join(venv_path, "bin", "activate_this.py")
 
 if os.path.exists(activate_script):
@@ -22,9 +24,9 @@ else:
     )
     sys.path.insert(0, site_packages)
 
-# Ensure modules in the same directory can be imported
-script_dir = os.path.dirname(os.path.abspath(__file__))
+# Ensure modules in the parent directory can be imported
 sys.path.insert(0, script_dir)
+sys.path.insert(0, parent_dir)
 
 from db_utils.connection import connect_db
 from db_utils.inserter import insert_entry

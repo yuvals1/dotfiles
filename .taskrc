@@ -7,7 +7,7 @@ news.version=3.1.0
 # move this configuration file from ~/.taskrc to ~/.config/task/taskrc and update location config as follows:
 
 #data.location=~/.local/share/task
-hooks.location=~/.taskwarrior/hooks
+hooks.location=~/.taskwarrior/tw_utils/hooks
 data.location=~/.taskwarrior
 
 
