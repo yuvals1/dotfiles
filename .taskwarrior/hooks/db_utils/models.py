@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Optional
 
 from sqlmodel import Field, SQLModel
@@ -11,5 +10,5 @@ class TaskTimeInterval(SQLModel, table=True):
     description: str
     start_time: str
     end_time: Optional[str] = None
-    duration: Optional[timedelta] = None
+    duration_seconds: Optional[int] = None
     tags: str

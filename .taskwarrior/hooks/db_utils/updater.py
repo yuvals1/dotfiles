@@ -16,7 +16,9 @@ def update_entry_end_time(engine, task_uuid, end_time):
             result.end_time = end_time
             end_datetime = datetime.strptime(end_time, "%Y%m%dT%H%M%SZ")
             start_datetime = datetime.strptime(result.start_time, "%Y%m%dT%H%M%SZ")
-            result.duration = end_datetime - start_datetime
+            result.duration_seconds = int(
+                (end_datetime - start_datetime).total_seconds()
+            )
             session.add(result)
             session.commit()
 
