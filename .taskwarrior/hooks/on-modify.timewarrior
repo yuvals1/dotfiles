@@ -26,15 +26,18 @@ else:
 script_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, script_dir)
 
-from db_utils import (connect_db, create_table, insert_entry,
-                      update_entry_description, update_entry_end_time,
-                      update_entry_tags)
-from task_utils import (extract_description, extract_tags_from, extract_uuid,
-                        has_description_changed, has_task_started,
-                        has_task_stopped, have_tags_changed)
-from timew_utils import (annotate_description, annotate_uuid,
-                         start_time_tracking, stop_time_tracking,
-                         update_timew_tags)
+from db_utils.connection import connect_db
+from db_utils.inserter import insert_entry
+from db_utils.schema import create_table
+from db_utils.updater import (update_entry_description, update_entry_end_time,
+                              update_entry_tags)
+from task_utils.comparer import (has_description_changed, has_task_started,
+                                 has_task_stopped, have_tags_changed)
+from task_utils.extractor import (extract_description, extract_tags_from,
+                                  extract_uuid)
+from timew_utils.annotator import annotate_description, annotate_uuid
+from timew_utils.tagger import update_timew_tags
+from timew_utils.tracker import start_time_tracking, stop_time_tracking
 
 
 def main():
