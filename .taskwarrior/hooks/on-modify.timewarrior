@@ -56,7 +56,7 @@ def main():
 
     # Set up the database
     data_dir = get_data_directory()
-    db_path = os.path.join(data_dir, "time_data.db")
+    db_path = os.path.join(data_dir, "timewarrior.sqlite3")  # Changed filename
     engine = connect_db(db_path)
     create_table(engine)
 
