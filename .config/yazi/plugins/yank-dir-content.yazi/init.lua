@@ -81,7 +81,7 @@ local function generate_tree(dir_url)
 		:arg("3") -- Limit depth to 3 levels, adjust as needed
 		:arg("--charset=ascii") -- Use ASCII characters for compatibility
 		:arg("-I")
-		:arg(".venv") -- Ignore .venv directories
+		:arg(".venv|__pycache__|.mypy_cache") -- Ignore specified directories
 		:arg(tostring(dir_url))
 		:output()
 
@@ -115,6 +115,12 @@ return {
 			:arg("-not")
 			:arg("-path")
 			:arg("*/.venv/*") -- Exclude .venv directories
+			:arg("-not")
+			:arg("-path")
+			:arg("*/__pycache__/*") -- Exclude __pycache__ directories
+			:arg("-not")
+			:arg("-path")
+			:arg("*/.mypy_cache/*") -- Exclude .mypy_cache directories
 			:output()
 		if not output then
 			return info("Failed to list directory contents, error: " .. err)
@@ -139,8 +145,10 @@ return {
 				return not fs.stat(path).is_dir
 			end)
 
-			-- Skip .venv directories
-			if formatted_path:match("^%.venv") or formatted_path:match("/%.venv") then
+			-- Skip specified directories
+			if formatted_path:match("^%.venv") or formatted_path:match("/%.venv") or
+			   formatted_path:match("^__pycache__") or formatted_path:match("/__pycache__") or
+			   formatted_path:match("^%.mypy_cache") or formatted_path:match("/%.mypy_cache") then
 				goto continue
 			end
 
