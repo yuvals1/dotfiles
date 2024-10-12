@@ -1,10 +1,12 @@
+from datetime import datetime
+
 from sqlmodel import Session, select
 
 from .models import TaskTimeInterval
 
 
 def update_entry_end_time(engine, task_uuid, end_time):
-    """Updates the end time of an existing time entry."""
+    """Updates the end time and duration of an existing time entry."""
     with Session(engine) as session:
         statement = select(TaskTimeInterval).where(
             TaskTimeInterval.task_uuid == task_uuid, TaskTimeInterval.end_time == None
@@ -12,6 +14,9 @@ def update_entry_end_time(engine, task_uuid, end_time):
         result = session.exec(statement).first()
         if result:
             result.end_time = end_time
+            end_datetime = datetime.strptime(end_time, "%Y%m%dT%H%M%SZ")
+            start_datetime = datetime.strptime(result.start_time, "%Y%m%dT%H%M%SZ")
+            result.duration = end_datetime - start_datetime
             session.add(result)
             session.commit()
 
