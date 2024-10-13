@@ -42,6 +42,7 @@ brew 'rust'
 brew 'ghc' # Add this line for GHC
 brew 'cabal-install'  # Add this line for Cabal
 brew 'haskell-stack'  # Add this line for Stack
+brew 'haskell-language-server'
 
 # Casks (GUI applications)
 cask 'kitty'
