@@ -3,7 +3,7 @@ tap 'homebrew/bundle'
 tap 'nikitabobko/tap'
 tap 'withgraphite/tap'
 tap 'oven-sh/bun'
-tap 'jorgerojas26/lazysql' # New tap for lazysql
+tap 'jorgerojas26/lazysql'
 
 # CLI tools
 brew 'git'
@@ -28,7 +28,7 @@ brew 'stow'
 brew 'timewarrior'
 brew 'task'
 brew 'taskwarrior-tui'
-brew 'lazysql' # Added lazysql
+brew 'lazysql'
 
 # Languages and runtimes
 brew 'python'
@@ -39,6 +39,9 @@ brew 'go'
 brew 'luarocks'
 brew 'rbenv'
 brew 'rust'
+brew 'ghc' # Add this line for GHC
+brew 'cabal-install'  # Add this line for Cabal
+brew 'haskell-stack'  # Add this line for Stack
 
 # Casks (GUI applications)
 cask 'kitty'

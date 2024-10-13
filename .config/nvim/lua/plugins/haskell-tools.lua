@@ -1,7 +1,7 @@
 -- haskell-tools-config.lua
 return {
   'mrcjkb/haskell-tools.nvim',
-  version = '^3', -- Recommended
+  rversion = '^3',
   ft = { 'haskell', 'lhaskell', 'cabal', 'cabalproject' },
   config = function()
     local ht = require 'haskell-tools'
@@ -18,6 +18,20 @@ return {
           vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, opts)
           vim.keymap.set('n', '<space>hf', ht.repl.toggle, opts)
         end,
+      },
+      tools = {
+        codeLens = {
+          autoRefresh = true,
+        },
+        hoogle = {
+          mode = 'auto', -- Changed from "telescope" to "auto"
+        },
+        repl = {
+          handler = 'builtin',
+          builtin = {
+            cmd = { '/opt/homebrew/bin/ghci' }, -- Path to Homebrew-installed GHCi
+          },
+        },
       },
     }
 
