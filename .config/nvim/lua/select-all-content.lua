@@ -1,1 +1,1 @@
-vim.keymap.set({ 'n', 'v' }, 'S', 'ggVG', { noremap = true, desc = 'Select all content' })
+vim.keymap.set({ 'n', 'v' }, '<C-space>', 'ggVG', { noremap = true, desc = 'Select all content' })
