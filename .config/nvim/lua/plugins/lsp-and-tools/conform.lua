@@ -17,15 +17,22 @@ function M.setup(languages)
         desc = '[F]ormat buffer',
       },
     },
-
     opts = {
       formatters_by_ft = configs.formatters,
-      -- formatters = configs.formatters_options, -- Added this line
+      formatters = configs.formatters_options, -- Ensure this line is active
       format_on_save = {
         timeout_ms = 500,
         lsp_fallback = true,
       },
     },
+    config = function(_, opts)
+      local conform = require 'conform'
+      -- Register custom formatter configurations
+      for formatter_name, formatter_opts in pairs(opts.formatters) do
+        conform.formatters[formatter_name] = formatter_opts
+      end
+      conform.setup(opts)
+    end,
   }
 end
 

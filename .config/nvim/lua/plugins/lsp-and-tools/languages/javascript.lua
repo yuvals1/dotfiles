@@ -19,30 +19,10 @@ return {
     javascriptreact = { 'eslint_d' },
     typescriptreact = { 'eslint_d' },
   },
-  -- formatter_options = {
-  --   prettier = {
-  --     args = function(ctx)
-  --       local args = { '--stdin-filepath', ctx.filename }
-  --       local prettier_config = vim.fn.findfile('.prettierrc', vim.fn.getcwd() .. ';')
-  --       if prettier_config ~= '' then
-  --         table.insert(args, '--config')
-  --         table.insert(args, prettier_config)
-  --       else
-  --         vim.list_extend(args, {
-  --           '--single-quote',
-  --           '--trailing-comma',
-  --           'es5',
-  --           '--print-width',
-  --           '130',
-  --         })
-  --       end
-  --       if ctx.filename:match('%.json$') then
-  --         table.insert(args, '--parser')
-  --         table.insert(args, 'json')
-  --       end
-  --       return args
-  --     end,
-  --     stdin = true,
-  --   },
-  -- },
+  formatter_options = {
+    prettier = {
+      args = { '--stdin-filepath', '$FILENAME', '--experimental-ternaries' },
+      stdin = true,
+    },
+  },
 }

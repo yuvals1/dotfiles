@@ -5,10 +5,10 @@ function M.collect_configurations(languages)
   local configs = {
     lsp_servers = {},
     formatters = {},
-		    formatters_options = {}, -- Added this line
+    formatters_options = {},
 
     linters = {},
-    linter_options = {}, -- Add this line
+    linter_options = {},
     tools = {},
   }
 
@@ -31,11 +31,14 @@ function M.collect_configurations(languages)
         configs.formatters[ft] = formatters
       end
     end
+
+    -- Collect formatter options
     if lang.formatter_options then
       for formatter, options in pairs(lang.formatter_options) do
         configs.formatters_options[formatter] = options
       end
     end
+
     -- Collect linters
     if lang.linters then
       for ft, linters in pairs(lang.linters) do
