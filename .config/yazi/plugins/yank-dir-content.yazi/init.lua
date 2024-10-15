@@ -81,7 +81,7 @@ local function generate_tree(dir_url)
 		:arg("3") -- Limit depth to 3 levels, adjust as needed
 		:arg("--charset=ascii") -- Use ASCII characters for compatibility
 		:arg("-I")
-		:arg(".venv|__pycache__|.mypy_cache|.git") -- Ignore specified directories
+		:arg(".venv|__pycache__|.mypy_cache|.git|node_modules") -- Ignore specified directories
 		:arg(tostring(dir_url))
 		:output()
 
@@ -124,6 +124,9 @@ return {
 			:arg("-not")
 			:arg("-path")
 			:arg("*/.git/*") -- Exclude .git directories
+			:arg("-not")
+			:arg("-path")
+			:arg("*/node_modules/*") -- Exclude node_modules directories
 			:output()
 		if not output then
 			return info("Failed to list directory contents, error: " .. err)
@@ -152,7 +155,8 @@ return {
 			if formatted_path:match("^%.venv") or formatted_path:match("/%.venv") or
 			   formatted_path:match("^__pycache__") or formatted_path:match("/__pycache__") or
 			   formatted_path:match("^%.mypy_cache") or formatted_path:match("/%.mypy_cache") or
-			   formatted_path:match("^%.git") or formatted_path:match("/%.git") then
+			   formatted_path:match("^%.git") or formatted_path:match("/%.git") or
+			   formatted_path:match("^node_modules") or formatted_path:match("/node_modules") then
 				goto continue
 			end
 
