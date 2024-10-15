@@ -1,0 +1,5 @@
+[[database]]
+Name = 'taskwarrior'
+Provider = 'sqlite3'
+DBName = ''
+URL = '/Users/yuvalspiegel/.taskwarrior/taskchampion.sqlite3'
