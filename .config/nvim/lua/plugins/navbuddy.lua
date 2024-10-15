@@ -12,8 +12,8 @@ return {
   opts = {
     window = {
       border = 'single',
-      size = '60%',
-      position = '50%',
+      size = { height = '20%', width = '100%' }, -- Set the size to 20% height and full width
+      position = { row = '100%', col = '0%' }, -- Position at 80% from the top (bottom 20%)
       scrolloff = nil,
       sections = {
         left = {
