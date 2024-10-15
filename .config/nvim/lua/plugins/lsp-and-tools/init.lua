@@ -12,6 +12,7 @@ local languages = {
   require 'plugins.lsp-and-tools.languages.javascript',
   require 'plugins.lsp-and-tools.languages.ruby',
   require 'plugins.lsp-and-tools.languages.haskell',
+  require 'plugins.lsp-and-tools.languages.go',
 }
 
 -- Require the highlight module
