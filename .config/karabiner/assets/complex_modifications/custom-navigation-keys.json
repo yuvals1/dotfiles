@@ -1,8 +1,8 @@
 {
-  "title": "Chrome Navigation Keys",
+  "title": "Custom Navigation Keys",
   "rules": [
     {
-      "description": "Ctrl+N to Down Arrow and Ctrl+P to Up Arrow in Chrome",
+      "description": "Custom Navigation Key Mappings",
       "manipulators": [
         {
           "type": "basic",
@@ -43,6 +43,51 @@
             {
               "type": "frontmost_application_if",
               "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "b",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "s",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow"
             }
           ]
         }

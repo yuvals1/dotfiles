@@ -2,7 +2,7 @@
   "title": "Ctrl Modifications",
   "rules": [
     {
-      "description": "Ctrl+; to Escape",
+      "description": "Ctrl Key Modifications",
       "manipulators": [
         {
           "type": "basic",
@@ -18,12 +18,7 @@
               "key_code": "escape"
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "Ctrl+Comma to Return",
-      "manipulators": [
+        },
         {
           "type": "basic",
           "from": {
@@ -38,12 +33,7 @@
               "key_code": "return_or_enter"
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "Ctrl+Period to Backspace",
-      "manipulators": [
+        },
         {
           "type": "basic",
           "from": {
@@ -58,12 +48,7 @@
               "key_code": "delete_or_backspace"
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "Ctrl+/ to Forward Delete",
-      "manipulators": [
+        },
         {
           "type": "basic",
           "from": {
@@ -78,12 +63,7 @@
               "key_code": "delete_forward"
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "Ctrl+W to Alt+Backspace (delete word)",
-      "manipulators": [
+        },
         {
           "type": "basic",
           "from": {
@@ -99,12 +79,7 @@
               "modifiers": ["option"]
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "Ctrl+M to Tab",
-      "manipulators": [
+        },
         {
           "type": "basic",
           "from": {
@@ -119,12 +94,7 @@
               "key_code": "tab"
             }
           ]
-        }
-      ]
-    },
-    {
-      "description": "Ctrl+' to Shift+Enter",
-      "manipulators": [
+        },
         {
           "type": "basic",
           "from": {
