@@ -19,11 +19,26 @@ function M.setup(languages)
     },
     opts = {
       formatters_by_ft = configs.formatters,
-      formatters = configs.formatters_options, -- Ensure this line is active
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
+      formatters = configs.formatters_options,
+      format_on_save = function(bufnr)
+        -- Define the list of filetypes to NOT format on save
+        local no_format_on_save_filetypes = {
+          'go',
+        }
+
+        -- Get the filetype of the current buffer
+        local filetype = vim.bo[bufnr].filetype
+
+        -- Check if the current filetype should not be formatted on save
+        if vim.tbl_contains(no_format_on_save_filetypes, filetype) then
+          return false
+        else
+          return {
+            timeout_ms = 500,
+            lsp_fallback = true,
+          }
+        end
+      end,
     },
     config = function(_, opts)
       local conform = require 'conform'
