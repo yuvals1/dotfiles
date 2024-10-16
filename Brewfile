@@ -3,7 +3,6 @@ tap 'homebrew/bundle'
 tap 'nikitabobko/tap'
 tap 'withgraphite/tap'
 tap 'oven-sh/bun'
-tap 'jorgerojas26/lazysql'
 
 # CLI tools
 brew 'git'
@@ -28,7 +27,6 @@ brew 'stow'
 brew 'timewarrior'
 brew 'task'
 brew 'taskwarrior-tui'
-brew 'lazysql'
 
 # Languages and runtimes
 brew 'python'
