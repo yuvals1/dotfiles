@@ -8,6 +8,7 @@ require 'time-keymaps'
 require 'brewfile-handling'
 require 'highlight-yank'
 require 'open-files'
+require 'cycle_window_keymaps'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
