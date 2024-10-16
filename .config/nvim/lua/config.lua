@@ -6,7 +6,6 @@ require 'cursor-movement'
 require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
 require 'time-keymaps'
 require 'brewfile-handling'
-require 'select-all-content'
 require 'highlight-yank'
 require 'open-files'
 
