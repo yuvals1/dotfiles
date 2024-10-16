@@ -21,6 +21,9 @@
       },
       "morantron/tmux-fingers": {
         "revision": "3f60b702dcf6c6bf5307c69e6bfa8f8b37724f3c"
+      },
+      "yuvals1/personal": {
+        "revision": "1906689d6841d078656b5edd0dc85a1fe0b900db"
       }
     },
     "brew": {
@@ -1483,7 +1486,7 @@
         "bottle": false
       },
       "lazysql": {
-        "version": "0.2.9",
+        "version": "0.1.0-yuvals1",
         "bottle": false
       },
       "ghc": {

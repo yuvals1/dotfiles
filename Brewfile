@@ -3,7 +3,8 @@ tap 'homebrew/bundle'
 tap 'nikitabobko/tap'
 tap 'withgraphite/tap'
 tap 'oven-sh/bun'
-tap 'morantron/tmux-fingers'  # Added this line
+tap 'morantron/tmux-fingers'
+tap 'yuvals1/personal'  # Added this line for your personal tap
 
 # CLI tools
 brew 'git'
@@ -28,7 +29,8 @@ brew 'stow'
 brew 'timewarrior'
 brew 'task'
 brew 'taskwarrior-tui'
-brew 'morantron/tmux-fingers/tmux-fingers'  # Added this line
+brew 'morantron/tmux-fingers/tmux-fingers'
+brew 'lazysql'  # Added this line for your custom LazySQL
 
 # Languages and runtimes
 brew 'python'
