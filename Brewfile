@@ -3,6 +3,7 @@ tap 'homebrew/bundle'
 tap 'nikitabobko/tap'
 tap 'withgraphite/tap'
 tap 'oven-sh/bun'
+tap 'morantron/tmux-fingers'  # Added this line
 
 # CLI tools
 brew 'git'
@@ -27,6 +28,7 @@ brew 'stow'
 brew 'timewarrior'
 brew 'task'
 brew 'taskwarrior-tui'
+brew 'morantron/tmux-fingers/tmux-fingers'  # Added this line
 
 # Languages and runtimes
 brew 'python'
@@ -37,9 +39,9 @@ brew 'go'
 brew 'luarocks'
 brew 'rbenv'
 brew 'rust'
-brew 'ghc' # Add this line for GHC
-brew 'cabal-install'  # Add this line for Cabal
-brew 'haskell-stack'  # Add this line for Stack
+brew 'ghc'
+brew 'cabal-install'
+brew 'haskell-stack'
 brew 'haskell-language-server'
 
 # Casks (GUI applications)
