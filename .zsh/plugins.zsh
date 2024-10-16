@@ -34,10 +34,6 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
-# Install sesh
-zinit ice from"gh-r" as"command" pick"sesh"
-zinit light joshmedeski/sesh
-
 # Set FZF options for default behavior and history search
 export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
 
