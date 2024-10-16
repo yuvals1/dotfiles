@@ -24,6 +24,7 @@ function M.setup(languages)
         -- Define the list of filetypes to NOT format on save
         local no_format_on_save_filetypes = {
           'go',
+          'ruby',
         }
 
         -- Get the filetype of the current buffer
