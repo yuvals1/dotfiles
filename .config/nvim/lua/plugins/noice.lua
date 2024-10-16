@@ -75,7 +75,7 @@ return {
     vim.keymap.set('n', '<leader>nd', function()
       require('noice').cmd 'dismiss'
     end, { silent = true, desc = 'Dismiss Noice notifications' })
-    vim.keymap.set('n', '<C-x>', function()
+    vim.keymap.set('n', '<C-space>', function()
       require('noice').cmd 'dismiss'
     end, { silent = true, desc = 'Dismiss Noice notifications' })
   end,
