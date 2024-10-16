@@ -10,8 +10,7 @@ return { -- Autocompletion
         end
         return 'make install_jsregexp'
       end)(),
-      dependencies = {
-      },
+      dependencies = {},
     },
     'saadparwaiz1/cmp_luasnip',
 
