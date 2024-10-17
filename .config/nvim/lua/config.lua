@@ -12,7 +12,7 @@ end
 require 'options'
 require 'file-cmds'
 require 'python-host'
-require 'clipboard_keymaps'
+require 'clipboard.clipboard_keymaps'
 require 'brewfile-handling'
 require 'highlight-yank'
 require 'open-files'

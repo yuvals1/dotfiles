@@ -1,6 +1,6 @@
 -- test_clipboard_visual_append.lua
 
-local clipboard_utils = require 'clipboard_utils'
+local clipboard_utils = require 'clipboard.clipboard_utils'
 
 local function test_append_visual_selection()
   -- Simulate visual selection

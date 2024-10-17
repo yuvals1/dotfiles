@@ -1,7 +1,7 @@
 -- clipboard_keymaps.lua
 
-local clipboard_utils = require 'clipboard_utils'
-local visual_utils = require 'visual_utils'
+local clipboard_utils = require 'clipboard.clipboard_utils'
+local visual_utils = require 'clipboard.visual_utils'
 
 -- Yank entire file (remapped to avoid conflict)
 vim.keymap.set('n', 'yaf', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
