@@ -12,7 +12,6 @@ end
 require 'options'
 require 'file-cmds'
 require 'python-host'
-require 'cursor-movement'
 require 'clipboard_keymaps'
 require 'brewfile-handling'
 require 'highlight-yank'
