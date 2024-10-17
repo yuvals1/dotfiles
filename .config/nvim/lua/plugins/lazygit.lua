@@ -1,4 +1,3 @@
--- nvim v0.8.0
 return {
   'kdheepak/lazygit.nvim',
   cmd = {
@@ -20,7 +19,8 @@ return {
     { '<leader>lf', '<cmd>LazyGitFilterCurrentFile<cr>', desc = 'LazyGitFilterCurrentFile' },
   },
   config = function()
+    local home = vim.fn.expand '$HOME'
     vim.g.lazygit_use_custom_config_file_path = 1
-    vim.g.lazygit_config_file_path = '~/.config/lazygit/config.yml'
+    vim.g.lazygit_config_file_path = home .. '/.config/lazygit/config.yml'
   end,
 }
