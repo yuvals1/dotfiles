@@ -17,11 +17,11 @@ return {
     map({ 'n', 'v' }, 'f', function()
       hop.hint_words()
     end, 'Hop word')
-    map({ 'n', 'v' }, 't', function()
-      hop.hint_lines()
-    end, 'Hop line')
-    map({ 'n', 'v' }, 'T', function()
-      hop.hint_lines_skip_whitespace()
-    end, 'Hop line start')
+    -- map({ 'n', 'v' }, 't', function()
+    --   hop.hint_lines()
+    -- end, 'Hop line')
+    -- map({ 'n', 'v' }, 'T', function()
+    --   hop.hint_lines_skip_whitespace()
+    -- end, 'Hop line start')
   end,
 }
