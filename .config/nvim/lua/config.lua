@@ -1,15 +1,25 @@
+local function require_all(directory)
+  local config_path = vim.fn.stdpath 'config'
+  local lua_pattern = config_path .. '/lua/' .. directory .. '/*.lua'
+  for _, file in ipairs(vim.fn.glob(lua_pattern, false, true)) do
+    local module = file:match '([^/]+)%.lua$'
+    if module then
+      require(directory .. '.' .. module)
+    end
+  end
+end
 -- Load options
 require 'options'
-require 'keymaps'
 require 'file-cmds'
 require 'python-host'
 require 'cursor-movement'
-require 'clipboard_keymaps' -- Add this line to load the new clipboard keymaps
-require 'time-keymaps'
+require 'clipboard_keymaps'
 require 'brewfile-handling'
 require 'highlight-yank'
 require 'open-files'
-require 'cycle_window_keymaps'
+
+-- Load all keymap files
+require_all 'keymaps'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
