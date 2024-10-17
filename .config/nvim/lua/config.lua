@@ -10,14 +10,13 @@ local function require_all(directory)
 end
 -- Load options
 require 'options'
-require 'python-host'
 require 'clipboard.clipboard_keymaps'
-require 'brewfile-handling'
 require 'highlight-yank'
 require 'open-files'
 
 -- Load all keymap files
 require_all 'keymaps'
+require_all 'others'
 
 -- Set leader key (optional, but recommended for the default keymapping)
 vim.g.mapleader = ' '
