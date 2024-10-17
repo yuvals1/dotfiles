@@ -1,5 +1,3 @@
--- /Users/yuvals1/dotfiles/.config/yazi-nvim_copy/lua/file-commands.lua
-
 -- Custom commands for copying paths
 vim.api.nvim_create_user_command('CopyRelPath', function()
   local path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')

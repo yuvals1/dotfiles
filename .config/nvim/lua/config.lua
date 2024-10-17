@@ -10,7 +10,6 @@ local function require_all(directory)
 end
 -- Load options
 require 'options'
-require 'file-cmds'
 require 'python-host'
 require 'clipboard.clipboard_keymaps'
 require 'brewfile-handling'
