@@ -19,4 +19,4 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 vim.keymap.set('n', '<M-BS>', 'db', { noremap = true, silent = true })
 
 -- Insert mode: delete to start of word
-vim.keymap.set('i', '<M-BS>', '<Esc>dba', { noremap = true, silent = true })
+vim.keymap.set('i', '<M-BS>', '<C-o>db', { noremap = true, silent = true })
