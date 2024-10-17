@@ -29,6 +29,6 @@ return {
     end
 
     -- Key mapping to toggle Copilot
-    vim.api.nvim_set_keymap('n', '<leader>tc', ':lua toggle_copilot()<CR>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('n', '<leader>tt', ':lua toggle_copilot()<CR>', { noremap = true, silent = true })
   end,
 }
