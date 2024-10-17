@@ -1,5 +1,6 @@
 -- Load options
 require 'options'
+require 'keymaps'
 require 'file-cmds'
 require 'python-host'
 require 'cursor-movement'
