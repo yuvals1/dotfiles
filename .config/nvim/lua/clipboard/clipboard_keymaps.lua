@@ -3,9 +3,6 @@
 local clipboard_utils = require 'clipboard.clipboard_utils'
 local visual_utils = require 'clipboard.visual_utils'
 
--- Yank entire file (remapped to avoid conflict)
-vim.keymap.set('n', 'yaf', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
-
 -- Keymap to copy file path and content (replacing clipboard)
 vim.keymap.set('n', 'yac', function()
   local lines_yanked = clipboard_utils.copy_file_path_and_content()
