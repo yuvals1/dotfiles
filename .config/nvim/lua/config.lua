@@ -11,6 +11,7 @@ end
 -- Load options
 require 'options'
 -- require 'clipboard.clipboard_keymaps'
+require 'clipboard.yank-with-path'
 require 'highlight-yank'
 require 'open-files'
 
