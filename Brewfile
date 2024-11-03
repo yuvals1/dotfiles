@@ -16,6 +16,8 @@ brew 'fzf'
 brew 'bat'
 brew 'eza'
 brew 'yazi'
+brew 'mpv'        # Added for video playback
+brew 'mediainfo'  # Added for media file information
 brew 'zoxide'
 brew 'colima'
 brew 'lazydocker'
@@ -52,6 +54,7 @@ cask 'karabiner-elements'
 cask 'raycast'
 cask 'wezterm'
 cask 'aerospace'
+cask 'iina' # Added optional modern video player for macOS
 
 # Additional tools
 brew 'ripgrep'
