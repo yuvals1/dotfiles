@@ -33,6 +33,7 @@ brew 'task'
 brew 'taskwarrior-tui'
 brew 'morantron/tmux-fingers/tmux-fingers'
 brew 'lazysql'  # Added this line for your custom LazySQL
+brew 'termscp'
 
 # Languages and runtimes
 brew 'python'
