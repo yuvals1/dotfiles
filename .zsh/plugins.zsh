@@ -38,9 +38,15 @@ zinit snippet OMZP::command-not-found
 export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
 
 # Source fzf keybindings and completion
-zinit snippet '/usr/local/opt/fzf/shell/key-bindings.zsh'
-zinit snippet '/usr/local/opt/fzf/shell/completion.zsh'
-
+if [ -d "/usr/local/opt/fzf/shell" ]; then
+    # macOS Homebrew path
+    zinit snippet '/usr/local/opt/fzf/shell/key-bindings.zsh'
+    zinit snippet '/usr/local/opt/fzf/shell/completion.zsh'
+elif [ -d "$HOME/.fzf/shell" ]; then
+    # Linux path (when installed from git)
+    zinit snippet "$HOME/.fzf/shell/key-bindings.zsh"
+    zinit snippet "$HOME/.fzf/shell/completion.zsh"
+fi
 # If you need fzf-tmux, you can add an alias or function like this:
 fzf-tmux() {
     /usr/local/opt/fzf/bin/fzf-tmux "$@"
