@@ -1,0 +1,28 @@
+# System essentials
+build-essential
+pkg-config
+ninja-build
+gettext
+cmake
+unzip
+
+# Development tools
+git
+python3-pip
+cargo
+ripgrep
+
+# Terminal utilities
+tree
+bat
+fzf
+zsh
+curl
+
+# Custom installations (will be handled separately in install.sh)
+# neovim - built from source
+# lazygit - downloaded from GitHub
+# zoxide - installed via curl
+# eza - installed via cargo
+# yazi-fm - installed via cargo
+# nvm/node - installed via curl
