@@ -1,3 +1,4 @@
+-- TODO: extract the smart_clipboard function to a separate module
 -- Configuration
 local CONFIG = {
   log_to_file = false, -- Set this to false to disable logging to file
