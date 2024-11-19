@@ -4,13 +4,13 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Ctrl+Shift retains original function, Ctrl maps to arrows for N,P,F,S,B",
+                        "description": "Ctrl+Cmd retains original function, Ctrl maps to arrows for N,P,F,S,B",
                         "manipulators": [
                             {
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["control", "shift"],
+                                        "mandatory": ["control", "command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -26,7 +26,7 @@
                                 "from": {
                                     "key_code": "p",
                                     "modifiers": {
-                                        "mandatory": ["control", "shift"],
+                                        "mandatory": ["control", "command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -42,7 +42,7 @@
                                 "from": {
                                     "key_code": "f",
                                     "modifiers": {
-                                        "mandatory": ["control", "shift"],
+                                        "mandatory": ["control", "command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -58,7 +58,7 @@
                                 "from": {
                                     "key_code": "b",
                                     "modifiers": {
-                                        "mandatory": ["control", "shift"],
+                                        "mandatory": ["control", "command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -74,7 +74,7 @@
                                 "from": {
                                     "key_code": "s",
                                     "modifiers": {
-                                        "mandatory": ["control", "shift"],
+                                        "mandatory": ["control", "command"],
                                         "optional": ["any"]
                                     }
                                 },
