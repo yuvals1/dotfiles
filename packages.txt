@@ -5,6 +5,7 @@ ninja-build
 gettext
 cmake
 unzip
+netcat
 
 # Development tools
 git
