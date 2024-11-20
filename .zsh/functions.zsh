@@ -165,3 +165,14 @@ rename_hyphens_to_underscores() {
 alias rhu='rename_hyphens_to_underscores'
 
 
+function yank-line-to-clipboard() {
+    if [[ "$(uname)" = "Darwin" ]]; then
+        # On macOS, use pbcopy directly
+        echo "$BUFFER" | pbcopy
+    else
+        # On remote systems, use netcat to clipper
+        echo "$BUFFER" | nc -N localhost 8377
+    fi
+    LBUFFER+=$'\n'
+    zle -M "Current line yanked to clipboard"
+}
