@@ -29,3 +29,8 @@ kitty +kitten themes --reload-in=all Catppuccin-Frappe
 
 export PATH="$HOME/.rbenv/shims:$PATH"
 eval "$(rbenv init -)"
+export PATH=$PATH:/opt/X11/bin
+# Start clipper if it's not already running
+if ! brew services list | grep clipper | grep started > /dev/null; then
+    brew services start clipper
+fi

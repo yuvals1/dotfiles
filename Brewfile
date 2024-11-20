@@ -4,8 +4,6 @@ tap 'nikitabobko/tap'
 tap 'withgraphite/tap'
 tap 'oven-sh/bun'
 tap 'morantron/tmux-fingers'
-tap 'yuvals1/personal'  # Added this line for your personal tap
-
 # CLI tools
 brew 'git'
 brew 'git-delta'
@@ -34,7 +32,7 @@ brew 'taskwarrior-tui'
 brew 'morantron/tmux-fingers/tmux-fingers'
 brew 'lazysql'  # Added this line for your custom LazySQL
 brew 'termscp'
-
+brew 'clipper'  # Added for remote clipboard support
 # Languages and runtimes
 brew 'python'
 brew 'node'
@@ -48,7 +46,6 @@ brew 'ghc'
 brew 'cabal-install'
 brew 'haskell-stack'
 brew 'haskell-language-server'
-
 # Casks (GUI applications)
 cask 'kitty'
 cask 'karabiner-elements'
@@ -56,14 +53,11 @@ cask 'raycast'
 cask 'wezterm'
 cask 'aerospace'
 cask 'iina' # Added optional modern video player for macOS
-
 # Additional tools
 brew 'ripgrep'
 brew 'fd'
-
 # Docker-related tools
 brew 'docker'
 brew 'docker-compose'
-
 # GitHub CLI
 brew 'gh'
