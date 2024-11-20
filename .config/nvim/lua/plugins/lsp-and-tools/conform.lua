@@ -25,6 +25,7 @@ function M.setup(languages)
         local no_format_on_save_filetypes = {
           'go',
           'ruby',
+          'dockerfile',
         }
 
         -- Get the filetype of the current buffer
