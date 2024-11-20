@@ -1,1 +1,3 @@
 promptToReturnFromSubprocess: false
+# os:
+#   copyToClipboardCmd: "echo {{text}} | nc -N localhost 8377"
