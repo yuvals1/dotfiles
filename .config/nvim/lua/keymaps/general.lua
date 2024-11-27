@@ -24,5 +24,5 @@ vim.keymap.set('n', '<M-BS>', 'db', { noremap = true, silent = true })
 vim.keymap.set('i', '<M-BS>', '<C-o>db', { noremap = true, silent = true })
 
 -- Normal moded: move 10 lines up or down
-vim.keymap.set('n', '<F13>', '10k', { desc = 'Move 10 lines up' })
-vim.keymap.set('n', '<C-]>', '10j', { desc = 'Move 10 lines down' })
+vim.keymap.set({ 'n', 'v' }, '<F13>', '10k', { desc = 'Move 10 lines up' })
+vim.keymap.set({ 'n', 'v' }, '<C-]>', '10j', { desc = 'Move 10 lines down' })
