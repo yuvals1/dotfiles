@@ -25,19 +25,7 @@ return {
         -- Add other filetypes as needed
       },
     }
-
-    -- Create a function to toggle Copilot
-    local function toggle_copilot()
-      local ok, copilot_suggestion = pcall(require, 'copilot.suggestion')
-      if ok then
-        copilot_suggestion.toggle_auto_trigger()
-        -- Print status
-        local status = vim.b.copilot_suggestion_auto_trigger and 'enabled' or 'disabled'
-        vim.notify('Copilot ' .. status, vim.log.levels.INFO)
-      end
-    end
-
-    -- Set up the toggle keymap
-    vim.keymap.set('n', '<leader>tt', toggle_copilot, { noremap = true, silent = true, desc = 'Toggle Copilot' })
+    -- Set up the toggle keymap using the built-in command
+    vim.keymap.set('n', '<leader>tt', '<cmd>Copilot toggle<CR>', { noremap = true, silent = true, desc = 'Toggle Copilot' })
   end,
 }
