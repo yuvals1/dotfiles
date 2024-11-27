@@ -30,7 +30,8 @@ function M.setup()
   end
 
   -- Set python3_host_prog
-  vim.g.python3_host_prog = python_path
+  -- vim.g.python3_host_prog = python_path
+  vim.g.python3_host_prog = '/usr/bin/python3'
 end
 
 -- Run setup on module load

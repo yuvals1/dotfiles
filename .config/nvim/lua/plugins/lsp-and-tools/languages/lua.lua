@@ -1,6 +1,6 @@
 -- lua.lua
 return {
-  mason = { 'lua-language-server', 'stylua', 'luacheck' },
+  mason = { 'lua-language-server', 'stylua' },
   lsp = {
     lua_ls = {
       settings = {
@@ -14,7 +14,7 @@ return {
     lua = { 'stylua' },
   },
   linters = {
-    lua = { 'luacheck' },
+    -- lua = { 'luacheck' },
   },
   linter_options = {
     luacheck = {

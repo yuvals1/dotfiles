@@ -1,5 +1,5 @@
 return {
-  mason = { 'fourmolu' },
+  mason = {},
   lsp = {},
   formatters = {
     haskell = { 'fourmolu' },

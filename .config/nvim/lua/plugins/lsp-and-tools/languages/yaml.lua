@@ -1,6 +1,6 @@
 -- yaml.lua
 return {
-  mason = { 'yaml-language-server', 'yamllint', 'prettier' },
+  mason = { 'yaml-language-server', 'prettier' },
   lsp = {
     -- yamlls = {},
   },
