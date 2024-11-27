@@ -38,7 +38,27 @@ return {
             shorting_target = 40,
           },
         },
-        lualine_x = { 'copilot', 'filetype' },
+        lualine_x = {
+          {
+            'copilot',
+            symbols = {
+              status = {
+                hl = {
+                  enabled = '#50FA7B', -- Green for enabled state
+                  sleep = '#AEB7D0', -- Grey for sleep state
+                  disabled = '#6272A4', -- Blue-grey for disabled state
+                  warning = '#FFB86C', -- Orange for warning state
+                  unknown = '#FF5555', -- Red for unknown state
+                },
+              },
+              spinners = require('copilot-lualine.spinners').dots, -- Choose from: dots, line, pipe, snake
+              spinner_color = '#6272A4',
+            },
+            show_colors = true, -- Enable colored icons
+            show_loading = true, -- Show loading spinner
+          },
+          'filetype',
+        },
         lualine_y = { 'progress' },
         lualine_z = {
           {
