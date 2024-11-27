@@ -4,6 +4,22 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Map Control+[ to F13 key",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "f13" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Navigation key mappings with modifier overrides",
                         "manipulators": [
                             {

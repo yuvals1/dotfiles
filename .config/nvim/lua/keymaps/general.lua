@@ -22,3 +22,7 @@ vim.keymap.set('n', '<M-BS>', 'db', { noremap = true, silent = true })
 
 -- Insert mode: delete to start of word
 vim.keymap.set('i', '<M-BS>', '<C-o>db', { noremap = true, silent = true })
+
+-- Normal moded: move 10 lines up or down
+vim.keymap.set('n', '<F13>', '10k', { desc = 'Move 10 lines up' })
+vim.keymap.set('n', '<C-]>', '10j', { desc = 'Move 10 lines down' })
