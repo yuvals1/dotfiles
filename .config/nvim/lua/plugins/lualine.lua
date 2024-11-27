@@ -44,18 +44,18 @@ return {
             symbols = {
               status = {
                 hl = {
-                  enabled = '#50FA7B', -- Green for enabled state
-                  sleep = '#AEB7D0', -- Grey for sleep state
-                  disabled = '#6272A4', -- Blue-grey for disabled state
-                  warning = '#FFB86C', -- Orange for warning state
-                  unknown = '#FF5555', -- Red for unknown state
+                  enabled = '#50FA7B', -- Green for enabled/active
+                  sleep = '#AEB7D0', -- Grey for sleep/inactive
+                  disabled = '#6272A4', -- Blue-grey for disabled
+                  warning = '#FFB86C', -- Orange for warning
+                  unknown = '#FF5555', -- Red for unknown
                 },
               },
-              spinners = require('copilot-lualine.spinners').dots, -- Choose from: dots, line, pipe, snake
+              spinners = require('copilot-lualine.spinners').dots,
               spinner_color = '#6272A4',
             },
-            show_colors = true, -- Enable colored icons
-            show_loading = true, -- Show loading spinner
+            show_colors = true,
+            show_loading = true,
           },
           'filetype',
         },
