@@ -6,6 +6,7 @@ return {
       'nvim-tree/nvim-web-devicons',
       lazy = true,
     },
+    'AndreM222/copilot-lualine',
   },
   config = function()
     require('lualine').setup {
@@ -37,7 +38,7 @@ return {
             shorting_target = 40,
           },
         },
-        lualine_x = { 'filetype' },
+        lualine_x = { 'copilot', 'filetype' },
         lualine_y = { 'progress' },
         lualine_z = {
           {
