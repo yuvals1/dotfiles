@@ -36,7 +36,7 @@ function M.setup(languages)
           return false
         else
           return {
-            timeout_ms = 500,
+            timeout_ms = 5000,
             lsp_fallback = true,
           }
         end
