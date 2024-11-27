@@ -1,34 +1,43 @@
 return {
-  'github/copilot.vim',
+  'zbirenbaum/copilot.lua',
+  cmd = 'Copilot',
+  event = 'InsertEnter',
   config = function()
-    -- Disable default Tab mapping for Copilot
-    vim.g.copilot_no_tab_map = true
-    vim.g.copilot_assume_mapped = true
-    vim.g.copilot_tab_fallback = ''
+    require('copilot').setup {
+      suggestion = {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+          -- Equivalent to your <C-d> mapping for accepting the whole suggestion
+          accept = '<C-d>',
+          -- Equivalent to your <C-e> mapping for accepting a word
+          accept_word = '<C-e>',
+          -- You might want to add these for navigation
+          next = '<M-]>',
+          prev = '<M-[>',
+          dismiss = '<C-]>',
+        },
+      },
+      -- Other configuration options
+      filetypes = {
+        -- Add any specific filetype configurations
+        jupyter = true, -- Enable for jupyter files
+        -- Add other filetypes as needed
+      },
+    }
 
-    -- Custom keybindings for Copilot
-    vim.api.nvim_set_keymap('i', '<C-e>', 'copilot#AcceptWord()', { silent = true, expr = true, script = true })
-    vim.api.nvim_set_keymap('i', '<C-d>', 'copilot#Accept()', { silent = true, expr = true, script = true })
-
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = 'jupyter',
-      callback = function()
-        vim.api.nvim_buf_set_keymap(0, 'i', '<C-d>', 'copilot#AcceptWord()', { silent = true, expr = true, script = true })
-      end,
-    })
-
-    -- Function to toggle Copilot
-    function _G.toggle_copilot()
-      if vim.g.copilot_enabled == 1 then
-        vim.cmd 'Copilot disable'
-        print 'Copilot Disabled'
-      else
-        vim.cmd 'Copilot enable'
-        print 'Copilot Enabled'
+    -- Create a function to toggle Copilot
+    local function toggle_copilot()
+      local ok, copilot_suggestion = pcall(require, 'copilot.suggestion')
+      if ok then
+        copilot_suggestion.toggle_auto_trigger()
+        -- Print status
+        local status = vim.b.copilot_suggestion_auto_trigger and 'enabled' or 'disabled'
+        vim.notify('Copilot ' .. status, vim.log.levels.INFO)
       end
     end
 
-    -- Key mapping to toggle Copilot
-    vim.api.nvim_set_keymap('n', '<leader>tt', ':lua toggle_copilot()<CR>', { noremap = true, silent = true })
+    -- Set up the toggle keymap
+    vim.keymap.set('n', '<leader>tt', toggle_copilot, { noremap = true, silent = true, desc = 'Toggle Copilot' })
   end,
 }
