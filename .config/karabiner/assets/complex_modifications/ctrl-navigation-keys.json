@@ -59,58 +59,6 @@
         {
           "type": "basic",
           "from": {
-            "key_code": "b",
-            "modifiers": {
-              "mandatory": ["control", "shift"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "b",
-              "modifiers": ["command"]
-            }
-          ],
-          "conditions": [
-            {
-              "type": "frontmost_application_if",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "key_code": "b",
-            "modifiers": {
-              "mandatory": ["control", "shift"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "left_arrow",
-              "modifiers": ["option"]
-            }
-          ],
-          "conditions": [
-            {
-              "type": "frontmost_application_unless",
-              "bundle_identifiers": [
-                "^net\\.kovidgoyal\\.kitty$",
-                "^com\\.apple\\.Terminal$",
-                "^com\\.googlecode\\.iterm2$"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
             "key_code": "s",
             "modifiers": {
               "mandatory": ["control", "shift"],
@@ -211,22 +159,6 @@
         {
           "type": "basic",
           "from": {
-            "key_code": "b",
-            "modifiers": {
-              "mandatory": ["control", "command"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "b",
-              "modifiers": ["control"]
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
             "key_code": "s",
             "modifiers": {
               "mandatory": ["control", "command"],
@@ -282,21 +214,6 @@
           "to": [
             {
               "key_code": "right_arrow"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "key_code": "b",
-            "modifiers": {
-              "mandatory": ["control"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "left_arrow"
             }
           ]
         },
