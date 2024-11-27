@@ -1,3 +1,5 @@
+-- File: ~/.config/nvim/lua/plugins/dial.lua
+
 return {
   'monaqa/dial.nvim',
   keys = {
@@ -9,37 +11,52 @@ return {
   config = function()
     local augend = require 'dial.augend'
 
-    -- Start with a minimal configuration to ensure everything works
     require('dial.config').augends:register_group {
       -- Default group that applies everywhere
       default = {
-        -- Numbers
-        augend.integer.alias.decimal, -- 1, 2, 3...
-        augend.integer.alias.hex, -- 0x1, 0x2, 0x3...
+        -- Number augends
+        augend.integer.alias.decimal, -- Regular numbers (0-9)
+        augend.integer.alias.hex, -- Hex numbers (0x1, 0xff)
+        augend.integer.alias.binary, -- Binary numbers (0b0101)
 
-        -- Dates
+        -- Date and time augends
         augend.date.alias['%Y/%m/%d'], -- 2024/03/27
         augend.date.alias['%Y-%m-%d'], -- 2024-03-27
-
-        -- Time
         augend.date.alias['%H:%M'], -- 23:59
 
-        -- Boolean
+        -- Programming augends
         augend.constant.alias.bool, -- true/false
-
-        -- Common operators
         augend.constant.new {
           elements = { '&&', '||' },
           word = false,
           cyclic = true,
         },
+
+        -- Add semantic versioning support
+        augend.semver.alias.semver, -- Increment version numbers (1.2.3)
+
+        -- Add hex color support
+        augend.hexcolor.new { case = 'lower' }, -- Color codes (#fff, #abcdef)
+      },
+
+      -- Special group for visual mode
+      visual = {
+        -- Include everything from default group
+        augend.integer.alias.decimal,
+        augend.integer.alias.hex,
+
+        -- Add letter sequences for visual mode
+        augend.constant.alias.alpha, -- Lowercase letters (a-z)
+        augend.constant.alias.Alpha, -- Uppercase letters (A-Z)
       },
     }
 
-    -- Basic keymaps
+    -- Regular increment/decrement
     vim.keymap.set('n', '<C-a>', require('dial.map').inc_normal(), { noremap = true })
     vim.keymap.set('n', '<C-x>', require('dial.map').dec_normal(), { noremap = true })
-    vim.keymap.set('v', '<C-a>', require('dial.map').inc_visual(), { noremap = true })
-    vim.keymap.set('v', '<C-x>', require('dial.map').dec_visual(), { noremap = true })
+
+    -- Visual mode with special group
+    vim.keymap.set('v', '<C-a>', require('dial.map').inc_visual 'visual', { noremap = true })
+    vim.keymap.set('v', '<C-x>', require('dial.map').dec_visual 'visual', { noremap = true })
   end,
 }
