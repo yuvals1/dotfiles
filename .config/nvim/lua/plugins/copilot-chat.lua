@@ -70,7 +70,7 @@ return {
         width = 0.8, -- fractional width of parent
         height = 0.6, -- fractional height of parent
       },
-      model = 'gpt-4o', -- Default model to use
+      model = 'claude-3.5-sonnet', -- Using Claude instead of GPT
       show_help = true, -- Show help text for CopilotChatInPlace
       auto_follow_cursor = true, -- Follow cursor in chat window
       auto_insert_mode = true, -- Enter insert mode when opening chat window
