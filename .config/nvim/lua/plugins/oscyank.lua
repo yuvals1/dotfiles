@@ -10,7 +10,7 @@ return {
 
       -- Set up keymaps
       vim.keymap.set('n', '<leader>c', '<Plug>OSCYankOperator', { desc = 'OSC Yank Operator' })
-      vim.keymap.set('n', '<leader>cc', '<leader>c_', { remap = true, desc = 'OSC Yank Line' })
+      -- vim.keymap.set('n', '<leader>cc', '<leader>c_', { remap = true, desc = 'OSC Yank Line' })
       vim.keymap.set('v', '<leader>c', '<Plug>OSCYankVisual', { desc = 'OSC Yank Visual' })
 
       -- Set up autocmd for automatic copying (optional)
