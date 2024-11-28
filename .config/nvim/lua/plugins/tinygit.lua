@@ -23,20 +23,20 @@ return {
       end,
       desc = 'TinyGit: Push',
     },
-    {
-      '<leader>gf',
-      function()
-        require('tinygit').searchFileHistory()
-      end,
-      desc = 'TinyGit: Search File History',
-    },
-    {
-      '<leader>gl',
-      function()
-        require('tinygit').lineHistory()
-      end,
-      desc = 'TinyGit: Line History',
-    },
+    -- {
+    --   '<leader>gf',
+    --   function()
+    --     require('tinygit').searchFileHistory()
+    --   end,
+    --   desc = 'TinyGit: Search File History',
+    -- },
+    -- {
+    --   '<leader>gl',
+    --   function()
+    --     require('tinygit').lineHistory()
+    --   end,
+    --   desc = 'TinyGit: Line History',
+    -- },
     {
       '<leader>gF',
       function()
