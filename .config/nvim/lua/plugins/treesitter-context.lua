@@ -16,4 +16,11 @@ return {
     mode = 'cursor',
     zindex = 20,
   },
+  config = function()
+    -- Set up custom highlights for the context window
+    vim.api.nvim_set_hl(0, 'TreesitterContext', { bg = '#4c313c' }) -- Background color
+    vim.api.nvim_set_hl(0, 'TreesitterContextLineNumber', { fg = '#7c8494' }) -- Line number color
+    -- Optional: Add a subtle bottom border
+    vim.api.nvim_set_hl(0, 'TreesitterContextBottom', { sp = '#3e4451', underline = true })
+  end,
 }
