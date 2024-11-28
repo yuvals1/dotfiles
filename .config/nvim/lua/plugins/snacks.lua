@@ -1,10 +1,35 @@
 return {
   'folke/snacks.nvim',
+  priority = 1000, -- Important: high priority for early loading
+  lazy = false, -- Don't lazy load since we need early setup
   opts = {
-    -- other options...
+    -- Enable and configure bigfile
+    bigfile = {
+      enabled = true,
+      -- Optional: customize bigfile settings
+      size = 1 * 1024 * 1024, -- 1MB
+      pattern = { '*' }, -- filetypes or patterns to apply to
+      features = {
+        'indent_blankline',
+        'illuminate',
+        'lsp',
+        'treesitter',
+        'syntax',
+        'matchparen',
+        'vimopts',
+        'filetype',
+      },
+      setup = function(ctx)
+        vim.b.minianimate_disable = true
+        vim.schedule(function()
+          vim.bo[ctx.buf].syntax = ctx.ft
+        end)
+      end,
+    },
   },
+  -- Key mappings for lazygit
   keys = {
-    -- Map lazygit to <leader>gg
+    -- LazyGit mappings
     {
       '<leader>gg',
       function()
@@ -12,8 +37,6 @@ return {
       end,
       desc = 'Lazygit',
     },
-
-    -- File history
     {
       '<leader>gf',
       function()
@@ -21,8 +44,6 @@ return {
       end,
       desc = 'Lazygit Current File History',
     },
-
-    -- Repository log
     {
       '<leader>gl',
       function()
