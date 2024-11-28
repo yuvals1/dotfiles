@@ -9,7 +9,7 @@ deps = [
   { use = "yazi-rs/plugins:smart-filter", rev = "c578505" },
   { use = "Rolv-Apneseth/starship", rev = "77a65f5" },
   { use = "GianniBYoung/rsync", rev = "3f431aa" },
-  { use = "h-hg/yamb", rev = "0598b8d" },
+  { use = "h-hg/yamb", rev = "0598b8d" }, { use = "yazi-rs/plugins:smart-enter", rev = "d85bfd6" },
 ]
 
 [flavor]
