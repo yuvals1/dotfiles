@@ -30,9 +30,12 @@ brew 'timewarrior'
 brew 'task'
 brew 'taskwarrior-tui'
 brew 'morantron/tmux-fingers/tmux-fingers'
-brew 'lazysql'  # Added this line for your custom LazySQL
+brew 'lazysql'  
 brew 'termscp'
-brew 'clipper'  # Added for remote clipboard support
+brew 'clipper' 
+brew 'ncdu'
+brew 'tailscale'
+
 # Languages and runtimes
 brew 'python'
 brew 'node'
