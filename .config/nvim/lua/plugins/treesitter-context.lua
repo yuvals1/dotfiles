@@ -9,10 +9,10 @@ return {
   },
   opts = {
     enable = true,
-    max_lines = 0,
+    max_lines = 3, -- Reduced from 5
     line_numbers = true,
-    multiline_threshold = 5,
-    trim_scope = 'outer',
+    multiline_threshold = 3, -- Reduced from 5
+    trim_scope = 'inner', -- Changed from 'outer'
     mode = 'cursor',
     zindex = 20,
   },
