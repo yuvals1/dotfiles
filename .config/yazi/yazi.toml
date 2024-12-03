@@ -53,9 +53,21 @@ play = [
   { run = 'mpv --force-window %*', orphan = true, for = "windows" },
   { run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
 ]
+browser = [
+  { run = 'open -a "Google Chrome" "$@"', desc = "Open in Chrome", for = "macos" },
+  { run = 'google-chrome "$@"', desc = "Open in Chrome", for = "linux" },
+  { run = 'start chrome "%1"', orphan = true, desc = "Open in Chrome", for = "windows" },
+]
+
 
 [open]
 rules = [
+  # html
+  { name = "*.{htm,html}", use = [
+    "browser",
+    "edit",
+    "reveal",
+  ] },
   # Folder
   { name = "*/", use = [
     "edit",
