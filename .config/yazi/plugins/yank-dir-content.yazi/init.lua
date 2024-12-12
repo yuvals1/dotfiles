@@ -100,7 +100,8 @@ local function get_language(file)
 			zsh = "bash",
 			sql = "sql",
 			xml = "xml",
-			rs = "rst",
+		    rs = "rust",    -- Fix Rust extension
+		    rst = "rst",   
 			go = "go",
 			-- Add more as needed
 		}
