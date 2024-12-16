@@ -35,6 +35,7 @@ brew 'termscp'
 brew 'clipper' 
 brew 'ncdu'
 brew 'tailscale'
+brew 'television'
 
 # Languages and runtimes
 brew 'python'
