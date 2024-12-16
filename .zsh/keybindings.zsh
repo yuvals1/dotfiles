@@ -8,7 +8,6 @@ bindkey '^[w' kill-region
 bindkey '^D' autosuggest-accept  # Ctrl-D to accept entire suggestion
 bindkey '^E' forward-word        # Ctrl-S to accept next word
 bindkey '^Y' yank-line-to-clipboard
-bindkey -s ^a "nvims\n"
 
 # Sesh keybinding
 zle -N sesh-sessions
