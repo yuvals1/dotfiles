@@ -15,3 +15,4 @@ alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 alias tt="taskwarrior-tui"
 alias lsq="lazysql"
 alias lzd="lazydocker"
+alias th="tv files-with-hidden"
