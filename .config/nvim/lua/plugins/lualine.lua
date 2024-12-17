@@ -31,13 +31,13 @@ return {
       sections = {
         lualine_a = { 'mode' },
         lualine_b = { 'diff', 'diagnostics' },
-        lualine_c = {
-          {
-            'filename',
-            path = 1,
-            shorting_target = 40,
-          },
-        },
+        --       lualine_c = {
+        --         {
+        --           'filename',
+        --           path = 1,
+        --           shorting_target = 40,
+        --         },
+        --       },
         lualine_x = {
           {
             'copilot',
@@ -60,25 +60,25 @@ return {
           'filetype',
         },
         lualine_y = { 'progress' },
-        lualine_z = {
-          {
-            function()
-              return tostring(vim.fn.line '$')
-            end,
-            icon = '☰',
-          },
-        },
+        -- lualine_z = {
+        --         {
+        --           function()
+        --             return tostring(vim.fn.line '$')
+        --           end,
+        --           icon = '☰',
+        --         },
+        --       },
       },
       inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = {
-          {
-            'filename',
-            path = 1, -- 0 = just filename, 1 = relative path, 2 = absolute path
-            shorting_target = 40, -- Shortens path to leave 40 spaces in the window
-          },
-        },
+        -- lualine_c = {
+        --         {
+        --           'filename',
+        --           path = 1, -- 0 = just filename, 1 = relative path, 2 = absolute path
+        --           shorting_target = 40, -- Shortens path to leave 40 spaces in the window
+        --         },
+        --       },
         lualine_y = {},
         lualine_z = {},
       },
