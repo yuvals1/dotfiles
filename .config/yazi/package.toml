@@ -1,15 +1,15 @@
 [plugin]
 deps = [
-  { use = "yazi-rs/plugins:diff", rev = "c578505" },
-  { use = "yazi-rs/plugins:jump-to-char", rev = "c578505" },
-  { use = "yazi-rs/plugins:git", rev = "c578505" },
-  { use = "yazi-rs/plugins:max-preview", rev = "c578505" },
-  { use = "yazi-rs/plugins:chmod", rev = "c578505" },
-  { use = "yazi-rs/plugins:full-border", rev = "c578505" },
-  { use = "yazi-rs/plugins:smart-filter", rev = "c578505" },
-  { use = "Rolv-Apneseth/starship", rev = "77a65f5" },
+  { use = "yazi-rs/plugins:diff", rev = "7afba3a" },
+  { use = "yazi-rs/plugins:jump-to-char", rev = "7afba3a" },
+  { use = "yazi-rs/plugins:git", rev = "7afba3a" },
+  { use = "yazi-rs/plugins:max-preview", rev = "7afba3a" },
+  { use = "yazi-rs/plugins:chmod", rev = "7afba3a" },
+  { use = "yazi-rs/plugins:full-border", rev = "7afba3a" },
+  { use = "yazi-rs/plugins:smart-filter", rev = "7afba3a" },
+  { use = "Rolv-Apneseth/starship", rev = "247f49d" },
   { use = "GianniBYoung/rsync", rev = "3f431aa" },
-  { use = "h-hg/yamb", rev = "0598b8d" }, { use = "yazi-rs/plugins:smart-enter", rev = "d85bfd6" },
+  { use = "h-hg/yamb", rev = "108347b" }, { use = "yazi-rs/plugins:smart-enter", rev = "7afba3a" },
 ]
 
 [flavor]
