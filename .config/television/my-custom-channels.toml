@@ -1,0 +1,7 @@
+# ~/.config/television/my-custom-channels.toml
+
+[[cable_channel]]
+name = "files-with-hidden"
+source_command = 'fd -t f -H .'
+preview_command = 'bat --color=always {0}'
+action_command = 'open {0}'                # Uses macOS open command
