@@ -510,5 +510,5 @@ keymap = [
 
 [[manager.prepend_keymap]]
 on = ["i"]
-run = "plugin --args=keep keyjump"
-desc = "Keyjump (Keep mode)"
+run = "plugin keyjump --args=global"
+desc = "Keyjump (Global mode)"
