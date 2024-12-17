@@ -142,7 +142,7 @@ keymap = [
   ], run = "plugin copy-relative-path", desc = "Copy the file path relative to home" },
 
   # Filter
-  { on = "f", run = "filter --smart", desc = "Filter files" },
+  { on = "i", run = "filter --smart", desc = "Filter files" },
 
   # Find
   { on = "/", run = "find --smart", desc = "Find next file" },
@@ -505,10 +505,10 @@ keymap = [
   { on = "<Down>", run = "arrow 1", desc = "Move cursor down" },
 
   # Filtering
-  { on = "f", run = "filter", desc = "Apply a filter for the help items" },
+  { on = "i", run = "filter", desc = "Apply a filter for the help items" },
 ]
 
 [[manager.prepend_keymap]]
-on = ["i"]
+on = ["f"]
 run = "plugin keyjump --args=global"
 desc = "Keyjump (Global mode)"
