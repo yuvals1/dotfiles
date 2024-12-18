@@ -12,10 +12,31 @@ fi
 
 # Linux specific settings
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  # Check architecture first before doing anything else
+  ARCH=$(uname -m)
+  if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm"* ]]; then
+    echo "Notice: Homebrew is not supported on Linux ARM processors (${ARCH})."
+    echo "Please use native package managers like 'apt' for your system."
   else
-    echo "Homebrew not found on Linux"
+    if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+      eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    else
+      echo "Checking for Homebrew installation requirements..."
+      # Only proceed with installation attempt on x86_64 architecture
+      if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update
+        sudo apt-get install -y build-essential procps curl file git
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          echo "Homebrew installed successfully!"
+        else
+          echo "Failed to install Homebrew. Please install manually."
+        fi
+      else
+        echo "This system doesn't appear to be Ubuntu/Debian. Please install Homebrew manually."
+      fi
+    fi
   fi
 fi
 
