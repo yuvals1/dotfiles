@@ -230,15 +230,21 @@ keymap = [
   { on = [
     "g",
     "c",
-  ], run = "cd ~/.config", desc = "Goto ~/.config" },
+  ], run = "cd ~/dotfiles/", desc = "Goto dotfiles" },
+
   { on = [
     "g",
     "d",
-  ], run = "cd ~/Downloads", desc = "Goto ~/Downloads" },
+  ], run = "cd ~/dev-projects/", desc = "Goto dev-projects" },
   { on = [
     "g",
     "<Space>",
   ], run = "cd --interactive", desc = "Jump interactively" },
+  { on = [
+    "g",
+    "o",
+  ], run = "cd ~/iCloud~md~obsidian/Documents/Yuval/", desc = "Goto Obsidian" },
+
 
   # Tabs
   { on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
