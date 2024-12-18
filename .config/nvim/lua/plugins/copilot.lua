@@ -18,6 +18,6 @@ return {
         jupyter = true,
       },
     }
-    vim.keymap.set('n', '<leader>tt', '<cmd>Copilot toggle<CR>', { noremap = true, silent = true, desc = 'Toggle Copilot' })
+    vim.keymap.set('n', '<leader>cc', '<cmd>Copilot toggle<CR>', { noremap = true, silent = true, desc = 'Toggle Copilot' })
   end,
 }

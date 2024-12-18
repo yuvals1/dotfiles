@@ -5,7 +5,7 @@ return {
   },
   event = 'VeryLazy',
   keys = {
-    { '<leader>tc', '<cmd>TSContextToggle<CR>', desc = 'Toggle Treesitter Context' },
+    { '<leader>tt', '<cmd>TSContextToggle<CR>', desc = 'Toggle Treesitter Context' },
   },
   opts = {
     enable = true,
