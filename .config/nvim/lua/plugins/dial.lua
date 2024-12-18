@@ -11,7 +11,13 @@ return {
     require('dial.config').augends:register_group {
       -- Default group that applies everywhere
       default = {
-        -- Markdown checkbox toggle
+        -- Markdown toggles with cyclic headings
+        augend.constant.new {
+          elements = { '# ', '## ', '### ', '#### ', '##### ', '###### ' }, -- Added spaces
+          word = false,
+          cyclic = true,
+          match_before_cursor = true,
+        },
         augend.constant.new {
           elements = { '[ ]', '[x]' },
           word = false,
