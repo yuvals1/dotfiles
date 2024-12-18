@@ -17,11 +17,6 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   if [[ "$ARCH" == "aarch64" || "$ARCH" == "arm"* ]]; then
     echo "Notice: Homebrew is not supported on Linux ARM processors (${ARCH})."
     echo "Please use native package managers like 'apt' for your system."
-    return 0
-  fi
-
-  if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
   else
     if [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]]; then
       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -44,6 +39,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     fi
   fi
 fi
+
 # Common settings
 if [ -d "$HOME/.local/bin" ]; then
   export PATH="$HOME/.local/bin:$PATH"
