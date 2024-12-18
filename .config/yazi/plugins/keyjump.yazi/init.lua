@@ -1,13 +1,15 @@
 -- stylua: ignore
 local SPECIAL_KEYS = {
-	"<Space>", "<Esc>", "<Enter>",
-	"<Left>", "<Right>", "<Up>", "<Down>",
-	"h", "j", "k", "l",
-	"J", "K",
-	"<A-j>", "<A-k>",
-	"z",
-	"<C-j>", "<C-k>",
+    "<Space>", "<Esc>", "<Enter>",
+    "<Left>", "<Right>", "<Up>", "<Down>",
+    "h", "j", "k", "l",
+    "J", "K",
+    "<A-j>", "<A-k>",
+    "z",
+    "<C-j>", "<C-k>",
+    "q", 'f'  -- <-- add q here
 }
+
 
 -- stylua: ignore
 local SINGLE_KEYS = {
@@ -132,14 +134,17 @@ local GLOBAL_PARRENT_DOUBLE_KEYS = {
 
 -- stylua: ignore
 local SPECIAL_CANDS = {
-	{ on = "<Space>" }, { on = "<Esc>" }, { on = "<Enter>" },
-	{ on = "<Left>" }, { on = "<Right>" }, { on = "<Up>" }, { on = "<Down>" },
-	{ on = "h" }, { on = "j" }, { on = "k" }, { on = "l" },
-	{ on = "J" }, { on = "K" },
-	{ on = "<A-j>" }, { on = "<A-k>" },
-	{ on = "z" },
-	{ on = "<C-j>" }, { on = "<C-k>" },
+    { on = "<Space>" }, { on = "<Esc>" }, { on = "<Enter>" },
+    { on = "<Left>" }, { on = "<Right>" }, { on = "<Up>" }, { on = "<Down>" },
+    { on = "h" }, { on = "j" }, { on = "k" }, { on = "l" },
+    { on = "J" }, { on = "K" },
+    { on = "<A-j>" }, { on = "<A-k>" },
+    { on = "z" },
+    { on = "<C-j>" }, { on = "<C-k>" },
+    { on = "q" } ,
+    { on = "f" } -- <-- add q here
 }
+
 
 -- stylua: ignore
 local SIGNAL_CANDS = {
@@ -529,6 +534,8 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
       return true
     elseif special_key_str == 'z' then
       return true
+    elseif special_key_str == 'f' then
+      return true
     elseif special_key_str == '<Enter>' then
       ya.manager_emit('open', {})
       return true
@@ -588,6 +595,9 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
     elseif special_key_str == '<C-k>' then
       ya.manager_emit('arrow', { '-100%' })
       return false
+    elseif special_key_str == 'q' then
+      ya.manager_emit('quit', {})
+      return true
     end
   end
 
