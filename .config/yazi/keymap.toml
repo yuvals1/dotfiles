@@ -244,6 +244,10 @@ keymap = [
     "g",
     "o",
   ], run = "cd ~/iCloud~md~obsidian/Documents/Yuval/", desc = "Goto Obsidian" },
+  { on = [
+    "g",
+    "a",
+  ], run = "cd /data", desc = "Goto /data" },
 
 
   # Tabs
