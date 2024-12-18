@@ -250,9 +250,14 @@ keymap = [
     "a",
   ], run = "cd /data", desc = "Goto /data" },
   { on = [
-    "g",
-    "v",
-  ], run = "cd ~/vaults-icloud-obsidian/", desc = "Goto Vaults" },
+    'g',
+    'r',
+  ], run = 'cd ~/dev/robopilot', desc = 'Goto Robopilot' },
+  { on = [
+    'g',
+    't',
+  ], run = 'cd ~/dev/robopilot/treex_algo', desc = 'Goto Treex Algo' },
+
 
   # Tabs
   { on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
