@@ -18,12 +18,12 @@ vim.keymap.set('n', '<leader>t1', insert_time '## %d/%m/%Y', { desc = 'insert da
 
 -- For normal mode
 vim.keymap.set('n', '<leader>t', function()
-  local time = os.date '%H%M'
+  local time = os.date '%H:%M'
   vim.api.nvim_put({ time }, 'c', true, true)
 end, { desc = 'Insert current time' })
 
 -- For insert mode
 vim.keymap.set('i', '<C-t>', function()
-  local time = os.date '%H%M'
+  local time = os.date '%H:%M'
   vim.api.nvim_put({ time }, 'c', true, true)
 end, { desc = 'Insert current time' })
