@@ -26,3 +26,6 @@ vim.keymap.set('i', '<M-BS>', '<C-o>db', { noremap = true, silent = true })
 -- Normal moded: move 10 lines up or down
 vim.keymap.set({ 'n', 'v' }, '<F13>', '10k', { desc = 'Move 10 lines up' })
 vim.keymap.set({ 'n', 'v' }, '<C-]>', '10j', { desc = 'Move 10 lines down' })
+
+vim.keymap.set('i', '<C-a>', '<ESC><C-a>a', { desc = 'Increment number while in insert mode' })
+vim.keymap.set('i', '<C-x>', '<ESC><C-x>a', { desc = 'Decrement number while in insert mode' })
