@@ -33,7 +33,12 @@ return {
         augend.date.alias['%Y-%m-%d'], -- 2024-03-27
         augend.date.alias['%H:%M'], -- 23:59
         -- Programming augends
-        augend.constant.alias.bool, -- true/false
+        augend.constant.alias.bool, -- lowercase true/false for other languages
+        augend.constant.new { -- Add Python booleans while keeping the original
+          elements = { 'True', 'False' },
+          word = true,
+          cyclic = true,
+        },
         augend.constant.new {
           elements = { '&&', '||' },
           word = false,
