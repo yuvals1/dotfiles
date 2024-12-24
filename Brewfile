@@ -36,6 +36,7 @@ brew 'clipper'
 brew 'ncdu'
 brew 'tailscale'
 brew 'television'
+brew 'insect'
 
 # Languages and runtimes
 brew 'python'
