@@ -2,7 +2,7 @@
 return {
   'folke/todo-comments.nvim',
   cmd = { 'TodoQuickFix', 'TodoLocList', 'TodoTelescope' },
-  event = 'VeryLazy', -- Changed from BufReadPost and BufNewFile
+  event = 'VeryLazy',
   dependencies = {
     {
       'nvim-lua/plenary.nvim',
@@ -11,6 +11,7 @@ return {
   },
   opts = {
     keywords = {
+      -- Your existing keywords
       DEBUG = { icon = '󰍉', color = '#FF00FF', alt = { 'DEBUGGING', 'DBUG' } },
       WORK = { icon = '🏢', color = '#4A90E2', alt = { 'JOB', 'TASK' } },
       LEARNING = { icon = '📚', color = '#FF00FF', alt = { 'STUDY', 'READ' } },
@@ -19,24 +20,22 @@ return {
       BAD_BEHAVIOR = { icon = '⚠️', color = '#E74C3C', alt = { 'BAD', 'MISBEHAVIOR' } },
       SLEEP = { icon = '😴', color = '#F39C12', alt = { 'REST', 'NAP' } },
       EXERCISE = { icon = '🏋️', color = '#1ABC9C', alt = { 'WORKOUT', 'TRAINING' } },
+      -- Adding new status keywords
+      FAIL = { icon = '❌', color = '#DC2626', alt = { 'FAILED', 'FAILURE' } },
+      DONE = { icon = '✅', color = '#22C55E', alt = { 'COMPLETED', 'FINISHED' } },
+      IN_PROGRESS = { icon = '🔄', color = '#FBBF24', alt = { 'WIP', 'ONGOING' } },
     },
     merge_keywords = true,
     highlight = {
-      pattern = [[.*<(KEYWORDS)\s*:]], -- Adjusted pattern to work with hidden files
+      pattern = [[.*<?(KEYWORDS)\s*]], -- Simpler pattern that works with or without colon
+      before = '', -- no highlight before the keyword
+      keyword = 'wide', -- highlight the keyword
+      after = '', -- no highlight after the keyword
       comments_only = false, -- Allow highlighting in all files, not just comments
     },
     search = {
-      pattern = [[\b(KEYWORDS):]], -- Adjusted search pattern
+      pattern = [[\b(KEYWORDS)\b]], -- Simple word boundary match
     },
-    -- You can keep the colors table for reference or remove it if not needed
-    -- colors = {
-    --   error = { 'DiagnosticError', 'ErrorMsg', '#DC2626' },
-    --   warning = { 'DiagnosticWarn', 'WarningMsg', '#FBBF24' },
-    --   info = { 'DiagnosticInfo', '#2563EB' },
-    --   hint = { 'DiagnosticHint', '#10B981' },
-    --   default = { 'Identifier', '#7C3AED' },
-    --   test = { 'Identifier', '#FF00FF' },
-    -- },
   },
   keys = {
     { '<leader>td', '<cmd>TodoTelescope<cr>', desc = 'Todo' },
