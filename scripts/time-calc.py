@@ -3,6 +3,22 @@ import sys
 from datetime import datetime
 
 
+def standardize_date_format(text):
+    """
+    Convert all date headings to use forward slashes (DD/MM/YYYY)
+    """
+    # Match headings with either periods or forward slashes
+    pattern = r"##\s+(\d{1,2})[./](\d{1,2})[./](\d{4})"
+
+    def replace_date(match):
+        day = match.group(1)
+        month = match.group(2)
+        year = match.group(3)
+        return f"## {day}/{month}/{year}"
+
+    return re.sub(pattern, replace_date, text)
+
+
 def parse_time(time_str):
     """
     Attempt to parse an HH:MM time string into a datetime.time object.
@@ -41,7 +57,10 @@ def process_document(document_text):
     parse the table rows that follow, and compute total time (in minutes).
     Returns a dictionary: { 'DD/MM/YYYY': total_minutes, ... }
     """
-    # Regex to match lines like '## 17/12/2024'
+    # First standardize all date formats
+    document_text = standardize_date_format(document_text)
+
+    # Regex to match lines like '## DD/MM/YYYY'
     day_heading_pattern = r"^##\s+(\d{1,2}/\d{1,2}/\d{4})"
     # Regex to match table rows: | Activity | Start | End |
     row_pattern = r"^\|\s*(.*?)\s*\|\s*([\d:-]+)\s*\|\s*([\d:-]+)\s*\|"
@@ -63,7 +82,6 @@ def process_document(document_text):
         if current_day:
             row_match = re.match(row_pattern, line.strip())
             if row_match:
-                # Extract the activity (not used in calculation, but shown for clarity)
                 activity = row_match.group(1).strip()
                 start_str = row_match.group(2).strip()
                 end_str = row_match.group(3).strip()
@@ -104,22 +122,19 @@ def create_or_update_markdown(results, filename="time_spent.md"):
 
 
 def main():
-    # Usage:
-    #   python time_calc.py /path/to/your_document.md
-
     if len(sys.argv) < 2:
         doc_path = r"/Users/yuvalspiegel/iCloud~md~obsidian/Documents/Yuval/conscious-green-light.md"
     else:
         doc_path = sys.argv[1]
 
-    # 1. Read the entire document from the given file path
+    # Read the document
     with open(doc_path, "r", encoding="utf-8") as f:
         document_text = f.read()
 
-    # 2. Extract data and compute total minutes per day
+    # Process and compute totals
     results = process_document(document_text)
 
-    # 3. Create/overwrite the markdown file with totals
+    # Create/update the output file
     create_or_update_markdown(
         results,
         r"/Users/yuvalspiegel/iCloud~md~obsidian/Documents/Yuval/green-light-total.md",
