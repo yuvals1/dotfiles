@@ -1,31 +1,31 @@
 return {
-  'zbirenbaum/copilot.lua',
-  cmd = 'Copilot',
-  event = { 'InsertEnter', 'LspAttach' },
-  config = function()
-    require('copilot').setup {
-      suggestion = {
-        enabled = true,
-        auto_trigger = true,
-        keymap = {
-          accept = '<C-d>',
-          accept_word = '<C-e>',
-          next = '<M-]>',
-          prev = '<M-[>',
-          dismiss = '<C-]>',
-        },
-      },
-      filetypes = {
-        jupyter = true,
-        markdown = true,
-      },
-    }
-
-    vim.keymap.set(
-      'n',
-      '<leader>cc',
-      require('copilot.suggestion').toggle_auto_trigger,
-      { noremap = true, silent = true, desc = 'Toggle Copilot Auto Trigger' }
-    )
-  end,
+  -- 'zbirenbaum/copilot.lua',
+  -- cmd = 'Copilot',
+  -- event = { 'InsertEnter', 'LspAttach' },
+  -- config = function()
+  --   require('copilot').setup {
+  --     suggestion = {
+  --       enabled = true,
+  --       auto_trigger = true,
+  --       keymap = {
+  --         accept = '<C-d>',
+  --         accept_word = '<C-e>',
+  --         next = '<M-]>',
+  --         prev = '<M-[>',
+  --         dismiss = '<C-]>',
+  --       },
+  --     },
+  --     filetypes = {
+  --       jupyter = true,
+  --       markdown = true,
+  --     },
+  --   }
+  --
+  --   vim.keymap.set(
+  --     'n',
+  --     '<leader>cc',
+  --     require('copilot.suggestion').toggle_auto_trigger,
+  --     { noremap = true, silent = true, desc = 'Toggle Copilot Auto Trigger' }
+  --   )
+  -- end,
 }
