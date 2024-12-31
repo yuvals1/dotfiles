@@ -37,6 +37,7 @@ brew 'ncdu'
 brew 'tailscale'
 brew 'television'
 brew 'insect'
+brew 'rclone'
 
 # Languages and runtimes
 brew 'python'
