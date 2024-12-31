@@ -34,3 +34,6 @@ kitty +kitten themes --reload-in=all Catppuccin-Frappe
 # if ! brew services list | grep clipper | grep started > /dev/null; then
 #     brew services start clipper
 # fi
+#
+
+export EDITOR=nvim
