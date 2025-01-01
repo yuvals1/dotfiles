@@ -27,6 +27,10 @@ return { -- Autocompletion
     -- Load friendly-snippets
     require('luasnip.loaders.from_vscode').lazy_load()
 
+    -- Add React snippets to TypeScript files
+    luasnip.filetype_extend('typescript', { 'javascript' })
+    luasnip.filetype_extend('typescriptreact', { 'javascript', 'javascriptreact' })
+
     cmp.setup {
       snippet = {
         expand = function(args)
