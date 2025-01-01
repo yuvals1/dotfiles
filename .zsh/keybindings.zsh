@@ -8,9 +8,3 @@ bindkey '^[w' kill-region
 bindkey '^D' autosuggest-accept  # Ctrl-D to accept entire suggestion
 bindkey '^E' forward-word        # Ctrl-S to accept next word
 bindkey '^Y' yank-line-to-clipboard
-
-# Sesh keybinding
-zle -N sesh-sessions
-bindkey -M emacs '\es' sesh-sessions
-bindkey -M vicmd '\es' sesh-sessions
-bindkey -M viins '\es' sesh-sessions
