@@ -2,7 +2,7 @@
   "title": "Ctrl+D to Ctrl+F in Chrome",
   "rules": [
     {
-      "description": "Map Ctrl+D to Ctrl+F in Chrome",
+      "description": "Map Ctrl+D to Ctrl+F in Chrome for better alignment with nvim autocomplete keybinds",
       "manipulators": [
         {
           "type": "basic",
