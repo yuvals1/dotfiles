@@ -1,0 +1,32 @@
+{
+  "title": "Chrome Tab Closing",
+  "rules": [
+    {
+      "description": "Map Cmd+X to Cmd+W in Chrome for closing tabs",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "x",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "w",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
