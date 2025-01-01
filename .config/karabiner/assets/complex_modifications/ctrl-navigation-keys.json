@@ -175,6 +175,22 @@
         {
           "type": "basic",
           "from": {
+            "key_code": "y",
+            "modifiers": {
+              "mandatory": ["control", "command"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "y",
+              "modifiers": ["control"]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
             "key_code": "n",
             "modifiers": {
               "mandatory": ["control"],
