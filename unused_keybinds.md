@@ -11,3 +11,5 @@ This document lists all keybinds that are currently unused in the dotfiles.
 - W
 - Y (unneeded because yy has the same functionality)
 - Z
+- ctrl+u
+- ctrl+d
