@@ -1,0 +1,24 @@
+{
+  "title": "Generate UUID",
+  "rules": [
+    {
+      "description": "Generate UUID with Command+Shift+U",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": ["command", "shift"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.config/karabiner/scripts/uuid.sh"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

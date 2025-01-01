@@ -4,6 +4,19 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Generate UUID with Command+Shift+U",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "u",
+                                    "modifiers": { "mandatory": ["command", "shift"] }
+                                },
+                                "to": [{ "shell_command": "~/.config/karabiner/scripts/uuid.sh" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Map Control+[ to F13 key",
                         "manipulators": [
                             {
