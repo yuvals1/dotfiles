@@ -37,13 +37,20 @@ zinit snippet OMZP::command-not-found
 # Set FZF options for default behavior and history search
 export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
 
-# Source fzf keybindings and completion
 if [ -d "/usr/local/opt/fzf/shell" ]; then
     # macOS Homebrew path
     zinit snippet '/usr/local/opt/fzf/shell/key-bindings.zsh'
     zinit snippet '/usr/local/opt/fzf/shell/completion.zsh'
+elif [ -d "/home/linuxbrew/.linuxbrew/opt/fzf/shell" ]; then
+    # Linuxbrew path
+    zinit snippet '/home/linuxbrew/.linuxbrew/opt/fzf/shell/key-bindings.zsh'
+    zinit snippet '/home/linuxbrew/.linuxbrew/opt/fzf/shell/completion.zsh'
+elif [ -d "/usr/share/doc/fzf/examples" ]; then
+    # Ubuntu apt installation path
+    zinit snippet '/usr/share/doc/fzf/examples/key-bindings.zsh'
+    zinit snippet '/usr/share/doc/fzf/examples/completion.zsh'
 elif [ -d "$HOME/.fzf/shell" ]; then
-    # Linux path (when installed from git)
+    # Git installation path
     zinit snippet "$HOME/.fzf/shell/key-bindings.zsh"
     zinit snippet "$HOME/.fzf/shell/completion.zsh"
 fi
