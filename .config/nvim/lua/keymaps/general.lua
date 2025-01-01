@@ -29,3 +29,5 @@ vim.keymap.set({ 'n', 'v' }, '<C-]>', '10j', { desc = 'Move 10 lines down' })
 
 vim.keymap.set('i', '<C-a>', '<ESC><C-a>a', { desc = 'Increment number while in insert mode' })
 vim.keymap.set('i', '<C-x>', '<ESC><C-x>a', { desc = 'Decrement number while in insert mode' })
+
+vim.keymap.set('n', 'J', '*', { noremap = true })
