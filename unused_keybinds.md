@@ -13,3 +13,4 @@ This document lists all keybinds that are currently unused in the dotfiles.
 - Z
 - ctrl+u
 - ctrl+d
+- ctrl+g (show filename-unneeded)
