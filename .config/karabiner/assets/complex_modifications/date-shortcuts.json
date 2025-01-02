@@ -1,0 +1,43 @@
+{
+  "title": "Date Shortcuts",
+  "rules": [
+    {
+      "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "d",
+            "modifiers": {
+              "mandatory": ["command", "shift"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.config/karabiner/scripts/date.sh"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "s",
+            "modifiers": {
+              "mandatory": ["command", "shift"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "~/.config/karabiner/scripts/datetime.sh"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

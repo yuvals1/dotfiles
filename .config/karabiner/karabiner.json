@@ -4,6 +4,36 @@
       "complex_modifications": {
         "rules": [
           {
+            "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "d",
+                  "modifiers": { "mandatory": ["command", "shift"] }
+                },
+                "to": [
+                  { "shell_command": "~/.config/karabiner/scripts/date.sh" }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "s",
+                  "modifiers": { "mandatory": ["command", "shift"] }
+                },
+                "to": [
+                  { "shell_command": "~/.config/karabiner/scripts/datetime.sh" }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
             "description": "Map Cmd+X to Cmd+W in Chrome for closing tabs",
             "manipulators": [
               {
