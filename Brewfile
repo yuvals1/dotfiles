@@ -38,6 +38,7 @@ brew 'tailscale'
 brew 'television'
 brew 'insect'
 brew 'rclone'
+brew 'unison'
 
 # Languages and runtimes
 brew 'python'
