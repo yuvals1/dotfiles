@@ -26,6 +26,7 @@ function M.setup(languages)
           'go',
           'ruby',
           'dockerfile',
+          'cpp',
         }
 
         -- Get the filetype of the current buffer
