@@ -86,6 +86,22 @@ setup_rust_tools() {
 		return 0
 	fi
 
+	# Install Rust if not already installed
+	if ! command_exists rustc; then
+		log "Installing Rust..."
+		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		source "$HOME/.cargo/env"
+		rustup default stable
+	else
+		exists "Rust already installed"
+	fi
+
+	# Ensure we have the stable toolchain
+	if ! rustup show active-toolchain | grep -q "stable"; then
+		log "Setting up stable Rust toolchain..."
+		rustup default stable
+	fi
+
 	log "Setting up Rust tools..."
 	source "$HOME/.cargo/env" || true
 
@@ -201,6 +217,11 @@ install_btop() {
 		exists "btop already installed"
 		return
 	fi
+
+	log "Setting up required locales..."
+	sudo apt install -y locales
+	sudo locale-gen en_US.UTF-8
+	sudo update-locale LANG=en_US.UTF-8
 
 	log "Installing btop..."
 	BUILD_DIR="$(mktemp -d)"
