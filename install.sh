@@ -195,6 +195,22 @@ install_lazygit() {
 	success "Lazygit installed"
 }
 
+# Install lazydocker
+install_lazydocker() {
+	if command_exists lazydocker; then
+		exists "lazydocker already installed"
+		return
+	fi
+
+	log "Installing lazydocker..."
+	LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+	curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_arm64.tar.gz"
+	tar xf lazydocker.tar.gz
+	sudo install lazydocker /usr/local/bin
+	rm lazydocker lazydocker.tar.gz
+	success "Lazydocker installed"
+}
+
 # Setup fzf
 setup_fzf() {
 	if [ -f "$HOME/.zsh/tools/fzf/key-bindings.zsh" ] && [ -f "$HOME/.zsh/tools/fzf/completion.zsh" ]; then
@@ -244,12 +260,12 @@ main() {
 	log "Starting system setup..."
 
 	# Count total steps
-	local total=8
+	local total=9 # Updated count to include lazydocker
 	local current=0
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_zoxide install_lazygit setup_fzf setup_python_tools; do
+		install_node install_zoxide install_lazygit install_lazydocker setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
