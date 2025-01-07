@@ -195,6 +195,28 @@ install_lazygit() {
 	success "Lazygit installed"
 }
 
+# Install btop
+install_btop() {
+	if command_exists btop; then
+		exists "btop already installed"
+		return
+	fi
+
+	log "Installing btop..."
+	BUILD_DIR="$(mktemp -d)"
+	cd "$BUILD_DIR"
+
+	git clone https://github.com/aristocratos/btop.git
+	cd btop
+	make
+	sudo make install
+
+	cd
+	rm -rf "$BUILD_DIR"
+
+	command -v btop >/dev/null && success "btop installed!" || error "btop installation failed"
+}
+
 # Install lazydocker
 install_lazydocker() {
 	if command_exists lazydocker; then
@@ -260,12 +282,12 @@ main() {
 	log "Starting system setup..."
 
 	# Count total steps
-	local total=9 # Updated count to include lazydocker
+	local total=10 # Updated count to include btop
 	local current=0
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_zoxide install_lazygit install_lazydocker setup_fzf setup_python_tools; do
+		install_node install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
