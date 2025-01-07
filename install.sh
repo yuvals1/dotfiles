@@ -211,6 +211,25 @@ install_lazygit() {
 	success "Lazygit installed"
 }
 
+# Install Graphite CLI
+install_graphite() {
+	if command_exists gt; then
+		current_version=$(gt --version)
+		exists "Graphite CLI already installed: $current_version"
+		return
+	fi
+
+	log "Installing Graphite CLI..."
+	npm install -g @withgraphite/graphite-cli@stable || error "Failed to install Graphite CLI"
+
+	if command_exists gt; then
+		version=$(gt --version)
+		success "Graphite CLI installed: $version"
+	else
+		error "Graphite CLI installation failed"
+	fi
+}
+
 # Install btop
 install_btop() {
 	if command_exists btop; then
@@ -303,12 +322,12 @@ main() {
 	log "Starting system setup..."
 
 	# Count total steps
-	local total=10 # Updated count to include btop
+	local total=11 # Updated count to include graphite
 	local current=0
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
+		install_node install_graphite install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
