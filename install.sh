@@ -458,6 +458,20 @@ setup_python_tools() {
 		python3 -m pip install --user uv || error "Failed to install uv"
 	fi
 
+	if command_exists black; then
+		exists "black already installed"
+	else
+		log "Installing black..."
+		python3 -m pip install --user black || error "Failed to install black"
+	fi
+
+	if command_exists mypy; then
+		exists "mypy already installed"
+	else
+		log "Installing mypy..."
+		python3 -m pip install --user mypy || error "Failed to install mypy"
+	fi
+
 	success "Python tools setup completed"
 }
 
