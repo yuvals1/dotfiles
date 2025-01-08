@@ -86,6 +86,22 @@ setup_rust_tools() {
 		return 0
 	fi
 
+	# Install Rust if not already installed
+	if ! command_exists rustc; then
+		log "Installing Rust..."
+		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+		source "$HOME/.cargo/env"
+		rustup default stable
+	else
+		exists "Rust already installed"
+	fi
+
+	# Ensure we have the stable toolchain
+	if ! rustup show active-toolchain | grep -q "stable"; then
+		log "Setting up stable Rust toolchain..."
+		rustup default stable
+	fi
+
 	log "Setting up Rust tools..."
 	source "$HOME/.cargo/env" || true
 
@@ -195,6 +211,68 @@ install_lazygit() {
 	success "Lazygit installed"
 }
 
+# Install Graphite CLI
+install_graphite() {
+	if command_exists gt; then
+		current_version=$(gt --version)
+		exists "Graphite CLI already installed: $current_version"
+		return
+	fi
+
+	log "Installing Graphite CLI..."
+	npm install -g @withgraphite/graphite-cli@stable || error "Failed to install Graphite CLI"
+
+	if command_exists gt; then
+		version=$(gt --version)
+		success "Graphite CLI installed: $version"
+	else
+		error "Graphite CLI installation failed"
+	fi
+}
+
+# Install btop
+install_btop() {
+	if command_exists btop; then
+		exists "btop already installed"
+		return
+	fi
+
+	log "Setting up required locales..."
+	sudo apt install -y locales
+	sudo locale-gen en_US.UTF-8
+	sudo update-locale LANG=en_US.UTF-8
+
+	log "Installing btop..."
+	BUILD_DIR="$(mktemp -d)"
+	cd "$BUILD_DIR"
+
+	git clone https://github.com/aristocratos/btop.git
+	cd btop
+	make
+	sudo make install
+
+	cd
+	rm -rf "$BUILD_DIR"
+
+	command -v btop >/dev/null && success "btop installed!" || error "btop installation failed"
+}
+
+# Install lazydocker
+install_lazydocker() {
+	if command_exists lazydocker; then
+		exists "lazydocker already installed"
+		return
+	fi
+
+	log "Installing lazydocker..."
+	LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+	curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_${LAZYDOCKER_VERSION}_Linux_arm64.tar.gz"
+	tar xf lazydocker.tar.gz
+	sudo install lazydocker /usr/local/bin
+	rm lazydocker lazydocker.tar.gz
+	success "Lazydocker installed"
+}
+
 # Setup fzf
 setup_fzf() {
 	if [ -f "$HOME/.zsh/tools/fzf/key-bindings.zsh" ] && [ -f "$HOME/.zsh/tools/fzf/completion.zsh" ]; then
@@ -244,12 +322,12 @@ main() {
 	log "Starting system setup..."
 
 	# Count total steps
-	local total=8
+	local total=11 # Updated count to include graphite
 	local current=0
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_zoxide install_lazygit setup_fzf setup_python_tools; do
+		install_node install_graphite install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
