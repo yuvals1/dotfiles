@@ -87,9 +87,33 @@ install_base_packages() {
 	success "Base packages installation completed"
 }
 
+# Install yazi dependencies
+install_yazi_deps() {
+	log "Installing yazi dependencies..."
+	sudo apt install -y \
+		file \
+		ffmpeg \
+		p7zip-full \
+		jq \
+		poppler-utils \
+		fd-find \
+		ripgrep \
+		fzf \
+		zoxide \
+		imagemagick \
+		xclip || error "Failed to install yazi dependencies"
+
+	# Create fd symlink if needed (Debian/Ubuntu packages fd as fdfind)
+	if ! command_exists fd && command_exists fdfind; then
+		sudo ln -s $(which fdfind) /usr/local/bin/fd
+	fi
+
+	success "Yazi dependencies installed"
+}
+
 # Install and setup Rust tools
 setup_rust_tools() {
-	if command_exists eza && command_exists yazi; then
+	if command_exists eza && command_exists yazi && command_exists ya; then
 		exists "All Rust tools already installed"
 		return 0
 	fi
@@ -120,11 +144,22 @@ setup_rust_tools() {
 		cargo install eza || error "Failed to install eza"
 	fi
 
-	if command_exists yazi; then
-		exists "yazi already installed"
+	# Install both yazi packages
+	if ! command_exists ya || ! command_exists yazi; then
+		log "Installing yazi and ya CLI..."
+		cargo install --locked yazi-fm || error "Failed to install yazi-fm"
+		cargo install --locked yazi-cli || error "Failed to install yazi-cli"
+
+		# Create yazi config directory
+		mkdir -p "$HOME/.config/yazi"
+
+		# Initialize package.toml if it doesn't exist
+		if [ ! -f "$HOME/.config/yazi/package.toml" ]; then
+			echo '[plugin]' >"$HOME/.config/yazi/package.toml"
+			echo 'deps = []' >>"$HOME/.config/yazi/package.toml"
+		fi
 	else
-		log "Installing yazi..."
-		cargo install yazi-fm || error "Failed to install yazi"
+		exists "yazi and ya already installed"
 	fi
 
 	success "Rust tools installation completed"
@@ -435,7 +470,7 @@ main() {
 	local current=0
 
 	# Run each step and show progress
-	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
+	for step in setup_directories install_base_packages install_yazi_deps setup_rust_tools install_neovim \
 		install_node install_git install_graphite install_zoxide install_lazygit install_lazydocker install_btop install_ncdu install_ccze install_bat setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
