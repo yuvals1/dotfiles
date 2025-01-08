@@ -4,3 +4,5 @@
 [user]
 	email = yuvalspiegel1@gmail.com
 	name = yuval
+[credential]
+	helper = /usr/local/bin/gh auth git-credential
