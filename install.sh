@@ -134,6 +134,16 @@ install_neovim() {
 		fi
 	fi
 
+	log "Installing Neovim dependencies..."
+	sudo apt install -y \
+		ninja-build \
+		gettext \
+		cmake \
+		unzip \
+		curl \
+		libsqlite3-dev \
+		sqlite3 || error "Failed to install Neovim dependencies"
+
 	log "Building Neovim from source..."
 	BUILD_DIR="$(mktemp -d)"
 	cd "$BUILD_DIR"
@@ -211,6 +221,25 @@ install_lazygit() {
 	success "Lazygit installed"
 }
 
+# Install latest Git
+install_git() {
+	if command_exists git; then
+		current_version=$(git --version | awk '{print $3}')
+		if [ "$(printf '%s\n' "2.38" "$current_version" | sort -V | head -n1)" = "2.38" ]; then
+			exists "Git version $current_version is already installed and meets requirements"
+			return 0
+		fi
+	fi
+
+	log "Installing Git from PPA..."
+	sudo add-apt-repository -y ppa:git-core/ppa
+	sudo apt update
+	sudo apt install -y git
+
+	new_version=$(git --version | awk '{print $3}')
+	success "Git $new_version installed successfully"
+}
+
 # Install Graphite CLI
 install_graphite() {
 	if command_exists gt; then
@@ -228,6 +257,35 @@ install_graphite() {
 	else
 		error "Graphite CLI installation failed"
 	fi
+}
+
+# Setup locales
+setup_locales() {
+	log "Setting up UTF-8 locales..."
+
+	# Generate and set locales
+	sudo locale-gen "en_US.UTF-8"
+	sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8
+
+	# Set current session locale
+	export LC_ALL=en_US.UTF-8
+	export LANG=en_US.UTF-8
+	export LANGUAGE=en_US.UTF-8
+
+	# Add to shell rc files
+	for rc_file in "$HOME/.bashrc" "$HOME/.zshrc"; do
+		if [ -f "$rc_file" ]; then
+			if ! grep -q "LC_ALL=en_US.UTF-8" "$rc_file"; then
+				echo '' >>"$rc_file"
+				echo '# Locale settings' >>"$rc_file"
+				echo 'export LC_ALL=en_US.UTF-8' >>"$rc_file"
+				echo 'export LANG=en_US.UTF-8' >>"$rc_file"
+				echo 'export LANGUAGE=en_US.UTF-8' >>"$rc_file"
+			fi
+		fi
+	done
+
+	success "Locale setup completed"
 }
 
 # Install btop
@@ -327,7 +385,7 @@ main() {
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_graphite install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
+		install_node install_git install_graphite install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
