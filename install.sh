@@ -378,6 +378,25 @@ install_ccze() {
 	success "ccze installed successfully"
 }
 
+# Install bat
+install_bat() {
+	if command_exists bat; then
+		exists "bat already installed"
+		return 0
+	fi
+
+	log "Installing bat..."
+	sudo apt install -y bat || error "Failed to install bat"
+
+	# Create bat -> batcat symlink if it doesn't exist
+	if [ ! -f "/usr/local/bin/bat" ] && command_exists batcat; then
+		log "Creating bat symlink..."
+		sudo ln -s /usr/bin/batcat /usr/local/bin/bat
+	fi
+
+	success "bat installed successfully"
+}
+
 # Setup Python tools
 setup_python_tools() {
 	log "Setting up Python tools..."
@@ -409,7 +428,7 @@ main() {
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_git install_graphite install_zoxide install_lazygit install_lazydocker install_btop install_ncdu install_ccze setup_fzf setup_python_tools; do
+		install_node install_git install_graphite install_zoxide install_lazygit install_lazydocker install_btop install_ncdu install_ccze install_bat setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
