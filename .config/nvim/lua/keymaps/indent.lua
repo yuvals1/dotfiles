@@ -14,8 +14,3 @@ vim.keymap.set('v', '<C-t>', '>', { noremap = true, desc = 'Indent selection' })
 vim.keymap.set('n', '<C-g>', '<<', { noremap = true, desc = 'Reverse indent line' })
 vim.keymap.set('i', '<C-g>', '<C-o><<', { noremap = true, desc = 'Reverse indent line' })
 vim.keymap.set('v', '<C-g>', '<', { noremap = true, desc = 'Reverse indent selection' })
-
--- You can also keep CTRL-D mappings if you want both options:
-vim.keymap.set('n', '<C-d>', '<<', { noremap = true, desc = 'Unindent line' })
-vim.keymap.set('i', '<C-d>', '<C-d>', { noremap = true, desc = 'Unindent line' })
-vim.keymap.set('v', '<C-d>', '<', { noremap = true, desc = 'Unindent selection' })

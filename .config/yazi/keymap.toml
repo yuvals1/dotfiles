@@ -252,11 +252,11 @@ keymap = [
   { on = [
     'g',
     'r',
-  ], run = 'cd ~/dev/robopilot', desc = 'Goto Robopilot' },
+  ], run = 'cd ~/robopilot', desc = 'Goto Robopilot' },
   { on = [
     'g',
     't',
-  ], run = 'cd ~/dev/robopilot/treex_algo', desc = 'Goto Treex Algo' },
+  ], run = 'cd ~/robopilot/treex_algo', desc = 'Goto Treex Algo' },
 
 
   # Tabs
