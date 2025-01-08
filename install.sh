@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Setup required directories
+setup_directories() {
+	log "Setting up directories..."
+	mkdir -p "$HOME/.zsh/tools"
+	mkdir -p "$HOME/.local/bin"
+	success "Directories created"
+}
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
