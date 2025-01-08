@@ -29,3 +29,6 @@ vim.keymap.set('i', '<C-a>', '<ESC><C-a>a', { desc = 'Increment number while in 
 vim.keymap.set('i', '<C-x>', '<ESC><C-x>a', { desc = 'Decrement number while in insert mode' })
 
 vim.keymap.set('n', 'J', '*', { noremap = true })
+
+vim.keymap.set('n', '<C-d>', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic' })
+vim.keymap.set('n', '<C-u>', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic' })

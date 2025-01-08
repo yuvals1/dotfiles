@@ -12,5 +12,5 @@ This document lists all keybinds that are currently unused in the dotfiles.
 - Y (unneeded because yy has the same functionality)
 - Z
 - ctrl+u
-- ctrl+d
-- ctrl+g (show filename-unneeded)
+- ~ctrl+d~
+- ~ctrl+g (show filename-unneeded)~
