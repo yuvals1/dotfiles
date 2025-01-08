@@ -354,6 +354,30 @@ setup_fzf() {
 	success "fzf setup completed"
 }
 
+# Install ncdu
+install_ncdu() {
+	if command_exists ncdu; then
+		exists "ncdu already installed"
+		return 0
+	fi
+
+	log "Installing ncdu..."
+	sudo apt install -y ncdu || error "Failed to install ncdu"
+	success "ncdu installed successfully"
+}
+
+# Install ccze
+install_ccze() {
+	if command_exists ccze; then
+		exists "ccze already installed"
+		return 0
+	fi
+
+	log "Installing ccze..."
+	sudo apt install -y ccze || error "Failed to install ccze"
+	success "ccze installed successfully"
+}
+
 # Setup Python tools
 setup_python_tools() {
 	log "Setting up Python tools..."
@@ -385,7 +409,7 @@ main() {
 
 	# Run each step and show progress
 	for step in setup_directories install_base_packages setup_rust_tools install_neovim \
-		install_node install_git install_graphite install_zoxide install_lazygit install_lazydocker install_btop setup_fzf setup_python_tools; do
+		install_node install_git install_graphite install_zoxide install_lazygit install_lazydocker install_btop install_ncdu install_ccze setup_fzf setup_python_tools; do
 		((current++))
 		log "[$current/$total] Running ${step}..."
 		$step
