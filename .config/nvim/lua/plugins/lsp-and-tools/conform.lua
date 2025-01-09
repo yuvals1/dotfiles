@@ -29,6 +29,7 @@ function M.setup(languages)
           'cpp',
           'python',
           'bash',
+          'sh',
         }
 
         -- Get the filetype of the current buffer
