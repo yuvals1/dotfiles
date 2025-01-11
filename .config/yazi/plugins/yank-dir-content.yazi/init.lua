@@ -107,6 +107,7 @@ local function get_language(file)
 			cc = "cpp",
 			h = "cpp",
 			hpp = "cpp",
+			svelte = "svelte",
 			-- Add more as needed
 		}
 		return extensions[ext]
