@@ -1,0 +1,12 @@
+# List of base packages to install via apt
+curl
+wget
+git
+build-essential
+zsh
+ca-certificates
+gnupg
+lsb-release
+
+# Add other packages as needed...
+
