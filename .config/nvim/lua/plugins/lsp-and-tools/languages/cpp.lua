@@ -8,11 +8,9 @@ return {
         '--background-index',
         '--pch-storage=memory',
         '--clang-tidy',
-        '--suggest-missing-includes',
         '--header-insertion=iwyu',
-        '--cuda-include-path=/usr/local/cuda/include', -- For CUDA support
       },
-      filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'cu', 'cuh' },
+      filetypes = { 'c', 'cc', 'cpp', 'objc', 'objcpp', 'cuda', 'cu', 'cuh' },
     },
   },
   formatters = {
@@ -28,6 +26,16 @@ return {
   formatter_options = {
     ['clang-format'] = {
       args = { '--style=file' },
+    },
+  },
+  linter_options = {
+    ['cpplint'] = {
+      args = {
+        '--filter=-build/header_guard,-legal/copyright', -- Filter out specific warnings
+        '--counting=detailed',
+        '--linelength=120',
+        '--verbose=0', -- Only show errors (severity level 0)
+      },
     },
   },
 }
