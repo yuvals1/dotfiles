@@ -33,6 +33,7 @@ source "$SCRIPT_DIR/scripts/install_bat.sh"
 source "$SCRIPT_DIR/scripts/setup_fzf.sh"
 source "$SCRIPT_DIR/scripts/setup_python_tools.sh"
 source "$SCRIPT_DIR/scripts/setup_locales.sh"
+source "$SCRIPT_DIR/scripts/install_forgit.sh"
 
 main() {
     log "Starting system setup..."
@@ -55,6 +56,7 @@ main() {
         "run_install_ncdu"
         "run_install_ccze"
         "run_install_bat"
+	"run_install_forgit"
         "run_setup_fzf"
         "run_setup_python_tools"
         "run_setup_locales"
