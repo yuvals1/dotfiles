@@ -42,3 +42,13 @@ export NVM_DIR="$HOME/.nvm"
 export EDITOR=nvim
 export FZF_DEFAULT_COMMAND='find . -type f -name ".*" -o -type f'
 
+
+# Locale settings
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
+# fzf
+export PATH="$HOME/.fzf/bin:$PATH"
+
+# forgit
+source ~/.forgit/forgit.plugin.zsh
