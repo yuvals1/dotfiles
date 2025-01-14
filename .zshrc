@@ -52,3 +52,4 @@ export PATH="$HOME/.fzf/bin:$PATH"
 
 # forgit
 source ~/.forgit/forgit.plugin.zsh
+export EDITOR=nvim
