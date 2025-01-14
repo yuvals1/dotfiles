@@ -1,8 +1,51 @@
+[user]
+	email = ronen.eshel@treex-robotics.com
+	name = ronen-eshel
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential
-[user]
-	email = yuvalspiegel1@gmail.com
-	name = yuval
-[credential]
-	helper = /usr/local/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+
+[core]
+  pager = delta
+  editor = nvim
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true    # use n and N to move between diff sections
+  side-by-side = false
+
+
+    # delta detects terminal colors automatically; set one of these to disable auto-detection
+    # dark = true
+    # light = true
+
+[merge]
+  conflictstyle = diff3
+
+[diff]
+  colorMoved = default
+[alias]
+	st = status -s
+	sta = status
+	conf = config --global --edit
+	cge = config --global --edit
+	ci = commit
+	co = checkout
+	cod = checkout .
+	rh = reset HEAD
+	aa = add -A
+	cdf = clean -df
+	br = branch
+	bra = branch -a
+	amend = commit -a --amend --no-edit
+	ciam = commit -a --amend --no-edit
+	wta = worktree add
+	wtr = worktree remove
+	wtl = worktree list
+[init]
+
