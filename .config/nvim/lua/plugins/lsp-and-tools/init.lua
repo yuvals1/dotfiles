@@ -15,6 +15,7 @@ local languages = {
   require 'plugins.lsp-and-tools.languages.go',
   require 'plugins.lsp-and-tools.languages.dockerfile',
   -- require 'plugins.lsp-and-tools.languages.cpp',
+  require 'plugins.lsp-and-tools.languages.svelte',
 }
 
 -- Require the highlight module
