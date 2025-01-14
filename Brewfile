@@ -39,6 +39,7 @@ brew 'television'
 brew 'insect'
 brew 'rclone'
 brew 'unison'
+brew 'forgit'
 
 # Languages and runtimes
 brew 'python'
