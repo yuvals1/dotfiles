@@ -47,6 +47,7 @@
 	wta = worktree add
 	wtr = worktree remove
 	wtl = worktree list
+	mergecheck = merge --no-commit --no-ff
 	mc = merge --no-commit --no-ff
 [init]
 
