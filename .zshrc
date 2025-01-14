@@ -37,3 +37,5 @@ kitty +kitten themes --reload-in=all Catppuccin-Frappe
 #
 
 export EDITOR=nvim
+# Add to ~/.zshrc:
+[ -f $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh ] && source $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh
