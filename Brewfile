@@ -40,6 +40,7 @@ brew 'insect'
 brew 'rclone'
 brew 'unison'
 brew 'forgit'
+brew 'zk'
 
 # Languages and runtimes
 brew 'python'
