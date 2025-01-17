@@ -1,0 +1,40 @@
+{
+  "title": "Control Key Remapping",
+  "rules": [
+    {
+      "description": "Map Control Keys to Function Keys",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f13"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f20"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
