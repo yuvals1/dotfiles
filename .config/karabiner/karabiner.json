@@ -4,27 +4,28 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
+                        "description": "Map Control Keys to Function Keys",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "d",
-                                    "modifiers": { "mandatory": ["command", "shift"] }
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
                                 },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/date.sh" }],
+                                "to": [{ "key_code": "f13" }],
                                 "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
-                        "manipulators": [
+                            },
                             {
                                 "from": {
-                                    "key_code": "s",
-                                    "modifiers": { "mandatory": ["command", "shift"] }
+                                    "key_code": "i",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
                                 },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/datetime.sh" }],
+                                "to": [{ "key_code": "f20" }],
                                 "type": "basic"
                             }
                         ]
@@ -140,7 +141,7 @@
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -156,7 +157,7 @@
                                 "from": {
                                     "key_code": "p",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -172,7 +173,7 @@
                                 "from": {
                                     "key_code": "f",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -188,7 +189,7 @@
                                 "from": {
                                     "key_code": "s",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -263,30 +264,27 @@
                         ]
                     },
                     {
-                        "description": "Generate UUID with Command+Shift+U",
+                        "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "u",
+                                    "key_code": "d",
                                     "modifiers": { "mandatory": ["command", "shift"] }
                                 },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/uuid.sh" }],
+                                "to": [{ "shell_command": "~/.config/karabiner/scripts/date.sh" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Map Control+[ to F13 key",
+                        "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "open_bracket",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
+                                    "key_code": "s",
+                                    "modifiers": { "mandatory": ["command", "shift"] }
                                 },
-                                "to": [{ "key_code": "f13" }],
+                                "to": [{ "shell_command": "~/.config/karabiner/scripts/datetime.sh" }],
                                 "type": "basic"
                             }
                         ]
