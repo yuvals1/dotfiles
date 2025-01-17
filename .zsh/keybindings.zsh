@@ -10,3 +10,4 @@ bindkey '^Y' yank-line-to-clipboard
 bindkey '^U' backward-kill-line
 # bindkey '^G' end-of-line
 bindkey "\e[3~" delete-char
+bindkey '^[[57383u' kill-line
