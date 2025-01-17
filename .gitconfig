@@ -1,13 +1,11 @@
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
 [user]
-	email = ronen.eshel@treex-robotics.com
-	name = ronen-eshel
-[credential "https://github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = 
-	helper = !/usr/bin/gh auth git-credential
-
+	name = Yuval Spiegel
+	email = yuvalspiegel1@gmail.com
 [core]
   pager = delta
   editor = nvim
@@ -50,4 +48,17 @@
 	mergecheck = merge --no-commit --no-ff
 	mc = merge --no-commit --no-ff
 [init]
+	defaultBranch = main
+[url "https://github.com/"]
+	insteadOf = git@github.com:
+[url "https://"]
+	insteadOf = git://
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/local/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/local/bin/gh auth git-credential
+[credential]
+	helper = /usr/local/bin/gh auth git-credential
 
