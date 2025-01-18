@@ -1,0 +1,24 @@
+show_selection_mark = true
+
+content_search_max_file_size = "10MB"
+
+lines_before_match_in_preview = 1
+lines_after_match_in_preview = 1
+
+enable_kitty_keyboard = false
+
+[special-paths]
+"/media" = { list = "never", sum = "never" }
+"~/.config" = { show = "always" }
+"trav" = { show = "always", list = "always", sum = "never" }
+
+[[imports]]
+file = "verbs.toml"
+
+[[imports]]
+luma = ["dark", "unknown"]
+file = "skins/catppuccin-mocha.toml"
+
+[[imports]]
+luma = "light"
+file = "skins/catppuccin-mocha.toml"
