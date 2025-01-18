@@ -1,24 +1,175 @@
-show_selection_mark = true
+###############################################################
+# Navigation
+###############################################################
+[[verbs]]
+key = "ctrl-p"
+internal = ":toggle_preview"
 
-content_search_max_file_size = "10MB"
+[[verbs]]
+invocation = "toggle_tree"
+key = "ctrl-t"
+internal = ":toggle_tree"
 
-lines_before_match_in_preview = 1
-lines_after_match_in_preview = 1
+[[verbs]]
+key = "alt-h"
+internal = ":toggle_hidden"
 
-enable_kitty_keyboard = false
+[[verbs]]
+key = "alt-i"
+internal = ":toggle_git_ignore"
 
-[special-paths]
-"/media" = { list = "never", sum = "never" }
-"~/.config" = { show = "always" }
-"trav" = { show = "always", list = "always", sum = "never" }
+[[verbs]]
+key = "alt-c"
+internal = ":copy_line"
 
-[[imports]]
-file = "verbs.toml"
+[[verbs]]
+invocation = "up"
+key = "up"
+internal = ":line_up"
 
-[[imports]]
-luma = ["dark", "unknown"]
-file = "skins/catppuccin-mocha.toml"
+[[verbs]]
+invocation = "down"
+key = "down"
+internal = ":line_down"
 
-[[imports]]
-luma = "light"
-file = "skins/catppuccin-mocha.toml"
+[[verbs]]
+key = "home"
+internal = ":select_first"
+
+[[verbs]]
+key = "end"
+internal = ":select_last"
+
+[[verbs]]
+key = "page-up"
+internal = ":page_up"
+
+[[verbs]]
+key = "page-down"
+internal = ":page_down"
+
+###############################################################
+# Files and Panels Navigation
+###############################################################
+[[verbs]]
+key = "ctrl-left"
+internal = ":panel_left"
+
+[[verbs]]
+key = "ctrl-right"
+internal = ":panel_right"
+
+[[verbs]]
+key = "enter"
+internal = ":open_stay"
+
+[[verbs]]
+key = "alt-enter"
+internal = ":open_leave"
+
+###############################################################
+# File Operations
+###############################################################
+[[verbs]]
+invocation = "edit"
+key = "F2"
+shortcut = "e"
+external = "$EDITOR +{line} {file}"
+
+[[verbs]]
+invocation = "create"
+shortcut = "cr"
+external = "$EDITOR {directory}/{subpath}"
+
+[[verbs]]
+invocation = "mkdir"
+shortcut = "md"
+external = "mkdir -p {directory}/{subpath}"
+
+[[verbs]]
+invocation = "delete"
+shortcut = "rm"
+external = "rm -rf {file}"
+
+[[verbs]]
+invocation = "cp {subpath}"
+shortcut = "cp"
+external = "cp -r {file} {subpath}"
+
+[[verbs]]
+invocation = "move {subpath}"
+shortcut = "mv"
+external = "mv {file} {subpath}"
+
+[[verbs]]
+invocation = "chmod {args}"
+shortcut = "ch"
+external = "chmod {args} {file}"
+
+###############################################################
+# Panel Operations
+###############################################################
+[[verbs]]
+invocation = "copy_to_panel"
+key = "F5"
+shortcut = "cpp"
+external = "cp -r {file} {other-panel-directory}"
+
+[[verbs]]
+invocation = "move_to_panel"
+key = "F6"
+shortcut = "mvp"
+external = "mv {file} {other-panel-directory}"
+
+###############################################################
+# Git Operations
+###############################################################
+[[verbs]]
+key = "alt-g"
+internal = ":toggle_git_file_info"
+
+[[verbs]]
+invocation = "git_diff"
+shortcut = "gd"
+external = "git diff {file}"
+
+###############################################################
+# Search and Select
+###############################################################
+[[verbs]]
+key = "ctrl-s"
+internal = ":search_again"
+
+[[verbs]]
+key = "ctrl-f"
+internal = ":focus"
+
+[[verbs]]
+key = "tab"
+internal = ":next_match"
+
+###############################################################
+# View Toggles
+###############################################################
+[[verbs]]
+key = "alt-s"
+internal = ":toggle_sizes"
+
+[[verbs]]
+key = "alt-d"
+internal = ":toggle_dates"
+
+[[verbs]]
+key = "alt-p"
+internal = ":toggle_perm"
+
+###############################################################
+# General Actions
+###############################################################
+[[verbs]]
+key = "ctrl-q"
+internal = ":quit"
+
+[[verbs]]
+key = "F1"
+internal = ":help"
