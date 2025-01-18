@@ -165,3 +165,38 @@ function yank-line-to-clipboard() {
     LBUFFER+=$'\n'
     zle -M "Current line yanked to clipboard"
 }
+
+
+# Search file contents using ripgrep and fzf
+# Search file contents using ripgrep and fzf
+frg() {
+    local selection
+    selection=$(rg --line-number --no-heading --color=always --smart-case --hidden \
+        --glob '!.git/' \
+        "${*:-}" |
+        fzf --ansi \
+            --color "hl:-1:underline,hl+:-1:underline:reverse" \
+            --delimiter : \
+            --preview "bat --color=always {1} --highlight-line {2}" \
+            --preview-window 'up,60%,border-bottom,+{2}+3/3,~3')
+    
+    if [[ -n "$selection" ]]; then
+        local file=$(echo "$selection" | cut -d':' -f1)
+        local line=$(echo "$selection" | cut -d':' -f2)
+        $EDITOR "$file" "+$line"
+    fi
+}
+
+# Search in files with live preview
+fif() {
+    if [ ! "$#" -gt 0 ]; then
+        echo "Need a string to search for!"
+        return 1
+    fi
+    rg --files-with-matches --no-messages --hidden \
+        --glob '!.git/' \
+        "$1" | 
+        fzf --preview "highlight -O ansi -l {} 2> /dev/null | \
+            rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || \
+            rg --ignore-case --pretty --context 10 '$1' {}"
+}
