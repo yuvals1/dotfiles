@@ -59,9 +59,11 @@ function M:layout(area)
 end
 
 function M:get_selected_files()
-  local message = 'Selected files:\n\n'
+  local message = 'Selected files:\n'
+  local i = 1
   for _, file in pairs(cx.active.selected) do
-    message = message .. 'File properties:\n' .. dump(file) .. '\n\n'
+    message = message .. i .. '. ' .. tostring(file) .. '\n'
+    i = i + 1
   end
   return message
 end
