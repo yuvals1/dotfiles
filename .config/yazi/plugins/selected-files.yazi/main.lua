@@ -8,20 +8,35 @@ local toggle_ui = ya.sync(function(self)
   ya.render()
 end)
 
+-- Debug helper to print all properties of a table
+local function dump(o)
+  if type(o) == 'table' then
+    local s = '{ '
+    for k, v in pairs(o) do
+      if type(k) ~= 'number' then
+        k = '"' .. k .. '"'
+      end
+      s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+    end
+    return s .. '} '
+  else
+    return tostring(o)
+  end
+end
+
 -- Define M with keys
 local M = {
-  _id = 'test-modal',
+  _id = 'selected-modal',
   keys = {
     { on = 'q', run = 'quit' },
   },
 }
 
 function M:new(area)
-  self:layout(area) -- Notice this change from self._area = area
+  self:layout(area)
   return self
 end
 
--- Add layout function
 function M:layout(area)
   local chunks = ui.Layout()
     :constraints({
@@ -43,8 +58,15 @@ function M:layout(area)
   self._area = chunks[2]
 end
 
--- Change entry to handle events properly
-function M:entry(job) -- Notice the job parameter
+function M:get_selected_files()
+  local message = 'Selected files:\n\n'
+  for _, file in pairs(cx.active.selected) do
+    message = message .. 'File properties:\n' .. dump(file) .. '\n\n'
+  end
+  return message
+end
+
+function M:entry(job)
   toggle_ui()
 
   local tx1, rx1 = ya.chan 'mpsc'
@@ -93,7 +115,7 @@ function M:redraw()
   return {
     ui.Clear(self._area),
     ui.Border(ui.Border.ALL):area(self._area):type(ui.Border.ROUNDED),
-    ui.Text('Hello from test-modal!'):area(self._area:pad(ui.Pad(1, 2, 1, 2))),
+    ui.Text(self:get_selected_files()):area(self._area:pad(ui.Pad(1, 2, 1, 2))),
   }
 end
 
