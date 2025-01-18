@@ -591,3 +591,11 @@ desc = "find file by content (fuzzy match)"
 on = ["`"]
 run = "plugin  first-non-directory"
 desc = "Jumps to the first file"
+
+[[manager.prepend_keymap]]
+on = "Z"
+run = 'plugin selected-files'
+
+[[manager.prepend_keymap]]
+on = "E"
+run = 'plugin test-modal'
