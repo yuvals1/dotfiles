@@ -60,8 +60,11 @@ key = "ctrl-right"
 internal = ":panel_right"
 
 [[verbs]]
+invocation = "default_enter"
 key = "enter"
-internal = ":open_stay"
+external = "nvim +{line} {file}"
+apply_to = "text_file"           # This makes it only apply to text files
+leave_broot = false
 
 [[verbs]]
 key = "alt-enter"
