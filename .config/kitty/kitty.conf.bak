@@ -1,0 +1,111 @@
+font_size 21.0
+
+# Make sure you have the fonts installed
+font_family MesloLGM Nerd Font
+# font_family MesloLGS Nerd Font
+
+modify_font cell_width 95%
+
+scrollback_lines 10000
+SCROLLBACK_PAGER nvim --clean -noplugin -n
+
+# When you do fn+ctrl+shift+2 it opens the kitty file in the editor below
+editor /opt/homebrew/bin/nvim
+
+# hide_window_decorations yes
+hide_window_decorations titlebar-only
+
+window_padding_width 5 5 0 0
+
+confirm_os_window_close 0
+
+allow_remote_control yes
+listen_on unix:/tmp/kitty
+
+shell_integration enabled
+
+map kitty_mod+f kitty_scrollback_nvim --config search
+
+# create a new tmux window leader c 
+# map cmd+t send_text all \x01c
+map cmd+t send_text all \x01\x57
+
+# split tmux window vertically
+map cmd+y send_text all \x01\x56
+
+# split tmux window horizontally
+map cmd+u send_text all \x01\x48
+
+# switch to the last tmux session
+map cmd+p send_text all \x01L
+
+# quit vim <esc> :q
+map cmd+q send_text all \x1b:q\n
+
+# quit vim strong <esc> :q! 
+map cmd+d send_text all \x1b:q!\n
+
+# go to saved version <esc> :e!
+map cmd+e send_text all \x1b:e!\n
+
+# write vim buffer <esc> :w
+map cmd+w send_text all \x1b:w\n
+
+# kill the current pane (exit) 
+map cmd+x send_text all \x01x
+
+# toggle zoom state of the current tmux pane
+map cmd+z send_text all \x01z
+
+# switch to next tmux window
+map cmd+[ send_text all \x01p
+
+# switch to previous tmux window
+map cmd+] send_text all \x01n
+
+# enter the tmux command prompt
+map cmd+semicolon send_text all \x01:
+
+# select tmux window 1-9
+map cmd+1 send_text all \x011
+map cmd+2 send_text all \x012
+map cmd+3 send_text all \x013
+map cmd+4 send_text all \x014
+map cmd+5 send_text all \x015
+map cmd+6 send_text all \x016
+map cmd+7 send_text all \x017
+map cmd+8 send_text all \x018
+map cmd+9 send_text all \x019
+
+# open tmux menu
+map cmd+; send_text all \x01M
+
+# find in file 
+map cmd+h send_text all \x1b:Telescope current_buffer_fuzzy_find\n
+
+# live grep files 
+map cmd+j send_text all \x1b:Telescope live_grep\n 
+
+# smart open
+map cmd+l send_text all \x1b:Telescope smart_open smart_open\n
+
+# trouble
+map cmd+k send_text all \x1b:Trouble diagnostics focus filter.buf=0\n
+map cmd+shift+k send_text all \x1b:Trouble diagnostics focus\n
+
+# restore buffer to last commit state  # <space>hr see gitsigns/keymaps.lua
+map cmd+r send_text all \x20\x68\x72
+
+# stage buffer # <space>hm see gitsigns/keymaps.lua
+map cmd+m send_text all \x20\x68\x6D 
+
+# copy staged diff to clipboard # <space>hs see gitsigns/keymaps.lua
+map cmd+c send_text all \x20\x68\x73 
+
+# select all content (escape key) ggVG
+map cmd+a send_text all \x1bggVG
+
+# BEGIN_KITTY_THEME
+# Catppuccin-Frappe
+include current-theme.conf
+# END_KITTY_THEME
