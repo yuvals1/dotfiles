@@ -30,7 +30,7 @@ local function entry()
       '--preview',
       'echo "Full path: {}\n---" && bat --color=always {}', -- Show full path and preview
       '--height',
-      '50%', -- Use 50% of screen height
+      '100%', -- Use 50% of screen height
       '--layout',
       'reverse', -- Reverse layout
       '--border', -- Add border
