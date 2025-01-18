@@ -20,8 +20,25 @@ local function entry()
     return fail 'No files selected'
   end
 
-  -- Same fzf command but with PIPED stdin
-  local child, err = Command('fzf'):stdin(Command.PIPED):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  -- Create fzf command with options for filename display
+  local child, err = Command('fzf')
+    :args({
+      '--delimiter',
+      '/', -- Split by forward slash
+      '--with-nth',
+      '-1', -- Show only the last field (filename)
+      '--preview',
+      'echo "Full path: {}\n---" && bat --color=always {}', -- Show full path and preview
+      '--height',
+      '50%', -- Use 50% of screen height
+      '--layout',
+      'reverse', -- Reverse layout
+      '--border', -- Add border
+    })
+    :stdin(Command.PIPED)
+    :stdout(Command.PIPED)
+    :stderr(Command.INHERIT)
+    :spawn()
 
   if not child then
     return fail('Failed to start `fzf`, error: ' .. err)
@@ -41,7 +58,7 @@ local function entry()
 
   local target = output.stdout:gsub('\n$', '')
   if target ~= '' then
-    ya.manager_emit(target:find('[/\\]$' and 'cd' or 'reveal', { target }))
+    ya.manager_emit('reveal', { target })
   end
 end
 
