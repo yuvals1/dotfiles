@@ -9,5 +9,5 @@ bindkey '^D' forward-word        # Ctrl-D to accept next word while ctrl-E keep 
 bindkey '^Y' yank-line-to-clipboard
 bindkey '^U' backward-kill-line
 # bindkey '^G' end-of-line
-bindkey "\e[3~" delete-char
-bindkey '^[[57383u' kill-line
+bindkey "\e[3~" delete-char # prevent 'del' key from veing interpreted as '~'
+bindkey '^[[57383u' kill-line # map F20 (ctrl+u) to kill line 
