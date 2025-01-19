@@ -12,8 +12,13 @@ end
 local function entry()
   local _permit = ya.hide()
   local cwd = tostring(state())
-  local child, err =
-    Command('sh'):args({ '-c', 'find ' .. folders .. ' -type f | fzf' }):cwd(cwd):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  local child, err = Command('sh')
+    :args({ '-c', 'find ' .. folders .. ' -type f | fzf --delimiter="/" --with-nth=-1' })
+    :cwd(cwd)
+    :stdin(Command.INHERIT)
+    :stdout(Command.PIPED)
+    :stderr(Command.INHERIT)
+    :spawn()
 
   if not child then
     return fail('Failed to start `fzf`, error: ' .. err)
