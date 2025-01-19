@@ -88,10 +88,10 @@ keymap = [
   { on = ":", run = "shell --block --interactive", desc = "Run a shell command (block until finishes)" },
   { on = ".", run = "hidden toggle", desc = "Toggle the visibility of hidden files" },
   # { on = "s", run = "search --via=fd", desc = "Search files by name via fd" },
-  { on = "S", run = "search --via=rg", desc = "Search files by content via ripgrep" },
+  # { on = "S", run = "search --via=rg", desc = "Search files by content via ripgrep" },
   { on = "<C-s>", run = "escape --search", desc = "Cancel the ongoing search" },
   # { on = "z", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
-  { on = "s", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
+  { on = "Z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
 
   # Linemode
   { on = [
@@ -583,8 +583,8 @@ run = "plugin yamb --args=rename_by_fzf"
 desc = "Rename bookmark by fzf"
 
 [[manager.prepend_keymap]]
-on = ["z"]
-run = "plugin fg"
+on = ["R"]
+run = "plugin fg"                           # kind of ripgrep
 desc = "find file by content (fuzzy match)"
 
 [[manager.prepend_keymap]]
@@ -592,10 +592,18 @@ on = ["`"]
 run = "plugin  first-non-directory"
 desc = "Jumps to the first file"
 
-[[manager.prepend_keymap]]
-on = "Z"
-run = 'plugin selected-files'
+# [[manager.prepend_keymap]]
+# on = "W"
+# run = 'plugin minimal-select'
+
+# [[manager.prepend_keymap]]
+# on = "Z"
+# run = 'plugin selected-files'
 
 [[manager.prepend_keymap]]
-on = "E"
-run = 'plugin test-modal'
+on = "z"
+run = 'plugin preset-paths-fzf'
+
+[[manager.prepend_keymap]]
+on = "s"
+run = 'plugin selected-files-fzf'
