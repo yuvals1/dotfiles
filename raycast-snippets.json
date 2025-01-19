@@ -1,1 +1,98 @@
-[{"keyword":"@under","text":"i don't understand","name":"i dont understand"},{"text":"explain from first principles","keyword":"@first","name":"first principles"},{"name":"conventional commits","keyword":"@cc","text":"conventional commits"},{"name":"then ill choose and you'll implement","text":"then ill choose and you'll implement","keyword":"@ways"},{"name":"readit","text":"read it carefully and then i'll ask you to help with improving it","keyword":"@readit"},{"keyword":"@suggest2","text":"look at the code and suggest a couple of strategies to modify it in order to implement the desired behavior. then ill choose one of your options and youll implement it","name":"suggest2"},{"keyword":"@preview","name":"preview","text":"preview the way you think about implementing this then if i approve you'll implement it"},{"text":"suggest a couple of strategies and ill choose one ","keyword":"@suggest1","name":"suggest1"},{"text":"suggest git commit according to conventional commits\n\n\n","keyword":"@cf","name":"conventional commit full"},{"name":"plan","keyword":"@plan","text":"explain how you are planning to do it first. then if i confirm we will continue.\n"},{"keyword":"@suggest3","name":"suggest3","text":"suggest a couple of strategies how to do it and ill choose one\n"}]
+[
+  {
+    "keyword": "@under",
+    "name": "i dont understand",
+    "text": "i don't understand"
+  },
+  {
+    "name": "first principles",
+    "text": "explain from first principles",
+    "keyword": "@first"
+  },
+  {
+    "text": "conventional commits",
+    "name": "conventional commits",
+    "keyword": "@cv"
+  },
+  {
+    "name": "then ill choose and you'll implement",
+    "text": "then ill choose and you'll implement",
+    "keyword": "@ways"
+  },
+  {
+    "name": "readit",
+    "keyword": "@readit",
+    "text": "read it carefully and then i'll ask you to help with improving it"
+  },
+  {
+    "text": "look at the code and suggest a couple of strategies to modify it in order to implement the desired behavior. then ill choose one of your options and youll implement it",
+    "name": "suggest2",
+    "keyword": "@suggest2"
+  },
+  {
+    "keyword": "@preview",
+    "name": "preview",
+    "text": "preview the way you think about implementing this then if i approve you'll implement it"
+  },
+  {
+    "text": "suggest a couple of strategies and ill choose one ",
+    "keyword": "@suggest1",
+    "name": "suggest1"
+  },
+  {
+    "text": "suggest git commit according to conventional commits\n\n\n",
+    "keyword": "@cf",
+    "name": "conventional commit full"
+  },
+  {
+    "name": "plan",
+    "keyword": "@plan",
+    "text": "explain how you are planning to do it first. then if i confirm we will continue.\n"
+  },
+  {
+    "name": "suggest3",
+    "text": "suggest a couple of strategies how to do it and ill choose one\n",
+    "keyword": "@suggest3"
+  },
+  {
+    "keyword": "@cc",
+    "text": "suggest git commit according to conventional commits",
+    "name": "conventional commits full"
+  },
+  {
+    "name": "show the filename in copyable block",
+    "text": "show the filename in copyable block",
+    "keyword": "@copyable"
+  },
+  {
+    "keyword": "@struct",
+    "name": "provide a command for creating the file structure",
+    "text": "provide a command for creating the file structure\n"
+  },
+  {
+    "keyword": "@imagine",
+    "text": "but dont use the 'imagine' thing",
+    "name": "imagine"
+  },
+  {
+    "keyword": "@modi",
+    "text": "dont make any unnecessary modifications",
+    "name": "modi"
+  },
+  {
+    "keyword": "@empty",
+    "name": "empty files",
+    "text": "provide command for creating the empty files"
+  },
+  {
+    "keyword": "@cl",
+    "text": "suggest one line git commit according to conventional commits",
+    "name": "conventional commits one line"
+  },
+  {
+    "name": "make it more detailed",
+    "keyword": "@det",
+    "text": "make it more detailed"
+  }
+]
+

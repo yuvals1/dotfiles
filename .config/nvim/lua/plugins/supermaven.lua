@@ -4,8 +4,8 @@ return {
   config = function()
     require('supermaven-nvim').setup {
       keymaps = {
-        accept_suggestion = '<C-d>',
-        accept_word = '<C-e>',
+        accept_suggestion = '<C-e>',
+        accept_word = '<C-d>', -- <C-e> and <C-d> suggestion behavior matches their behavior in zsh
         clear_suggestion = '<C-]>',
       },
       -- Enable for specific filetypes (similar to your Copilot config)

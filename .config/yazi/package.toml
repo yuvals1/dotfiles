@@ -1,15 +1,77 @@
-[plugin]
-deps = [
-  { use = "yazi-rs/plugins:diff", rev = "7afba3a" },
-  { use = "yazi-rs/plugins:jump-to-char", rev = "7afba3a" },
-  { use = "yazi-rs/plugins:git", rev = "7afba3a" },
-  { use = "yazi-rs/plugins:max-preview", rev = "7afba3a" },
-  { use = "yazi-rs/plugins:chmod", rev = "7afba3a" },
-  { use = "yazi-rs/plugins:full-border", rev = "7afba3a" },
-  { use = "yazi-rs/plugins:smart-filter", rev = "7afba3a" },
-  { use = "Rolv-Apneseth/starship", rev = "247f49d" },
-  { use = "GianniBYoung/rsync", rev = "3f431aa" },
-]
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "e4aaf43"
+hash = "284f6694e3b1a4afd686acf1052acd90"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:jump-to-char"
+rev = "e4aaf43"
+hash = "72c66a0b3d60f8377eb9db5e1d8b60b2"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "e4aaf43"
+hash = "e9cf1bfc03de7fee0f1d4260da0d1dfd"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:max-preview"
+rev = "e4aaf43"
+hash = "9bc26d10d2f6e2aa93b10905b1b76979"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "e4aaf43"
+hash = "4c7e8fd0266eedee7b619d966bd2d025"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "e4aaf43"
+hash = "882ed23839778f82dc137248979c8681"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-filter"
+rev = "e4aaf43"
+hash = "ea24edab4a62c94dbd205adfb6f2c08d"
+
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "4053c8c"
+hash = "3e56b7665569519e3fc54b02868627c4"
+
+[[plugin.deps]]
+use = "GianniBYoung/rsync"
+rev = "3f431aa"
+hash = "1854a5a30d23e84bc8df24700f27957b"
+
+[[plugin.deps]]
+use = "h-hg/yamb"
+rev = "108347b"
+hash = "faf1b817347b5b46c96039dab538694b"
+
+[[plugin.deps]]
+use = "ahkohd/eza-preview"
+rev = "5ef05bc"
+hash = "72355a6c8b7c8de6ed4dda0f98f86fee"
+
+[[plugin.deps]]
+use = "lpnh/fg"
+rev = "9bba743"
+hash = "5c395bf9b8ef3d4701ac9bdbc963c4c1"
+
+[[plugin.deps]]
+use = "lpanebr/yazi-plugins:first-non-directory"
+rev = "7af4fed"
+hash = "55796171ddbc142daf7f7585fc879c1a"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "e4aaf43"
+hash = "cf3f5c20e1b33048cb19bb1e0bba90ec"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mactag"
+rev = "e4aaf43"
+hash = "3fee7f91058b2be662623cffcc9b0a10"
 
 [flavor]
 deps = []
