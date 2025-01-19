@@ -235,7 +235,7 @@ keymap = [
   { on = [
     "g",
     "d",
-  ], run = "cd ~/dev-projects/", desc = "Goto dev-projects" },
+  ], run = "cd ~/dev/", desc = "Goto dev-projects" },
   { on = [
     "g",
     "<Space>",
