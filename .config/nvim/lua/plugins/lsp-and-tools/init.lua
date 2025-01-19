@@ -11,7 +11,7 @@ local languages = {
   require 'plugins.lsp-and-tools.languages.toml',
   require 'plugins.lsp-and-tools.languages.javascript',
   require 'plugins.lsp-and-tools.languages.ruby',
-  require 'plugins.lsp-and-tools.languages.haskell',
+  -- require 'plugins.lsp-and-tools.languages.haskell',
   require 'plugins.lsp-and-tools.languages.go',
   require 'plugins.lsp-and-tools.languages.dockerfile',
   -- require 'plugins.lsp-and-tools.languages.cpp',

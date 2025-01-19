@@ -4,8 +4,10 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
-bindkey '^D' autosuggest-accept  # Ctrl-D to accept entire suggestion
-bindkey '^E' forward-word        # Ctrl-S to accept next word
+# bindkey '^E' autosuggest-accept   
+bindkey '^D' forward-word        # Ctrl-D to accept next word while ctrl-E keep its default behavior which is accepting entire suggestion if exists and if not trying to move to end of line
 bindkey '^Y' yank-line-to-clipboard
 bindkey '^U' backward-kill-line
-bindkey '^G' end-of-line
+# bindkey '^G' end-of-line
+bindkey "\e[3~" delete-char # prevent 'del' key from veing interpreted as '~'
+bindkey '^[[57383u' kill-line # map F20 (ctrl+u) to kill line 

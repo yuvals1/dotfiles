@@ -4,27 +4,89 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
+                        "description": "Map Ctrl+D to Ctrl+F in Chrome for better alignment with nvim autocomplete keybinds",
                         "manipulators": [
                             {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.google\\.Chrome$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
                                 "from": {
                                     "key_code": "d",
-                                    "modifiers": { "mandatory": ["command", "shift"] }
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
                                 },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/date.sh" }],
+                                "to": [
+                                    {
+                                        "key_code": "f",
+                                        "modifiers": ["control"]
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
+                        "description": "Map Control Keys to Function Keys",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "s",
-                                    "modifiers": { "mandatory": ["command", "shift"] }
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
                                 },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/datetime.sh" }],
+                                "to": [{ "key_code": "f13" }],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.google\\.Chrome"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "i",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "k",
+                                        "modifiers": ["control"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.google\\.Chrome"
+                                        ],
+                                        "type": "frontmost_application_unless"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "i",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "f20" }],
                                 "type": "basic"
                             }
                         ]
@@ -140,7 +202,7 @@
                                 "from": {
                                     "key_code": "n",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -156,7 +218,7 @@
                                 "from": {
                                     "key_code": "p",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -172,7 +234,7 @@
                                 "from": {
                                     "key_code": "f",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -188,7 +250,7 @@
                                 "from": {
                                     "key_code": "s",
                                     "modifiers": {
-                                        "mandatory": ["control", "command"],
+                                        "mandatory": ["control", "right_command"],
                                         "optional": ["any"]
                                     }
                                 },
@@ -263,30 +325,27 @@
                         ]
                     },
                     {
-                        "description": "Generate UUID with Command+Shift+U",
+                        "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "u",
+                                    "key_code": "d",
                                     "modifiers": { "mandatory": ["command", "shift"] }
                                 },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/uuid.sh" }],
+                                "to": [{ "shell_command": "~/.config/karabiner/scripts/date.sh" }],
                                 "type": "basic"
                             }
                         ]
                     },
                     {
-                        "description": "Map Control+[ to F13 key",
+                        "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "open_bracket",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
+                                    "key_code": "s",
+                                    "modifiers": { "mandatory": ["command", "shift"] }
                                 },
-                                "to": [{ "key_code": "f13" }],
+                                "to": [{ "shell_command": "~/.config/karabiner/scripts/datetime.sh" }],
                                 "type": "basic"
                             }
                         ]
@@ -443,35 +502,6 @@
                                     {
                                         "key_code": "return_or_enter",
                                         "modifiers": ["shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Map Ctrl+D to Ctrl+F in Chrome",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com\\.google\\.Chrome$"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "d",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "f",
-                                        "modifiers": ["control"]
                                     }
                                 ],
                                 "type": "basic"
