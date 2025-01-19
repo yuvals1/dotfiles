@@ -9,8 +9,13 @@ end
 local function entry()
   local _permit = ya.hide()
   local cwd = tostring(state())
-
-  local child, err = Command('fzf'):cwd(cwd):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  local child, err = Command('sh')
+    :args({ '-c', 'find ~/dev-projects/test-fzf-folders/a ~/dev-projects/test-fzf-folders/b -type f | fzf' })
+    :cwd(cwd)
+    :stdin(Command.INHERIT)
+    :stdout(Command.PIPED)
+    :stderr(Command.INHERIT)
+    :spawn()
 
   if not child then
     return fail('Failed to start `fzf`, error: ' .. err)
