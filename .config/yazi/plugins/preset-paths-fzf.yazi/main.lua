@@ -1,5 +1,6 @@
 -- Define the folders at the top
-local folders = '~/dev-projects/test-fzf-folders/a ~/dev-projects/test-fzf-folders/b'
+-- local folders = '~/dev-projects/test-fzf-folders/a ~/dev-projects/test-fzf-folders/b'
+local folders = '~/treex-mono/robopilot/'
 
 local state = ya.sync(function()
   return cx.active.current.cwd
