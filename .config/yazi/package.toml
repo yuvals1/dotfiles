@@ -63,5 +63,15 @@ use = "lpanebr/yazi-plugins:first-non-directory"
 rev = "7af4fed"
 hash = "55796171ddbc142daf7f7585fc879c1a"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "e4aaf43"
+hash = "cf3f5c20e1b33048cb19bb1e0bba90ec"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mactag"
+rev = "e4aaf43"
+hash = "3fee7f91058b2be662623cffcc9b0a10"
+
 [flavor]
 deps = []
