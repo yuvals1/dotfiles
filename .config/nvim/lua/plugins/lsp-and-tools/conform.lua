@@ -9,7 +9,7 @@ function M.setup(languages)
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>fc',
+        'M',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
@@ -27,6 +27,7 @@ function M.setup(languages)
           'ruby',
           'dockerfile',
           'cpp',
+          'typescript',
         }
 
         -- Get the filetype of the current buffer
