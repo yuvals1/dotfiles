@@ -30,6 +30,7 @@ function M.setup(languages)
           'python',
           'bash',
           'sh',
+          'typescript',
         }
 
         -- Get the filetype of the current buffer
