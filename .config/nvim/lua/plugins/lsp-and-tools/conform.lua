@@ -9,7 +9,7 @@ function M.setup(languages)
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>fc',
+        'M',
         function()
           require('conform').format { async = true, lsp_fallback = true }
         end,
