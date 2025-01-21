@@ -28,6 +28,9 @@ function M.setup(languages)
           'dockerfile',
           'cpp',
           'typescript',
+          'python',
+          'bash',
+          'sh',
         }
 
         -- Get the filetype of the current buffer
