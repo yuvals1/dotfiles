@@ -28,7 +28,7 @@ vim.keymap.set({ 'n', 'v' }, '<C-]>', '10j', { desc = 'Move 10 lines down' })
 vim.keymap.set('i', '<C-a>', '<ESC><C-a>a', { desc = 'Increment number while in insert mode' })
 vim.keymap.set('i', '<C-x>', '<ESC><C-x>a', { desc = 'Decrement number while in insert mode' })
 
-vim.keymap.set('n', 'J', '*', { noremap = true })
+vim.keymap.set('n', 'J', 'viwy/\\V<C-r>"<CR>', { noremap = true })
 
 vim.keymap.set('n', '<C-d>', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic' })
 vim.keymap.set('n', '<C-u>', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic' })
