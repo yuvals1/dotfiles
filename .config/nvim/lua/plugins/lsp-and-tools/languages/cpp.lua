@@ -1,41 +1,24 @@
 -- cpp.lua
 return {
-  mason = { 'clangd', 'clang-format', 'cpplint' },
+  mason = { 'clangd', 'clang-format' },
   lsp = {
     clangd = {
       cmd = {
         'clangd',
         '--background-index',
-        '--pch-storage=memory',
         '--clang-tidy',
+        '--completion-style=detailed',
         '--header-insertion=iwyu',
       },
-      filetypes = { 'c', 'cc', 'cpp', 'objc', 'objcpp', 'cuda', 'cu', 'cuh' },
+      capabilities = {
+        offsetEncoding = { 'utf-16' },
+      },
+      root_dir = function(fname)
+        return require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', 'Makefile', '.git')(fname)
+      end,
     },
   },
   formatters = {
     cpp = { 'clang-format' },
-    c = { 'clang-format' },
-    cuda = { 'clang-format' },
-  },
-  linters = {
-    cpp = { 'cpplint' },
-    c = { 'cpplint' },
-    cuda = { 'cpplint' },
-  },
-  formatter_options = {
-    ['clang-format'] = {
-      args = { '--style=file' },
-    },
-  },
-  linter_options = {
-    ['cpplint'] = {
-      args = {
-        '--filter=-build/header_guard,-legal/copyright', -- Filter out specific warnings
-        '--counting=detailed',
-        '--linelength=120',
-        '--verbose=0', -- Only show errors (severity level 0)
-      },
-    },
   },
 }
