@@ -38,20 +38,31 @@ local function entry()
   local find_cmd = [[
     result=$(for dir in ]] .. folders .. [[; do
       dir="${dir%/}"
-      (cd "$dir" && find . -type f -exec printf "%s/%s\t%s\n" "$dir" "{}" "{}" \;) | sed 's|/\./|/|g'
+      (cd "$dir" && find . -type f -exec printf "%s\t%s\n" "$dir/{}" "{}" \;) | sed 's|/\./|/|g'
     done | awk -F'\t' '
       {
         full=$1
         rel=$2
         gsub(/^\.\//, "", rel)
+        
+        split(full, parts, "/")
+        last_idx = length(parts)
+        
+        if (rel ~ "/") {
+          base_dir = parts[last_idx-2]
+        } else {
+          base_dir = parts[last_idx-1]
+        }
+        
         if (!(full in seen) || length(rel) < length(seen[full])) {
           seen[full] = rel
-          paths[full] = $0
+          seen_base[full] = base_dir
+          paths[full] = base_dir "/" rel
         }
       }
       END {
         for (p in paths) {
-          print paths[p]
+          print p "\t" paths[p]
         }
       }
     ')
@@ -65,6 +76,7 @@ local function entry()
   ]]
 
   local child, err = Command('sh'):args({ '-c', find_cmd }):cwd(cwd):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+
   if not child then
     return fail('Failed to start command, error: ' .. err)
   end
