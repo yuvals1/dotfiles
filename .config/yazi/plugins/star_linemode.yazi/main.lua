@@ -17,9 +17,15 @@ return {
     self.state.bookmarks = {}
 
     for line in file:lines() do
-      local _, path = line:match '([^\t]+)\t([^\t]+)'
+      -- Split the line into columns
+      local _, path, type = line:match '([^\t]+)\t([^\t]+)\t?([^\t]*)'
       if path then
+        -- Store both path and whether it's a directory
         self.state.bookmarks[path] = true
+        -- Also store path without trailing slash for directories
+        if path:sub(-1) == '/' or type == 'd' then
+          self.state.bookmarks[path:sub(1, -2)] = true
+        end
       end
     end
     file:close()
@@ -36,7 +42,7 @@ return {
     -- local symbol = " ♥"    -- Heart, classic favorite symbol
     local symbol = ' ⭐' -- Star mark
     -- local symbol = " ⚑"    -- Flag mark
-    -- local symbol = ' 📌' -- Pin
+    -- local symbol = " 📌"   -- Pin
     -- local symbol = " 📎"   -- Paperclip
     -- local symbol = " ⚐"    -- White flag
     -- local symbol = " ☆"    -- Open star
