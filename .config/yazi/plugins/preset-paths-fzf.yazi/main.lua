@@ -16,7 +16,7 @@ local function entry()
     done)
     
     if [ -n "$result" ]; then
-      echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat --style=numbers --color=always {1}"
+      echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat --style=numbers --color=always {1}" --header='Search in folders'
     else
       echo "No files found" >&2
       exit 1
