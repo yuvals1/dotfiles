@@ -92,6 +92,11 @@ keymap = [
   { on = "<C-s>", run = "escape --search", desc = "Cancel the ongoing search" },
   # { on = "z", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
   { on = "Z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
+  { on = "W", run = "plugin skim", desc = "Jump to a file/directory via skim" },
+  { on = [
+    "m",
+    "x",
+  ], run = "linemode custom_linemode", desc = "Custom linemode" },
 
   # Linemode
   { on = [
@@ -607,3 +612,7 @@ run = 'plugin preset-paths-fzf'
 [[manager.prepend_keymap]]
 on = "s"
 run = 'plugin selected-files-fzf'
+
+[[manager.prepend_keymap]]
+on = "Q"
+run = 'plugin fzf-orig'
