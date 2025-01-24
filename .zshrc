@@ -40,3 +40,8 @@ fi
 export EDITOR=nvim
 # Add to ~/.zshrc:
 [ -f $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh ] && source $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh
+
+compdef _git_diff forgit::diff
+
+
+export FZF_DEFAULT_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down"
