@@ -1,14 +1,41 @@
-local folders =
-  '~/dev-projects/test-fzf-folders/a ~/dev-projects/test-fzf-folders/b /Users/yuvalspiegel/dotfiles/.config/yazi/flavors /Users/yuvalspiegel/dotfiles/ubuntu_setup'
+local function read_bookmarks()
+  local home = os.getenv 'HOME'
+  local bookmark_file = home .. '/.config/yazi/bookmark'
+  local paths = {}
+  local file = io.open(bookmark_file, 'r')
+  if not file then
+    ya.notify { title = 'FZF', content = 'Could not open bookmark file', level = 'error' }
+    return {}
+  end
+  for line in file:lines() do
+    local _, path = line:match '([^\t]+)\t([^\t]+)'
+    if path then
+      -- Remove trailing slash if exists
+      path = path:gsub('/$', '')
+      paths[#paths + 1] = path
+    end
+  end
+  file:close()
+  return table.concat(paths, ' ') -- Convert paths array to space-separated string
+end
+
 local state = ya.sync(function()
   return cx.active.current.cwd
 end)
+
 local function fail(s, ...)
   ya.notify { title = 'Fzf', content = string.format(s, ...), timeout = 5, level = 'error' }
 end
+
 local function entry()
   local _permit = ya.hide()
   local cwd = tostring(state())
+
+  local folders = read_bookmarks()
+  if folders == '' then
+    return fail 'No bookmarks found'
+  end
+
   local find_cmd = [[
     result=$(for dir in ]] .. folders .. [[; do
       dir=$(eval echo "$dir")
@@ -16,12 +43,13 @@ local function entry()
     done)
     
     if [ -n "$result" ]; then
-      echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat --style=numbers --color=always {1}" --header='Search in folders'
+      echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat --style=numbers --color=always {1}" --header='Search in bookmarked folders'
     else
       echo "No files found" >&2
       exit 1
     fi
   ]]
+
   local child, err = Command('sh'):args({ '-c', find_cmd }):cwd(cwd):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
   if not child then
     return fail('Failed to start command, error: ' .. err)
@@ -33,9 +61,11 @@ local function entry()
   elseif not output.status.success and output.status.code ~= 130 then
     return fail('Command exited with error code %s', output.status.code)
   end
+
   local target = output.stdout:gsub('\n$', ''):match '^([^\t]+)'
   if target and target ~= '' then
     ya.manager_emit(target:find '[/\\]$' and 'cd' or 'reveal', { target })
   end
 end
+
 return { entry = entry }
