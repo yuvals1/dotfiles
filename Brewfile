@@ -41,6 +41,9 @@ brew 'rclone'
 brew 'unison'
 brew 'forgit'
 brew 'zk'
+# brew 'sk'
+# brew 'gping'
+# brew 'bandwhich'
 
 # Languages and runtimes
 brew 'python'
