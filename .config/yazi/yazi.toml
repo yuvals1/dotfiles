@@ -275,7 +275,7 @@ run = "git"
 
 [[plugin.prepend_linemode]]
 name = "*"
-run = "custom_linemode"
+run = "my_linemode"
 
 # [[plugin.prepend_previewers]]
 # name = "*/"

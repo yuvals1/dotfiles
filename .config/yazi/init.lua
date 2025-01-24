@@ -1,4 +1,5 @@
 require('git'):setup {}
+require('my_linemode'):setup()
 require('full-border'):setup()
 require('starship'):setup()
 
