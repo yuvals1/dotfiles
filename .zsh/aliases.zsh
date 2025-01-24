@@ -17,3 +17,4 @@ alias th="tv files-with-hidden"
 alias glt="python3 ~/dotfiles/scripts/time-calc.py"
 alias zi="zoxide query -i"
 [[ -f ~/dev/lazygit/lazygit ]] && alias lazygit="~/dev/lazygit/lazygit"
+alias gdn='git diff --name-only'
