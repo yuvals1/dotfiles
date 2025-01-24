@@ -40,3 +40,4 @@ fi
 export EDITOR=nvim
 # Add to ~/.zshrc:
 [ -f $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh ] && source $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh
+compdef _git_diff forgit::diff
