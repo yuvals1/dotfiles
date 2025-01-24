@@ -1,11 +1,9 @@
 -- ~/.config/yazi/plugins/star_linemode.yazi/main.lua
 return {
-  -- Store bookmarks in state
   state = {
     bookmarks = {},
   },
 
-  -- Read bookmarks file and store paths
   load_bookmarks = function(self)
     local home = os.getenv 'HOME'
     local bookmark_file = home .. '/.config/yazi/bookmark'
@@ -16,10 +14,8 @@ return {
       return
     end
 
-    -- Clear existing bookmarks
     self.state.bookmarks = {}
 
-    -- Read each line and store the path
     for line in file:lines() do
       local _, path = line:match '([^\t]+)\t([^\t]+)'
       if path then
@@ -30,18 +26,34 @@ return {
   end,
 
   setup = function(self, opts)
-    -- Load bookmarks initially
     self:load_bookmarks()
 
     opts = opts or {}
     opts.order = opts.order or 1500
 
-    -- Add our custom element to the linemode
+    -- Try different symbols by uncommenting one at a time:
+    -- local symbol = ' 🔖' -- Bookmark (default)
+    -- local symbol = " ♥"    -- Heart, classic favorite symbol
+    local symbol = ' ⭐' -- Star mark
+    -- local symbol = " ⚑"    -- Flag mark
+    -- local symbol = ' 📌' -- Pin
+    -- local symbol = " 📎"   -- Paperclip
+    -- local symbol = " ⚐"    -- White flag
+    -- local symbol = " ☆"    -- Open star
+    -- local symbol = " ★"    -- Filled star
+    -- local symbol = " ▶"    -- Triangle marker
+    -- local symbol = " •"    -- Bullet
+    -- local symbol = " ◉"    -- Large dot
+    -- local symbol = " ✓"    -- Checkmark
+    -- local symbol = " ✦"    -- Decorative star
+    -- local symbol = " ⚡"   -- Lightning bolt
+
+    local symbol_style = ui.Style():fg('yellow'):bold()
+
     Linemode:children_add(function(this)
       local file_path = tostring(this._file.url)
-      -- Show a star if the file is bookmarked
       if self.state.bookmarks[file_path] then
-        return ui.Line ' ★'
+        return ui.Line { ui.Span(symbol):style(symbol_style) }
       end
       return ui.Line ''
     end, opts.order)
