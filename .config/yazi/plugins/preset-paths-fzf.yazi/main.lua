@@ -1,4 +1,5 @@
-local folders = '~/dev-projects/test-fzf-folders/a ~/dev-projects/test-fzf-folders/b'
+local folders =
+  '~/dev-projects/test-fzf-folders/a ~/dev-projects/test-fzf-folders/b /Users/yuvalspiegel/dotfiles/.config/yazi/flavors /Users/yuvalspiegel/dotfiles/ubuntu_setup'
 
 local state = ya.sync(function()
   return cx.active.current.cwd
@@ -12,14 +13,14 @@ local function entry()
   local _permit = ya.hide()
   local cwd = tostring(state())
 
-  -- Store find results in a variable first
   local find_cmd = [[
     result=$(for dir in ]] .. folders .. [[; do
-      (cd "$dir" && find . -type f | sed 's|^./||')
+      dir=$(eval echo "$dir")
+      (cd "$dir" && find . -type f -exec printf "%s\t%s\n" "$dir/{}" "{}" \;)
     done)
     
     if [ -n "$result" ]; then
-      echo "$result" | fzf --preview "bat {}"
+      echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat {1}"
     else
       echo "No files found" >&2
       exit 1
@@ -39,8 +40,8 @@ local function entry()
     return fail('Command exited with error code %s', output.status.code)
   end
 
-  local target = output.stdout:gsub('\n$', '')
-  if target ~= '' then
+  local target = output.stdout:gsub('\n$', ''):match '^([^\t]+)'
+  if target and target ~= '' then
     ya.manager_emit(target:find '[/\\]$' and 'cd' or 'reveal', { target })
   end
 end
