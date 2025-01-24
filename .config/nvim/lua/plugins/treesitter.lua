@@ -32,6 +32,7 @@ return {
       'toml',
       'rust',
       'ruby',
+      'svelte',
     },
     auto_install = true,
     highlight = {
