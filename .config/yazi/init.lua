@@ -39,3 +39,40 @@ require('yamb'):setup {
   -- Optional, the path of bookmarks
   path = (ya.target_family() == 'windows' and os.getenv 'APPDATA' .. '\\yazi\\config\\bookmark') or (os.getenv 'HOME' .. '/.config/yazi/bookmark'),
 }
+
+function Linemode:justname()
+  return self._file.name
+end
+
+function Linemode:lines()
+  -- For directories, return empty
+  if self._file.cha.is_dir then
+    return ''
+  end
+
+  -- For files, count lines
+  local path = tostring(self._file.url)
+  local count = 0
+
+  -- Try to open the file
+  local file = io.open(path, 'r')
+  if not file then
+    return 'N/A'
+  end
+
+  -- Count lines
+  for _ in file:lines() do
+    count = count + 1
+  end
+  file:close()
+
+  -- Format the output
+  if count == 0 then
+    return '0L'
+  elseif count < 1000 then
+    return count .. 'L'
+  else
+    -- Format thousands with K
+    return string.format('%.1fK', count / 1000) .. 'L'
+  end
+end
