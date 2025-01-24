@@ -10,13 +10,12 @@ local function read_bookmarks()
   for line in file:lines() do
     local _, path = line:match '([^\t]+)\t([^\t]+)'
     if path then
-      -- Remove trailing slash if exists
       path = path:gsub('/$', '')
       paths[#paths + 1] = path
     end
   end
   file:close()
-  return table.concat(paths, ' ') -- Convert paths array to space-separated string
+  return table.concat(paths, ' ')
 end
 
 local state = ya.sync(function()
@@ -38,9 +37,24 @@ local function entry()
 
   local find_cmd = [[
     result=$(for dir in ]] .. folders .. [[; do
-      dir=$(eval echo "$dir")
-      (cd "$dir" && find . -type f -exec printf "%s\t%s\n" "$dir/{}" "{}" \;)
-    done)
+      dir="${dir%/}"
+      (cd "$dir" && find . -type f -exec printf "%s/%s\t%s\n" "$dir" "{}" "{}" \;) | sed 's|/\./|/|g'
+    done | awk -F'\t' '
+      {
+        full=$1
+        rel=$2
+        gsub(/^\.\//, "", rel)
+        if (!(full in seen) || length(rel) < length(seen[full])) {
+          seen[full] = rel
+          paths[full] = $0
+        }
+      }
+      END {
+        for (p in paths) {
+          print paths[p]
+        }
+      }
+    ')
     
     if [ -n "$result" ]; then
       echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat --style=numbers --color=always {1}" --header='Search in bookmarked folders'
