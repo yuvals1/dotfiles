@@ -85,53 +85,87 @@ local function entry()
   end
 
   local find_cmd = [[
-    result=$(for dir in ]] .. folders .. [[; do
-      dir="${dir%/}"
-      if [ -d "$dir" ]; then
-        bookmark_name=$(basename "$dir")
-        (cd "$dir" 2>/dev/null && fd --type f \
-          --hidden \
-          --no-ignore \
-          --color=always \
-          --exclude .git \
-          --exclude .mypy_cache \
-          --exclude __pycache__ \
-          --exclude node_modules \
-          --exclude venv \
-          --exclude dist \
-          --exclude build \
-          --strip-cwd-prefix | \
-          awk -v dir="$dir" -v bname="$bookmark_name" '{printf "%s\t\033[0m%s/%s\n", dir"/"$0, bname, $0}')
-      fi
-    done | awk -F'\t' '
-      {
-        full=$1
-        rel=$2
-        
-        if (!(full in seen) || length(rel) < length(seen[full])) {
-          seen[full] = rel
-          paths[full] = rel
-        }
-      }
-      END {
-        for (p in paths) {
-          print p "\t" paths[p]
-        }
-      }
-    ')
-    
-    if [ -n "$result" ]; then
-      echo "$result" | fzf \
-        --ansi \
-        --delimiter='\t' \
-        --with-nth=2 \
-        --preview "bat --style=numbers --color=always {1}" \
-        --header='Search in bookmarked folders'
-    else
-      echo "No files found" >&2
-      exit 1
+frecency_file="${HOME}/.yazi_frecency.txt"
+separator="━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+{
+  # First output frecency files
+  if [ -f "$frecency_file" ]; then
+    cut -f1 "$frecency_file" | while read -r tracked_file; do
+      for dir in ]] .. folders .. [[; do
+        dir="${dir%/}"
+        if [ -d "$dir" ]; then
+          bookmark_name=$(basename "$dir")
+          if [ -f "$tracked_file" ] && echo "$tracked_file" | grep -q "^$dir/"; then
+            rel_path=${tracked_file#$dir/}
+            printf "%s\t\033[0m%s/%s\n" "$tracked_file" "$bookmark_name" "$rel_path"
+          fi
+        fi
+      done
+    done
+  fi
+
+  # Output separator
+  printf "%s\t%s\n" "$separator" "$separator"
+
+  # Then output regular results
+  for dir in ]] .. folders .. [[; do
+    dir="${dir%/}"
+    if [ -d "$dir" ]; then
+      bookmark_name=$(basename "$dir")
+      cd "$dir" 2>/dev/null && fd --type f \
+        --hidden \
+        --no-ignore \
+        --color=always \
+        --exclude .git \
+        --exclude .mypy_cache \
+        --exclude __pycache__ \
+        --exclude node_modules \
+        --exclude venv \
+        --exclude dist \
+        --exclude build \
+        --strip-cwd-prefix | while read -r file; do
+          full_path="$dir/$file"
+          printf "%s\t\033[0m%s/%s\n" "$full_path" "$bookmark_name" "$file"
+        done
     fi
-  ]]
+  done
+} | awk -F'\t' '
+  {
+    full=$1
+    rel=$2
+    
+    if (full == "━━━━━━━━━━━━━━━━━━━━━━━━━━━━") {
+      print "\033[0;34m" full "\033[0m"
+      separator_seen = 1
+    }
+    else {
+      # For regular entries
+      cleaned_full = full
+      # Remove ANSI color codes if any
+      gsub(/\033\[[0-9;]*m/, "", cleaned_full)
+      
+      if (!seen[cleaned_full]++) {
+        if (separator_seen) {
+          # Only print if we have not seen this path in the frecency section
+          if (!(cleaned_full in frecency_seen)) {
+            print full "\t" rel
+          }
+        } else {
+          # Mark this as seen in frecency section
+          frecency_seen[cleaned_full] = 1
+          print full "\t" rel
+        }
+      }
+    }
+  }
+' | fzf \
+    --ansi \
+    --delimiter='\t' \
+    --with-nth=2 \
+    --preview "bat --style=numbers --color=always {1}" \
+    --header='Search in bookmarked folders'
+]]
 
   local child, err = Command('sh'):args({ '-c', find_cmd }):cwd(cwd):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
   if not child then
