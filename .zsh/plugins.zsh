@@ -79,18 +79,42 @@ zinit cdreplay -q
 
 fzf_with_history() {
     local current_path=$(pwd)
+    local now=$(date +%s)
+    
+    # Create history file if it doesn't exist
+    touch ~/.fzf_history.txt
+    
+    # Process history with frecency scoring
     (
-        # Color the history entries using ls --color
         if [ -f ~/.fzf_history.txt ]; then
-            while IFS= read -r line; do
-                if [[ -f "$current_path/$line" ]]; then
-                    ls --color=always "$line"
+            while IFS=$'\t' read -r file timestamp count; do
+                if [[ -f "$current_path/$file" ]]; then
+                    # Simple frecency score: count * (1 / age_in_days)
+                    local age=$(( (now - timestamp) / 86400 + 1 ))
+                    local score=$(( count * 100 / age ))
+                    echo "$score	$file"
                 fi
-            done < ~/.fzf_history.txt
+            done < ~/.fzf_history.txt | sort -nr | cut -f2
         fi
-        
         fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
     ) | sed 's|^\./||' | awk '!seen[$0]++' | \
     fzf --tiebreak=index | \
-    tee -a ~/.fzf_history.txt
+    while read -r selected; do
+        # Update history with new timestamp and increment count
+        local new_history=$(mktemp)
+        local updated=0
+        while IFS=$'\t' read -r file timestamp count || [[ -n "$file" ]]; do
+            if [[ "$file" == "$selected" ]]; then
+                echo -e "$file\t$now\t$((count + 1))" >> "$new_history"
+                updated=1
+            elif [[ -n "$file" ]]; then
+                echo -e "$file\t$timestamp\t$count" >> "$new_history"
+            fi
+        done < ~/.fzf_history.txt
+        if [[ $updated -eq 0 ]]; then
+            echo -e "$selected\t$now\t1" >> "$new_history"
+        fi
+        mv "$new_history" ~/.fzf_history.txt
+        echo "$selected"
+    done
 }
