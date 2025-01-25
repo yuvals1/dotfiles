@@ -8,9 +8,7 @@ local function read_bookmarks()
     return {}
   end
   for line in file:lines() do
-    -- Skip comments and empty lines
     if not line:match '^%s*#' and line:match '%S' then
-      -- Split line by tabs and take the path (second column)
       local parts = {}
       for part in line:gmatch '[^\t]+' do
         table.insert(parts, part)
@@ -45,15 +43,18 @@ local function entry()
     result=$(for dir in ]] .. folders .. [[; do
       dir="${dir%/}"
       if [ -d "$dir" ]; then
-        (cd "$dir" 2>/dev/null && fd --type f --hidden --no-ignore \
+        (cd "$dir" 2>/dev/null && fd --type f \
+          --hidden \
+          --no-ignore \
+          --color=always \
           --exclude .git \
           --exclude .mypy_cache \
           --exclude __pycache__ \
           --exclude node_modules \
           --exclude venv \
           --exclude dist \
-          --exclude build \
-          --exec printf "%s\t%s\n" "$dir/{}" "{}" ) | sed 's|/\./|/|g'
+          --exclude build | \
+          awk -v dir="$dir" '{printf "%s\t\033[0m%s\n", dir"/"$0, $0}') 
       fi
     done | awk -F'\t' '
       {
@@ -84,7 +85,12 @@ local function entry()
     ')
     
     if [ -n "$result" ]; then
-      echo "$result" | fzf --delimiter='\t' --with-nth=2 --preview "bat --style=numbers --color=always {1}" --header='Search in bookmarked folders'
+      echo "$result" | fzf \
+        --ansi \
+        --delimiter='\t' \
+        --with-nth=2 \
+        --preview "bat --style=numbers --color=always {1}" \
+        --header='Search in bookmarked folders'
     else
       echo "No files found" >&2
       exit 1
