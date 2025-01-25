@@ -1,3 +1,48 @@
+local function read_frecency()
+  local home = os.getenv 'HOME'
+  local frecency_file = home .. '/.yazi_frecency.txt'
+  local scores = {}
+
+  local file = io.open(frecency_file, 'r')
+  if file then
+    for line in file:lines() do
+      local filepath, count, last_access = line:match '([^\t]+)\t(%d+)\t(%d+)'
+      if filepath and count and last_access then
+        scores[filepath] = {
+          count = tonumber(count),
+          last_access = tonumber(last_access),
+        }
+      end
+    end
+    file:close()
+  end
+  return scores
+end
+
+local function update_frecency(filepath)
+  local home = os.getenv 'HOME'
+  local frecency_file = home .. '/.yazi_frecency.txt'
+  local scores = read_frecency()
+
+  -- Update or add new entry
+  local current_time = os.time()
+  if scores[filepath] then
+    scores[filepath].count = scores[filepath].count + 1
+    scores[filepath].last_access = current_time
+  else
+    scores[filepath] = { count = 1, last_access = current_time }
+  end
+
+  -- Write back to file
+  local file = io.open(frecency_file, 'w')
+  if file then
+    for path, data in pairs(scores) do
+      file:write(string.format('%s\t%d\t%d\n', path, data.count, data.last_access))
+    end
+    file:close()
+  end
+end
+
 local function read_bookmarks()
   local home = os.getenv 'HOME'
   local bookmark_file = home .. '/.config/yazi/bookmark'
@@ -109,6 +154,8 @@ local function entry()
   end
   local target = output.stdout:gsub('\n$', ''):match '^([^\t]+)'
   if target and target ~= '' then
+    -- Update frecency data when a file is selected
+    update_frecency(target)
     ya.manager_emit(target:find '[/\\]$' and 'cd' or 'reveal', { target })
   end
 end
