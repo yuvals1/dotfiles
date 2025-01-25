@@ -82,7 +82,7 @@ fzf_with_history() {
     # History entries first with no header
     cat ~/.fzf_history.txt 2>/dev/null
     # Then all other files
-    fd --type f
+    fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
   ) | sed 's|^\./||' | awk '!seen[$0]++' | \
   fzf --tiebreak=index | \
   tee -a ~/.fzf_history.txt
