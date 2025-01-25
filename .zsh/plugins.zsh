@@ -79,42 +79,36 @@ zinit cdreplay -q
 
 fzf_with_history() {
     local current_path=$(pwd)
-    local now=$(date +%s)
-    
-    # Create history file if it doesn't exist
-    touch ~/.fzf_history.txt
-    
-    # Process history with frecency scoring
     (
+        # History entries first, with color using file type
         if [ -f ~/.fzf_history.txt ]; then
-            while IFS=$'\t' read -r file timestamp count; do
-                if [[ -f "$current_path/$file" ]]; then
-                    # Simple frecency score: count * (1 / age_in_days)
-                    local age=$(( (now - timestamp) / 86400 + 1 ))
-                    local score=$(( count * 100 / age ))
-                    echo "$score	$file"
+            while IFS= read -r line; do
+                if [[ -f "$current_path/$line" ]]; then
+                    # Get file type color based on extension
+                    if [[ "$line" =~ \.(cpp|h|hpp)$ ]]; then
+                        printf "\033[0;35m%s\033[0m\n" "$line"  # Magenta for C++
+                    elif [[ "$line" =~ \.(py)$ ]]; then
+                        printf "\033[0;32m%s\033[0m\n" "$line"  # Green for Python
+                    elif [[ "$line" =~ \.(js|ts)$ ]]; then
+                        printf "\033[0;33m%s\033[0m\n" "$line"  # Yellow for JS/TS
+                    else
+                        printf "\033[0;36m%s\033[0m\n" "$line"  # Cyan for others
+                    fi
                 fi
-            done < ~/.fzf_history.txt | sort -nr | cut -f2
+            done < ~/.fzf_history.txt
         fi
+        
+        # Then all other files with fd's coloring
         fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
-    ) | sed 's|^\./||' | awk '!seen[$0]++' | \
-    fzf --tiebreak=index | \
-    while read -r selected; do
-        # Update history with new timestamp and increment count
-        local new_history=$(mktemp)
-        local updated=0
-        while IFS=$'\t' read -r file timestamp count || [[ -n "$file" ]]; do
-            if [[ "$file" == "$selected" ]]; then
-                echo -e "$file\t$now\t$((count + 1))" >> "$new_history"
-                updated=1
-            elif [[ -n "$file" ]]; then
-                echo -e "$file\t$timestamp\t$count" >> "$new_history"
-            fi
-        done < ~/.fzf_history.txt
-        if [[ $updated -eq 0 ]]; then
-            echo -e "$selected\t$now\t1" >> "$new_history"
-        fi
-        mv "$new_history" ~/.fzf_history.txt
-        echo "$selected"
-    done
+    ) | sed 's|^\./||' | \
+    awk '{ 
+        # Remove ANSI escape sequences for comparison
+        cleaned=$0
+        gsub(/\033\[[0-9;]*m/, "", cleaned)
+        if (!seen[cleaned]++) {
+            print $0
+        }
+    }' | \
+    fzf --tiebreak=index --ansi | \
+    tee -a ~/.fzf_history.txt
 }
