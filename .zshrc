@@ -44,4 +44,3 @@ export EDITOR=nvim
 compdef _git_diff forgit::diff
 
 
-export FZF_DEFAULT_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down"
