@@ -76,71 +76,73 @@ fzf-tmux() {
 
 zinit cdreplay -q
 
-
 fzf_with_history() {
     local current_path=$(pwd)
-    local history_file=~/.fzf_history.txt
     local frecency_file=~/.fzf_frecency.txt
+    local separator=$'\e[0;34m'"━━━━━━━━━━━━━━━━━━━━━━━━━━━━"$'\e[0m'
 
     # Create or load frecency data
     declare -A frecency_scores
     if [ -f "$frecency_file" ]; then
         while IFS=$'\t' read -r file count last_access; do
-            # Calculate frecency score: count * (1 / days_since_last_access)
             local days_since=$(((`date +%s` - last_access) / 86400 + 1))
             frecency_scores[$file]=$(( count * 100 / days_since ))
         done < "$frecency_file"
     fi
 
     (
-        # Output history entries with frecency sorting
-        if [ -f "$history_file" ]; then
+        # Output frecency-sorted files first
+        if [ -f "$frecency_file" ]; then
             {
-                while IFS= read -r line; do
+                while IFS=$'\t' read -r line _ _; do
                     if [[ -f "$current_path/$line" ]]; then
                         local score=${frecency_scores[$line]:-0}
-                        echo "$score $line"
+                        local dir=$(dirname "$line")
+                        local file=$(basename "$line")
+                        
+                        local colored_dir=""
+                        if [ "$dir" != "." ]; then
+                            colored_dir="\033[34m${dir}/\033[0m"
+                        fi
+                        
+                        local colored_line=""
+                        if [[ "$file" =~ \.(cpp|h|hpp)$ ]]; then
+                            colored_line="${colored_dir}\033[35m${file}\033[0m"
+                        elif [[ "$file" =~ \.(py)$ ]]; then
+                            colored_line="${colored_dir}\033[32m${file}\033[0m"
+                        elif [[ "$file" =~ \.(js|ts)$ ]]; then
+                            colored_line="${colored_dir}\033[33m${file}\033[0m"
+                        else
+                            colored_line="${colored_dir}\033[36m${file}\033[0m"
+                        fi
+                        echo "$score $line $colored_line"
                     fi
-                done < "$history_file" | sort -rn | cut -d' ' -f2- | while read -r line; do
-                    # Split into directory and filename for coloring
-                    local dir=$(dirname "$line")
-                    local file=$(basename "$line")
-                    
-                    local colored_dir=""
-                    if [ "$dir" != "." ]; then
-                        colored_dir="\033[34m${dir}/\033[0m"
-                    fi
-                    
-                    if [[ "$file" =~ \.(cpp|h|hpp)$ ]]; then
-                        echo -e "${colored_dir}\033[35m${file}\033[0m"
-                    elif [[ "$file" =~ \.(py)$ ]]; then
-                        echo -e "${colored_dir}\033[32m${file}\033[0m"
-                    elif [[ "$file" =~ \.(js|ts)$ ]]; then
-                        echo -e "${colored_dir}\033[33m${file}\033[0m"
-                    else
-                        echo -e "${colored_dir}\033[36m${file}\033[0m"
-                    fi
-                done
+                done < "$frecency_file" | sort -rn | cut -d' ' -f3-
             }
         fi
         
+        echo "$separator"
+        
+        # Then add fd results
         fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
     ) | sed 's|^\./||' | \
-    awk '{ 
+    awk -v sep="$separator" '{ 
         cleaned=$0
         gsub(/\033\[[0-9;]*m/, "", cleaned)
-        if (!seen[cleaned]++) {
+        if (cleaned == sep) {
+            print cleaned
+        } else if (!seen[cleaned]++) {
             print $0
         }
     }' | \
-    fzf --tiebreak=index --ansi | tee >(
-        # Update frecency data when a file is selected
+    fzf --tiebreak=index --ansi \
+        # --height ~50% \
+        --border rounded \
+        --header "$separator" | tee >(
         while read -r selected; do
-            # Clean ANSI codes from selection
             clean_selected=$(echo "$selected" | sed 's/\x1b\[[0-9;]*m//g')
             timestamp=$(date +%s)
             
-            # Update or create frecency entry
             touch "$frecency_file.tmp"
             if [ -f "$frecency_file" ]; then
                 while IFS=$'\t' read -r file count last_access; do
@@ -152,12 +154,11 @@ fzf_with_history() {
                 done < "$frecency_file"
             fi
             
-            # Add new entry if not found
             if ! grep -q "^$clean_selected	" "$frecency_file.tmp" 2>/dev/null; then
                 echo -e "$clean_selected\t1\t$timestamp" >> "$frecency_file.tmp"
             fi
             
             mv "$frecency_file.tmp" "$frecency_file"
         done
-    ) | tee -a "$history_file"
+    )
 }
