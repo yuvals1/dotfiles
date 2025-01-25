@@ -88,6 +88,7 @@ local function entry()
     result=$(for dir in ]] .. folders .. [[; do
       dir="${dir%/}"
       if [ -d "$dir" ]; then
+        bookmark_name=$(basename "$dir")
         (cd "$dir" 2>/dev/null && fd --type f \
           --hidden \
           --no-ignore \
@@ -100,7 +101,7 @@ local function entry()
           --exclude dist \
           --exclude build \
           --strip-cwd-prefix | \
-          awk -v dir="$dir" '{printf "%s\t\033[0m%s\n", dir"/"$0, $0}')
+          awk -v dir="$dir" -v bname="$bookmark_name" '{printf "%s\t\033[0m%s/%s\n", dir"/"$0, bname, $0}')
       fi
     done | awk -F'\t' '
       {
