@@ -8,10 +8,17 @@ local function read_bookmarks()
     return {}
   end
   for line in file:lines() do
-    local _, path = line:match '([^\t]+)\t([^\t]+)'
-    if path then
-      path = path:gsub('/$', '')
-      paths[#paths + 1] = path
+    -- Skip comments and empty lines
+    if not line:match '^%s*#' and line:match '%S' then
+      -- Split line by tabs and take the path (second column)
+      local parts = {}
+      for part in line:gmatch '[^\t]+' do
+        table.insert(parts, part)
+      end
+      if parts[2] then
+        local path = parts[2]:gsub('/$', '')
+        paths[#paths + 1] = path
+      end
     end
   end
   file:close()
@@ -29,7 +36,6 @@ end
 local function entry()
   local _permit = ya.hide()
   local cwd = tostring(state())
-
   local folders = read_bookmarks()
   if folders == '' then
     return fail 'No bookmarks found'
@@ -38,7 +44,18 @@ local function entry()
   local find_cmd = [[
     result=$(for dir in ]] .. folders .. [[; do
       dir="${dir%/}"
-      (cd "$dir" && find . -type f -exec printf "%s\t%s\n" "$dir/{}" "{}" \;) | sed 's|/\./|/|g'
+      if [ -d "$dir" ]; then  # Check if directory exists
+        (cd "$dir" 2>/dev/null && find . -type f \
+        -not -path "*/\.*/*" \
+        -not -path "*/__pycache__/*" \
+        -not -path "*/node_modules/*" \
+        -not -path "*/venv/*" \
+        -not -path "*/dist/*" \
+        -not -path "*/build/*" \
+	-not -path "*/.git/*" \
+	-not -path "*/.mypy_cache/*" \
+        -exec printf "%s\t%s\n" "$dir/{}" "{}" \;) | sed 's|/\./|/|g'
+      fi
     done | awk -F'\t' '
       {
         full=$1
@@ -76,18 +93,15 @@ local function entry()
   ]]
 
   local child, err = Command('sh'):args({ '-c', find_cmd }):cwd(cwd):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
-
   if not child then
     return fail('Failed to start command, error: ' .. err)
   end
-
   local output, err = child:wait_with_output()
   if not output then
     return fail('Cannot read output, error: ' .. err)
   elseif not output.status.success and output.status.code ~= 130 then
     return fail('Command exited with error code %s', output.status.code)
   end
-
   local target = output.stdout:gsub('\n$', ''):match '^([^\t]+)'
   if target and target ~= '' then
     ya.manager_emit(target:find '[/\\]$' and 'cd' or 'reveal', { target })
