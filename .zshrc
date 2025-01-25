@@ -17,6 +17,7 @@ for tool_file (~/.zsh/tools/*.zsh); do
   source $tool_file
 done
 
+source ~/.zsh/fzf_frecency/init.zsh
 # Source plugins.zsh after instant prompt initialization
 source ~/.zsh/plugins.zsh
 
