@@ -80,16 +80,15 @@ zinit cdreplay -q
 fzf_with_history() {
     local current_path=$(pwd)
     (
-        # History entries that match current path
+        # Color the history entries using ls --color
         if [ -f ~/.fzf_history.txt ]; then
             while IFS= read -r line; do
                 if [[ -f "$current_path/$line" ]]; then
-                    echo "$line"
+                    ls --color=always "$line"
                 fi
             done < ~/.fzf_history.txt
         fi
         
-        # Then all other files in current directory
         fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
     ) | sed 's|^\./||' | awk '!seen[$0]++' | \
     fzf --tiebreak=index | \
