@@ -44,17 +44,16 @@ local function entry()
   local find_cmd = [[
     result=$(for dir in ]] .. folders .. [[; do
       dir="${dir%/}"
-      if [ -d "$dir" ]; then  # Check if directory exists
-        (cd "$dir" 2>/dev/null && find . -type f \
-        -not -path "*/\.*/*" \
-        -not -path "*/__pycache__/*" \
-        -not -path "*/node_modules/*" \
-        -not -path "*/venv/*" \
-        -not -path "*/dist/*" \
-        -not -path "*/build/*" \
-	-not -path "*/.git/*" \
-	-not -path "*/.mypy_cache/*" \
-        -exec printf "%s\t%s\n" "$dir/{}" "{}" \;) | sed 's|/\./|/|g'
+      if [ -d "$dir" ]; then
+        (cd "$dir" 2>/dev/null && fd --type f --hidden --no-ignore \
+          --exclude .git \
+          --exclude .mypy_cache \
+          --exclude __pycache__ \
+          --exclude node_modules \
+          --exclude venv \
+          --exclude dist \
+          --exclude build \
+          --exec printf "%s\t%s\n" "$dir/{}" "{}" ) | sed 's|/\./|/|g'
       fi
     done | awk -F'\t' '
       {
