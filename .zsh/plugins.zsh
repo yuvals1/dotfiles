@@ -69,3 +69,10 @@ fzf-tmux() {
 }
 
 zinit cdreplay -q
+
+
+fzf_with_history() {
+  # Combine history and current files, strip ./ prefix, remove duplicates
+  (cat ~/.fzf_history.txt 2>/dev/null; fd --type f) | sed 's|^\./||' | awk '!seen[$0]++' | fzf | tee -a ~/.fzf_history.txt
+}
+
