@@ -84,15 +84,25 @@ fzf_with_history() {
         if [ -f ~/.fzf_history.txt ]; then
             while IFS= read -r line; do
                 if [[ -f "$current_path/$line" ]]; then
-                    # Get file type color based on extension
-                    if [[ "$line" =~ \.(cpp|h|hpp)$ ]]; then
-                        printf "\033[0;35m%s\033[0m\n" "$line"  # Magenta for C++
-                    elif [[ "$line" =~ \.(py)$ ]]; then
-                        printf "\033[0;32m%s\033[0m\n" "$line"  # Green for Python
-                    elif [[ "$line" =~ \.(js|ts)$ ]]; then
-                        printf "\033[0;33m%s\033[0m\n" "$line"  # Yellow for JS/TS
+                    # Split into directory and filename
+                    local dir=$(dirname "$line")
+                    local file=$(basename "$line")
+                    
+                    # Only add blue color to directory if it's not just '.'
+                    local colored_dir=""
+                    if [ "$dir" != "." ]; then
+                        colored_dir="\033[34m${dir}/\033[0m"
+                    fi
+                    
+                    # Color filename based on extension
+                    if [[ "$file" =~ \.(cpp|h|hpp)$ ]]; then
+                        echo -e "${colored_dir}\033[35m${file}\033[0m"  # Magenta for C++
+                    elif [[ "$file" =~ \.(py)$ ]]; then
+                        echo -e "${colored_dir}\033[32m${file}\033[0m"  # Green for Python
+                    elif [[ "$file" =~ \.(js|ts)$ ]]; then
+                        echo -e "${colored_dir}\033[33m${file}\033[0m"  # Yellow for JS/TS
                     else
-                        printf "\033[0;36m%s\033[0m\n" "$line"  # Cyan for others
+                        echo -e "${colored_dir}\033[36m${file}\033[0m"  # Cyan for others
                     fi
                 fi
             done < ~/.fzf_history.txt
