@@ -98,28 +98,18 @@ local function entry()
           --exclude node_modules \
           --exclude venv \
           --exclude dist \
-          --exclude build | \
-          awk -v dir="$dir" '{printf "%s\t\033[0m%s\n", dir"/"$0, $0}') 
+          --exclude build \
+          --strip-cwd-prefix | \
+          awk -v dir="$dir" '{printf "%s\t\033[0m%s\n", dir"/"$0, $0}')
       fi
     done | awk -F'\t' '
       {
         full=$1
         rel=$2
-        gsub(/^\.\//, "", rel)
-        
-        split(full, parts, "/")
-        last_idx = length(parts)
-        
-        if (rel ~ "/") {
-          base_dir = parts[last_idx-2]
-        } else {
-          base_dir = parts[last_idx-1]
-        }
         
         if (!(full in seen) || length(rel) < length(seen[full])) {
           seen[full] = rel
-          seen_base[full] = base_dir
-          paths[full] = base_dir "/" rel
+          paths[full] = rel
         }
       }
       END {
