@@ -78,12 +78,20 @@ zinit cdreplay -q
 
 
 fzf_with_history() {
-  (
-    # History entries first with no header
-    cat ~/.fzf_history.txt 2>/dev/null
-    # Then all other files
-    fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
-  ) | sed 's|^\./||' | awk '!seen[$0]++' | \
-  fzf --tiebreak=index | \
-  tee -a ~/.fzf_history.txt
+    local current_path=$(pwd)
+    (
+        # History entries that match current path
+        if [ -f ~/.fzf_history.txt ]; then
+            while IFS= read -r line; do
+                if [[ -f "$current_path/$line" ]]; then
+                    echo "$line"
+                fi
+            done < ~/.fzf_history.txt
+        fi
+        
+        # Then all other files in current directory
+        fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --color=always
+    ) | sed 's|^\./||' | awk '!seen[$0]++' | \
+    fzf --tiebreak=index | \
+    tee -a ~/.fzf_history.txt
 }
