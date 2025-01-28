@@ -5,7 +5,7 @@ alias cat='bat --style=plain --paging=never'
 alias icat='kitty +kitten icat'
 alias y='yazi'
 alias n='nvim'
-alias cd='z'
+# alias cd='z'
 alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
 alias gpr='f() { git checkout $(git rev-list -n 1 --grep="#$1" HEAD) }; f'
@@ -15,5 +15,5 @@ alias lsq="lazysql"
 alias lzd="lazydocker"
 alias th="tv files-with-hidden"
 alias glt="python3 ~/dotfiles/scripts/time-calc.py"
-alias zi="zoxide query -i"
+# alias zi="zoxide query -i"
 [[ -f ~/dev/lazygit/lazygit ]] && alias lazygit="~/dev/lazygit/lazygit"
