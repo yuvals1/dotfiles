@@ -25,9 +25,9 @@ source ~/.zsh/plugins.zsh
 
 export PATH="/usr/local/bin:$PATH"
 
-if ping -c 1 google.com &> /dev/null; then
-    kitty +kitten themes --reload-in=all Catppuccin-Frappe
-fi
+# if ping -c 1 google.com &> /dev/null; then
+#     kitty +kitten themes --reload-in=all Catppuccin-Frappe
+# fi
 # export PATH="$HOME/.rbenv/shims:$PATH"
 # eval "$(rbenv init -)"
 # export PATH=$PATH:/opt/X11/bin
