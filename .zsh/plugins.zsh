@@ -34,8 +34,6 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
-# Set FZF options for default behavior and history search
-export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
 
 if [ -d "/usr/local/opt/fzf/shell" ]; then
     # macOS Homebrew path
@@ -54,9 +52,28 @@ elif [ -d "$HOME/.fzf/shell" ]; then
     zinit snippet "$HOME/.fzf/shell/key-bindings.zsh"
     zinit snippet "$HOME/.fzf/shell/completion.zsh"
 fi
+
+
+# Set FZF options for default behavior and history search
+
+# Generate colors based on file extensions
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --exclude "*.mypy_cache" --color=always'
+export FZF_DEFAULT_OPTS="
+  --preview='bat -n --color=always {}'
+  --bind shift-up:preview-page-up,shift-down:preview-page-down
+--bind 'ctrl-e:execute(nvim {})'
+  --ansi
+"
+
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+
+export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:preview-page-up,shift-down:preview-page-down --bind 'ctrl-y:execute-silent(echo {} | pbcopy)+abort'"
+
 # If you need fzf-tmux, you can add an alias or function like this:
 fzf-tmux() {
     /usr/local/opt/fzf/bin/fzf-tmux "$@"
 }
 
 zinit cdreplay -q
+

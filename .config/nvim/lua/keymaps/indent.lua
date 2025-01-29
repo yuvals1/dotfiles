@@ -11,8 +11,8 @@ vim.keymap.set('i', '<C-t>', '<C-t>', { noremap = true, desc = 'Indent line' })
 vim.keymap.set('v', '<C-t>', '>gv', { noremap = true, desc = 'Indent selection' })
 
 -- Reverse indentation with CTRL-G
-vim.keymap.set('n', '<C-g>', '<<', { noremap = true, desc = 'Reverse indent line' })
-vim.keymap.set('i', '<C-g>', '<C-o><<', { noremap = true, desc = 'Reverse indent line' })
+vim.keymap.set('n', '<C-q>', '<<', { noremap = true, desc = 'Reverse indent line' })
+vim.keymap.set('i', '<C-q>', '<C-o><<', { noremap = true, desc = 'Reverse indent line' })
 
 -- Visual mode: reverse indent and maintain selection
-vim.keymap.set('v', '<C-g>', '<gv', { noremap = true, desc = 'Reverse indent selection' })
+vim.keymap.set('v', '<C-q>', '<gv', { noremap = true, desc = 'Reverse indent selection' })
