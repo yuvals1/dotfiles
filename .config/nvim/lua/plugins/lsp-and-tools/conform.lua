@@ -34,6 +34,7 @@ function M.setup(languages)
           'python',
           'bash',
           'sh',
+          'javascript',
         }
 
         -- Get the filetype of the current buffer
