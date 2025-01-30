@@ -5,26 +5,24 @@ return {
     require('supermaven-nvim').setup {
       keymaps = {
         accept_suggestion = '<C-e>',
-        accept_word = '<C-d>', -- <C-e> and <C-d> suggestion behavior matches their behavior in zsh
+        accept_word = '<C-d>',
         clear_suggestion = '<C-]>',
+        -- We do NOT specify `accept_char` here because we'll define
+        -- our own custom function for that next
       },
-      -- Enable for specific filetypes (similar to your Copilot config)
-      ignore_filetypes = {
-        -- Add filetypes you want to disable here
-        -- Format: filetype = true
-      },
-      -- Color customization (optional)
-      color = {
-        suggestion_color = '#ffffff',
-        cterm = 244,
-      },
-      -- Logging level
       log_level = 'info',
-      -- Keep inline completion enabled (similar to Copilot)
       disable_inline_completion = false,
     }
 
-    -- Add toggle keybinding similar to your Copilot config
+    -- Optional toggle, as in your example
     vim.keymap.set('n', '<leader>cc', ':SupermavenToggle<CR>', { noremap = true, silent = true, desc = 'Toggle Supermaven' })
+
+    ----------------------------------------------------------------
+    -- 2. Add our custom “accept only the next character” mapping --
+    ----------------------------------------------------------------
+    vim.keymap.set('i', '<C-g>', function()
+      -- The function we define below (see “Step 2”)
+      require('user.supermaven_extra').accept_next_char()
+    end, { noremap = true, silent = true })
   end,
 }
