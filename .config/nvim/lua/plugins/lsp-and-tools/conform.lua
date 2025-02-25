@@ -27,7 +27,6 @@ function M.setup(languages)
           'ruby',
           'dockerfile',
           'cpp',
-          'python',
           'bash',
           'sh',
           'bash',
