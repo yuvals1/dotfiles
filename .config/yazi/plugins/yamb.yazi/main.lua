@@ -1,5 +1,113 @@
 local path_sep = package.config:sub(1, 1)
 
+-- Function to get a random emoji
+local get_random_emoji = function()
+  local emojis = {
+    '📚',
+    '📂',
+    '📁',
+    '📄',
+    '📝',
+    '📊',
+    '📈',
+    '📉',
+    '🔖',
+    '📑',
+    '📌',
+    '📎',
+    '📋',
+    '📓',
+    '📔',
+    '📕',
+    '📖',
+    '📗',
+    '📘',
+    '📙',
+    '🗂️',
+    '🗃️',
+    '🗄️',
+    '🏠',
+    '🏡',
+    '🏢',
+    '🏣',
+    '🏤',
+    '🏥',
+    '🏦',
+    '🏨',
+    '🏩',
+    '🏪',
+    '🏫',
+    '🏬',
+    '🏭',
+    '🏯',
+    '🏰',
+    '💾',
+    '💿',
+    '📀',
+    '🔍',
+    '🔎',
+    '📱',
+    '💻',
+    '🖥️',
+    '⌨️',
+    '🖱️',
+    '🖨️',
+    '⚙️',
+    '🔧',
+    '🔨',
+    '🛠️',
+    '🗜️',
+    '📦',
+    '📫',
+    '📪',
+    '📬',
+    '📭',
+    '📮',
+    '✨',
+    '💡',
+    '🔔',
+    '🔕',
+    '🎵',
+    '🎶',
+    '🎤',
+    '🎧',
+    '🎼',
+    '🎹',
+    '🎸',
+    '🎺',
+    '🎻',
+    '🥁',
+    '📻',
+    '📺',
+    '📹',
+    '📼',
+    '🎥',
+    '🎞️',
+  }
+  -- Seed random number generator
+  math.randomseed(os.time())
+  return emojis[math.random(1, #emojis)]
+end
+
+-- Function to check if a tag starts with an emoji
+local has_emoji_prefix = function(tag)
+  -- Simple check: if first character is a multibyte Unicode character
+  return string.byte(tag, 1) > 127
+end
+
+-- Function to strip emoji prefix
+local strip_emoji_prefix = function(tag)
+  -- If the tag has an emoji prefix, remove the emoji and the space after it
+  if has_emoji_prefix(tag) then
+    -- Find the first space after the emoji
+    local _, space_pos = string.find(tag, ' ')
+    if space_pos then
+      return string.sub(tag, space_pos + 1)
+    end
+  end
+  return tag
+end
+
 local get_hovered_path = ya.sync(function(state)
   local h = cx.active.current.hovered
   if h then
@@ -155,6 +263,12 @@ local action_save = function(mb_path, bookmarks, path)
   local path_obj = bookmarks[path]
   -- check tag
   local tag = path_obj and path_obj.tag or path:match '.*[\\/]([^\\/]+)[\\/]?$'
+
+  -- If we're editing an existing bookmark, strip the emoji for easier editing
+  if path_obj then
+    tag = strip_emoji_prefix(tag)
+  end
+
   while true do
     local value, event = ya.input {
       title = 'Tag (alias name)',
@@ -174,14 +288,16 @@ local action_save = function(mb_path, bookmarks, path)
       }
     else
       -- check the tag
-      local tag_obj = nil
-      for _, item in pairs(bookmarks) do
-        if item.tag == tag then
-          tag_obj = item
+      local tag_exists = false
+      for check_path, item in pairs(bookmarks) do
+        -- Strip emoji for comparison
+        local clean_item_tag = strip_emoji_prefix(item.tag)
+        if clean_item_tag == tag and check_path ~= path then
+          tag_exists = true
           break
         end
       end
-      if tag_obj == nil or tag_obj.path == path then
+      if not tag_exists then
         break
       end
       ya.notify {
@@ -192,6 +308,10 @@ local action_save = function(mb_path, bookmarks, path)
       }
     end
   end
+
+  -- Add emoji to tag
+  tag = get_random_emoji() .. ' ' .. tag
+
   -- check key
   local key = path_obj and path_obj.key or generate_key(bookmarks)
   while true do
