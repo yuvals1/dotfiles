@@ -91,7 +91,7 @@ keymap = [
   # { on = "S", run = "search --via=rg", desc = "Search files by content via ripgrep" },
   { on = "<C-s>", run = "escape --search", desc = "Cancel the ongoing search" },
   # { on = "z", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
-  { on = "Z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
+  { on = "z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
   { on = "W", run = "plugin skim", desc = "Jump to a file/directory via skim" },
 
   # Linemode
@@ -592,9 +592,9 @@ desc = "Jumps to the first file"
 # on = "Z"
 # run = 'plugin selected-files'
 
-[[manager.prepend_keymap]]
-on = "z"
-run = 'plugin preset-paths-fzf'
+# [[manager.prepend_keymap]]
+# on = "z"
+# run = 'plugin preset-paths-fzf'
 
 [[manager.prepend_keymap]]
 on = "s"
