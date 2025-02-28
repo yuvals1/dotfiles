@@ -43,7 +43,7 @@ function M.setup(bufnr)
   end, { desc = 'Reset selected hunk' })
 
   -- Actions in Normal Mode
-  -- map('n', 'M', gitsigns.stage_hunk, { desc = 'Stage current hunk' })
+  map('n', 'M', gitsigns.stage_hunk, { desc = 'Stage current hunk' })
   map('n', 'R', gitsigns.reset_hunk, { desc = 'Reset current hunk' })
   map('n', 'P', gitsigns.preview_hunk, { desc = 'Preview current hunk' })
 
