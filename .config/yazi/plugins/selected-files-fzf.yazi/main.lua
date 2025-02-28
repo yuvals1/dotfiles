@@ -77,8 +77,8 @@ local function entry()
     -- Get file info (line count or DIR)
     local file_info = get_file_info(filepath)
 
-    -- Format as "filename (info) :: /full/path"
-    local entry = string.format('%s (%s) :: %s', filename, file_info, filepath)
+    -- Use tab as delimiter - it's standard and works well with FZF
+    local entry = string.format('%s (%s)\t%s', filename, file_info, filepath)
     table.insert(fzf_entries, entry)
   end
 
@@ -86,7 +86,7 @@ local function entry()
   local child, err = Command('fzf')
     :args({
       '--delimiter',
-      ' :: ', -- Split by our custom delimiter
+      '\t', -- Use tab as delimiter - standard for FZF
       '--with-nth',
       '1', -- Show only the first part (filename with line count)
       '--preview',
@@ -121,7 +121,7 @@ local function entry()
   local selected_entry = output.stdout:gsub('\n$', '')
   if selected_entry ~= '' then
     -- Extract the actual filepath from our formatted entry
-    local target = selected_entry:match ' :: (.+)$'
+    local target = selected_entry:match '\t(.+)$'
     if target then
       ya.manager_emit('reveal', { target })
     else
