@@ -2,7 +2,7 @@ require('git'):setup {}
 -- require('my_linemode'):setup()
 require('full-border'):setup()
 require('starship'):setup()
-require('star_linemode'):setup()
+-- require('star_linemode'):setup()
 
 -- You can configure your bookmarks by lua language
 local bookmarks = {}
