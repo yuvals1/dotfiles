@@ -529,7 +529,7 @@ keymap = [
 
 [[manager.prepend_keymap]]
 on = ["f"]
-run = "plugin keyjump --args=global"
+run = "plugin keyjump global"
 desc = "Keyjump (Global mode)"
 
 
