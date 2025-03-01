@@ -3,12 +3,41 @@ return {
   priority = 1000, -- Important: high priority for early loading
   lazy = false, -- Don't lazy load since we need early setup
   opts = {
-    -- Enable and configure bigfile
+    -- Your other options
+
+    lazygit = {
+      configure = true,
+      -- Use the default lazygit theme by providing specific config
+      config = {
+        os = { editPreset = 'nvim-remote' },
+        gui = {
+          nerdFontsVersion = '3',
+          -- Explicitly set the default lazygit theme
+          theme = {
+            activeBorderColor = { 'green', 'bold' },
+            searchingActiveBorderColor = { 'cyan', 'bold' },
+            inactiveBorderColor = { 'default' },
+            optionsTextColor = { 'blue' },
+            selectedLineBgColor = { 'blue' },
+            inactiveViewSelectedLineBgColor = { 'bold' },
+            cherryPickedCommitBgColor = { 'cyan' },
+            cherryPickedCommitFgColor = { 'blue' },
+            markedBaseCommitBgColor = { 'yellow' },
+            markedBaseCommitFgColor = { 'blue' },
+            unstagedChangesColor = { 'red' },
+            defaultFgColor = { 'default' },
+          },
+        },
+      },
+      win = {
+        style = 'lazygit',
+      },
+    },
+
     bigfile = {
       enabled = true,
-      -- Optional: customize bigfile settings
       size = 1 * 1024 * 1024, -- 1MB
-      pattern = { '*' }, -- filetypes or patterns to apply to
+      pattern = { '*' },
       features = {
         'indent_blankline',
         'illuminate',
