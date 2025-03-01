@@ -534,46 +534,6 @@ desc = "Keyjump (Global mode)"
 
 
 [[manager.prepend_keymap]]
-on = ["U", "a"]
-run = "plugin yamb --args=save"
-desc = "Add bookmark"
-
-[[manager.prepend_keymap]]
-on = ["U", "G"]
-run = "plugin yamb --args=jump_by_key"
-desc = "Jump bookmark by key"
-
-[[manager.prepend_keymap]]
-on = ["u"]
-run = "plugin yamb --args=jump_by_fzf"
-desc = "Jump bookmark by fzf"
-
-[[manager.prepend_keymap]]
-on = ["U", "D"]
-run = "plugin yamb --args=delete_by_key"
-desc = "Delete bookmark by key"
-
-[[manager.prepend_keymap]]
-on = ["U", "d"]
-run = "plugin yamb --args=delete_by_fzf"
-desc = "Delete bookmark by fzf"
-
-[[manager.prepend_keymap]]
-on = ["U", "A"]
-run = "plugin yamb --args=delete_all"
-desc = "Delete all bookmarks"
-
-[[manager.prepend_keymap]]
-on = ["U", "R"]
-run = "plugin yamb --args=rename_by_key"
-desc = "Rename bookmark by key"
-
-[[manager.prepend_keymap]]
-on = ["U", "r"]
-run = "plugin yamb --args=rename_by_fzf"
-desc = "Rename bookmark by fzf"
-
-[[manager.prepend_keymap]]
 on = ["R"]
 run = "plugin fg"                           # kind of ripgrep
 desc = "find file by content (fuzzy match)"
