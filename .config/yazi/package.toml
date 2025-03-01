@@ -14,11 +14,6 @@ rev = "e4aaf43"
 hash = "e9cf1bfc03de7fee0f1d4260da0d1dfd"
 
 [[plugin.deps]]
-use = "yazi-rs/plugins:max-preview"
-rev = "e4aaf43"
-hash = "9bc26d10d2f6e2aa93b10905b1b76979"
-
-[[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
 rev = "e4aaf43"
 hash = "4c7e8fd0266eedee7b619d966bd2d025"
@@ -42,11 +37,6 @@ hash = "3e56b7665569519e3fc54b02868627c4"
 use = "GianniBYoung/rsync"
 rev = "3f431aa"
 hash = "1854a5a30d23e84bc8df24700f27957b"
-
-[[plugin.deps]]
-use = "h-hg/yamb"
-rev = "108347b"
-hash = "faf1b817347b5b46c96039dab538694b"
 
 [[plugin.deps]]
 use = "ahkohd/eza-preview"
