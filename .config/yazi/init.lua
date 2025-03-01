@@ -22,11 +22,6 @@ if ya.target_family() == 'windows' then
     key = 'P',
   })
 end
-table.insert(bookmarks, {
-  tag = 'Desktop',
-  path = home_path .. path_sep .. 'Desktop' .. path_sep,
-  key = 'd',
-})
 
 require('yamb'):setup {
   -- Optional, the path ending with path seperator represents folder.

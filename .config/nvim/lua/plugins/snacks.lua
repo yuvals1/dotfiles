@@ -4,7 +4,6 @@ return {
   lazy = false, -- Don't lazy load since we need early setup
   opts = {
     -- Enable and configure bigfile
-    lazygit = { configure = false },
     bigfile = {
       enabled = true,
       -- Optional: customize bigfile settings

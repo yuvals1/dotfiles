@@ -12,6 +12,7 @@ return {
     html = { 'prettier' },
     css = { 'prettier' },
     scss = { 'prettier' },
+    conf = { 'prettier' }, -- Added conf filetype
   },
   linters = {
     javascript = { 'eslint_d' },
