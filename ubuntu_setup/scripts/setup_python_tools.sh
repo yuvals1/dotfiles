@@ -6,8 +6,11 @@ run_setup_python_tools() {
     log "Setting up Python tools..."
 
     if ! command_exists pip; then
-        error "pip is not installed"
-        return 1
+        log "pip is not installed, attempting to install..."
+        sudo apt update && sudo apt install -y python3-pip || {
+            error "Failed to install pip"
+            return 1
+        }
     fi
 
     python3 -m pip install --user --upgrade pip
