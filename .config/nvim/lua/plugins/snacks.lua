@@ -6,19 +6,23 @@ return {
     -- Your other options
 
     lazygit = {
-      theme = {
-        activeBorderColor = { 'green', 'bold' },
-        searchingActiveBorderColor = { 'cyan', 'bold' },
-        inactiveBorderColor = { 'default' },
-        optionsTextColor = { 'blue' },
-        selectedLineBgColor = { 'blue' },
-        inactiveViewSelectedLineBgColor = { 'bold' },
-        cherryPickedCommitBgColor = { 'cyan' },
-        cherryPickedCommitFgColor = { 'blue' },
-        markedBaseCommitBgColor = { 'yellow' },
-        markedBaseCommitFgColor = { 'blue' },
-        unstagedChangesColor = { 'red' },
-        defaultFgColor = { 'default' },
+      config = {
+        gui = {
+          theme = {
+            activeBorderColor = { 'green', 'bold' },
+            searchingActiveBorderColor = { 'cyan', 'bold' },
+            inactiveBorderColor = { 'default' },
+            optionsTextColor = { 'blue' },
+            selectedLineBgColor = { 'blue' },
+            inactiveViewSelectedLineBgColor = { 'bold' },
+            cherryPickedCommitBgColor = { 'cyan' },
+            cherryPickedCommitFgColor = { 'blue' },
+            markedBaseCommitBgColor = { 'yellow' },
+            markedBaseCommitFgColor = { 'blue' },
+            unstagedChangesColor = { 'red' },
+            defaultFgColor = { 'default' },
+          },
+        },
       },
       setup = function(ctx)
         vim.b.minianimate_disable = true
