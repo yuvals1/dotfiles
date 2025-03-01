@@ -6,8 +6,13 @@ return {
     -- Your other options
 
     lazygit = {
+      configure = true,
+      -- Use the default lazygit theme by providing specific config
       config = {
+        os = { editPreset = 'nvim-remote' },
         gui = {
+          nerdFontsVersion = '3',
+          -- Explicitly set the default lazygit theme
           theme = {
             activeBorderColor = { 'green', 'bold' },
             searchingActiveBorderColor = { 'cyan', 'bold' },
@@ -23,6 +28,25 @@ return {
             defaultFgColor = { 'default' },
           },
         },
+      },
+      win = {
+        style = 'lazygit',
+      },
+    },
+
+    bigfile = {
+      enabled = true,
+      size = 1 * 1024 * 1024, -- 1MB
+      pattern = { '*' },
+      features = {
+        'indent_blankline',
+        'illuminate',
+        'lsp',
+        'treesitter',
+        'syntax',
+        'matchparen',
+        'vimopts',
+        'filetype',
       },
       setup = function(ctx)
         vim.b.minianimate_disable = true
