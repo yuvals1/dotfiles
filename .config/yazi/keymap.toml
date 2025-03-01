@@ -602,3 +602,10 @@ run = 'plugin selected-files-fzf'
 [[manager.prepend_keymap]]
 on = "Q"
 run = 'plugin fzf-orig'
+
+
+# keymap.toml
+[[manager.prepend_keymap]]
+on = "T"
+run = "plugin toggle-pane max-preview"
+desc = "Maximize or restore the preview pane"
