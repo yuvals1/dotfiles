@@ -3,21 +3,22 @@ return {
   priority = 1000, -- Important: high priority for early loading
   lazy = false, -- Don't lazy load since we need early setup
   opts = {
-    -- Enable and configure bigfile
-    bigfile = {
-      enabled = true,
-      -- Optional: customize bigfile settings
-      size = 1 * 1024 * 1024, -- 1MB
-      pattern = { '*' }, -- filetypes or patterns to apply to
-      features = {
-        'indent_blankline',
-        'illuminate',
-        'lsp',
-        'treesitter',
-        'syntax',
-        'matchparen',
-        'vimopts',
-        'filetype',
+    -- Your other options
+
+    lazygit = {
+      theme = {
+        activeBorderColor = { 'green', 'bold' },
+        searchingActiveBorderColor = { 'cyan', 'bold' },
+        inactiveBorderColor = { 'default' },
+        optionsTextColor = { 'blue' },
+        selectedLineBgColor = { 'blue' },
+        inactiveViewSelectedLineBgColor = { 'bold' },
+        cherryPickedCommitBgColor = { 'cyan' },
+        cherryPickedCommitFgColor = { 'blue' },
+        markedBaseCommitBgColor = { 'yellow' },
+        markedBaseCommitFgColor = { 'blue' },
+        unstagedChangesColor = { 'red' },
+        defaultFgColor = { 'default' },
       },
       setup = function(ctx)
         vim.b.minianimate_disable = true
