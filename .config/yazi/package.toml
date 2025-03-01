@@ -28,10 +28,6 @@ use = "yazi-rs/plugins:smart-filter"
 rev = "e4aaf43"
 hash = "ea24edab4a62c94dbd205adfb6f2c08d"
 
-[[plugin.deps]]
-use = "Rolv-Apneseth/starship"
-rev = "4053c8c"
-hash = "3e56b7665569519e3fc54b02868627c4"
 
 [[plugin.deps]]
 use = "GianniBYoung/rsync"
