@@ -34,9 +34,8 @@ keymap = [
   { on = [
     "g",
     "g",
-  ], run = "arrow -99999999", desc = "Move cursor to the top" },
-  { on = "G", run = "arrow 99999999", desc = "Move cursor to the bottom" },
-
+  ], run = "arrow top", desc = "Move cursor to the top" },
+  { on = "G", run = "arrow bot", desc = "Move cursor to the bottom" },
   # Navigation
   { on = "h", run = "leave", desc = "Go back to the parent directory" },
   { on = "l", run = "enter", desc = "Enter the child directory" },
@@ -254,14 +253,9 @@ keymap = [
     "a",
   ], run = "cd /data", desc = "Goto /data" },
   { on = [
-    'g',
-    'r',
-  ], run = 'cd ~/robopilot', desc = 'Goto Robopilot' },
-  { on = [
-    'g',
-    't',
-  ], run = 'cd ~/robopilot/treex_algo', desc = 'Goto Treex Algo' },
-
+    "g",
+    "v",
+  ], run = "cd ~/vaults-icloud-obsidian/", desc = "Goto Vaults" },
 
   # Tabs
   { on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
@@ -491,7 +485,7 @@ keymap = [
   { on = "<F1>", run = "help", desc = "Open help" },
 ]
 
-[completion]
+[cmp]
 
 keymap = [
   { on = "<C-c>", run = "close", desc = "Cancel completion" },
@@ -535,49 +529,9 @@ keymap = [
 
 [[manager.prepend_keymap]]
 on = ["f"]
-run = "plugin keyjump --args=global"
+run = "plugin keyjump global"
 desc = "Keyjump (Global mode)"
 
-
-[[manager.prepend_keymap]]
-on = ["U", "a"]
-run = "plugin yamb --args=save"
-desc = "Add bookmark"
-
-[[manager.prepend_keymap]]
-on = ["U", "G"]
-run = "plugin yamb --args=jump_by_key"
-desc = "Jump bookmark by key"
-
-[[manager.prepend_keymap]]
-on = ["u"]
-run = "plugin yamb --args=jump_by_fzf"
-desc = "Jump bookmark by fzf"
-
-[[manager.prepend_keymap]]
-on = ["U", "D"]
-run = "plugin yamb --args=delete_by_key"
-desc = "Delete bookmark by key"
-
-[[manager.prepend_keymap]]
-on = ["U", "d"]
-run = "plugin yamb --args=delete_by_fzf"
-desc = "Delete bookmark by fzf"
-
-[[manager.prepend_keymap]]
-on = ["U", "A"]
-run = "plugin yamb --args=delete_all"
-desc = "Delete all bookmarks"
-
-[[manager.prepend_keymap]]
-on = ["U", "R"]
-run = "plugin yamb --args=rename_by_key"
-desc = "Rename bookmark by key"
-
-[[manager.prepend_keymap]]
-on = ["U", "r"]
-run = "plugin yamb --args=rename_by_fzf"
-desc = "Rename bookmark by fzf"
 
 [[manager.prepend_keymap]]
 on = ["R"]
@@ -606,5 +560,17 @@ on = "s"
 run = 'plugin selected-files-fzf'
 
 [[manager.prepend_keymap]]
+on = "u"
+run = 'plugin hardcoded-files-fzf'
+
+
+[[manager.prepend_keymap]]
 on = "Q"
 run = 'plugin fzf-orig'
+
+
+# keymap.toml
+[[manager.prepend_keymap]]
+on = "T"
+run = "plugin toggle-pane max-preview"
+desc = "Maximize or restore the preview pane"

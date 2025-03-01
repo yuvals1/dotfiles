@@ -811,7 +811,7 @@ local add_cwd_status_watch = ya.sync(function(state)
     if #cx.active.current.window > 0 and state.again then
       state.again = false
       local times = state.times and state.times or ''
-      ya.manager_emit('plugin', { 'keyjump', args = ya.quote(state.type) .. ' ' .. times })
+      ya.manager_emit('plugin', { 'keyjump', ya.quote(state.type) .. ' ' .. times })
     end
     return ui.Line {}
   end

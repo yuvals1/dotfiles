@@ -14,11 +14,6 @@ rev = "e4aaf43"
 hash = "e9cf1bfc03de7fee0f1d4260da0d1dfd"
 
 [[plugin.deps]]
-use = "yazi-rs/plugins:max-preview"
-rev = "e4aaf43"
-hash = "9bc26d10d2f6e2aa93b10905b1b76979"
-
-[[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
 rev = "e4aaf43"
 hash = "4c7e8fd0266eedee7b619d966bd2d025"
@@ -33,20 +28,11 @@ use = "yazi-rs/plugins:smart-filter"
 rev = "e4aaf43"
 hash = "ea24edab4a62c94dbd205adfb6f2c08d"
 
-[[plugin.deps]]
-use = "Rolv-Apneseth/starship"
-rev = "4053c8c"
-hash = "3e56b7665569519e3fc54b02868627c4"
 
 [[plugin.deps]]
 use = "GianniBYoung/rsync"
 rev = "3f431aa"
 hash = "1854a5a30d23e84bc8df24700f27957b"
-
-[[plugin.deps]]
-use = "h-hg/yamb"
-rev = "108347b"
-hash = "faf1b817347b5b46c96039dab538694b"
 
 [[plugin.deps]]
 use = "ahkohd/eza-preview"
@@ -72,6 +58,16 @@ hash = "cf3f5c20e1b33048cb19bb1e0bba90ec"
 use = "yazi-rs/plugins:mactag"
 rev = "e4aaf43"
 hash = "3fee7f91058b2be662623cffcc9b0a10"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:toggle-pane"
+rev = "5186af7"
+hash = "2391805528b59d562a51f9b33f4a8236"
+
+[[plugin.deps]]
+use = "h-hg/yamb"
+rev = "22af003"
+hash = "7cc42012a7c2099f80064d228feb8d44"
 
 [flavor]
 deps = []
