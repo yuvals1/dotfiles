@@ -1,0 +1,11 @@
+FROM yuvaldev-base:latest
+
+USER developer
+WORKDIR /home/developer
+
+# Initialize Neovim with a timeout to prevent build hangs
+# The timeout command ensures the process won't run longer than 30 minutes
+RUN timeout 60 nvim --headless -c "Lazy sync" -c "qa!" || true
+
+# Set default command
+CMD ["/home/linuxbrew/.linuxbrew/bin/zsh"]
