@@ -44,14 +44,16 @@ RUN git clone https://github.com/yuvals1/dotfiles
 RUN brew update && cd ~/dotfiles && brew bundle || true
 
 # Use stow to adopt dotfiles
-# Note: The --adopt flag will adopt existing files
 RUN cd dotfiles && stow --adopt .
 
-# Initialize zsh
-RUN if [ -f ~/.zshrc ]; then cp ~/.zshrc ~/.zshrc.pre-oh-my-zsh || true; fi && \
-    echo "exit" > ~/.zshrc.temp && \
-    zsh -c "source ~/.zshrc || true" && \
-    rm ~/.zshrc.temp || true
+# Create empty zsh_secrets file to avoid warnings
+RUN touch ~/.zsh_secrets
+
+# Properly initialize zsh with an interactive session simulation
+# This should load zinit, powerlevel10k, and other zsh plugins
+RUN bash -c "echo 'source ~/.zshrc' > /tmp/init.sh && zsh -i /tmp/init.sh || true" && \
+    zsh -c "source ~/.zshrc; exit 0" && \
+    rm -f /tmp/init.sh
 
 # Set Homebrew's zsh as default shell
 SHELL ["/home/linuxbrew/.linuxbrew/bin/zsh", "-c"]
