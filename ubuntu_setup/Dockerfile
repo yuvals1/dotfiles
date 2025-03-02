@@ -1,9 +1,7 @@
 FROM ubuntu:22.04
-
 # Set non-interactive environment variables to avoid prompts
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=tmux-256color
-
 # Update and install essential tools
 RUN apt-get update && apt-get install -y \
     git \
@@ -15,30 +13,34 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
 # Create a non-root user (optional but recommended)
 ARG USERNAME=developer
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
-
 # Switch to the new user
 USER $USERNAME
 WORKDIR /home/$USERNAME
-
 # Clone dotfiles repository
 RUN git clone https://github.com/yuvals1/dotfiles
-
 # Use stow to adopt dotfiles
 # Note: The --adopt flag will adopt existing files
 RUN cd dotfiles && stow --adopt .
-
 # Run the installation script
 RUN chmod +x ~/dotfiles/ubuntu_setup/install.sh && ~/dotfiles/ubuntu_setup/install.sh
 
-# Set default command (you can override this when running the container)
-CMD ["/bin/bash"]
+# Run zsh initialization by creating a .zshrc.pre-oh-my-zsh backup if needed
+# and then executing zsh commands with appropriate options
+RUN if [ -f ~/.zshrc ]; then cp ~/.zshrc ~/.zshrc.pre-oh-my-zsh || true; fi && \
+    echo "exit" > ~/.zshrc.temp && \
+    zsh -c "source ~/.zshrc || true" && \
+    rm ~/.zshrc.temp || true
+
+# Set zsh as default shell
+SHELL ["/bin/zsh", "-c"]
+
+# Set default command
+CMD ["/bin/zsh"]
