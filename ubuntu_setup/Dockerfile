@@ -2,6 +2,7 @@ FROM ubuntu:22.04
 
 # Set non-interactive environment variables to avoid prompts
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TERM=tmux-256color
 
 # Update and install essential tools
 RUN apt-get update && apt-get install -y \
@@ -36,6 +37,8 @@ RUN git clone https://github.com/yuvals1/dotfiles
 # Note: The --adopt flag will adopt existing files
 RUN cd dotfiles && stow --adopt .
 
+# Run the installation script
+RUN chmod +x ~/dotfiles/ubuntu_setup/install.sh && ~/dotfiles/ubuntu_setup/install.sh
+
 # Set default command (you can override this when running the container)
 CMD ["/bin/bash"]
-
