@@ -7,5 +7,9 @@ WORKDIR /home/developer
 # The timeout command ensures the process won't run longer than 30 minutes
 RUN timeout 60 nvim --headless -c "Lazy sync" -c "qa!" || true
 
-# Set default command
+
+RUN sudo apt-get update && sudo apt-get install -y \
+    x11-apps
+
+# Set default command (on a new line, not part of the RUN command)
 CMD ["/home/linuxbrew/.linuxbrew/bin/zsh"]
