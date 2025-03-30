@@ -1,92 +1,64 @@
--- Hammerspoon configuration for moving mouse cursor to specific coordinates
+-- Hammerspoon configuration for moving mouse cursor to specific coordinates and clicking
 
--- BASIC MOUSE MOVEMENT FUNCTION
--- Move mouse to specific x,y coordinates
-function moveMouseToPosition(x, y)
+-- BASIC MOUSE MOVEMENT AND CLICK FUNCTION
+function moveAndClick(x, y)
+	-- First move the mouse
 	hs.mouse.absolutePosition({ x = x, y = y })
+
+	-- Give time for the move to complete
+	hs.timer.usleep(100000) -- 100ms pause
+
+	-- Click directly at current position (most reliable method)
+	local currentPosition = hs.mouse.absolutePosition()
+	hs.eventtap.leftClick(currentPosition)
 end
 
--- KEYMAP CONFIGURATION
--- Define keyboard shortcuts to move mouse to preset positions
-
--- Option 1: Move mouse to specific screen positions with hotkeys
--- Example: Move to center of primary screen
-hs.hotkey.bind({ "cmd", "shift" }, "C", function()
-	local screen = hs.screen.primaryScreen()
-	local screenRect = screen:frame()
-	local centerX = screenRect.x + screenRect.w / 2
-	local centerY = screenRect.y + screenRect.h / 2
-
-	moveMouseToPosition(centerX, centerY)
-end)
-
--- Example: Move to top-left corner
-hs.hotkey.bind({ "cmd", "shift" }, "1", function()
-	local screen = hs.screen.primaryScreen()
-	local screenRect = screen:frame()
-
-	moveMouseToPosition(screenRect.x, screenRect.y)
-end)
-
--- Example: Move to top-right corner
-hs.hotkey.bind({ "cmd", "shift" }, "2", function()
-	local screen = hs.screen.primaryScreen()
-	local screenRect = screen:frame()
-
-	moveMouseToPosition(screenRect.x + screenRect.w, screenRect.y)
-end)
-
--- Option 2: Create a modal hotkey for dynamic mouse positioning
-mousePositionMode = hs.hotkey.modal.new({ "cmd", "shift" }, "M")
-
--- Press Escape to exit mode
-mousePositionMode:bind({}, "escape", function()
-	mousePositionMode:exit()
-end)
-
--- Function to handle coordinate movement
-function moveMouseToCoordinates()
-	-- Create a small dialog to input coordinates
-	local button, coordinates = hs.dialog.textPrompt("Move Mouse", "Enter coordinates as 'x,y':", "", "Move", "Cancel")
-
-	if button == "Move" then
-		-- Parse the x,y coordinates
-		local x, y = coordinates:match("(%d+),(%d+)")
-
-		if x and y then
-			x = tonumber(x)
-			y = tonumber(y)
-			moveMouseToPosition(x, y)
-		else
-			hs.alert.show("Invalid coordinates format. Use 'x,y'")
-		end
-	end
-
-	mousePositionMode:exit()
+-- Alternate fallback click method if needed
+function forceClick()
+	-- This is a very direct method that should always work
+	hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseDown, hs.mouse.absolutePosition()):post()
+	hs.timer.usleep(20000) -- 20ms
+	hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseUp, hs.mouse.absolutePosition()):post()
 end
 
--- In position mode, press 'p' to enter coordinates
-mousePositionMode:bind({}, "p", moveMouseToCoordinates)
+-- Move to specific coordinate and click - Position 1
+hs.hotkey.bind({ "cmd", "shift" }, "q", function()
+	hs.mouse.absolutePosition({ x = 1377, y = 149 })
+	-- Add a delay before clicking
+	hs.timer.doAfter(0.2, function()
+		forceClick()
+	end)
+end)
 
--- When entering mouse position mode, show a help message
-function mousePositionMode:entered()
-	hs.alert.show("Mouse Position Mode\nPress 'p' to specify coordinates\nPress ESC to cancel")
-end
+-- Move to specific coordinate and click - Position 2
+hs.hotkey.bind({ "cmd", "shift" }, "w", function()
+	hs.mouse.absolutePosition({ x = 1074, y = 605 })
+	-- Add a delay before clicking
+	hs.timer.doAfter(0.2, function()
+		forceClick()
+	end)
+end)
 
--- UTILITY FUNCTIONS
+-- Move to specific coordinate and click - Position 3
+hs.hotkey.bind({ "cmd", "shift" }, "e", function()
+	hs.mouse.absolutePosition({ x = 1442, y = 605 })
+	-- Add a delay before clicking
+	hs.timer.doAfter(0.2, function()
+		forceClick()
+	end)
+end)
 
--- Get current mouse position (for logging/debugging)
-function getCurrentMousePosition()
-	local pos = hs.mouse.absolutePosition()
-	print("Current mouse position: x=" .. pos.x .. ", y=" .. pos.y)
-	return pos
-end
-
--- Bind a key to show current mouse position
+-- Get current mouse position (for debugging)
 hs.hotkey.bind({ "cmd", "shift" }, "P", function()
-	local pos = getCurrentMousePosition()
+	local pos = hs.mouse.absolutePosition()
 	hs.alert.show("Mouse at: " .. math.floor(pos.x) .. "," .. math.floor(pos.y))
 end)
 
+-- For testing: Simple click at current position
+hs.hotkey.bind({ "cmd", "shift" }, "C", function()
+	forceClick()
+	hs.alert.show("Clicked at current position")
+end)
+
 -- Alert to show Hammerspoon is loaded successfully
-hs.alert.show("Hammerspoon config loaded")
+hs.alert.show("Hammerspoon config loaded with click functionality")
