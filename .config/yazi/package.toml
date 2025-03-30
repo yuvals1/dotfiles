@@ -73,5 +73,10 @@ use = "boydaihungst/simple-tag"
 rev = "837f702"
 hash = "e1c65491ab72954e1607a25b2e49a936"
 
+[[plugin.deps]]
+use = "stelcodes/bunny"
+rev = "a64f32a"
+hash = "22d9e6f72230be88ab322040626623a"
+
 [flavor]
 deps = []
