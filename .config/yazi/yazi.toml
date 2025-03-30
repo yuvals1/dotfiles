@@ -98,6 +98,7 @@ rules = [
   ] },
   # PDF files
   { mime = "application/pdf", use = [
+    "browser",
     "open",
     "reveal",
   ] },
