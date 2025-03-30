@@ -655,3 +655,8 @@ desc = "exclude-select"
 on = ["t", "s", "u"]
 run = "plugin simple-tag -- undo-select"
 desc = "Undos/Redos the last selection action"
+
+[[manager.prepend_keymap]]
+on = ";"
+run = "plugin bunny"
+desc = "Start bunny.yazi"

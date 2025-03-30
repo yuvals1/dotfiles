@@ -106,3 +106,17 @@ require('simple-tag'):setup {
     ['p'] = '',
   },
 }
+
+require('bunny'):setup {
+  hops = {
+    { key = 'h', path = '~', desc = 'Home' },
+    { key = 'd', path = '~/Downloads', desc = 'Downloads' },
+    { key = 'c', path = '~/dotfiles', desc = 'Config files' },
+    { key = 't', path = '~/Documents/technion', desc = 'Technion' },
+    { key = 'y', path = '~/dotfiles/.config/yazi', desc = 'Yazi config' },
+    -- Add other frequent directories you use
+  },
+  desc_strategy = 'path',
+  notify = false,
+  fuzzy_cmd = 'fzf',
+}
