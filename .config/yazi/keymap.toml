@@ -574,3 +574,84 @@ run = 'plugin fzf-orig'
 on = "T"
 run = "plugin toggle-pane max-preview"
 desc = "Maximize or restore the preview pane"
+
+
+[[manager.prepend_keymap]]
+on = ["t", "t", "k"]
+run = "plugin simple-tag -- toggle-tag"
+desc = "Toggle a tag (press any key)"
+
+[[manager.prepend_keymap]]
+on = ["t", "a", "k"]
+run = "plugin simple-tag -- add-tag"
+desc = "Add a tag (press any key)"
+
+[[manager.prepend_keymap]]
+on = ["t", "d", "k"]
+run = "plugin simple-tag -- remove-tag"
+desc = "Remove a tag (press any key)"
+
+[[manager.prepend_keymap]]
+on = ["t", "r", "k"]
+run = "plugin simple-tag -- replace-tag"
+desc = "Replace with a new tag (press any key)"
+
+[[manager.prepend_keymap]]
+on = ["t", "e"]
+run = "plugin simple-tag -- edit-tag"
+desc = "Edit tag(s) (input box)"
+
+[[manager.prepend_keymap]]
+on = ["t", "c"]
+run = "plugin simple-tag -- clear"
+desc = "Clear all tags from selected or hovered files"
+
+[[manager.prepend_keymap]]
+on = ["t", "u", "s"]
+run = "plugin simple-tag -- toggle-ui"
+desc = "Toggle tag indicator (icon > tag key > hidden)"
+
+[[manager.prepend_keymap]]
+on = ["t", "f"]
+run = "plugin simple-tag -- filter"
+desc = "Filter files/folders by a tag (press any key)"
+
+[[manager.prepend_keymap]]
+on = ["t", "F"]
+run = "plugin simple-tag -- filter --input"
+desc = "Filter files/folders by tag(s) (input box)"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "t"]
+run = "plugin simple-tag -- toggle-select"
+desc = "Select a selection action then select a tag key (toggle-select)"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "r"]
+run = "plugin simple-tag -- replace-select"
+desc = "replace-select"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "u"]
+run = "plugin simple-tag -- unite-select"
+desc = "unite-select"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "i"]
+run = "plugin simple-tag -- intersect-select"
+desc = "intersect-select"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "s"]
+run = "plugin simple-tag -- subtract-select"
+desc = "subtract-select"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "e"]
+run = "plugin simple-tag -- exclude-select"
+desc = "exclude-select"
+
+[[manager.prepend_keymap]]
+on = ["t", "s", "u"]
+run = "plugin simple-tag -- undo-select"
+desc = "Undos/Redos the last selection action"
