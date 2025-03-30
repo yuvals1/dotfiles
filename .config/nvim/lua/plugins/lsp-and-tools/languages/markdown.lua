@@ -7,6 +7,6 @@ return {
     markdown = { 'prettier' },
   },
   linters = {
-    markdown = { 'markdownlint' },
+    -- markdown = { 'markdownlint' },
   },
 }

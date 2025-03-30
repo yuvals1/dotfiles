@@ -29,8 +29,8 @@ function M.setup(languages)
           -- 'cpp',
           -- 'typescript',
           -- 'python',
-          'bash',
-          'sh',
+          -- 'bash',
+          -- 'sh',
           -- 'javascript',
         }
 
