@@ -1,6 +1,6 @@
 -- languages/ruby.lua
 return {
-  mason = { 'solargraph', 'rubocop' },
+  mason = { 'solargraph' },
   lsp = {
     solargraph = {
       filetypes = { 'ruby', 'rakefile', 'erb', 'Brewfile' },
