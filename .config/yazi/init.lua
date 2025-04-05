@@ -112,7 +112,7 @@ require('bunny'):setup {
     { key = 'h', path = '~', desc = 'Home' },
     { key = 'd', path = '~/Downloads', desc = 'Downloads' },
     { key = 'a', path = '~/dotfiles', desc = 'Config files' },
-    { key = 'c', path = '~/Documents/diary/commitments/', desc = 'Commitments' },
+    { key = 'c', path = '~/Documents/diary/', desc = 'Commitments' },
     { key = 't', path = '~/Documents/technion', desc = 'Technion' },
     { key = 'y', path = '~/dotfiles/.config/yazi', desc = 'Yazi config' },
     { key = 'v', path = '~/vaults-icloud-obsidian/personal-vault', desc = 'Personal vault' },
