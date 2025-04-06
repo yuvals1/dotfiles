@@ -20,12 +20,12 @@ return {
         },
       },
       -- Disable notifications
-      notify = {
-        enabled = false,
-      },
-      messages = {
-        enabled = false, -- disable the notifications that appear in the bottom right
-      },
+      -- notify = {
+      --   enabled = false,
+      -- },
+      -- messages = {
+      --   enabled = false, -- disable the notifications that appear in the bottom right
+      -- },
       -- you can enable a preset for easier configuration
       presets = {
         bottom_search = true, -- use a classic bottom cmdline for search
