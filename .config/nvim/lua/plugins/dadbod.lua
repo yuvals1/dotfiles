@@ -47,6 +47,12 @@ return {
 
       -- Set win position to right
       vim.g.db_ui_win_position = 'right'
+
+      -- Increase the drawer width
+      vim.g.db_ui_winwidth = 60
+
+      -- Disable info notifications after query execution
+      vim.g.db_ui_disable_info_notifications = 1
     end,
     config = function()
       -- Add custom key mappings or additional configuration if needed
