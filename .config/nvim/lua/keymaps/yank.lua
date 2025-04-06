@@ -1,4 +1,4 @@
-vim.keymap.set('n', 'yf', ':%y<CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
+vim.keymap.set('n', 'yf', ':%y<CR><CR>', { noremap = true, silent = true, desc = 'Yank entire file' })
 
 -- Yank absolute path (full path)
 vim.keymap.set('n', 'yp', function()
