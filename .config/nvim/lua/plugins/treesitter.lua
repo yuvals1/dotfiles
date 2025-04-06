@@ -33,6 +33,7 @@ return {
       'rust',
       'ruby',
       'svelte',
+      'sql',
     },
     auto_install = true,
     highlight = {
