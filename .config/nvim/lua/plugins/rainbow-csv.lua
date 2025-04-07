@@ -1,6 +1,14 @@
 return {
   'cameron-wags/rainbow_csv.nvim',
-  config = true,
+  config = function()
+    -- Disable hovering column information
+    vim.g.disable_rainbow_hover = 1
+
+    -- Or alternatively set a debounce time if you prefer
+    -- vim.g.rainbow_hover_debounce_ms = 300
+
+    require('rainbow_csv').setup()
+  end,
   ft = {
     'csv',
     'tsv',
