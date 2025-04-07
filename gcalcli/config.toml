@@ -1,0 +1,28 @@
+#:schema https://raw.githubusercontent.com/insanum/gcalcli/HEAD/data/config-schema.json
+
+[calendars]
+default-calendars = [
+  "yuvalspiegel1@gmail.com",
+  "Studies",
+  "Therapy",
+  "HW",
+  "Sport",
+  "Meetings",
+  "חגים בישראל",
+]
+
+[colors]
+owner = "blue"
+reader = "cyan"
+
+[output]
+week-start = "sunday"
+
+[calendar_colors]
+"yuvalspiegel1@gmail.com" = "green"
+"Studies" = "magenta"
+"Therapy" = "yellow"
+"HW" = "red"
+"Sport" = "cyan"
+"Meetings" = "blue"
+"חגים בישראל" = "white"
