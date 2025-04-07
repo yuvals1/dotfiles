@@ -46,7 +46,7 @@ brew 'pandoc'
 brew 'poppler'
 brew 'regclient'
 brew 'tabiew'
-brew 'visidata'
+brew 'visidata' # use cmd-s for settings navigation
 # brew 'sk'
 # brew 'gping'
 # brew 'bandwhich'
