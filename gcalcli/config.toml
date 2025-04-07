@@ -2,13 +2,13 @@
 
 [calendars]
 default-calendars = [
-  "yuvalspiegel1@gmail.com",
-  "Studies",
-  "Therapy",
-  "HW",
-  "Sport",
-  "Meetings",
-  "חגים בישראל",
+  "yuvalspiegel1@gmail.com#green",
+  "Studies#magenta",
+  "Therapy#yellow",
+  "HW#red",
+  "Sport#cyan",
+  "Meetings#blue",
+  "חגים בישראל#white",
 ]
 
 [colors]
@@ -17,12 +17,3 @@ reader = "cyan"
 
 [output]
 week-start = "sunday"
-
-[calendar_colors]
-"yuvalspiegel1@gmail.com" = "green"
-"Studies" = "magenta"
-"Therapy" = "yellow"
-"HW" = "red"
-"Sport" = "cyan"
-"Meetings" = "blue"
-"חגים בישראל" = "white"
