@@ -2,14 +2,15 @@
 
 [calendars]
 default-calendars = [
-  "yuvalspiegel1@gmail.com#green",
-  "Studies#magenta",
-  "Therapy#yellow",
-  "HW#red",
-  "Sport#cyan",
-  "Meetings#blue",
+  "yuval#green",
+  "studies#magenta",
+  "therapy#cyan",
+  "hw#red",
+  "meetings#blue",
   "חגים בישראל#white",
 ]
+
+ignore-calendars = ["Sport#brown"]
 
 [colors]
 owner = "blue"
