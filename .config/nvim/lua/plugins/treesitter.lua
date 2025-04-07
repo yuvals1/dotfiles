@@ -50,6 +50,7 @@ return {
       'perl',
       'r',
       'clojure',
+      'pascal',
     },
     auto_install = true,
     highlight = {
