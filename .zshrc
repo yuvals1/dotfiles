@@ -45,4 +45,10 @@ compdef _git_diff forgit::diff
 
 export GCALCLI_CONFIG="$HOME/dotfiles/gcalcli/config.toml"
 alias g='gcalcli'
+alias gg='open https://calendar.google.com/calendar/u/0/r'
+alias cw='gcalcli calw'
+alias cm='gcalcli calm'
+alias ca='gcalcli agenda now 8w --calendar'
+alias ch='gcalcli agenda today 8w --calendar "HW"'
+
 
