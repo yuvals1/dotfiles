@@ -43,4 +43,4 @@ export EDITOR=nvim
 
 compdef _git_diff forgit::diff
 
-
+export GCALCLI_CONFIG="$HOME/dotfiles/gcalcli/config.toml"
