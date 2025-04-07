@@ -2,11 +2,13 @@
 
 [calendars]
 default-calendars = [
-  "yuval#green",
+  "yuval#white",
   "studies#magenta",
   "therapy#cyan",
   "hw#red",
   "meetings#blue",
+  "tasks#green",
+  "events#white",
   "חגים בישראל#white",
 ]
 
