@@ -19,4 +19,11 @@ return {
     },
   },
   cmd = { 'CsvViewEnable', 'CsvViewDisable', 'CsvViewToggle' },
+  keys = {
+    {
+      '<leader>cv',
+      '<cmd>CsvViewToggle display_mode=border header_lnum=1<CR>',
+      desc = 'Toggle CSV view with border',
+    },
+  },
 }
