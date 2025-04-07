@@ -52,3 +52,4 @@ alias ca='gcalcli agenda now 8w --calendar'
 alias ch='gcalcli agenda today 8w --calendar "HW"'
 
 
+export PATH=/usr/local/smlnj/bin:$PATH
