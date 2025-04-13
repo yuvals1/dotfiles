@@ -45,7 +45,7 @@ brew 'poppler'
 brew 'regclient'
 brew 'tabiew'
 brew 'visidata' # use cmd-s for settings navigation
-brew 'gcalcli'
+# brew 'gcalcli'
 brew 'fpc'
 brew 'swi-prolog'
 # brew 'sk'
