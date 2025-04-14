@@ -116,6 +116,7 @@ require('bunny'):setup {
     { key = 't', path = '~/Documents/technion', desc = 'Technion' },
     { key = 'y', path = '~/dotfiles/.config/yazi', desc = 'Yazi config' },
     { key = 'v', path = '~/vaults-icloud-obsidian/personal-vault', desc = 'Personal vault' },
+    { key = 'p', path = '~/Documents/prompts', desc = 'Prompts' },
     -- Add other frequent directories you use
   },
   desc_strategy = 'path',
