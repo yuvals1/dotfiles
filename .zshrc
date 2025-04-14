@@ -43,10 +43,9 @@ export EDITOR=nvim
 
 compdef _git_diff forgit::diff
 
-export GCALCLI_CONFIG="$HOME/dotfiles/gcalcli/config.toml"
-alias g='gcalcli'
 alias gg='open https://calendar.google.com/calendar/u/0/r'
 alias gt='open https://calendar.google.com/calendar/u/0/r/tasks'
+alias cf='open https://cheesefork.cf/'
 
 
 export PATH=/usr/local/smlnj/bin:$PATH
