@@ -26,12 +26,14 @@ function M.setup(languages)
           'go',
           'ruby',
           'dockerfile',
-          -- 'cpp',
+          'cpp',
+          'c',
           -- 'typescript',
           -- 'python',
-          -- 'bash',
-          -- 'sh',
+          'bash',
+          'sh',
           -- 'javascript',
+          'svelte',
         }
 
         -- Get the filetype of the current buffer
