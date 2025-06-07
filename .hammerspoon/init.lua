@@ -75,6 +75,17 @@ hs.hotkey.bind({ "cmd", "shift" }, "x", function()
 	hs.alert.show("Stopped speaking")
 end)
 
+-- Stop speaking (alternative keybind)
+hs.hotkey.bind({ "cmd" }, "g", function()
+	if speakingTask then
+		speakingTask:terminate()
+		speakingTask = nil
+	end
+	-- Also use killall as backup
+	hs.task.new("/bin/bash", nil, { "-c", "killall say" }):start()
+	hs.alert.show("Stopped speaking")
+end)
+
 -- Move to specific coordinate and click - Position 1
 hs.hotkey.bind({ "cmd", "shift" }, "q", function()
 	hs.mouse.absolutePosition({ x = 1377, y = 149 })
