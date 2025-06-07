@@ -53,7 +53,7 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+shift+u` | Global | Generate UUID | Inserts random UUID |
 | `cmd+b` | - | **Available** | Reserved by Karabiner for navigation |
 | `cmd+f` | - | **Available** | Reserved by Karabiner for navigation |
-| `cmd+g` | - | **Available** | - |
+| `cmd+g` | Global | Stop speaking | Hammerspoon: killall say |
 | `cmd+n` | - | **Available** | May conflict in some contexts |
 | `cmd+s` | - | **Available** | May conflict in some contexts |
 | `cmd+v` | - | **Available** | - |
