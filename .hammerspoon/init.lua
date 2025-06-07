@@ -25,7 +25,7 @@ end
 -- Variable to store the speaking task
 local speakingTask = nil
 
--- Speak clipboard contents
+-- Speak clipboard contents (normal speed)
 hs.hotkey.bind({ "cmd", "shift" }, "a", function()
 	-- Kill any existing speech first
 	if speakingTask then
@@ -36,6 +36,32 @@ hs.hotkey.bind({ "cmd", "shift" }, "a", function()
 	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say" })
 	speakingTask:start()
 	hs.alert.show("Speaking clipboard...")
+end)
+
+-- Speak clipboard contents (faster speed - 180 wpm)
+hs.hotkey.bind({ "cmd", "shift" }, "s", function()
+	-- Kill any existing speech first
+	if speakingTask then
+		speakingTask:terminate()
+	end
+
+	-- Start new speech at 180 wpm
+	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 180" })
+	speakingTask:start()
+	hs.alert.show("Speaking clipboard (slow)...")
+end)
+
+-- Speak clipboard contents (fastest speed - 200 wpm)
+hs.hotkey.bind({ "cmd", "shift" }, "f", function()
+	-- Kill any existing speech first
+	if speakingTask then
+		speakingTask:terminate()
+	end
+
+	-- Start new speech at 200 wpm
+	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 200" })
+	speakingTask:start()
+	hs.alert.show("Speaking clipboard (fast)...")
 end)
 
 -- Stop speaking
@@ -87,6 +113,5 @@ hs.hotkey.bind({ "cmd", "shift" }, "C", function()
 	forceClick()
 	hs.alert.show("Clicked at current position")
 end)
-
--- Alert to show Hammerspoon is loaded successfully
+-- Alert to show Hammerspoon config loaded successfully
 hs.alert.show("Hammerspoon config loaded with click functionality and TTS")
