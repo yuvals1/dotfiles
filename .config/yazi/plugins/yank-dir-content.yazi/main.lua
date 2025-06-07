@@ -103,6 +103,7 @@ local function get_language(file)
 		    rs = "rust",    -- Fix Rust extension
 		    rst = "rst",   
 			go = "go",
+			c = "c",
 			cpp = "cpp",
 			cc = "cpp",
 			h = "cpp",
