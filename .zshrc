@@ -45,7 +45,6 @@ compdef _git_diff forgit::diff
 
 alias gg='open https://calendar.google.com/calendar/u/0/r'
 alias gt='open https://calendar.google.com/calendar/u/0/r/tasks'
-alias cf='open https://cheesefork.cf/'
 
 
 export PATH=/usr/local/smlnj/bin:$PATH

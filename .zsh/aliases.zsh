@@ -19,3 +19,6 @@ alias zi="zoxide query -i"
 # [[ -f ~/dev/lazygit/lazygit ]] && alias lazygit="~/dev/lazygit/lazygit"
 alias gdn='git diff --name-only'
 alias l='~/links.sh'
+alias s='pbpaste | say'
+
+
