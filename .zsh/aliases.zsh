@@ -20,5 +20,7 @@ alias zi="zoxide query -i"
 alias gdn='git diff --name-only'
 alias l='~/links.sh'
 alias s='pbpaste | say'
-
+alias s1='pbpaste | say -r 150'
+alias s2='pbpaste | say -r 180'
+alias s3='pbpaste | say -r 200'
 
