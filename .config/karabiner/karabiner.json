@@ -378,32 +378,6 @@
                         ]
                     },
                     {
-                        "description": "Insert Date (DD/MM/YYYY) with Command+Shift+D",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "d",
-                                    "modifiers": { "mandatory": ["command", "shift"] }
-                                },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/date.sh" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Insert Date and Time (DD/MM/YYYY HH:MM) with Command+Shift+S",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "s",
-                                    "modifiers": { "mandatory": ["command", "shift"] }
-                                },
-                                "to": [{ "shell_command": "~/.config/karabiner/scripts/datetime.sh" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Caps Lock to Ctrl",
                         "manipulators": [
                             {
