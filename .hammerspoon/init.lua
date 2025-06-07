@@ -21,6 +21,34 @@ function forceClick()
 	hs.eventtap.event.newMouseEvent(hs.eventtap.event.types.leftMouseUp, hs.mouse.absolutePosition()):post()
 end
 
+-- CLIPBOARD SPEAKING FUNCTIONS
+-- Variable to store the speaking task
+local speakingTask = nil
+
+-- Speak clipboard contents
+hs.hotkey.bind({ "cmd", "shift" }, "a", function()
+	-- Kill any existing speech first
+	if speakingTask then
+		speakingTask:terminate()
+	end
+
+	-- Start new speech
+	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say" })
+	speakingTask:start()
+	hs.alert.show("Speaking clipboard...")
+end)
+
+-- Stop speaking
+hs.hotkey.bind({ "cmd", "shift" }, "x", function()
+	if speakingTask then
+		speakingTask:terminate()
+		speakingTask = nil
+	end
+	-- Also use killall as backup
+	hs.task.new("/bin/bash", nil, { "-c", "killall say" }):start()
+	hs.alert.show("Stopped speaking")
+end)
+
 -- Move to specific coordinate and click - Position 1
 hs.hotkey.bind({ "cmd", "shift" }, "q", function()
 	hs.mouse.absolutePosition({ x = 1377, y = 149 })
@@ -61,4 +89,4 @@ hs.hotkey.bind({ "cmd", "shift" }, "C", function()
 end)
 
 -- Alert to show Hammerspoon is loaded successfully
-hs.alert.show("Hammerspoon config loaded with click functionality")
+hs.alert.show("Hammerspoon config loaded with click functionality and TTS")
