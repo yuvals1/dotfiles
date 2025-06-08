@@ -83,7 +83,6 @@ hs.hotkey.bind({ "cmd" }, "g", function()
 	end
 	-- Also use killall as backup
 	hs.task.new("/bin/bash", nil, { "-c", "killall say" }):start()
-	hs.alert.show("Stopped speaking")
 end)
 
 -- Move to specific coordinate and click - Position 1
