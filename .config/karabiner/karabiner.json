@@ -22,10 +22,15 @@
                                         "optional": ["any"]
                                     }
                                 },
-                                "to": [
+                                "parameters": { "basic.to_after_key_up_delay_milliseconds": 0 },
+                                "to_after_key_up": [
                                     {
                                         "key_code": "w",
                                         "modifiers": ["command"]
+                                    },
+                                    {
+                                        "key_code": "open_bracket",
+                                        "modifiers": ["command", "shift"]
                                     }
                                 ],
                                 "type": "basic"
