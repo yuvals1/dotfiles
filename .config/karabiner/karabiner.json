@@ -555,22 +555,6 @@
                                 "type": "basic"
                             }
                         ]
-                    },
-                    {
-                        "description": "Option+v triggers a left mouse click",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "v",
-                                    "modifiers": {
-                                        "mandatory": ["option"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "pointing_button": "button1" }],
-                                "type": "basic"
-                            }
-                        ]
                     }
                 ]
             },
