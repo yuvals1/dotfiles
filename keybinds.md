@@ -56,7 +56,7 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+g` | Global | Duplicate cmd+shift+w mouse click | Hammerspoon action |
 | `cmd+n` | - | **Available** | May conflict in some contexts |
 | `cmd+s` | - | **Available** | May conflict in some contexts |
-| `cmd+v` | - | **Available** | - |
+| `cmd+v` | System | Paste | Standard macOS paste |
 | `cmd+shift+[others]` | - | **Available** | Except d, s, u, y, ;, . |
 | `cmd+option+[any key]` | - | **Available** | - |
 | `cmd+control+[any key]` | - | **Available** | - |
