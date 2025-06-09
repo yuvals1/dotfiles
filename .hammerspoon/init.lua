@@ -111,6 +111,28 @@ hs.hotkey.bind({ "cmd", "shift" }, "e", function()
 	end)
 end)
 
+-- Same as Position 3 but works everywhere except Kitty (Cmd+J)
+local cmdJEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+	local flags = event:getFlags()
+	local keyCode = event:getKeyCode()
+
+	-- Check if it's Cmd+J (keyCode 38 is 'j')
+	if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 38 then
+		local app = hs.application.frontmostApplication()
+		if app:name() ~= "kitty" then
+			-- Consume the event and perform our action
+			hs.mouse.absolutePosition({ x = 1442, y = 605 })
+			hs.timer.doAfter(0.2, function()
+				forceClick()
+			end)
+			return true -- Consume the event
+		end
+	end
+	return false -- Let the event pass through
+end)
+
+cmdJEventtap:start()
+
 -- Get current mouse position (for debugging)
 hs.hotkey.bind({ "cmd", "shift" }, "P", function()
 	local pos = hs.mouse.absolutePosition()
