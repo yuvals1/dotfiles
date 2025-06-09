@@ -10,3 +10,5 @@ __pycache__/
 *.py[cod]
 .config/lazysql/config.toml
 
+.claude.json
+.claude/
