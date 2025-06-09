@@ -76,7 +76,7 @@ hs.hotkey.bind({ "cmd", "shift" }, "x", function()
 end)
 
 -- Move to specific coordinate and click - Position 2 (alternative keybind)
-hs.hotkey.bind({ "cmd" }, "g", function()
+hs.hotkey.bind({ "cmd" }, "/", function()
 	hs.mouse.absolutePosition({ x = 1074, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
