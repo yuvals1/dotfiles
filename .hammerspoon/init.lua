@@ -77,7 +77,7 @@ end)
 
 -- Move to specific coordinate and click - Position 2 (alternative keybind)
 hs.hotkey.bind({ "cmd" }, "/", function()
-	hs.mouse.absolutePosition({ x = 1074, y = 605 })
+	hs.mouse.absolutePosition({ x = 1442, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
 		forceClick()
@@ -121,7 +121,7 @@ local cmdJEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, functi
 		local app = hs.application.frontmostApplication()
 		if app:name() ~= "kitty" then
 			-- Consume the event and perform our action
-			hs.mouse.absolutePosition({ x = 1442, y = 605 })
+			hs.mouse.absolutePosition({ x = 1074, y = 605 })
 			hs.timer.doAfter(0.2, function()
 				forceClick()
 			end)
