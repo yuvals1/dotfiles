@@ -8,13 +8,7 @@
 #include <list>
 
 namespace ast {
-    enum BuiltInType {
-        VOID,
-        BOOL,
-        BYTE,
-        INT,
-        STRING
-    };    
+    // BuiltInType is defined in nodes.hpp
     class Num;
     class NumB;
     class String;
@@ -47,36 +41,35 @@ namespace ast {
     class ArrayAssign;
 }
 
-class Symbol_Table_Entry{
-    public:
-        std::string name;
-        Symbol_Table_Entry(const std::string& name) : name(name) {}
-    };
-    class Var_Entry : public Symbol_Table_Entry {
-        public:
-        ast::BuiltInType type;
-        int offset;
-        Var_Entry(const std::string& name, int offset, ast::BuiltInType type) : 
-        Symbol_Table_Entry(name), type(type), offset(offset) {}
-    };
-    class Array_Entry : public Symbol_Table_Entry {
-        public:
-        ast::BuiltInType var_type;
-        int length;
-        int offset;
-        Array_Entry(const std::string& name, int offset, ast::BuiltInType var_type, int length) : 
-        Symbol_Table_Entry(name), var_type(var_type), length(length), offset(offset) {}
-    };
-    class Func_Entry : public Symbol_Table_Entry {
-        public:
-        ast::BuiltInType ret_type;
-        std::vector<ast::BuiltInType> parameter_types;
-        Func_Entry(const std::string& name, ast::BuiltInType ret_type, std::vector<ast::BuiltInType> param_types) : 
-        Symbol_Table_Entry(name), ret_type(ret_type), parameter_types(param_types) {}
-    };
+struct Symbol_Table_Entry {
+    std::string name;
+    Symbol_Table_Entry(const std::string& name) : name(name) {}
+    virtual ~Symbol_Table_Entry() = default;
+};
 
-class Symbol_table{
-public:
+struct Var_Entry : public Symbol_Table_Entry {
+    ast::BuiltInType type;
+    int offset;
+    Var_Entry(const std::string& name, int offset, ast::BuiltInType type) : 
+        Symbol_Table_Entry(name), type(type), offset(offset) {}
+};
+
+struct Array_Entry : public Symbol_Table_Entry {
+    ast::BuiltInType var_type;
+    int length;
+    int offset;
+    Array_Entry(const std::string& name, int offset, ast::BuiltInType var_type, int length) : 
+        Symbol_Table_Entry(name), var_type(var_type), length(length), offset(offset) {}
+};
+
+struct Func_Entry : public Symbol_Table_Entry {
+    ast::BuiltInType ret_type;
+    std::vector<ast::BuiltInType> parameter_types;
+    Func_Entry(const std::string& name, ast::BuiltInType ret_type, std::vector<ast::BuiltInType> param_types) : 
+        Symbol_Table_Entry(name), ret_type(ret_type), parameter_types(param_types) {}
+};
+
+struct Symbol_table {
     Symbol_table* parent;
     std::map<std::string, std::shared_ptr<Symbol_Table_Entry>> table;
     Symbol_table(Symbol_table* parent = nullptr) : parent(parent), table() {}
