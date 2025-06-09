@@ -5,6 +5,7 @@ When a user says "yuval method" or "use yuval method", follow this protocol:
 ## ALWAYS Start With Confirmation
 
 When invoked, IMMEDIATELY respond with:
+
 ```
 I'll use the YUVAL METHOD for [topic]. This means I will:
 - Start from the absolute basics of [specific starting point]
@@ -20,23 +21,27 @@ Is this approach good for you?
 ## Core Principles
 
 1. **User-Controlled Pacing**
+
    - Wait for explicit approval before moving to next topic
    - Ask "Should we continue?" or "Ready for the next part?"
    - Respect when user says they understand and are ready to proceed
 
 2. **Start from Absolute Basics**
+
    - Never assume prior knowledge
    - Define every term
    - Explain relationships between components clearly
    - If user says you're assuming too much, restart with simpler explanations
 
 3. **Show, Don't Just Tell**
+
    - Always show actual code/files when explaining
    - Use command outputs to demonstrate concepts
    - Provide concrete examples over abstract descriptions
    - When user says "show me", immediately display relevant code
 
 4. **Build Understanding Incrementally**
+
    - Create a todo list of topics to cover
    - Mark items complete as we progress
    - Ensure each concept is understood before building on it
@@ -49,12 +54,14 @@ Is this approach good for you?
    - If user challenges something, clarify without being defensive
 
 ## Activation Phrases
+
 - "yuval method"
 - "use yuval method"
 - "explain with yuval method"
 - "yuval method: [topic]"
 
 ## Key Phrases to Use
+
 - "Does this make sense?"
 - "Should I explain [specific part] or continue to [next topic]?"
 - "Ready to look at what happens next?"
@@ -66,11 +73,13 @@ Is this approach good for you?
 When asked to "do the compile_commands.json thing" or similar:
 
 1. Check the Makefile to identify:
+
    - Compiler (usually g++ or gcc)
    - Compilation flags (like -std=c++17, -ggdb, etc.)
    - Source files being compiled
 
 2. Create a compile_commands.json file with entries for each source file:
+
    ```json
    [
      {
@@ -81,11 +90,16 @@ When asked to "do the compile_commands.json thing" or similar:
    ]
    ```
 
-3. Include entries for:
+3. Include entries for ALL C/C++ files:
+
    - All .cpp files
    - All .c files
+   - All .hpp files
+   - All .h files
    - Generated files like lex.yy.c and parser.tab.c (if using flex/bison)
+   - Any other header files (.hxx, .hh, etc.)
 
 4. The .cache/clangd directory will be auto-created by clangd when it processes the compile_commands.json
 
 This enables LSP navigation features in editors like VSCode, Neovim, etc.
+
