@@ -60,3 +60,32 @@ Is this approach good for you?
 - "Ready to look at what happens next?"
 - "Which part would you like me to explain first?"
 - "Let me show you exactly..."
+
+# Generate compile_commands.json for C/C++ Projects
+
+When asked to "do the compile_commands.json thing" or similar:
+
+1. Check the Makefile to identify:
+   - Compiler (usually g++ or gcc)
+   - Compilation flags (like -std=c++17, -ggdb, etc.)
+   - Source files being compiled
+
+2. Create a compile_commands.json file with entries for each source file:
+   ```json
+   [
+     {
+       "directory": "<full path to project directory>",
+       "command": "<compiler> <flags> -c <source_file>",
+       "file": "<source_file>"
+     }
+   ]
+   ```
+
+3. Include entries for:
+   - All .cpp files
+   - All .c files
+   - Generated files like lex.yy.c and parser.tab.c (if using flex/bison)
+
+4. The .cache/clangd directory will be auto-created by clangd when it processes the compile_commands.json
+
+This enables LSP navigation features in editors like VSCode, Neovim, etc.
