@@ -454,7 +454,7 @@ local toggle_ui = ya.sync(function(st)
   Entity.icon = function(self)
     local file = self._file
     local icon = file:icon()
-    local span_icon_before = file:is_hovered() and ui.Span(file:icon().text .. ' ') or ui.Span(file:icon().text .. ' '):style(icon.style)
+    local span_icon_before = file.is_hovered and ui.Span(file:icon().text .. ' ') or ui.Span(file:icon().text .. ' '):style(icon.style)
 
     if st.type == 'global' then
       local pos, view = rel_position(file, 'all')
@@ -553,7 +553,7 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
       return false
     elseif special_key_str == '<Space>' then
       local under_cursor_file = cx.active.current.window[folder.cursor - folder.offset + 1]
-      local toggle_state = under_cursor_file:is_selected() and 'false' or 'true'
+      local toggle_state = under_cursor_file.is_selected and 'false' or 'true'
       ya.manager_emit('toggle', { state = toggle_state })
       ya.manager_emit('arrow', { 1 })
       return false
