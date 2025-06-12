@@ -574,9 +574,9 @@ desc = "Jumps to the first file"
 on = "s"
 run = 'plugin selected-files-fzf'
 
-[[manager.prepend_keymap]]
-on = "u"
-run = 'plugin hardcoded-files-fzf'
+# [[mgr.prepend_keymap]]
+# on = "u"
+# run = 'plugin hardcoded-files-fzf'
 
 
 [[mgr.prepend_keymap]]
@@ -685,3 +685,4 @@ desc = "Smart filter"
 on = ["c", "m"]
 run = "plugin chmod"
 desc = "Chmod on selected files"
+
