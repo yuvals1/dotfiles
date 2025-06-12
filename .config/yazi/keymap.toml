@@ -681,4 +681,7 @@ on = "F"
 run = "plugin smart-filter"
 desc = "Smart filter"
 
-
+[[mgr.prepend_keymap]]
+on = ["c", "m"]
+run = "plugin chmod"
+desc = "Chmod on selected files"
