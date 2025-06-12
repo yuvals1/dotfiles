@@ -1,13 +1,10 @@
 # mount.yazi
 
-> [!NOTE]
-> The plugin is currently very experimental, and the newest Yazi nightly is required for it to work.
-
 A mount manager for Yazi, providing disk mount, unmount, and eject functionality.
 
 Supported platforms:
 
-- Linux with `udisksctl`
+- Linux with [`udisksctl`](https://github.com/storaged-project/udisks) and [`lsblk`](https://github.com/util-linux/util-linux)
 - macOS with `diskutil`
 
 https://github.com/user-attachments/assets/c6f780ab-458b-420f-85cf-2fc45fcfe3a2
@@ -15,7 +12,7 @@ https://github.com/user-attachments/assets/c6f780ab-458b-420f-85cf-2fc45fcfe3a2
 ## Installation
 
 ```sh
-ya pack -a yazi-rs/plugins:mount
+ya pkg add yazi-rs/plugins:mount
 ```
 
 ## Usage
@@ -23,9 +20,9 @@ ya pack -a yazi-rs/plugins:mount
 Add this to your `~/.config/yazi/keymap.toml`:
 
 ```toml
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on  = "M"
-run = 'plugin mount'
+run = "plugin mount"
 ```
 
 Available keybindings:
@@ -37,7 +34,7 @@ Available keybindings:
 | <kbd>j</kbd> | <kbd>↓</kbd>  | Move down             |
 | <kbd>l</kbd> | <kbd>→</kbd>  | Enter the mount point |
 | <kbd>m</kbd> | -             | Mount the partition   |
-| <kbd>M</kbd> | -             | Unmount the partition |
+| <kbd>u</kbd> | -             | Unmount the partition |
 | <kbd>e</kbd> | -             | Eject the disk        |
 
 ## TODO

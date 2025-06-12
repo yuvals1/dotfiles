@@ -2,7 +2,7 @@
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
-[manager]
+[mgr]
 ratio = [1, 3, 4]
 sort_by = "mtime"
 sort_sensitive = false
@@ -280,6 +280,6 @@ run = "git"
 name = "*"
 run = "my_linemode"
 
-# [[plugin.prepend_previewers]]
-# name = "*/"
-# run = "eza-preview"
+[[plugin.prepend_previewers]]
+name = "*/"
+run = "eza-preview"

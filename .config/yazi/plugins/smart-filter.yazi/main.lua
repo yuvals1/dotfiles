@@ -1,4 +1,4 @@
---- @since 25.2.7
+--- @since 25.5.28
 
 local hovered = ya.sync(function()
 	local h = cx.active.current.hovered
@@ -28,20 +28,20 @@ local function entry()
 	while true do
 		local value, event = input:recv()
 		if event ~= 1 and event ~= 3 then
-			ya.manager_emit("escape", { filter = true })
+			ya.emit("escape", { filter = true })
 			break
 		end
 
-		ya.manager_emit("filter_do", { value, smart = true })
+		ya.emit("filter_do", { value, smart = true })
 
 		local h = hovered()
 		if h.unique and h.is_dir then
-			ya.manager_emit("escape", { filter = true })
-			ya.manager_emit("enter", {})
+			ya.emit("escape", { filter = true })
+			ya.emit("enter", {})
 			input = prompt()
 		elseif event == 1 then
-			ya.manager_emit("escape", { filter = true })
-			ya.manager_emit(h.is_dir and "enter" or "open", { h.url })
+			ya.emit("escape", { filter = true })
+			ya.emit(h.is_dir and "enter" or "open", { h.url })
 		end
 	end
 end

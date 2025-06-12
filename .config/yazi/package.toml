@@ -1,67 +1,67 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "e4aaf43"
-hash = "284f6694e3b1a4afd686acf1052acd90"
+rev = "aeca767"
+hash = "47865a70cade14a0b9b6bc6a54f16bdb"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:jump-to-char"
-rev = "e4aaf43"
-hash = "72c66a0b3d60f8377eb9db5e1d8b60b2"
+rev = "aeca767"
+hash = "30fc0b37f03a597b92d387268319450f"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "e4aaf43"
-hash = "e9cf1bfc03de7fee0f1d4260da0d1dfd"
+rev = "aeca767"
+hash = "bf6f074cd41ee33c3360341d168f9733"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "e4aaf43"
-hash = "4c7e8fd0266eedee7b619d966bd2d025"
+rev = "aeca767"
+hash = "d0ad0c1946b46a30c8489735fe8de41c"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "e4aaf43"
-hash = "882ed23839778f82dc137248979c8681"
+rev = "aeca767"
+hash = "3996fc74044bc44144b323686f887e1"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-filter"
-rev = "e4aaf43"
-hash = "ea24edab4a62c94dbd205adfb6f2c08d"
+rev = "aeca767"
+hash = "4d82cd9e7534d976f000edf9c0f68d8f"
 
 [[plugin.deps]]
 use = "GianniBYoung/rsync"
-rev = "3f431aa"
-hash = "1854a5a30d23e84bc8df24700f27957b"
+rev = "55631aa"
+hash = "fb38b3c546e6594961b335cee4eaa340"
 
 [[plugin.deps]]
 use = "ahkohd/eza-preview"
-rev = "5ef05bc"
-hash = "72355a6c8b7c8de6ed4dda0f98f86fee"
+rev = "7a93433"
+hash = "22e1bd3dd03894746a3540b5f3729d0c"
 
 [[plugin.deps]]
 use = "lpnh/fg"
-rev = "9bba743"
-hash = "5c395bf9b8ef3d4701ac9bdbc963c4c1"
+rev = "6d5e469"
+hash = "d8455f929580ec602b4d0bbd8e96711"
 
 [[plugin.deps]]
 use = "lpanebr/yazi-plugins:first-non-directory"
-rev = "7af4fed"
-hash = "55796171ddbc142daf7f7585fc879c1a"
+rev = "ca18a2c"
+hash = "5c20ffa5171dab34042e03d273dddc5b"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "e4aaf43"
-hash = "cf3f5c20e1b33048cb19bb1e0bba90ec"
+rev = "aeca767"
+hash = "277ba273e5d3d647feb5808d0fe4e4e0"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mactag"
-rev = "e4aaf43"
-hash = "3fee7f91058b2be662623cffcc9b0a10"
+rev = "aeca767"
+hash = "6e0cbddb97038ea95f04f9de0944c175"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:toggle-pane"
-rev = "5186af7"
-hash = "2391805528b59d562a51f9b33f4a8236"
+rev = "aeca767"
+hash = "d5d4f3527592da5fbe77fd6f51815f80"
 
 [[plugin.deps]]
 use = "h-hg/yamb"
@@ -70,13 +70,18 @@ hash = "7cc42012a7c2099f80064d228feb8d44"
 
 [[plugin.deps]]
 use = "boydaihungst/simple-tag"
-rev = "837f702"
-hash = "e1c65491ab72954e1607a25b2e49a936"
+rev = "2bc47d1"
+hash = "7faa45bbce138653868377c985223dac"
 
 [[plugin.deps]]
 use = "stelcodes/bunny"
-rev = "a64f32a"
-hash = "22d9e6f72230be88ab322040626623a"
+rev = "a0b4e18"
+hash = "7acba2bb504c67dd7f2da135b88aae1b"
+
+[[plugin.deps]]
+use = "lpnh/fr"
+rev = "6d5e469"
+hash = "d8455f929580ec602b4d0bbd8e96711"
 
 [flavor]
 deps = []

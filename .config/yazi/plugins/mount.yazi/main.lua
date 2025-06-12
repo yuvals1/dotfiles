@@ -1,3 +1,5 @@
+--- @since 25.5.28
+
 local toggle_ui = ya.sync(function(self)
 	if self.children then
 		Modal:children_remove(self.children)
@@ -10,7 +12,7 @@ end)
 
 local subscribe = ya.sync(function(self)
 	ps.unsub("mount")
-	ps.sub("mount", function() ya.manager_emit("plugin", { self._id, args = "refresh" }) end)
+	ps.sub("mount", function() ya.emit("plugin", { self._id, "refresh" }) end)
 end)
 
 local update_partitions = ya.sync(function(self, partitions)
@@ -36,14 +38,14 @@ local M = {
 
 		{ on = "k", run = "up" },
 		{ on = "j", run = "down" },
-		{ on = "l", run = "right" },
+		{ on = "l", run = { "enter", "quit" } },
 
 		{ on = "<Up>", run = "up" },
 		{ on = "<Down>", run = "down" },
-		{ on = "<Right>", run = "right" },
+		{ on = "<Right>", run = { "enter", "quit" } },
 
 		{ on = "m", run = "mount" },
-		{ on = "M", run = "unmount" },
+		{ on = "u", run = "unmount" },
 		{ on = "e", run = "eject" },
 	},
 }
@@ -87,12 +89,12 @@ function M:entry(job)
 	local tx2, rx2 = ya.chan("mpsc")
 	function producer()
 		while true do
-			local cand = self.keys[ya.which { cands = self.keys, silent = true }]
-			if cand then
-				tx1:send(cand.run)
-				if cand.run == "quit" then
+			local cand = self.keys[ya.which { cands = self.keys, silent = true }] or { run = {} }
+			for _, r in ipairs(type(cand.run) == "table" and cand.run or { cand.run }) do
+				tx1:send(r)
+				if r == "quit" then
 					toggle_ui()
-					break
+					return
 				end
 			end
 		end
@@ -108,10 +110,10 @@ function M:entry(job)
 				update_cursor(-1)
 			elseif run == "down" then
 				update_cursor(1)
-			elseif run == "right" then
+			elseif run == "enter" then
 				local active = active_partition()
 				if active and active.dist then
-					ya.manager_emit("cd", { active.dist })
+					ya.emit("cd", { active.dist })
 				end
 			else
 				tx2:send(run)
@@ -142,20 +144,22 @@ function M:reflow() return { self } end
 function M:redraw()
 	local rows = {}
 	for _, p in ipairs(self.partitions or {}) do
-		if p.sub == "" then
+		if not p.sub then
 			rows[#rows + 1] = ui.Row { p.main }
+		elseif p.sub == "" then
+			rows[#rows + 1] = ui.Row { p.main, p.label or "", p.dist or "", p.fstype or "" }
 		else
-			rows[#rows + 1] = ui.Row { p.sub, p.label or "", p.dist or "", p.fstype or "" }
+			rows[#rows + 1] = ui.Row { "  " .. p.sub, p.label or "", p.dist or "", p.fstype or "" }
 		end
 	end
 
 	return {
 		ui.Clear(self._area),
-		ui.Border(ui.Border.ALL)
+		ui.Border(ui.Edge.ALL)
 			:area(self._area)
 			:type(ui.Border.ROUNDED)
 			:style(ui.Style():fg("blue"))
-			:title(ui.Line("Mount"):align(ui.Line.CENTER)),
+			:title(ui.Line("Mount"):align(ui.Align.CENTER)),
 		ui.Table(rows)
 			:area(self._area:pad(ui.Pad(1, 2, 1, 2)))
 			:header(ui.Row({ "Src", "Label", "Dist", "FSType" }):style(ui.Style():bold()))
@@ -174,22 +178,24 @@ function M.obtain()
 	local tbl = {}
 	local last
 	for _, p in ipairs(fs.partitions()) do
-		local main, sub
-		if ya.target_os() == "macos" then
-			main, sub = p.src:match("^(/dev/disk%d+)(.+)$")
-		else
-			main, sub = p.src:match("^(/dev/[a-z]+[a-z])(%d+)$")
-		end
-		if sub then
-			if last ~= main then
+		local main, sub = M.split(p.src)
+		if main and last ~= main then
+			if p.src == main then
+				last, p.main, p.sub, tbl[#tbl + 1] = p.src, p.src, "", p
+			else
 				last, tbl[#tbl + 1] = main, { src = main, main = main, sub = "" }
 			end
-			p.main, p.sub, tbl[#tbl + 1] = main, "  " .. sub, p
+		end
+		if sub then
+			if tbl[#tbl].sub == "" and tbl[#tbl].main == main then
+				tbl[#tbl].sub = nil
+			end
+			p.main, p.sub, tbl[#tbl + 1] = main, sub, p
 		end
 	end
-	table.sort(tbl, function(a, b)
+	table.sort(M.fillin(tbl), function(a, b)
 		if a.main == b.main then
-			return a.sub < b.sub
+			return (a.sub or "") < (b.sub or "")
 		else
 			return a.main > b.main
 		end
@@ -197,24 +203,67 @@ function M.obtain()
 	return tbl
 end
 
+function M.split(src)
+	local pats = {
+		{ "^/dev/sd[a-z]", "%d+$" }, -- /dev/sda1
+		{ "^/dev/nvme%d+n%d+", "p%d+$" }, -- /dev/nvme0n1p1
+		{ "^/dev/mmcblk%d+", "p%d+$" }, -- /dev/mmcblk0p1
+		{ "^/dev/disk%d+", ".+$" }, -- /dev/disk1s1
+	}
+	for _, p in ipairs(pats) do
+		local main = src:match(p[1])
+		if main then
+			return main, src:sub(#main + 1):match(p[2])
+		end
+	end
+end
+
+function M.fillin(tbl)
+	if ya.target_os() ~= "linux" then
+		return tbl
+	end
+
+	local sources, indices = {}, {}
+	for i, p in ipairs(tbl) do
+		if p.sub and not p.fstype then
+			sources[#sources + 1], indices[p.src] = p.src, i
+		end
+	end
+	if #sources == 0 then
+		return tbl
+	end
+
+	local output, err = Command("lsblk"):arg({ "-p", "-o", "name,fstype", "-J" }):arg(sources):output()
+	if err then
+		ya.dbg("Failed to fetch filesystem types for unmounted partitions: " .. err)
+		return tbl
+	end
+
+	local t = ya.json_decode(output and output.stdout or "")
+	for _, p in ipairs(t and t.blockdevices or {}) do
+		tbl[indices[p.name]].fstype = p.fstype
+	end
+	return tbl
+end
+
 function M.operate(type)
 	local active = active_partition()
 	if not active then
 		return
-	elseif active.sub == "" then
+	elseif not active.sub then
 		return -- TODO: mount/unmount main disk
 	end
 
 	local output, err
 	if ya.target_os() == "macos" then
-		output, err = Command("diskutil"):args({ type, active.src }):output()
+		output, err = Command("diskutil"):arg({ type, active.src }):output()
 	end
 	if ya.target_os() == "linux" then
 		if type == "eject" then
-			Command("udisksctl"):args({ "unmount", "-b", active.src }):status()
-			output, err = Command("udisksctl"):args({ "power-off", "-b", active.src }):output()
+			Command("udisksctl"):arg({ "unmount", "-b", active.src }):status()
+			output, err = Command("udisksctl"):arg({ "power-off", "-b", active.src }):output()
 		else
-			output, err = Command("udisksctl"):args({ type, "-b", active.src }):output()
+			output, err = Command("udisksctl"):arg({ type, "-b", active.src }):output()
 		end
 	end
 
@@ -225,7 +274,7 @@ function M.operate(type)
 	end
 end
 
-function M.fail(s, ...) ya.notify { title = "Mount", content = string.format(s, ...), timeout = 10, level = "error" } end
+function M.fail(...) ya.notify { title = "Mount", content = string.format(...), timeout = 10, level = "error" } end
 
 function M:click() end
 

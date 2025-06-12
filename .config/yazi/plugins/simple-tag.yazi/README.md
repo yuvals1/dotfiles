@@ -1,8 +1,10 @@
 # simple-tag
 
 <!--toc:start-->
+
 - [simple-tag](#simple-tag)
   - [Overview](#overview)
+  - [Features](#features)
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Previews](#previews)
@@ -12,7 +14,7 @@
     - [Keybindings in `keymap.toml`](#keybindings-in-keymaptoml)
     - [Customizing the Theme for tag hints window](#customizing-the-theme-for-tag-hints-window)
   - [For Developers](#for-developers)
-<!--toc:end-->
+  <!--toc:end-->
 
 ## Overview
 
@@ -20,10 +22,20 @@ simple-tag is a Yazi plugin that allows you to add tags to files and folders. Ea
 
 > Disclaimer: This is not mactag and does not utilize mactag.
 
+## Features
+
+- Toggle, Add, Remove, Replace, Clear, Edit Tag(s). Supported input multiple tags.
+- Filter Files/Folders by Tag(s).
+- Visual Selection files/folders by Tag(s) (Replace, Unite, Subtract, Intersect, Exclude). Undo/Redo visual selection.
+- Change Tag Icon/Text/Hidden Indicator.
+- Tag Hints, will show up whenever you need to input or select tag(s).
+- Automatically transfer tags after moving/renaming/bulk-renaming files/folders.
+- Automatically clear tags when files/folders are deleted or trashed.
+
 ## Requirements
 
 > [!IMPORTANT]
-> Minimum supported version: Yazi v25.2.7.
+> Minimum supported version: Yazi v25.5.28.
 
 - [Yazi](https://github.com/sxyazi/yazi)
 - Tested on Linux
@@ -33,6 +45,8 @@ simple-tag is a Yazi plugin that allows you to add tags to files and folders. Ea
 Install the plugin:
 
 ```sh
+ya pkg add boydaihungst/simple-tag
+# or
 ya pack -a boydaihungst/simple-tag
 ```
 
@@ -124,7 +138,7 @@ require("simple-tag"):setup({
 
   -- Set tag colors
   colors = { -- (Optional)
-	  -- Set this same value with `theme.toml` > [manager] > hovered > reversed
+	  -- Set this same value with `theme.toml` > [mgr] > hovered > reversed
 	  -- Default theme use "reversed = true".
 	  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-config/preset/theme-dark.toml#L25
 	  reversed = true, -- (Optional)
@@ -189,7 +203,7 @@ Since Yazi prioritizes the first matching key, `prepend_keymap` takes precedence
 Or you can use `keymap` to replace all other keys
 
 ```toml
-[manager]
+[mgr]
   prepend_keymap = [
     # Tagging plugin
 
@@ -293,12 +307,6 @@ Or you can use `keymap` to replace all other keys
     # or → Filter files which contain at least one of selected tags.
 
     # Filter files/folders by tags
-    # NOTE: For yazi < v25.3.7
-    #       This use a hacky way to filter files, so it may not work if
-    #       there are too many files matched the selected  tags.
-    #       Work just file if there are less than 5000 files.
-    #       Well,  it depends on your system and the length of file's name.
-    # NOTE: For yazi version >= v25.3.7, then this limitation is gone, you can search as many files as you want.
 
     # Filter files/folders by a tag (press any tag key)
     # A tag hint window will show up.
@@ -392,7 +400,7 @@ You can trigger this plugin programmatically:
 	args = args .. " " .. ya.quote("--mode=unite")
 -- another arguments
 -- args = args .. " " .. ya.quote("--tag=q")
-	ya.manager_emit("plugin", {
+	ya.emit("plugin", {
 		simple_tag._id,
 		args,
 	})
@@ -405,7 +413,7 @@ You can trigger this plugin programmatically:
   for _, url in ipairs(files_to_clear_tags) do
 	  args = args .. " " .. ya.quote(url)
   end
-  ya.manager_emit("plugin", {
+  ya.emit("plugin", {
 		simple_tag._id,
 	  args,
   })
