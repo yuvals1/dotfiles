@@ -675,3 +675,10 @@ desc = "Undos/Redos the last selection action"
 on = ";"
 run = "plugin bunny"
 desc = "Start bunny.yazi"
+
+[[mgr.prepend_keymap]]
+on = "F"
+run = "plugin smart-filter"
+desc = "Smart filter"
+
+
