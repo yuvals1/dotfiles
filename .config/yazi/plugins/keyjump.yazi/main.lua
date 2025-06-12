@@ -7,7 +7,7 @@ local SPECIAL_KEYS = {
     "<A-j>", "<A-k>",
     "z",
     "<C-j>", "<C-k>",
-    "q", 'f'  -- <-- add q here
+    "q"
 }
 
 
