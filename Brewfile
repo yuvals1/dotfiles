@@ -12,7 +12,6 @@ brew 'zsh'
 brew 'fzf'
 brew 'bat'
 brew 'eza'
-brew 'yazi'
 brew 'wget'
 # brew 'mpv'        # Added for video playback
 # brew 'mediainfo'  # Added for media file information
@@ -79,3 +78,6 @@ brew 'docker-compose'
 brew 'gh'
 # SML/NJ
 cask 'smlnj'
+
+# Sublime Text
+cask 'sublime-text'
