@@ -140,7 +140,7 @@ local function setup(st, opts)
 
 	local t = th.git or {}
 	local styles = {
-		[CODES.ignored] = t.ignored and ui.Style(t.ignored) or ui.Style():fg("darkgray"),
+		[CODES.ignored] = t.ignored and ui.Style(t.ignored) or ui.Style():fg("white"),
 		[CODES.untracked] = t.untracked and ui.Style(t.untracked) or ui.Style():fg("magenta"),
 		[CODES.modified] = t.modified and ui.Style(t.modified) or ui.Style():fg("yellow"),
 		[CODES.added] = t.added and ui.Style(t.added) or ui.Style():fg("green"),
@@ -148,12 +148,12 @@ local function setup(st, opts)
 		[CODES.updated] = t.updated and ui.Style(t.updated) or ui.Style():fg("yellow"),
 	}
 	local signs = {
-		[CODES.ignored] = t.ignored_sign or "",
-		[CODES.untracked] = t.untracked_sign or "?",
-		[CODES.modified] = t.modified_sign or "",
-		[CODES.added] = t.added_sign or "",
-		[CODES.deleted] = t.deleted_sign or "",
-		[CODES.updated] = t.updated_sign or "",
+		[CODES.ignored] = t.ignored_sign or "",
+		[CODES.untracked] = t.untracked_sign or "",
+		[CODES.modified] = t.modified_sign or "",
+		[CODES.added] = t.added_sign or "",
+		[CODES.deleted] = t.deleted_sign or "",
+		[CODES.updated] = t.updated_sign or "U",
 	}
 
 	Linemode:children_add(function(self)
