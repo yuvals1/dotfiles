@@ -13,7 +13,7 @@ end)
 
 -- Check if a path is a directory using Command
 local function is_directory(path)
-  local child, err = Command('test'):args({ '-d', path }):stdout(Command.PIPED):stderr(Command.PIPED):spawn()
+  local child, err = Command('test'):arg({ '-d', path }):stdout(Command.PIPED):stderr(Command.PIPED):spawn()
 
   if not child then
     return false
@@ -31,7 +31,7 @@ local function get_file_info(path)
   end
 
   -- Try to open the file with a time limit by using Command
-  local child, err = Command('wc'):args({ '-l', path }):stdout(Command.PIPED):stderr(Command.PIPED):spawn()
+  local child, err = Command('wc'):arg({ '-l', path }):stdout(Command.PIPED):stderr(Command.PIPED):spawn()
 
   if not child then
     return 'N/A'
@@ -84,7 +84,7 @@ local function entry()
 
   -- Create fzf command
   local child, err = Command('fzf')
-    :args({
+    :arg({
       '--delimiter',
       '\t', -- Use tab as delimiter - standard for FZF
       '--with-nth',
