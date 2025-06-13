@@ -1,3 +1,14 @@
+-- Configure git signs before setup
+th = th or {}
+th.git = {
+	modified_sign = "M",
+	added_sign = "A", 
+	untracked_sign = "?",
+	ignored_sign = "!",
+	deleted_sign = "D",
+	updated_sign = "U"
+}
+
 require('git'):setup {}
 -- require('my_linemode'):setup()
 require('full-border'):setup()
