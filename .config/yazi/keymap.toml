@@ -701,6 +701,7 @@ on = ["u", "a"]
 run = "plugin fr rga"
 desc = "Search file by content (rga)"
 
+
 [[mgr.prepend_keymap]]
 on = "p"
 run = "plugin smart-paste"
@@ -715,3 +716,8 @@ desc = "regular paste"
 on = "b"
 run = "open --interactive extract"
 desc = "Extract archive"
+
+[[mgr.prepend_keymap]]
+on = "<C-d>"
+run = "plugin diff"
+desc = "Diff the selected with the hovered file"
