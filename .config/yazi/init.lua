@@ -121,7 +121,7 @@ require('bunny'):setup {
   },
   desc_strategy = 'path',
   notify = false,
-  fuzzy_cmd = 'fzf',
+  fuzzy_cmd = "fzf --preview='echo {} | cut -f2 | xargs -I@ eza --tree --level=2 --color=always --icons --git @'",
 }
 
 require('eza-preview'):setup {

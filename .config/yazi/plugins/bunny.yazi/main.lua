@@ -257,10 +257,45 @@ end
 -- Returns nil if fzf command failed or user exited with escape key
 local select_fuzzy = function(hops, config)
   local permit = ya.hide()
-  local child, spawn_err =
-      Command(config.fuzzy_cmd):stdin(Command.PIPED):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  
+  -- Parse the fuzzy command string to separate command and arguments
+  local cmd_parts = {}
+  local in_quotes = false
+  local current_part = ""
+  local quote_char = nil
+  
+  for i = 1, #config.fuzzy_cmd do
+    local char = config.fuzzy_cmd:sub(i, i)
+    if (char == "'" or char == '"') and (not in_quotes or char == quote_char) then
+      if not in_quotes then
+        in_quotes = true
+        quote_char = char
+      else
+        in_quotes = false
+        quote_char = nil
+      end
+    elseif char == " " and not in_quotes then
+      if current_part ~= "" then
+        table.insert(cmd_parts, current_part)
+        current_part = ""
+      end
+    else
+      current_part = current_part .. char
+    end
+  end
+  if current_part ~= "" then
+    table.insert(cmd_parts, current_part)
+  end
+  
+  -- Build command with arguments
+  local cmd = Command(cmd_parts[1])
+  for i = 2, #cmd_parts do
+    cmd = cmd:arg(cmd_parts[i])
+  end
+  
+  local child, spawn_err = cmd:stdin(Command.PIPED):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
   if not child then
-    fail("Command `%s` failed with code %s. Do you have it installed?", config.fuzzy_cmd, spawn_err.code)
+    fail("Command `%s` failed with code %s. Do you have it installed?", cmd_parts[1], spawn_err and spawn_err.code or "unknown")
     return
   end
   
