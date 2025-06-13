@@ -36,6 +36,14 @@ local get_cwd = ya.sync(function(state)
   return tostring(cx.active.current.cwd)
 end)
 
+local get_hovered = ya.sync(function(state)
+  local hovered = cx.active.current.hovered
+  if hovered then
+    return tostring(hovered.url), hovered.cha.is_dir
+  end
+  return nil, false
+end)
+
 local get_current_tab_idx = ya.sync(function(state)
   return cx.tabs.idx
 end)
@@ -126,21 +134,39 @@ local function save_hops(hops)
   file:close()
 end
 
--- Save current directory as a hop
-local function save_current_directory(config)
-  local cwd = get_cwd()
+-- Save hovered directory as a hop
+local function save_hovered_directory(config)
+  local hovered_path, is_dir = get_hovered()
+  local path_to_save = nil
+  
+  if hovered_path and is_dir then
+    -- Save the hovered directory
+    path_to_save = hovered_path
+  elseif hovered_path and not is_dir then
+    -- If hovering a file, save its parent directory
+    local parent = Url(hovered_path):parent()
+    if parent then
+      path_to_save = tostring(parent)
+    end
+  end
+  
+  -- Fallback to current directory if nothing is hovered
+  if not path_to_save then
+    path_to_save = get_cwd()
+  end
+  
   local hops = load_hops()
   
   -- Update or create entry
-  local existing = hops[cwd]
-  hops[cwd] = {
+  local existing = hops[path_to_save]
+  hops[path_to_save] = {
     last_used = os.time(),
     count = existing and existing.count or 0,
-    desc = existing and existing.desc or path_to_desc(cwd, config.desc_strategy)
+    desc = existing and existing.desc or path_to_desc(path_to_save, config.desc_strategy)
   }
   
   save_hops(hops)
-  info("Saved hop: " .. hops[cwd].desc)
+  info("Saved hop: " .. hops[path_to_save].desc)
 end
 
 -- Fuzzy search for deletion
@@ -492,7 +518,7 @@ return {
     local action = job.args[1]
     
     if action == "save" then
-      save_current_directory(config)
+      save_hovered_directory(config)
     elseif action == "delete" then
       delete_hop_fuzzy(config)
     else
