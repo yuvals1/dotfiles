@@ -692,7 +692,7 @@ run = "plugin chmod"
 desc = "Chmod on selected files"
 
 [[mgr.prepend_keymap]]
-on = ["u", "r"]
+on = "Z"
 run = "plugin fr rg"
 desc = "Search file by content (rg)"
 
