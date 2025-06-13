@@ -283,3 +283,7 @@ run = "git"
 # [[plugin.prepend_previewers]]
 # name = "*/"
 # run = "eza-preview"
+
+[[plugin.append_previewers]]
+name = "*"
+run = "hexyl"
