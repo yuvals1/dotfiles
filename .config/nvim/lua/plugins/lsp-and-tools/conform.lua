@@ -23,6 +23,7 @@ function M.setup(languages)
       format_on_save = function(bufnr)
         -- Define the list of filetypes to NOT format on save
         local no_format_on_save_filetypes = {
+          'lua',
           'go',
           'ruby',
           'dockerfile',
