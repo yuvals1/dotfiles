@@ -123,3 +123,8 @@ require('bunny'):setup {
   notify = false,
   fuzzy_cmd = 'fzf',
 }
+
+require('eza-preview'):setup {
+  -- Set initial state to hide hidden files
+  all = false,
+}
