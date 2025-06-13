@@ -710,3 +710,8 @@ desc = "Paste into the hovered directory or CWD"
 on = "P"
 run = "paste"
 desc = "regular paste"
+
+[[mgr.prepend_keymap]]
+on = "b"
+run = "open --interactive extract"
+desc = "Extract archive"
