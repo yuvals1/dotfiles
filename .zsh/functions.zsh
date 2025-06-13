@@ -200,3 +200,17 @@ fif() {
             rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || \
             rg --ignore-case --pretty --context 10 '$1' {}"
 }
+
+# Folder picker with eza preview
+fzd() {
+    local selected
+    if [[ $# -eq 0 ]]; then
+        # If no arguments, use fd to find directories
+        selected=$(fd --type d --hidden --exclude .git | fzf --preview='eza -la --color=always --icons --git --group-directories-first {}')
+    else
+        # If arguments provided, use them as folder options
+        selected=$(printf '%s\n' "$@" | fzf --preview='eza -la --color=always --icons --git --group-directories-first {}')
+    fi
+    
+    [[ -n "$selected" ]] && cd "$selected"
+}
