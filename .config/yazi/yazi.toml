@@ -280,6 +280,6 @@ run = "git"
 name = "*"
 run = "my_linemode"
 
-[[plugin.prepend_previewers]]
-name = "*/"
-run = "eza-preview"
+# [[plugin.prepend_previewers]]
+# name = "*/"
+# run = "eza-preview"
