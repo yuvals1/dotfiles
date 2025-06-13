@@ -83,8 +83,8 @@ keymap = [
   { on = "D", run = "remove --permanently", desc = "Permanently delete selected files" },
   { on = "a", run = "create", desc = "Create a file (ends with / for directories)" },
   { on = "r", run = "rename --cursor=before_ext", desc = "Rename selected file(s)" },
-  { on = ";", run = "shell --interactive", desc = "Run a shell command" },
-  { on = ":", run = "shell --block --interactive", desc = "Run a shell command (block until finishes)" },
+  # { on = ";", run = "shell --interactive", desc = "Run a shell command" },
+  # { on = ":", run = "shell --block --interactive", desc = "Run a shell command (block until finishes)" },
   { on = ".", run = "hidden toggle", desc = "Toggle the visibility of hidden files" },
   # { on = "s", run = "search --via=fd", desc = "Search files by name via fd" },
   # { on = "S", run = "search --via=rg", desc = "Search files by content via ripgrep" },
@@ -672,14 +672,19 @@ run = "plugin simple-tag -- undo-select"
 desc = "Undos/Redos the last selection action"
 
 [[mgr.prepend_keymap]]
+desc = "Bunny hop (fuzzy search)"
 on = ";"
 run = "plugin bunny"
-desc = "Start bunny.yazi"
 
 [[mgr.prepend_keymap]]
-desc = "Start bunny.yazi fuzzy search"
-on = ':'
-run = "plugin bunny fuzzy"
+desc = "Save current directory"
+on = [":", "s"]
+run = "plugin bunny save"
+
+[[mgr.prepend_keymap]]
+desc = "Delete a hop"
+on = [":", "d"]
+run = "plugin bunny delete"
 
 [[mgr.prepend_keymap]]
 on = "F"

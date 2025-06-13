@@ -20,6 +20,7 @@ local function debug(...)
   end
   ya.dbg("BUNNY.YAZI", table.unpack(processed_args))
 end
+
 local function fail(s, ...) ya.notify { title = "bunny.yazi", content = string.format(s, ...), timeout = 4, level = "error" } end
 local function info(s, ...) ya.notify { title = "bunny.yazi", content = string.format(s, ...), timeout = 2, level = "info" } end
 
@@ -32,7 +33,7 @@ local set_state = ya.sync(function(state, attr, value)
 end)
 
 local get_cwd = ya.sync(function(state)
-  return tostring(cx.active.current.cwd) -- Url objects are evil >.<"
+  return tostring(cx.active.current.cwd)
 end)
 
 local get_current_tab_idx = ya.sync(function(state)
@@ -68,7 +69,6 @@ local function path_to_desc(path, strategy)
   local home = os.getenv("HOME")
   if home and home ~= "" then
     local startPos, endPos = string.find(path, home)
-    -- Only substitute if the match is from the start of path, very important
     if startPos == 1 then
       return "~" .. path:sub(endPos + 1)
     end
@@ -76,242 +76,84 @@ local function path_to_desc(path, strategy)
   return tostring(path)
 end
 
-local function sort_hops(hops)
-  local function convert_key(key)
-    local t = type(key)
-    if t == "table" then
-      -- If table, sort by first key string
-      return key[1]
-    elseif t == "string" and string.lower(key) ~= key then
-      -- If uppercase letter (signifying an ephemeral hop), prepend "z"
-      -- so it gets sorted after lowercase persistent hops
-      return "z" .. key
-    end
-    return key
-  end
-  table.sort(hops, function(x, y)
-    return convert_key(x.key) < convert_key(y.key)
-  end)
-  return hops
-end
-
--- Load usage data from file
-local function load_usage_data()
+-- Load hops from single history file
+local function load_hops()
   local home = os.getenv("HOME")
   if not home then return {} end
   
-  local usage_file = home .. "/.local/share/yazi/bunny-usage.json"
-  local file = io.open(usage_file, "r")
+  local history_file = home .. "/.local/share/yazi/bunny-history.json"
+  local file = io.open(history_file, "r")
   if not file then return {} end
   
   local content = file:read("*all")
   file:close()
   
   -- Simple JSON parsing for our use case
-  local usage = {}
-  for path, timestamp, count in string.gmatch(content, '"([^"]+)":%s*{%s*"last_used":%s*(%d+),%s*"count":%s*(%d+)%s*}') do
-    usage[path] = {
+  local hops = {}
+  for path, timestamp, count, desc in string.gmatch(content, '"([^"]+)":%s*{%s*"last_used":%s*(%d+),%s*"count":%s*(%d+),%s*"desc":%s*"([^"]*)"') do
+    hops[path] = {
       last_used = tonumber(timestamp),
-      count = tonumber(count)
+      count = tonumber(count),
+      desc = desc ~= "" and desc or nil
     }
   end
-  return usage
+  return hops
 end
 
--- Save usage data to file
-local function save_usage_data(usage)
+-- Save hops to single history file
+local function save_hops(hops)
   local home = os.getenv("HOME")
   if not home then return end
   
   -- Ensure directory exists
   os.execute("mkdir -p " .. home .. "/.local/share/yazi")
   
-  local usage_file = home .. "/.local/share/yazi/bunny-usage.json"
-  local file = io.open(usage_file, "w")
+  local history_file = home .. "/.local/share/yazi/bunny-history.json"
+  local file = io.open(history_file, "w")
   if not file then return end
   
   -- Simple JSON generation
   file:write("{\n")
   local first = true
-  for path, data in pairs(usage) do
+  for path, data in pairs(hops) do
     if not first then file:write(",\n") end
     first = false
-    file:write(string.format('  "%s": {"last_used": %d, "count": %d}', 
-      path, data.last_used, data.count))
+    local desc = (data.desc or ""):gsub('"', '\\"')
+    file:write(string.format('  "%s": {"last_used": %d, "count": %d, "desc": "%s"}', 
+      path, data.last_used, data.count, desc))
   end
   file:write("\n}\n")
   file:close()
 end
 
--- Load ephemeral hops from file
-local function load_ephemeral_hops()
-  local home = os.getenv("HOME")
-  if not home then return {} end
+-- Save current directory as a hop
+local function save_current_directory(config)
+  local cwd = get_cwd()
+  local hops = load_hops()
   
-  local hops_file = home .. "/.local/share/yazi/bunny-ephemeral-hops.json"
-  local file = io.open(hops_file, "r")
-  if not file then return {} end
-  
-  local content = file:read("*all")
-  file:close()
-  
-  -- Simple JSON parsing for ephemeral hops
-  local hops = {}
-  -- Match pattern: "key": {"path": "...", "desc": "..."}
-  for key, path, desc in string.gmatch(content, '"([^"]+)":%s*{%s*"path":%s*"([^"]+)",%s*"desc":%s*"([^"]*)"') do
-    table.insert(hops, {
-      key = key,
-      path = path,
-      desc = desc ~= "" and desc or nil,
-      ephemeral = true  -- Mark as ephemeral
-    })
-  end
-  return hops
-end
-
--- Save ephemeral hops to file
-local function save_ephemeral_hops(hops)
-  local home = os.getenv("HOME")
-  if not home then return end
-  
-  -- Ensure directory exists
-  os.execute("mkdir -p " .. home .. "/.local/share/yazi")
-  
-  local hops_file = home .. "/.local/share/yazi/bunny-ephemeral-hops.json"
-  local file = io.open(hops_file, "w")
-  if not file then return end
-  
-  -- Simple JSON generation - only save ephemeral hops
-  file:write("{\n")
-  local first = true
-  for _, hop in pairs(hops) do
-    if hop.ephemeral then  -- Only save hops marked as ephemeral
-      if not first then file:write(",\n") end
-      first = false
-      file:write(string.format('  "%s": {"path": "%s", "desc": "%s"}', 
-        hop.key, hop.path, hop.desc or ""))
-    end
-  end
-  file:write("\n}\n")
-  file:close()
-end
-
--- Update usage data
-local function update_usage(path)
-  local usage = get_state("usage") or load_usage_data()
-  usage[path] = {
+  -- Update or create entry
+  local existing = hops[cwd]
+  hops[cwd] = {
     last_used = os.time(),
-    count = (usage[path] and usage[path].count or 0) + 1
+    count = existing and existing.count or 0,
+    desc = existing and existing.desc or path_to_desc(cwd, config.desc_strategy)
   }
-  set_state("usage", usage)
-  save_usage_data(usage)
+  
+  save_hops(hops)
+  info("Saved hop: " .. hops[cwd].desc)
 end
 
-local create_special_hops = function(config)
-  local hops = {}
-  local desc_strategy, tabs, ephemeral = config.desc_strategy, config.tabs, config.ephemeral
-  if ephemeral then
-    table.insert(hops, { key = "<Enter>", desc = "Create hop", path = "__MARK__" })
+-- Fuzzy search for deletion
+local function delete_hop_fuzzy(config)
+  local hops = load_hops()
+  if next(hops) == nil then
+    info("No saved hops to delete")
+    return
   end
-  table.insert(hops, { key = "<Space>", desc = "Fuzzy search", path = "__FUZZY__" })
-  local tabhist = get_state("tabhist")
-  local tab = get_current_tab_idx()
-  if tabhist[tab] and tabhist[tab][2] then
-    local previous_dir = tabhist[tab][2]
-    table.insert(hops, {
-      key = "<Backspace>",
-      path = previous_dir,
-      desc = path_to_desc(previous_dir, desc_strategy)
-    })
-  end
-  if tabs then
-    for idx, tab_path in pairs(get_tabs_as_paths()) do
-      table.insert(hops, {
-        key = tostring(idx),
-        path = tab_path,
-        desc = path_to_desc(tab_path, desc_strategy)
-      })
-    end
-  end
-  return hops
-end
-
-local function validate_options(options)
-  local function validate_key(key)
-    local kt = type(key)
-    if not key then
-      return false, "key is missing"
-    elseif kt == "string" then
-      if utf8.len(key) ~= 1 then
-        return false, "key must be single character"
-      end
-    elseif kt == "table" then
-      if #key == 0 then
-        return false, "key cannot be empty table"
-      end
-      for _, char in pairs(key) do
-        if utf8.len(char) ~= 1 then
-          return false, "key list must contain single characters"
-        end
-      end
-    else
-      return false, "key must be string or table"
-    end
-    return true, ""
-  end
-  if type(options) ~= "table" then
-    return "Invalid config"
-  end
-  local hops, desc_strategy, tabs, ephemeral, fuzzy_cmd, notify =
-      options.hops, options.desc_strategy, options.tabs,
-      options.ephemeral, options.fuzzy_cmd, options.notify
-  -- Validate hops
-  if type(hops) == "table" then
-    local used_keys = {}
-    for idx, hop in pairs(hops) do
-      hop.desc = hop.desc or hop.tag or nil -- used to be tag, allow for backwards compat
-      local key_is_validated, key_err = validate_key(hop.key)
-      local err = 'Invalid "hops" config value: #' .. idx .. " "
-      if not key_is_validated then
-        return err .. key_err
-      elseif not hop.path then
-        return err .. 'path is missing'
-      elseif type(hop.path) ~= "string" or string.len(hop.path) == 0 then
-        return err .. 'path must be non-empty string'
-      elseif hop.desc and (type(hop.desc) ~= "string" or string.len(hop.path) == 0) then
-        return err .. 'desc must be non-empty string'
-      end
-      -- Check for duplicate keys
-      if used_keys[hop.key] then
-        return err .. 'needs unique key'
-      end
-      -- Insert hop keys as table keys to easily check for set membership
-      used_keys[hop.key] = true
-    end
-  else
-    return 'Invalid "hops" config value'
-  end
-  -- Validate other options
-  if desc_strategy ~= nil and desc_strategy ~= "path" and desc_strategy ~= "filename" then
-    return 'Invalid "desc_strategy" config value'
-  elseif tabs ~= nil and type(notify) ~= "boolean" then
-    return 'Invalid "tabs" config value'
-  elseif ephemeral ~= nil and type(notify) ~= "boolean" then
-    return 'Invalid "ephemeral" config value'
-  elseif fuzzy_cmd ~= nil and type(fuzzy_cmd) ~= "string" then
-    return 'Invalid "fuzzy_cmd" config value'
-  elseif notify ~= nil and type(notify) ~= "boolean" then
-    return 'Invalid "notify" config value'
-  end
-end
-
--- https://github.com/sxyazi/yazi/blob/main/yazi-plugin/preset/plugins/fzf.lua
--- https://github.com/sxyazi/yazi/blob/main/yazi-plugin/src/process/child.rs
--- Returns nil if fzf command failed or user exited with escape key
-local select_fuzzy = function(hops, config)
+  
   local permit = ya.hide()
   
-  -- Parse the fuzzy command string to separate command and arguments
+  -- Parse fuzzy command
   local cmd_parts = {}
   local in_quotes = false
   local current_part = ""
@@ -340,7 +182,96 @@ local select_fuzzy = function(hops, config)
     table.insert(cmd_parts, current_part)
   end
   
-  -- Build command with arguments
+  -- Build command
+  local cmd = Command(cmd_parts[1])
+  for i = 2, #cmd_parts do
+    cmd = cmd:arg(cmd_parts[i])
+  end
+  -- Add prompt for deletion
+  cmd = cmd:arg("--prompt=Delete hop: ")
+  
+  local child, spawn_err = cmd:stdin(Command.PIPED):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+  if not child then
+    permit:drop()
+    fail("Command `%s` failed. Do you have it installed?", cmd_parts[1])
+    return
+  end
+  
+  -- Build input for fuzzy search
+  local entries = {}
+  for path, data in pairs(hops) do
+    table.insert(entries, {
+      path = path,
+      desc = data.desc or path_to_desc(path, config.desc_strategy),
+      last_used = data.last_used
+    })
+  end
+  
+  -- Sort by recency
+  table.sort(entries, function(a, b)
+    return a.last_used > b.last_used
+  end)
+  
+  -- Build fuzzy input
+  local input_lines = {}
+  for _, entry in ipairs(entries) do
+    local line = entry.desc .. string.rep(" ", 30 - #entry.desc) .. "\t" .. entry.path
+    table.insert(input_lines, line)
+  end
+  
+  child:write_all(table.concat(input_lines, "\n"))
+  child:flush()
+  local output, _ = child:wait_with_output()
+  permit:drop()
+  
+  if not output.status.success then
+    return -- User cancelled
+  end
+  
+  -- Parse result
+  local desc, path = string.match(output.stdout, "^(.-) *\t(.-)\n$")
+  if path and path ~= "" then
+    hops[path] = nil
+    save_hops(hops)
+    info("Deleted hop: " .. desc)
+  end
+end
+
+-- Main fuzzy search and cd
+local function fuzzy_search_and_cd(config)
+  local hops = load_hops()
+  local permit = ya.hide()
+  
+  -- Parse fuzzy command
+  local cmd_parts = {}
+  local in_quotes = false
+  local current_part = ""
+  local quote_char = nil
+  
+  for i = 1, #config.fuzzy_cmd do
+    local char = config.fuzzy_cmd:sub(i, i)
+    if (char == "'" or char == '"') and (not in_quotes or char == quote_char) then
+      if not in_quotes then
+        in_quotes = true
+        quote_char = char
+      else
+        in_quotes = false
+        quote_char = nil
+      end
+    elseif char == " " and not in_quotes then
+      if current_part ~= "" then
+        table.insert(cmd_parts, current_part)
+        current_part = ""
+      end
+    else
+      current_part = current_part .. char
+    end
+  end
+  if current_part ~= "" then
+    table.insert(cmd_parts, current_part)
+  end
+  
+  -- Build command
   local cmd = Command(cmd_parts[1])
   for i = 2, #cmd_parts do
     cmd = cmd:arg(cmd_parts[i])
@@ -348,147 +279,141 @@ local select_fuzzy = function(hops, config)
   
   local child, spawn_err = cmd:stdin(Command.PIPED):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
   if not child then
-    fail("Command `%s` failed with code %s. Do you have it installed?", cmd_parts[1], spawn_err and spawn_err.code or "unknown")
+    permit:drop()
+    fail("Command `%s` failed. Do you have it installed?", cmd_parts[1])
     return
   end
   
-  -- Load usage data for sorting
-  local usage = get_state("usage") or load_usage_data()
-  
-  -- Build entries with usage data
-  local seen_paths = {}
+  -- Build entries including special ones
   local entries = {}
+  local special_entries = {}
   
-  -- Collect all unique entries
-  for _, hop in ipairs(hops) do
-    if not seen_paths[hop.path] then
-      local fuzzy_desc = hop.desc
-      -- Avoid repeating path in description
-      if fuzzy_desc == hop.path then
-        fuzzy_desc = ""
-      end
+  -- Add tab entries
+  for idx, tab_path in pairs(get_tabs_as_paths()) do
+    table.insert(special_entries, {
+      path = tab_path,
+      desc = "[Tab " .. idx .. "] " .. path_to_desc(tab_path, config.desc_strategy),
+      is_special = true,
+      sort_key = "0tab" .. idx
+    })
+  end
+  
+  -- Add back entry
+  local tabhist = get_state("tabhist")
+  local tab = get_current_tab_idx()
+  if tabhist and tabhist[tab] and tabhist[tab][2] then
+    local previous_dir = tabhist[tab][2]
+    table.insert(special_entries, {
+      path = previous_dir,
+      desc = "[Back] " .. path_to_desc(previous_dir, config.desc_strategy),
+      is_special = true,
+      sort_key = "0back"
+    })
+  end
+  
+  -- Add hop entries
+  for path, data in pairs(hops) do
+    -- Check if directory still exists
+    local _, err = fs.read_dir(Url(path), { limit = 1, resolve = true })
+    if not err then
       table.insert(entries, {
-        path = hop.path,
-        desc = fuzzy_desc,
-        last_used = usage[hop.path] and usage[hop.path].last_used or 0,
-        count = usage[hop.path] and usage[hop.path].count or 0
+        path = path,
+        desc = data.desc or path_to_desc(path, config.desc_strategy),
+        last_used = data.last_used,
+        count = data.count,
+        is_special = false
       })
-      seen_paths[hop.path] = true
     end
   end
   
-  -- Sort by recency (most recent first), then by count
+  -- Sort hops by recency
   table.sort(entries, function(a, b)
-    -- If both have been used, sort by recency
-    if a.last_used > 0 and b.last_used > 0 then
-      return a.last_used > b.last_used
-    end
-    -- If only one has been used, it goes first
-    if a.last_used > 0 then return true end
-    if b.last_used > 0 then return false end
-    -- If neither has been used, maintain original order
-    return false
+    return a.last_used > b.last_used
   end)
   
-  -- Build fzf input string with sorted entries
-  local input_lines = {}
+  -- Combine special entries first, then regular entries
+  local all_entries = {}
+  for _, entry in ipairs(special_entries) do
+    table.insert(all_entries, entry)
+  end
   for _, entry in ipairs(entries) do
-    local line = entry.desc .. string.rep(" ", 23 - #entry.desc) .. "\t" .. entry.path
+    table.insert(all_entries, entry)
+  end
+  
+  -- Handle empty state
+  if #all_entries == 0 then
+    permit:drop()
+    info("No saved hops. Use 'save' action to bookmark current directory")
+    return
+  end
+  
+  -- Build fuzzy input
+  local input_lines = {}
+  for _, entry in ipairs(all_entries) do
+    local line = entry.desc .. string.rep(" ", 40 - #entry.desc) .. "\t" .. entry.path
     table.insert(input_lines, line)
   end
   
   child:write_all(table.concat(input_lines, "\n"))
   child:flush()
-  local output, output_err = child:wait_with_output()
+  local output, _ = child:wait_with_output()
   permit:drop()
+  
   if not output.status.success then
-    if output.status.code ~= 130 then -- user pressed escape to quit
-      fail("Command `%s` failed with code %s", config.fuzzy_cmd, output_err.code)
-    end
-    return
+    return -- User cancelled
   end
-  -- Parse fzf output, remove right padded spaces from desc
+  
+  -- Parse result
   local desc, path = string.match(output.stdout, "^(.-) *\t(.-)\n$")
-  if not desc or not path or path == "" then
-    fail("Failed to parse fuzzy searcher result")
-    return
-  end
-  if desc == "" then
-    desc = path_to_desc(path, config.desc_strategy)
-  end
-  return { desc = desc, path = path }
-end
-
-local cd = function(selected_hop, config)
-  local _, dir_list_err = fs.read_dir(Url(selected_hop.path), { limit = 1, resolve = true })
-  if dir_list_err then
-    fail("Invalid directory " .. path_to_desc(selected_hop.path))
+  if not path or path == "" then
     return
   end
   
-  -- Update usage data
-  update_usage(selected_hop.path)
+  -- Perform cd
+  local _, dir_err = fs.read_dir(Url(path), { limit = 1, resolve = true })
+  if dir_err then
+    fail("Invalid directory: " .. path)
+    return
+  end
   
-  -- Assuming that if I can fs.read_dir, then this will also succeed
-  ya.emit("cd", { selected_hop.path })
+  ya.emit("cd", { path })
+  
+  -- Update usage for non-special entries
+  local is_special = false
+  for _, entry in ipairs(special_entries) do
+    if entry.path == path then
+      is_special = true
+      break
+    end
+  end
+  
+  if not is_special and hops[path] then
+    hops[path].last_used = os.time()
+    hops[path].count = hops[path].count + 1
+    save_hops(hops)
+  end
+  
   if config.notify then
-    info('Hopped to ' .. selected_hop.desc)
+    info("Hopped to: " .. path_to_desc(path, config.desc_strategy))
   end
 end
 
-local attempt_hop = function(hops, config)
-  local cands = {}
-  for _, hop in pairs(create_special_hops(config)) do
-    table.insert(cands, { desc = hop.desc, on = hop.key, path = hop.path })
+local function validate_options(options)
+  if type(options) ~= "table" then
+    return "Invalid config"
   end
-  for _, hop in pairs(hops) do
-    table.insert(cands, { desc = hop.desc, on = hop.key, path = hop.path })
+  
+  local desc_strategy = options.desc_strategy
+  local fuzzy_cmd = options.fuzzy_cmd
+  local notify = options.notify
+  
+  if desc_strategy ~= nil and desc_strategy ~= "path" and desc_strategy ~= "filename" then
+    return 'Invalid "desc_strategy" config value'
+  elseif fuzzy_cmd ~= nil and type(fuzzy_cmd) ~= "string" then
+    return 'Invalid "fuzzy_cmd" config value'
+  elseif notify ~= nil and type(notify) ~= "boolean" then
+    return 'Invalid "notify" config value'
   end
-  local hops_idx = ya.which { cands = cands }
-  if not hops_idx then return end
-  local selected_hop = cands[hops_idx]
-  -- Handle special hops
-  if selected_hop.path == "__MARK__" then
-    local mark_cands = {};
-    -- Ideally any unicode character would be supported, but yazi.which
-    -- requies a concrete list of candidates
-    local candidate_chars = {
-      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-      'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F',
-      'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-      'W', 'X', 'Y', 'Z', '`', '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-      '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', "'", '"', ',', '<',
-      '.', '>', '/', '?', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-    }
-    for _, char in pairs(candidate_chars) do
-      table.insert(mark_cands, { on = char })
-    end
-    info("Press a key to create new hop")
-    local char_idx = ya.which { cands = mark_cands, silent = true }
-    if char_idx ~= nil then
-      local selected_char = mark_cands[char_idx].on
-      local cwd = get_cwd()
-      -- Create new ephemeral hop
-      local new_hop = { 
-        key = selected_char, 
-        path = cwd, 
-        desc = path_to_desc(cwd, config.desc_strategy),
-        ephemeral = true  -- Mark as ephemeral
-      }
-      table.insert(hops, new_hop)
-      local sorted_hops = sort_hops(hops)
-      set_state("hops", sorted_hops)
-      -- Save ephemeral hops to disk
-      save_ephemeral_hops(sorted_hops)
-      info("Created persistent hop '" .. selected_char .. "' for " .. new_hop.desc)
-    end
-    return
-  elseif selected_hop.path == "__FUZZY__" then
-    local fuzzy_hop = select_fuzzy(hops, config)
-    if not fuzzy_hop then return end
-    selected_hop = fuzzy_hop
-  end
-  cd(selected_hop, config)
 end
 
 local function init()
@@ -507,18 +432,14 @@ local function init()
     os.execute("mkdir -p " .. history_dir)
   end
   
-  -- Load usage data on init
-  set_state("usage", load_usage_data())
-  
   -- Set default config values
   local desc_strategy = options.desc_strategy or "path"
   
-  -- Build default fuzzy command with history support if not provided
+  -- Build default fuzzy command with history support
   local default_fuzzy_cmd = "fzf"
   if home and (not options.fuzzy_cmd or options.fuzzy_cmd == "fzf") then
-    -- If user hasn't specified a custom command or is using plain "fzf", enhance it
     default_fuzzy_cmd = string.format(
-      "fzf --history=%s/.local/share/yazi/bunny-history " ..
+      "fzf --history=%s/.local/share/yazi/bunny-fzf-history " ..
       "--history-size=1000 " ..
       "--algo=v2 " ..
       "--tiebreak=index " ..
@@ -535,65 +456,22 @@ local function init()
     desc_strategy = desc_strategy,
     fuzzy_cmd = options.fuzzy_cmd or default_fuzzy_cmd,
     notify = options.notify or false,
-    ephemeral = options.ephemeral or true,
-    tabs = options.tabs or true,
   })
   
-  -- Set hops after ensuring they all have a description
-  local hops = {}
-  -- First, add configured hops
-  for _, hop in pairs(options.hops) do
-    hop.desc = hop.desc or path_to_desc(hop.path, desc_strategy)
-    -- Manually replace ~ from users so we can make a valid Url later to check if dir exists
-    if string.sub(hop.path, 1, 1) == "~" then
-      hop.path = os.getenv("HOME") .. hop.path:sub(2)
-    end
-    table.insert(hops, hop)
-  end
-  
-  -- Then, load and add ephemeral hops (if ephemeral is enabled)
-  if options.ephemeral ~= false then
-    local ephemeral_hops = load_ephemeral_hops()
-    for _, ehop in pairs(ephemeral_hops) do
-      -- Ensure desc is set
-      ehop.desc = ehop.desc or path_to_desc(ehop.path, desc_strategy)
-      -- Check if key is not already used by configured hops
-      local key_exists = false
-      for _, hop in pairs(hops) do
-        if hop.key == ehop.key then
-          key_exists = true
-          break
-        end
-      end
-      -- Only add if key doesn't conflict
-      if not key_exists then
-        table.insert(hops, ehop)
-      end
-    end
-  end
-  
-  set_state("hops", sort_hops(hops))
   set_state("init", true)
 end
 
 return {
   setup = function(state, options)
-    state.options = options
+    state.options = options or {}
     ps.sub("cd", function(body)
-      -- Note: This callback is sync and triggered at startup!
-      local tab = body.tab -- type number
-      -- Very important to turn this into a string because Url has ownership issues
-      -- when passed to standard utility functions >.<'
-      -- https://github.com/sxyazi/yazi/issues/2159
+      local tab = body.tab
       local cwd = tostring(cx.active.current.cwd)
-      -- Upon startup this will be nil so initialize if necessary
       local tabhist = state.tabhist or {}
-      -- tabhist structure:{ <tab_index> = { <current_dir>, <previous_dir?> }, ... }
+      
       if not tabhist[tab] then
-        -- If fresh tab, initialize tab history table
         tabhist[tab] = { cwd }
       else
-        -- Otherwise, shift history table to the right and add cwd to the front
         tabhist[tab] = { cwd, tabhist[tab][1] }
       end
       state.tabhist = tabhist
@@ -603,19 +481,23 @@ return {
     if not get_state("init") then
       init()
     end
+    
     local init_error = get_state("init_error")
     if init_error then
       fail(init_error)
       return
     end
-    local hops, config = get_state("hops"), get_state("config")
-    if job.args[1] == "fuzzy" then
-      local fuzzy_hop = select_fuzzy(hops, config)
-      if fuzzy_hop then
-        cd(fuzzy_hop, config)
-      end
+    
+    local config = get_state("config")
+    local action = job.args[1]
+    
+    if action == "save" then
+      save_current_directory(config)
+    elseif action == "delete" then
+      delete_hop_fuzzy(config)
     else
-      attempt_hop(hops, config)
+      -- Default action: fuzzy search
+      fuzzy_search_and_cd(config)
     end
   end,
 }
