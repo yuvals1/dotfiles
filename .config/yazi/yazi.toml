@@ -194,6 +194,42 @@ previewers = [
   { name = "*", run = "file" },
 ]
 
+[[plugin.prepend_previewers]]
+mime = "application/zip"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/gzip"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/*zip"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/x-tar"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/x-bzip2"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/x-7z-compressed"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/x-rar"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/x-xz"
+run = "ouch"
+
+[[plugin.prepend_previewers]]
+mime = "application/xz"
+run = "ouch"
+
 [input]
 cursor_blink = false
 

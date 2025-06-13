@@ -42,8 +42,8 @@ brew 'regclient'
 brew 'tabiew'
 brew 'visidata' # use cmd-s for settings navigation
 # brew 'gcalcli'
-brew 'fpc'
-brew 'swi-prolog'
+# brew 'fpc'
+# brew 'swi-prolog'
 # brew 'sk'
 # brew 'gping'
 # brew 'bandwhich'
@@ -77,6 +77,7 @@ brew 'docker-compose'
 # GitHub CLI
 brew 'gh'
 brew 'hexyl'
+brew 'ouch'
 # SML/NJ
 cask 'smlnj'
 
