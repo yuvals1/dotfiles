@@ -62,10 +62,20 @@ browser = [
   { run = 'google-chrome "$@"', desc = "Open in Chrome", for = "linux" },
   { run = 'start chrome "%1"', orphan = true, desc = "Open in Chrome", for = "windows" },
 ]
+hexyl = [
+  { run = '''hexyl "$1" | less -R''', block = true, desc = "View with hexyl", for = "unix" },
+  { run = 'hexyl %1 | more', block = true, desc = "View with hexyl", for = "windows" },
+]
 
 
 [open]
 rules = [
+  # Object files
+  { name = "*.o", use = [
+    "hexyl",
+    "edit",
+    "reveal",
+  ] },
   # html
   { name = "*.{htm,html}", use = [
     "browser",
