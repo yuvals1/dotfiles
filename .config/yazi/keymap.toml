@@ -89,7 +89,7 @@ keymap = [
   # { on = "s", run = "search --via=fd", desc = "Search files by name via fd" },
   # { on = "S", run = "search --via=rg", desc = "Search files by content via ripgrep" },
   { on = "<C-s>", run = "escape --search", desc = "Cancel the ongoing search" },
-  # { on = "z", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
+  { on = ";", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
   { on = "z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
   { on = "W", run = "plugin skim", desc = "Jump to a file/directory via skim" },
 
@@ -671,20 +671,20 @@ on = ["t", "s", "u"]
 run = "plugin simple-tag -- undo-select"
 desc = "Undos/Redos the last selection action"
 
-[[mgr.prepend_keymap]]
-desc = "Bunny hop (fuzzy search)"
-on = ";"
-run = "plugin bunny"
-
-[[mgr.prepend_keymap]]
-desc = "Save current directory"
-on = [":", "s"]
-run = "plugin bunny save"
-
-[[mgr.prepend_keymap]]
-desc = "Delete a hop"
-on = [":", "d"]
-run = "plugin bunny delete"
+# [[mgr.prepend_keymap]]
+# desc = "Bunny hop (fuzzy search)"
+# on = ";"
+# run = "plugin bunny"
+#
+# [[mgr.prepend_keymap]]
+# desc = "Save current directory"
+# on = [":", "s"]
+# run = "plugin bunny save"
+#
+# [[mgr.prepend_keymap]]
+# desc = "Delete a hop"
+# on = [":", "d"]
+# run = "plugin bunny delete"
 
 [[mgr.prepend_keymap]]
 on = "F"
