@@ -549,11 +549,6 @@ desc = "Keyjump (Global mode)"
 
 
 [[mgr.prepend_keymap]]
-on = ["R"]
-run = "plugin fg"                           # kind of ripgrep
-desc = "find file by content (fuzzy match)"
-
-[[mgr.prepend_keymap]]
 on = ["`"]
 run = "plugin  first-non-directory"
 desc = "Jumps to the first file"
