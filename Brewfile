@@ -76,6 +76,7 @@ brew 'docker'
 brew 'docker-compose'
 # GitHub CLI
 brew 'gh'
+brew 'hexyl'
 # SML/NJ
 cask 'smlnj'
 
