@@ -143,6 +143,59 @@ local function save_usage_data(usage)
   file:close()
 end
 
+-- Load ephemeral hops from file
+local function load_ephemeral_hops()
+  local home = os.getenv("HOME")
+  if not home then return {} end
+  
+  local hops_file = home .. "/.local/share/yazi/bunny-ephemeral-hops.json"
+  local file = io.open(hops_file, "r")
+  if not file then return {} end
+  
+  local content = file:read("*all")
+  file:close()
+  
+  -- Simple JSON parsing for ephemeral hops
+  local hops = {}
+  -- Match pattern: "key": {"path": "...", "desc": "..."}
+  for key, path, desc in string.gmatch(content, '"([^"]+)":%s*{%s*"path":%s*"([^"]+)",%s*"desc":%s*"([^"]*)"') do
+    table.insert(hops, {
+      key = key,
+      path = path,
+      desc = desc ~= "" and desc or nil,
+      ephemeral = true  -- Mark as ephemeral
+    })
+  end
+  return hops
+end
+
+-- Save ephemeral hops to file
+local function save_ephemeral_hops(hops)
+  local home = os.getenv("HOME")
+  if not home then return end
+  
+  -- Ensure directory exists
+  os.execute("mkdir -p " .. home .. "/.local/share/yazi")
+  
+  local hops_file = home .. "/.local/share/yazi/bunny-ephemeral-hops.json"
+  local file = io.open(hops_file, "w")
+  if not file then return end
+  
+  -- Simple JSON generation - only save ephemeral hops
+  file:write("{\n")
+  local first = true
+  for _, hop in pairs(hops) do
+    if hop.ephemeral then  -- Only save hops marked as ephemeral
+      if not first then file:write(",\n") end
+      first = false
+      file:write(string.format('  "%s": {"path": "%s", "desc": "%s"}', 
+        hop.key, hop.path, hop.desc or ""))
+    end
+  end
+  file:write("\n}\n")
+  file:close()
+end
+
 -- Update usage data
 local function update_usage(path)
   local usage = get_state("usage") or load_usage_data()
@@ -415,8 +468,19 @@ local attempt_hop = function(hops, config)
     if char_idx ~= nil then
       local selected_char = mark_cands[char_idx].on
       local cwd = get_cwd()
-      table.insert(hops, { key = selected_char, path = cwd, desc = path_to_desc(cwd, config.desc_strategy) })
-      set_state("hops", sort_hops(hops))
+      -- Create new ephemeral hop
+      local new_hop = { 
+        key = selected_char, 
+        path = cwd, 
+        desc = path_to_desc(cwd, config.desc_strategy),
+        ephemeral = true  -- Mark as ephemeral
+      }
+      table.insert(hops, new_hop)
+      local sorted_hops = sort_hops(hops)
+      set_state("hops", sorted_hops)
+      -- Save ephemeral hops to disk
+      save_ephemeral_hops(sorted_hops)
+      info("Created persistent hop '" .. selected_char .. "' for " .. new_hop.desc)
     end
     return
   elseif selected_hop.path == "__FUZZY__" then
@@ -477,6 +541,7 @@ local function init()
   
   -- Set hops after ensuring they all have a description
   local hops = {}
+  -- First, add configured hops
   for _, hop in pairs(options.hops) do
     hop.desc = hop.desc or path_to_desc(hop.path, desc_strategy)
     -- Manually replace ~ from users so we can make a valid Url later to check if dir exists
@@ -485,6 +550,28 @@ local function init()
     end
     table.insert(hops, hop)
   end
+  
+  -- Then, load and add ephemeral hops (if ephemeral is enabled)
+  if options.ephemeral ~= false then
+    local ephemeral_hops = load_ephemeral_hops()
+    for _, ehop in pairs(ephemeral_hops) do
+      -- Ensure desc is set
+      ehop.desc = ehop.desc or path_to_desc(ehop.path, desc_strategy)
+      -- Check if key is not already used by configured hops
+      local key_exists = false
+      for _, hop in pairs(hops) do
+        if hop.key == ehop.key then
+          key_exists = true
+          break
+        end
+      end
+      -- Only add if key doesn't conflict
+      if not key_exists then
+        table.insert(hops, ehop)
+      end
+    end
+  end
+  
   set_state("hops", sort_hops(hops))
   set_state("init", true)
 end
