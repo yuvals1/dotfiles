@@ -227,36 +227,36 @@ keymap = [
   ], run = "sort random --reverse=no", desc = "Sort randomly" },
 
   # Goto
-  { on = [
-    "g",
-    "h",
-  ], run = "cd ~", desc = "Go home" },
-  { on = [
-    "g",
-    "c",
-  ], run = "cd ~/dotfiles/", desc = "Goto dotfiles" },
+  # { on = [
+  #   "g",
+  #   "h",
+  # ], run = "cd ~", desc = "Go home" },
+  # { on = [
+  #   "g",
+  #   "c",
+  # ], run = "cd ~/dotfiles/", desc = "Goto dotfiles" },
 
-  { on = [
-    "g",
-    "d",
-  ], run = "cd ~/dev/", desc = "Goto dev-projects" },
-  { on = [
-    "g",
-    "<Space>",
-  ], run = "cd --interactive", desc = "Jump interactively" },
-  { on = [
-    "g",
-    "o",
-  ], run = "cd ~/iCloud~md~obsidian/Documents/Yuval/", desc = "Goto Obsidian" },
-  { on = [
-    "g",
-    "a",
-  ], run = "cd /data", desc = "Goto /data" },
-  { on = [
-    "g",
-    "v",
-  ], run = "cd ~/vaults-icloud-obsidian/", desc = "Goto Vaults" },
-
+  # { on = [
+  #   "g",
+  #   "d",
+  # ], run = "cd ~/dev/", desc = "Goto dev-projects" },
+  # { on = [
+  #   "g",
+  #   "<Space>",
+  # ], run = "cd --interactive", desc = "Jump interactively" },
+  # { on = [
+  #   "g",
+  #   "o",
+  # ], run = "cd ~/iCloud~md~obsidian/Documents/Yuval/", desc = "Goto Obsidian" },
+  # { on = [
+  #   "g",
+  #   "a",
+  # ], run = "cd /data", desc = "Goto /data" },
+  # { on = [
+  #   "g",
+  #   "v",
+  # ], run = "cd ~/vaults-icloud-obsidian/", desc = "Goto Vaults" },
+  #
   # Tabs
   { on = "t", run = "tab_create --current", desc = "Create a new tab with CWD" },
 
