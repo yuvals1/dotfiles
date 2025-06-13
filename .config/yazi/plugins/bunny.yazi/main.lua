@@ -95,6 +95,65 @@ local function sort_hops(hops)
   return hops
 end
 
+-- Load usage data from file
+local function load_usage_data()
+  local home = os.getenv("HOME")
+  if not home then return {} end
+  
+  local usage_file = home .. "/.local/share/yazi/bunny-usage.json"
+  local file = io.open(usage_file, "r")
+  if not file then return {} end
+  
+  local content = file:read("*all")
+  file:close()
+  
+  -- Simple JSON parsing for our use case
+  local usage = {}
+  for path, timestamp, count in string.gmatch(content, '"([^"]+)":%s*{%s*"last_used":%s*(%d+),%s*"count":%s*(%d+)%s*}') do
+    usage[path] = {
+      last_used = tonumber(timestamp),
+      count = tonumber(count)
+    }
+  end
+  return usage
+end
+
+-- Save usage data to file
+local function save_usage_data(usage)
+  local home = os.getenv("HOME")
+  if not home then return end
+  
+  -- Ensure directory exists
+  os.execute("mkdir -p " .. home .. "/.local/share/yazi")
+  
+  local usage_file = home .. "/.local/share/yazi/bunny-usage.json"
+  local file = io.open(usage_file, "w")
+  if not file then return end
+  
+  -- Simple JSON generation
+  file:write("{\n")
+  local first = true
+  for path, data in pairs(usage) do
+    if not first then file:write(",\n") end
+    first = false
+    file:write(string.format('  "%s": {"last_used": %d, "count": %d}', 
+      path, data.last_used, data.count))
+  end
+  file:write("\n}\n")
+  file:close()
+end
+
+-- Update usage data
+local function update_usage(path)
+  local usage = get_state("usage") or load_usage_data()
+  usage[path] = {
+    last_used = os.time(),
+    count = (usage[path] and usage[path].count or 0) + 1
+  }
+  set_state("usage", usage)
+  save_usage_data(usage)
+end
+
 local create_special_hops = function(config)
   local hops = {}
   local desc_strategy, tabs, ephemeral = config.desc_strategy, config.tabs, config.ephemeral
@@ -204,24 +263,52 @@ local select_fuzzy = function(hops, config)
     fail("Command `%s` failed with code %s. Do you have it installed?", config.fuzzy_cmd, spawn_err.code)
     return
   end
-  local fuzzy_entries = {}
-  for _, hop in pairs(hops) do
-    local existing_desc = fuzzy_entries[hop.path]
-    if not existing_desc or existing_desc == "" then
+  
+  -- Load usage data for sorting
+  local usage = get_state("usage") or load_usage_data()
+  
+  -- Build entries with usage data
+  local seen_paths = {}
+  local entries = {}
+  
+  -- Collect all unique entries
+  for _, hop in ipairs(hops) do
+    if not seen_paths[hop.path] then
       local fuzzy_desc = hop.desc
       -- Avoid repeating path in description
       if fuzzy_desc == hop.path then
         fuzzy_desc = ""
       end
-      fuzzy_entries[hop.path] = fuzzy_desc
+      table.insert(entries, {
+        path = hop.path,
+        desc = fuzzy_desc,
+        last_used = usage[hop.path] and usage[hop.path].last_used or 0,
+        count = usage[hop.path] and usage[hop.path].count or 0
+      })
+      seen_paths[hop.path] = true
     end
   end
-  -- Build fzf input string
+  
+  -- Sort by recency (most recent first), then by count
+  table.sort(entries, function(a, b)
+    -- If both have been used, sort by recency
+    if a.last_used > 0 and b.last_used > 0 then
+      return a.last_used > b.last_used
+    end
+    -- If only one has been used, it goes first
+    if a.last_used > 0 then return true end
+    if b.last_used > 0 then return false end
+    -- If neither has been used, maintain original order
+    return false
+  end)
+  
+  -- Build fzf input string with sorted entries
   local input_lines = {}
-  for entry_path, entry_desc in pairs(fuzzy_entries) do
-    local line = entry_desc .. string.rep(" ", 23 - #entry_desc) .. "\t" .. entry_path
+  for _, entry in ipairs(entries) do
+    local line = entry.desc .. string.rep(" ", 23 - #entry.desc) .. "\t" .. entry.path
     table.insert(input_lines, line)
   end
+  
   child:write_all(table.concat(input_lines, "\n"))
   child:flush()
   local output, output_err = child:wait_with_output()
@@ -250,6 +337,10 @@ local cd = function(selected_hop, config)
     fail("Invalid directory " .. path_to_desc(selected_hop.path))
     return
   end
+  
+  -- Update usage data
+  update_usage(selected_hop.path)
+  
   -- Assuming that if I can fs.read_dir, then this will also succeed
   ya.emit("cd", { selected_hop.path })
   if config.notify then
@@ -309,15 +400,46 @@ local function init()
     fail(err)
     return
   end
+  
+  -- Ensure history directory exists
+  local home = os.getenv("HOME")
+  if home then
+    local history_dir = home .. "/.local/share/yazi"
+    os.execute("mkdir -p " .. history_dir)
+  end
+  
+  -- Load usage data on init
+  set_state("usage", load_usage_data())
+  
   -- Set default config values
   local desc_strategy = options.desc_strategy or "path"
+  
+  -- Build default fuzzy command with history support if not provided
+  local default_fuzzy_cmd = "fzf"
+  if home and (not options.fuzzy_cmd or options.fuzzy_cmd == "fzf") then
+    -- If user hasn't specified a custom command or is using plain "fzf", enhance it
+    default_fuzzy_cmd = string.format(
+      "fzf --history=%s/.local/share/yazi/bunny-history " ..
+      "--history-size=1000 " ..
+      "--algo=v2 " ..
+      "--tiebreak=index " ..
+      "--prompt='🐰 ' " ..
+      "--pointer='→' " ..
+      "--layout=reverse " ..
+      "--info=inline " ..
+      "--no-preview",
+      home
+    )
+  end
+  
   set_state("config", {
     desc_strategy = desc_strategy,
-    fuzzy_cmd = options.fuzzy_cmd or "fzf",
+    fuzzy_cmd = options.fuzzy_cmd or default_fuzzy_cmd,
     notify = options.notify or false,
     ephemeral = options.ephemeral or true,
     tabs = options.tabs or true,
   })
+  
   -- Set hops after ensuring they all have a description
   local hops = {}
   for _, hop in pairs(options.hops) do
