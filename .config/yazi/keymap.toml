@@ -729,3 +729,8 @@ desc = "Diff the selected with the hovered file"
 on = ["g", "c"]
 run = "plugin vcs-files-all"
 desc = "Show Git file changes (including untracked)"
+
+[[mgr.prepend_keymap]]
+on = "Q"
+run = "plugin quit-cd"
+desc = "Quit and change directory"
