@@ -722,3 +722,10 @@ desc = "Extract archive"
 on = "D"
 run = "plugin diff"
 desc = "Diff the selected with the hovered file"
+
+
+# keymap.toml
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "plugin vcs-files-all"
+desc = "Show Git file changes (including untracked)"
