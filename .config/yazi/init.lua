@@ -144,3 +144,8 @@ require('eza-preview'):setup {
 require('zoxide'):setup {
   update_db = true,
 }
+
+-- Sync yanked files across all Yazi instances
+require('session'):setup {
+  sync_yanked = true,
+}
