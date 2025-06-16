@@ -442,8 +442,8 @@ keymap = [
   # Delete
   { on = "<Backspace>", run = "backspace", desc = "Delete the character before the cursor" },
   { on = "<Delete>", run = "backspace --under", desc = "Delete the character under the cursor" },
-  { on = "<C-h>", run = "backspace", desc = "Delete the character before the cursor" },
-  { on = "<C-d>", run = "backspace --under", desc = "Delete the character under the cursor" },
+  # { on = "<C-h>", run = "backspace", desc = "Delete the character before the cursor" },
+  # { on = "<C-d>", run = "backspace --under", desc = "Delete the character under the cursor" },
 
   # Kill
   { on = "<C-u>", run = "kill bol", desc = "Kill backwards to the BOL" },
