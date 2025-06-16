@@ -139,3 +139,8 @@ require('eza-preview'):setup {
   -- Set initial state to hide hidden files
   all = false,
 }
+
+-- Enable zoxide integration to automatically add visited directories
+require('zoxide'):setup {
+  update_db = true,
+}
