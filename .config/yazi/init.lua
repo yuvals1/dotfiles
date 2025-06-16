@@ -135,6 +135,8 @@ require('bunny'):setup {
   fuzzy_cmd = "fzf --preview='echo {} | cut -f2 | xargs -I@ eza --tree --level=2 --color=always --icons --git @'",
 }
 
+require('jump-back'):setup()
+
 require('eza-preview'):setup {
   -- Set initial state to hide hidden files
   all = false,

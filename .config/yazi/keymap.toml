@@ -92,6 +92,7 @@ keymap = [
   { on = ";", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
   { on = "z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
   { on = "W", run = "plugin skim", desc = "Jump to a file/directory via skim" },
+  { on = ":", run = "plugin jump-back", desc = "Jump to previous directory" },
 
   # Linemode
   { on = [
