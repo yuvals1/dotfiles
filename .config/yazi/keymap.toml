@@ -10,7 +10,7 @@ keymap = [
   { on = "q", run = "quit", desc = "Exit the process" },
   { on = "-", run = "quit", desc = "Quit Yazi" },
 
-  { on = "Q", run = "quit --no-cwd-file", desc = "Exit the process without writing cwd-file" },
+  # { on = "Q", run = "quit --no-cwd-file", desc = "Exit the process without writing cwd-file" },
   { on = "<C-c>", run = "close", desc = "Close the current tab, or quit if it is last tab" },
   { on = "<C-z>", run = "suspend", desc = "Suspend the process" },
 
@@ -575,9 +575,9 @@ run = 'plugin selected-files-fzf'
 # run = 'plugin hardcoded-files-fzf'
 
 
-[[mgr.prepend_keymap]]
-on = "Q"
-run = 'plugin fzf-orig'
+# [[mgr.prepend_keymap]]
+# on = "Q"
+# run = 'plugin fzf-orig'
 
 
 # keymap.toml
