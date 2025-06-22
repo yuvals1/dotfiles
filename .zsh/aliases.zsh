@@ -24,6 +24,9 @@ alias s1='pbpaste | say -r 150'
 alias s2='pbpaste | say -r 180'
 alias s3='pbpaste | say -r 200'
 
+alias gcalrefresh='rm -f ~/Library/Application\ Support/gcalcli/oauth && gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET" list'
+alias gcalcli='gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET"'
+
 
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
