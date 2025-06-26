@@ -103,3 +103,8 @@ When asked to "do the compile_commands.json thing" or similar:
 
 This enables LSP navigation features in editors like VSCode, Neovim, etc.
 
+# Yuval's Environment Notes
+
+- The dotfiles repository at `/Users/yuvalspiegel/dotfiles` contains all .config files
+- When looking for config files (like yazi, nvim, etc.), check `/Users/yuvalspiegel/dotfiles/.config/` first
+
