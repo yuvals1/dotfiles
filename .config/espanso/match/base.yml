@@ -70,6 +70,15 @@ matches:
     replace: "i don't understand"
     label: "i dont understand copy"
 
+  - trigger: ":uf"
+    replace: "i don't fucking understand"
+
+  - trigger: ":sl"
+    replace: "start from the beginning and move in very slow steps. dont move to next step until i approve"
+
+  - trigger: ":cn"
+    replace: "continue"
+
   # File and Code Management
   - trigger: ":copyable"
     replace: "show the filename in copyable block"
