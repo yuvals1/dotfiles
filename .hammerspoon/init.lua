@@ -25,43 +25,89 @@ end
 -- Variable to store the speaking task
 local speakingTask = nil
 
--- Speak clipboard contents (normal speed)
+-- Helper function to get text from tmux selection or clipboard
+local function getTextToSpeak()
+	-- Check if we're in a terminal that might have tmux
+	local app = hs.application.frontmostApplication()
+	if app and (app:name() == "kitty" or app:name() == "Terminal" or app:name() == "iTerm2") then
+		-- Try to copy tmux selection without clearing it
+		hs.task.new("/bin/bash", nil, { "-c", "tmux send-keys -X copy-pipe-no-clear 'pbcopy' 2>/dev/null" }):start()
+		-- Small delay to ensure clipboard is updated
+		hs.timer.usleep(50000) -- 50ms
+	end
+	return hs.pasteboard.getContents()
+end
+
+-- Speak clipboard contents (normal speed - 175 wpm)
 hs.hotkey.bind({ "cmd", "shift" }, "a", function()
 	-- Kill any existing speech first
 	if speakingTask then
 		speakingTask:terminate()
 	end
 
-	-- Start new speech
-	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say" })
-	speakingTask:start()
-	hs.alert.show("Speaking clipboard...")
+	local text = getTextToSpeak()
+	if text and text ~= "" then
+		-- Start new speech
+		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 175" })
+		speakingTask:start()
+		hs.alert.show("Speaking (normal)...")
+	else
+		hs.alert.show("No text to speak")
+	end
 end)
 
--- Speak clipboard contents (faster speed - 180 wpm)
+-- Speak clipboard contents (fast speed - 200 wpm)
 hs.hotkey.bind({ "cmd", "shift" }, "s", function()
 	-- Kill any existing speech first
 	if speakingTask then
 		speakingTask:terminate()
 	end
 
-	-- Start new speech at 180 wpm
-	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 180" })
-	speakingTask:start()
-	hs.alert.show("Speaking clipboard (slow)...")
+	local text = getTextToSpeak()
+	if text and text ~= "" then
+		-- Start new speech at 200 wpm
+		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 200" })
+		speakingTask:start()
+		hs.alert.show("Speaking (fast)...")
+	else
+		hs.alert.show("No text to speak")
+	end
 end)
 
--- Speak clipboard contents (fastest speed - 200 wpm)
+-- Speak clipboard contents (faster speed - 220 wpm)
+hs.hotkey.bind({ "cmd", "shift" }, "d", function()
+	-- Kill any existing speech first
+	if speakingTask then
+		speakingTask:terminate()
+	end
+
+	local text = getTextToSpeak()
+	if text and text ~= "" then
+		-- Start new speech at 220 wpm
+		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 220" })
+		speakingTask:start()
+		hs.alert.show("Speaking (faster)...")
+	else
+		hs.alert.show("No text to speak")
+	end
+end)
+
+-- Speak clipboard contents (fastest speed - 250 wpm)
 hs.hotkey.bind({ "cmd", "shift" }, "f", function()
 	-- Kill any existing speech first
 	if speakingTask then
 		speakingTask:terminate()
 	end
 
-	-- Start new speech at 200 wpm
-	speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 200" })
-	speakingTask:start()
-	hs.alert.show("Speaking clipboard (fast)...")
+	local text = getTextToSpeak()
+	if text and text ~= "" then
+		-- Start new speech at 250 wpm
+		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 250" })
+		speakingTask:start()
+		hs.alert.show("Speaking (fastest)...")
+	else
+		hs.alert.show("No text to speak")
+	end
 end)
 
 -- Stop speaking
