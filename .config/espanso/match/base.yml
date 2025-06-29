@@ -118,7 +118,7 @@ matches:
     label: "brainstorm some ideas first"
 
   # Comparisons and Technical
-  - trigger: ":wdf"
+  - trigger: ":wd"
     replace: "what's the difference"
     label: "what's the difference"
 
