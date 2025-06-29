@@ -66,7 +66,7 @@ matches:
     replace: "do you understand"
     label: "do you undetstand"
 
-  - trigger: ":und"
+  - trigger: ":un"
     replace: "i don't understand"
     label: "i dont understand copy"
 
