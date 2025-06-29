@@ -3,133 +3,129 @@
 
 matches:
   # First Principles
-  - trigger: "@first"
+  - trigger: ":first"
     replace: "explain from first principles"
     label: "first principles"
 
   # Conventional Commits
-  - trigger: "@cv"
+  - trigger: ":cv"
     replace: "conventional commits"
     label: "conventional commits"
 
-  - trigger: "@cf"
+  - trigger: ":cf"
     replace: "suggest git commit according to conventional commits\n\n\n"
     label: "conventional commit full"
 
-  - trigger: "@cc"
+  - trigger: ":cc"
     replace: "suggest git commit message according to conventional commits"
     label: "conventional commits full"
 
-  - trigger: "@cl"
+  - trigger: ":cl"
     replace: "suggest one line git commit according to conventional commits. put it in code block.\n"
     label: "conventional commits one line"
 
   # Implementation Strategies
-  - trigger: "@ways"
+  - trigger: ":ways"
     replace: "then ill choose and you'll implement"
     label: "then ill choose and you'll implement"
 
-  - trigger: "@suggest1"
+  - trigger: ":suggest1"
     replace: "suggest a couple of strategies and ill choose one "
     label: "suggest1"
 
-  - trigger: "@suggest2"
+  - trigger: ":suggest2"
     replace: "look at the code and suggest a couple of strategies to modify it in order to implement the desired behavior. then ill choose one of your options and youll implement it"
     label: "suggest2"
 
-  - trigger: "@suggest3"
+  - trigger: ":suggest3"
     replace: "suggest a couple of strategies how to do it and ill choose one\n"
     label: "suggest3"
 
-  - trigger: "@preview"
+  - trigger: ":preview"
     replace: "preview the way you think about implementing this then if i approve you'll implement it"
     label: "preview"
 
-  - trigger: "@plan"
+  - trigger: ":plan"
     replace: "explain how you are planning to do it first. then if i confirm we will continue.\n"
     label: "plan"
 
-  - trigger: "@mp"
+  - trigger: ":mp"
     replace: "make a plan first"
     label: "make a plan first"
 
   # Reading and Understanding
-  - trigger: "@readit"
+  - trigger: ":readit"
     replace: "read it carefully and then i'll ask you to help with improving it"
     label: "readit"
 
-  - trigger: "@exp1"
+  - trigger: ":exp1"
     replace: "explain the task so i know you understood"
     label: "explain the task so i know you understood"
 
-  - trigger: "@du"
+  - trigger: ":du"
     replace: "do you understand"
     label: "do you undetstand"
 
-  - trigger: "%under"
-    replace: "i don't understand"
-    label: "i dont understand copy"
-
-  - trigger: "@und"
+  - trigger: ":und"
     replace: "i don't understand"
     label: "i dont understand copy"
 
   # File and Code Management
-  - trigger: "@copyable"
+  - trigger: ":copyable"
     replace: "show the filename in copyable block"
     label: "show the filename in copyable block"
 
-  - trigger: "@struct"
+  - trigger: ":struct"
     replace: "provide a command for creating the file structure\n"
     label: "provide a command for creating the file structure"
 
-  - trigger: "@empty"
+  - trigger: ":empty"
     replace: "provide command for creating the empty files"
     label: "empty files"
 
-  - trigger: "@show"
+  - trigger: ":show"
     replace: "provide with a command to show you all files (copy it to my clipboard)"
     label: "show you"
 
   # Modifications and Details
-  - trigger: "@imagine"
+  - trigger: ":imagine"
     replace: "but dont use the 'imagine' thing"
     label: "imagine"
 
-  - trigger: "@modi"
+  - trigger: ":modi"
     replace: "dont make any unnecessary modifications"
     label: "modi"
 
-  - trigger: "@det"
+  - trigger: ":det"
     replace: "make it more detailed"
     label: "make it more detailed"
 
-  - trigger: "@di"
+  - trigger: ":di"
     replace: "don't implement yet"
     label: "don't implement yet"
 
   # Process and Flow
-  - trigger: "@inc"
+  - trigger: ":inc"
     replace: "let's start with {} and proceed from there very slowly.\nmade the least amount of modifications each step"
     label: "incremental flow"
 
-  - trigger: "@pr"
+  - trigger: ":pr"
     replace: "let's proceed"
     label: "let's proceed"
 
-  - trigger: "@br"
+  - trigger: ":br"
     replace: "brainstorm some ideas first"
     label: "brainstorm some ideas first"
 
   # Comparisons and Technical
-  - trigger: "@wdf"
+  - trigger: ":wdf"
     replace: "what's the difference"
     label: "what's the difference"
 
-  - trigger: "@dif"
+  - trigger: ":dif"
     replace: "difference"
     label: "difference"
 
-  - trigger: "@ana"
+  - trigger: ":ana"
     replace: "don't use analogies. i want to understand in the most technical sense."
     label: "analogies"
