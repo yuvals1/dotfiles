@@ -8,6 +8,8 @@ alias n='nvim'
 alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
 alias gpr='f() { git checkout $(git rev-list -n 1 --grep="#$1" HEAD) }; f'
+
+alias lazygit='/Users/yuvalspiegel/dev/lazygit/lazygit'
 alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 alias tt="taskwarrior-tui"
 alias lsq="lazysql"
