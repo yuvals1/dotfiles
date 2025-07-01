@@ -75,12 +75,14 @@ matches:
 
   - trigger: ":sl1"
     replace: "start from the beginning and move in very slow steps. dont move to next step until i approve"
+    label: "important - start from the beginning and move in very slow steps"
 
   - trigger: ":sl0"
     replace: "explain slowly"
 
   - trigger: ":sm1"
     replace: "move in very slow and small steps. dont move to next step until i approve"
+    label: "important - move in very slow and small steps"
 
   - trigger: ":sm0"
     replace: "small steps"
@@ -91,9 +93,11 @@ matches:
 
   - trigger: ":care"
     replace: "read this tutorial very carefully. this is pdf so it's not very structured so please read it again and again and again in order to make sure you understand it all. ask yourself if you understood everything to make sure and read again to make sure you indeed he indeed understood"
+    label: "important - read this tutorial very carefully"
 
   - trigger: ":app"
     replace: "dont move to next step until i approve"
+    label: "important - dont move to next step until i approve"
 
   # File and Code Management
   - trigger: ":copyable"
