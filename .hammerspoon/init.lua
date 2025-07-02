@@ -123,7 +123,7 @@ end)
 
 -- Move to specific coordinate and click - Position 2 (alternative keybind)
 hs.hotkey.bind({ "cmd" }, "g", function()
-	hs.mouse.absolutePosition({ x = 1074, y = 605 })
+	hs.mouse.absolutePosition({ x = 1442, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
 		forceClick()
@@ -132,7 +132,7 @@ end)
 
 -- Move to specific coordinate and click - Position 3 (alternative keybind)
 hs.hotkey.bind({ "cmd" }, "/", function()
-	hs.mouse.absolutePosition({ x = 1442, y = 605 })
+	hs.mouse.absolutePosition({ x = 1074, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
 		forceClick()
