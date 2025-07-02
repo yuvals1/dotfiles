@@ -48,7 +48,7 @@ hs.hotkey.bind({ "cmd", "shift" }, "a", function()
 	local text = getTextToSpeak()
 	if text and text ~= "" then
 		-- Start new speech
-		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 175" })
+		speakingTask = hs.task.new("/usr/bin/say", nil, { "-r", "175", text })
 		speakingTask:start()
 		hs.alert.show("Speaking (normal)...")
 	else
@@ -66,7 +66,7 @@ hs.hotkey.bind({ "cmd", "shift" }, "s", function()
 	local text = getTextToSpeak()
 	if text and text ~= "" then
 		-- Start new speech at 200 wpm
-		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 200" })
+		speakingTask = hs.task.new("/usr/bin/say", nil, { "-r", "200", text })
 		speakingTask:start()
 		hs.alert.show("Speaking (fast)...")
 	else
@@ -84,7 +84,7 @@ hs.hotkey.bind({ "cmd", "shift" }, "d", function()
 	local text = getTextToSpeak()
 	if text and text ~= "" then
 		-- Start new speech at 220 wpm
-		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 220" })
+		speakingTask = hs.task.new("/usr/bin/say", nil, { "-r", "220", text })
 		speakingTask:start()
 		hs.alert.show("Speaking (faster)...")
 	else
@@ -102,7 +102,7 @@ hs.hotkey.bind({ "cmd", "shift" }, "f", function()
 	local text = getTextToSpeak()
 	if text and text ~= "" then
 		-- Start new speech at 250 wpm
-		speakingTask = hs.task.new("/bin/bash", nil, { "-c", "pbpaste | say -r 250" })
+		speakingTask = hs.task.new("/usr/bin/say", nil, { "-r", "250", text })
 		speakingTask:start()
 		hs.alert.show("Speaking (fastest)...")
 	else
