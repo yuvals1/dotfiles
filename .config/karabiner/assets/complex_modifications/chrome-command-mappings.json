@@ -32,28 +32,6 @@
               "bundle_identifiers": ["^com\\.google\\.Chrome$"]
             }
           ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "key_code": "d",
-            "modifiers": {
-              "mandatory": ["command"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "x",
-              "modifiers": ["command"]
-            }
-          ],
-          "conditions": [
-            {
-              "type": "frontmost_application_if",
-              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
-            }
-          ]
         }
       ]
     }
