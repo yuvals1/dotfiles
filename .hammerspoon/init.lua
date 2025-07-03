@@ -199,5 +199,23 @@ hs.hotkey.bind({ "cmd", "shift" }, "C", function()
 	forceClick()
 	hs.alert.show("Clicked at current position")
 end)
+-- Move to specific coordinate and click - Alt+S
+hs.hotkey.bind({ "alt" }, "s", function()
+	hs.mouse.absolutePosition({ x = 2456, y = 642 })
+	-- Add a delay before clicking
+	hs.timer.doAfter(0.2, function()
+		forceClick()
+	end)
+end)
+
+-- Move to specific coordinate and click - Alt+F
+hs.hotkey.bind({ "alt" }, "f", function()
+	hs.mouse.absolutePosition({ x = 2480, y = 645 })
+	-- Add a delay before clicking
+	hs.timer.doAfter(0.2, function()
+		forceClick()
+	end)
+end)
+
 -- Alert to show Hammerspoon config loaded successfully
 hs.alert.show("Hammerspoon config loaded with click functionality and TTS")
