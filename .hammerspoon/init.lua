@@ -199,23 +199,34 @@ hs.hotkey.bind({ "cmd", "shift" }, "C", function()
 	forceClick()
 	hs.alert.show("Clicked at current position")
 end)
--- Move to specific coordinate and click - Alt+S
-hs.hotkey.bind({ "alt" }, "s", function()
-	hs.mouse.absolutePosition({ x = 2456, y = 642 })
-	-- Add a delay before clicking
-	hs.timer.doAfter(0.2, function()
-		forceClick()
-	end)
+-- Chrome-specific keybinds using event tap
+local chromeEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+	local flags = event:getFlags()
+	local keyCode = event:getKeyCode()
+	local app = hs.application.frontmostApplication()
+	
+	-- Only process if we're in Chrome
+	if app and app:name() == "Google Chrome" then
+		-- Check for Cmd+S (keyCode 1 is 's')
+		if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 1 then
+			hs.mouse.absolutePosition({ x = 2456, y = 642 })
+			hs.timer.doAfter(0.2, function()
+				forceClick()
+			end)
+			return true -- Consume the event
+		-- Check for Cmd+F (keyCode 3 is 'f')
+		elseif flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 3 then
+			hs.mouse.absolutePosition({ x = 2480, y = 645 })
+			hs.timer.doAfter(0.2, function()
+				forceClick()
+			end)
+			return true -- Consume the event
+		end
+	end
+	return false -- Let the event pass through for other apps
 end)
 
--- Move to specific coordinate and click - Alt+F
-hs.hotkey.bind({ "alt" }, "f", function()
-	hs.mouse.absolutePosition({ x = 2480, y = 645 })
-	-- Add a delay before clicking
-	hs.timer.doAfter(0.2, function()
-		forceClick()
-	end)
-end)
+chromeEventtap:start()
 
 -- Alert to show Hammerspoon config loaded successfully
 hs.alert.show("Hammerspoon config loaded with click functionality and TTS")
