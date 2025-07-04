@@ -226,7 +226,10 @@ local chromeEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, func
 	return false -- Let the event pass through for other apps
 end)
 
-chromeEventtap:start()
+-- Reload Hammerspoon configuration
+hs.hotkey.bind({ "cmd", "shift" }, "r", function()
+	hs.reload()
+end)
 
 -- Alert to show Hammerspoon config loaded successfully
 hs.alert.show("Hammerspoon config loaded with click functionality and TTS")
