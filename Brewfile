@@ -91,3 +91,5 @@ cask 'sublime-text'
 # Fonts
 cask 'font-meslo-lg-nerd-font'
 cask 'font-hack-nerd-font'
+cask 'font-sf-pro'
+cask 'sf-symbols'
