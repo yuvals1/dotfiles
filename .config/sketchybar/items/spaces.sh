@@ -14,9 +14,7 @@ for sid in $(aerospace list-workspaces --all); do
       label.padding_right=20 \
       label.y_offset=-1 \
       label="" \
-      script="$PLUGIN_DIR/aerospace.sh $sid" \
-      click_script="aerospace workspace $sid" \
-    --subscribe space.$sid aerospace_workspace_change
+      click_script="aerospace workspace $sid"
 done
 
 # Add space separator
@@ -27,8 +25,8 @@ sketchybar --add item space_separator left \
     icon.padding_left=4 \
     label.drawing=off \
     background.drawing=off \
-    script="$PLUGIN_DIR/space_windows.sh" \
+    script="$PLUGIN_DIR/aerospace_simple.sh" \
   --subscribe space_separator aerospace_workspace_change
 
-# Initial update to hide empty workspaces
-sh $PLUGIN_DIR/space_windows.sh
+# Initial update
+sh $PLUGIN_DIR/aerospace_simple.sh
