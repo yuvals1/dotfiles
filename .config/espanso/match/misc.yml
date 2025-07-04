@@ -1,0 +1,28 @@
+# Miscellaneous snippets
+
+matches:
+  # Modifications and Details
+  - trigger: ":imagine"
+    replace: "but dont use the 'imagine' thing"
+    label: "imagine"
+
+  - trigger: ":modi"
+    replace: "dont make any unnecessary modifications"
+    label: "modi"
+
+  - trigger: ":det"
+    replace: "make it more detailed"
+    label: "make it more detailed"
+
+  # Comparisons and Technical
+  - trigger: ":wd"
+    replace: "what's the difference"
+    label: "what's the difference"
+
+  - trigger: ":dif"
+    replace: "difference"
+    label: "difference"
+
+  - trigger: ":ana"
+    replace: "don't use analogies. i want to understand in the most technical sense."
+    label: "analogies"

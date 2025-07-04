@@ -1,0 +1,19 @@
+# Git and Conventional Commits snippets
+
+matches:
+  # Conventional Commits
+  - trigger: ":cv"
+    replace: "conventional commits"
+    label: "conventional commits"
+
+  - trigger: ":cf"
+    replace: "suggest git commit according to conventional commits\n\n\n"
+    label: "conventional commit full"
+
+  - trigger: ":cc"
+    replace: "suggest git commit message according to conventional commits"
+    label: "conventional commits full"
+
+  - trigger: ":cl"
+    replace: "suggest one line git commit according to conventional commits. put it in code block.\n"
+    label: "conventional commits one line"
