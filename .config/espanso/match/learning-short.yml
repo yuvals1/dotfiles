@@ -1,0 +1,27 @@
+# Short learning snippets (under 30 characters)
+
+matches:
+  - trigger: ":cn"
+    replace: "continue"
+  
+  - trigger: ":sl0"
+    replace: "explain slowly"
+  
+  - trigger: ":sm0"
+    replace: "small steps"
+    label: "small steps"
+  
+  - trigger: ":du"
+    replace: "do you understand"
+    label: "do you undetstand"
+  
+  - trigger: ":un"
+    replace: "i don't understand"
+    label: "i dont understand copy"
+  
+  - trigger: ":uf"
+    replace: "i don't fucking understand"
+  
+  - trigger: ":first"
+    replace: "explain from first principles"
+    label: "first principles"

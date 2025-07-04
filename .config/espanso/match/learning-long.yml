@@ -1,0 +1,18 @@
+# Long learning snippets (over 100 characters)
+
+matches:
+  - trigger: ":can"
+    replace: "can you teach it to me very slowly and comprehensively. move in small steps and only move on after i confimred"
+    label: "important - can you teach it to me very slowly and comprehensively"
+  
+  - trigger: ":care"
+    replace: "read this tutorial very carefully. this is pdf so it's not very structured so please read it again and again and again in order to make sure you understand it all. ask yourself if you understood everything to make sure and read again to make sure you indeed he indeed understood"
+    label: "important - read this tutorial very carefully"
+  
+  - trigger: ":new"
+    replace: "this is question 1 (about LR) of the homework. i want to solve it in the same way we solve question 2 (about dataflow). i want to move to new converstaion because this is getting too big. please tell me what to prompt the new conversation"
+    label: "important - new conversation"
+  
+  - trigger: ":instruct"
+    replace: "I have a homework question about LR parsing that I need to solve. I want to work through it using the same methodology we used successfully before: Go very slowly, step by step. Don't move to the next step until I explicitly approve with yes or continue Use multiple concrete examples to explain concepts If I say that I don't understand, completely restart the explanation from a simpler level. Explain technical terms in plain language first before using them"
+    label: "important - full instructions"
