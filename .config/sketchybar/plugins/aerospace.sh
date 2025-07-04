@@ -12,18 +12,23 @@ source "$CONFIG_DIR/colors.sh" # Load colors
 
 # Check if this space is the focused one
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
-    # Active workspace - inverted colors
+    # Active workspace - inverted colors with subtle shadow
     sketchybar --set $NAME \
         background.drawing=on \
         background.color=$ACCENT_COLOR \
         icon.color=$BAR_COLOR \
-        label.color=$BAR_COLOR
+        label.color=$BAR_COLOR \
+        background.shadow.drawing=on \
+        background.shadow.color=0x30000000 \
+        background.shadow.angle=45 \
+        background.shadow.distance=2
 else
     # Inactive workspace - normal colors
     sketchybar --set $NAME \
         background.drawing=off \
         icon.color=$ACCENT_COLOR \
-        label.color=$ACCENT_COLOR
+        label.color=$ACCENT_COLOR \
+        background.shadow.drawing=off
 fi
 
 # Update app icons for this workspace
