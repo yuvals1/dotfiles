@@ -4,3 +4,7 @@ matches:
   - trigger: ":br"
     replace: "brainstorm some ideas first"
     label: "brainstorm some ideas first"
+  
+  - trigger: ":cw"
+    replace: "try to think about creative workarounds"
+    label: "creative workarounds"
