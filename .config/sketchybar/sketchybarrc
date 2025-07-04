@@ -10,6 +10,9 @@ source "$CONFIG_DIR/colors.sh" # Loads all defined colors
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 ITEM_DIR="$CONFIG_DIR/items"
 
+# Register aerospace workspace change event
+sketchybar --add event aerospace_workspace_change
+
 ##### Bar Appearance #####
 # Configuring the general appearance of the bar, these are only some of the
 # options available. For all options see:

@@ -1,23 +1,34 @@
 #!/bin/bash
 
-SPACE_SIDS=(1 2 3 4 5 6 7 8 9 10)
-
-for sid in "${SPACE_SIDS[@]}"
-do
-  sketchybar --add space space.$sid left                                 \
-             --set space.$sid space=$sid                                 \
-                              icon=$sid                                  \
-                              label.font="sketchybar-app-font:Regular:16.0" \
-                              label.padding_right=20                     \
-                              label.y_offset=-1                          \
-                              script="$PLUGIN_DIR/space.sh"              
+# Remove any existing space items first
+for i in {1..10}; do
+  sketchybar --remove space.$i 2>/dev/null
 done
 
-sketchybar --add item space_separator left                             \
-           --set space_separator icon="􀆊"                                \
-                                 icon.color=$ACCENT_COLOR \
-                                 icon.padding_left=4                   \
-                                 label.drawing=off                     \
-                                 background.drawing=off                \
-                                 script="$PLUGIN_DIR/space_windows.sh" \
-           --subscribe space_separator space_windows_change                           
+# Dynamically create spaces based on aerospace workspaces
+for sid in $(aerospace list-workspaces --all); do
+  sketchybar --add item space.$sid left \
+    --set space.$sid \
+      icon=$sid \
+      label.font="sketchybar-app-font:Regular:16.0" \
+      label.padding_right=20 \
+      label.y_offset=-1 \
+      label="" \
+      script="$PLUGIN_DIR/aerospace.sh $sid" \
+      click_script="aerospace workspace $sid" \
+    --subscribe space.$sid aerospace_workspace_change
+done
+
+# Add space separator
+sketchybar --add item space_separator left \
+  --set space_separator \
+    icon="􀆊" \
+    icon.color=$ACCENT_COLOR \
+    icon.padding_left=4 \
+    label.drawing=off \
+    background.drawing=off \
+    script="$PLUGIN_DIR/space_windows.sh" \
+  --subscribe space_separator aerospace_workspace_change
+
+# Initial update to hide empty workspaces
+sh $PLUGIN_DIR/space_windows.sh
