@@ -1,6 +1,5 @@
 # Taps
 tap 'homebrew/bundle'
-tap 'homebrew/cask-fonts'
 tap 'nikitabobko/tap'
 tap 'oven-sh/bun'
 tap 'morantron/tmux-fingers'
