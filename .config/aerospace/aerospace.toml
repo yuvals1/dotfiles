@@ -15,7 +15,11 @@ after-login-command = []
 after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
-exec-on-workspace-change = ['/bin/bash', '-c', 'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE']
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -87,13 +91,13 @@ outer.right = 10
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#layout
-alt-semicolon = 'layout tiles horizontal accordion'
+alt-semicolon = 'layout tiles vertical accordion'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-alt-h = 'focus --boundaries workspace --boundaries-action stop left'
-alt-j = 'workspace prev --wrap-around'
-alt-k = 'workspace next --wrap-around'
-alt-l = 'focus --boundaries workspace --boundaries-action stop right'
+alt-h = 'workspace prev --wrap-around'
+alt-j = 'focus --boundaries workspace --boundaries-action stop down'
+alt-k = 'focus --boundaries workspace --boundaries-action stop up'
+alt-l = 'workspace next --wrap-around'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
 alt-cmd-h = 'move left'
