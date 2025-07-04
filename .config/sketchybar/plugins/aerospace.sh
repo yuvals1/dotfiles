@@ -5,10 +5,10 @@
 
 source "$CONFIG_DIR/colors.sh" # Load colors
 
-# Debug logging (remove after testing)
-echo "aerospace.sh called - SENDER: $SENDER, NAME: $NAME, ARG: $1" >> /tmp/sketchybar_aerospace.log
-echo "FOCUSED_WORKSPACE: $FOCUSED_WORKSPACE" >> /tmp/sketchybar_aerospace.log
-echo "---" >> /tmp/sketchybar_aerospace.log
+# Debug logging disabled
+# echo "aerospace.sh called - SENDER: $SENDER, NAME: $NAME, ARG: $1" >> /tmp/sketchybar_aerospace.log
+# echo "FOCUSED_WORKSPACE: $FOCUSED_WORKSPACE" >> /tmp/sketchybar_aerospace.log
+# echo "---" >> /tmp/sketchybar_aerospace.log
 
 # Check if this space is the focused one
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
