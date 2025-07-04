@@ -14,7 +14,9 @@ for sid in $(aerospace list-workspaces --all); do
       label.padding_right=20 \
       label.y_offset=-1 \
       label="" \
-      click_script="aerospace workspace $sid"
+      script="$PLUGIN_DIR/aerospace_fast.sh $sid" \
+      click_script="aerospace workspace $sid" \
+    --subscribe space.$sid aerospace_workspace_change
 done
 
 # Add space separator
@@ -25,8 +27,11 @@ sketchybar --add item space_separator left \
     icon.padding_left=4 \
     label.drawing=off \
     background.drawing=off \
-    script="$PLUGIN_DIR/aerospace_simple.sh" \
+    script="$PLUGIN_DIR/space_windows_fast.sh" \
   --subscribe space_separator aerospace_workspace_change
 
 # Initial update
-sh $PLUGIN_DIR/aerospace_simple.sh
+for sid in $(aerospace list-workspaces --all); do
+  sh $PLUGIN_DIR/aerospace_fast.sh $sid
+done
+sh $PLUGIN_DIR/space_windows_fast.sh
