@@ -1,0 +1,6 @@
+# Brainstorming patterns
+
+matches:
+  - trigger: ":br"
+    replace: "brainstorm some ideas first"
+    label: "brainstorm some ideas first"

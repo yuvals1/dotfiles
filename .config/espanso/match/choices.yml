@@ -1,0 +1,18 @@
+# Multiple choice interaction patterns
+
+matches:
+  - trigger: ":ways"
+    replace: "then ill choose and you'll implement"
+    label: "then ill choose and you'll implement"
+
+  - trigger: ":suggest1"
+    replace: "suggest a couple of strategies and ill choose one "
+    label: "suggest1"
+
+  - trigger: ":suggest2"
+    replace: "look at the code and suggest a couple of strategies to modify it in order to implement the desired behavior. then ill choose one of your options and youll implement it"
+    label: "suggest2"
+
+  - trigger: ":suggest3"
+    replace: "suggest a couple of strategies how to do it and ill choose one\n"
+    label: "suggest3"

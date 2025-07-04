@@ -1,0 +1,10 @@
+# Halt/delay execution patterns
+
+matches:
+  - trigger: ":di"
+    replace: "don't implement yet. let's discuss it first"
+    label: "don't implement yet"
+  
+  - trigger: ":mp"
+    replace: "make a plan first"
+    label: "make a plan first"

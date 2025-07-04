@@ -1,0 +1,6 @@
+# Resume/proceed patterns
+
+matches:
+  - trigger: ":pr"
+    replace: "let's proceed"
+    label: "let's proceed"

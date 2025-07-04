@@ -1,0 +1,6 @@
+# Step-by-step progress patterns
+
+matches:
+  - trigger: ":inc"
+    replace: "let's start with {} and proceed from there very slowly.\nmade the least amount of modifications each step"
+    label: "incremental flow"
