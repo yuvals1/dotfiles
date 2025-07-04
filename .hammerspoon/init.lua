@@ -199,32 +199,49 @@ hs.hotkey.bind({ "cmd", "shift" }, "C", function()
 	forceClick()
 	hs.alert.show("Clicked at current position")
 end)
--- Chrome-specific keybinds using event tap
-local chromeEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
-	local flags = event:getFlags()
-	local keyCode = event:getKeyCode()
-	local app = hs.application.frontmostApplication()
-	
-	-- Only process if we're in Chrome
-	if app and app:name() == "Google Chrome" then
-		-- Check for Cmd+S (keyCode 1 is 's')
-		if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 1 then
-			hs.mouse.absolutePosition({ x = 2456, y = 642 })
-			hs.timer.doAfter(0.2, function()
-				forceClick()
-			end)
-			return true -- Consume the event
-		-- Check for Cmd+F (keyCode 3 is 'f')
-		elseif flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 3 then
-			hs.mouse.absolutePosition({ x = 2480, y = 645 })
-			hs.timer.doAfter(0.2, function()
-				forceClick()
-			end)
-			return true -- Consume the event
+-- Chrome-specific keybinds using event tap with auto-restart
+local chromeEventtap = nil
+
+local function createChromeEventtap()
+	return hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
+		local flags = event:getFlags()
+		local keyCode = event:getKeyCode()
+		local app = hs.application.frontmostApplication()
+		
+		-- Only process if we're in Chrome
+		if app and app:name() == "Google Chrome" then
+			-- Check for Cmd+S (keyCode 1 is 's')
+			if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 1 then
+				hs.mouse.absolutePosition({ x = 2470, y = 644 })
+				hs.timer.doAfter(0.2, function()
+					forceClick()
+				end)
+				return true -- Consume the event
+			-- Check for Cmd+F (keyCode 3 is 'f')
+			elseif flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 3 then
+				hs.mouse.absolutePosition({ x = 2494, y = 645 })
+				hs.timer.doAfter(0.2, function()
+					forceClick()
+				end)
+				return true -- Consume the event
+			end
 		end
+		return false -- Let the event pass through for other apps
+	end)
+end
+
+-- Create and start the event tap
+chromeEventtap = createChromeEventtap()
+chromeEventtap:start()
+
+-- Monitor and restart the event tap if it stops
+local eventTapWatcher = hs.timer.new(5, function()
+	if not chromeEventtap:isEnabled() then
+		hs.alert.show("Chrome event tap stopped - restarting...")
+		chromeEventtap:start()
 	end
-	return false -- Let the event pass through for other apps
 end)
+eventTapWatcher:start()
 
 -- Reload Hammerspoon configuration
 hs.hotkey.bind({ "cmd", "shift" }, "r", function()
