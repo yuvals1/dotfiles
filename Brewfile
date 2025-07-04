@@ -4,6 +4,7 @@ tap 'nikitabobko/tap'
 tap 'oven-sh/bun'
 tap 'morantron/tmux-fingers'
 tap 'FelixKratz/formulae'
+tap 'espanso/espanso'
 # CLI tools
 brew 'git'
 brew 'git-delta'
