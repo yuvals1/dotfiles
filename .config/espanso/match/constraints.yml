@@ -1,0 +1,14 @@
+# Constraints and restrictions
+
+matches:
+  - trigger: ":imagine"
+    replace: "but dont use the 'imagine' thing"
+    label: "imagine"
+
+  - trigger: ":modi"
+    replace: "dont make any unnecessary modifications"
+    label: "modi"
+  
+  - trigger: ":ana"
+    replace: "don't use analogies. i want to understand in the most technical sense."
+    label: "analogies"

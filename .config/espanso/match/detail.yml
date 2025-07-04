@@ -1,0 +1,6 @@
+# Detail level control
+
+matches:
+  - trigger: ":det"
+    replace: "make it more detailed"
+    label: "make it more detailed"

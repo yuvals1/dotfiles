@@ -1,0 +1,10 @@
+# Question patterns
+
+matches:
+  - trigger: ":wd"
+    replace: "what's the difference"
+    label: "what's the difference"
+
+  - trigger: ":dif"
+    replace: "difference"
+    label: "difference"
