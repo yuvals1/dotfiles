@@ -114,22 +114,19 @@ done
 echo ""
 echo "Tasks:"
 echo ""
-TASK_HOURS=$(echo "$FILTERED_SESSIONS" | awk -F'[][]' '
+TASK_HOURS=$(echo "$FILTERED_SESSIONS" | awk '
     {
-        # Extract task name and minutes
-        if (NF >= 3) {
-            task = $2
-            # Find minutes in the line
+        # Extract task name - find text between [ and ]
+        start = index($0, "[")
+        end = index($0, "]")
+        if (start > 0 && end > start) {
+            task = substr($0, start + 1, end - start - 1)
+            # Find minutes
             for (i = 1; i <= NF; i++) {
-                if (index($0, " mins")) {
-                    split($0, parts, " ")
-                    for (j = 1; j <= length(parts); j++) {
-                        if (parts[j+1] == "mins") {
-                            minutes = parts[j]
-                            hours[task] += minutes / 60.0
-                            break
-                        }
-                    }
+                if ($i == "mins" && i > 1) {
+                    minutes = $(i-1)
+                    hours[task] += minutes / 60.0
+                    break
                 }
             }
         }
