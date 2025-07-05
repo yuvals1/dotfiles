@@ -7,8 +7,8 @@ MODE_FILE="$POMO_DIR/mode"
 mkdir -p "$POMO_DIR"
 
 # Timer durations
-WORK_MINUTES=25
-BREAK_MINUTES=5
+WORK_MINUTES=0.1
+BREAK_MINUTES=0.1
 
 # Function to stop any running timer
 stop_timer() {
@@ -47,7 +47,8 @@ else
     
     # Run timer in background
     (
-        TIME_LEFT=$((DURATION * 60))
+        # Convert to seconds (handle decimal minutes for testing)
+        TIME_LEFT=$(echo "$DURATION * 60" | bc | cut -d. -f1)
         while [ $TIME_LEFT -gt 0 ]; do
             MINUTES=$((TIME_LEFT / 60))
             SECONDS=$((TIME_LEFT % 60))
@@ -58,7 +59,20 @@ else
         done
         
         # Timer finished
+        END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+        
+        # Log to history file
+        HISTORY_FILE="$POMO_DIR/.pomodoro_history"
+        if [ "$MODE" = "work" ]; then
+            echo "$END_TIME [WORK] $WORK_MINUTES mins" >> "$HISTORY_FILE"
+        else
+            echo "$END_TIME [BREAK] $BREAK_MINUTES mins" >> "$HISTORY_FILE"
+        fi
+        
         sketchybar --set "$ITEM" label="$ICON Done!"
+        # Update history display
+        PLUGIN_DIR="$(dirname "$0")"
+        sh "$PLUGIN_DIR/pomodoro_history.sh"
         sleep 3
         sketchybar --set "$ITEM" label="$ICON"
         rm -f "$PID_FILE" "$MODE_FILE"
