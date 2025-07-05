@@ -7,8 +7,8 @@ MODE_FILE="$POMO_DIR/mode"
 mkdir -p "$POMO_DIR"
 
 # Timer durations
-WORK_MINUTES=0.1
-BREAK_MINUTES=0.1
+WORK_MINUTES=25
+BREAK_MINUTES=5
 
 # Function to stop any running timer
 stop_timer() {
