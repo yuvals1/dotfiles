@@ -1,7 +1,13 @@
 #!/bin/bash
 
-# Create a simple work button in the center
-sketchybar --add item pomodoro center \
-           --set pomodoro label="🍅" \
+# Create work button (tomato)
+sketchybar --add item pomodoro_work center \
+           --set pomodoro_work label="🍅" \
                  label.color=$WHITE \
-                 click_script="$PLUGIN_DIR/pomodoro_simple.sh"
+                 click_script="NAME=work $PLUGIN_DIR/pomodoro.sh"
+
+# Create break button (coffee)
+sketchybar --add item pomodoro_break center \
+           --set pomodoro_break label="☕️" \
+                 label.color=$WHITE \
+                 click_script="NAME=break $PLUGIN_DIR/pomodoro.sh"
