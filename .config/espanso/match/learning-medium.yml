@@ -4,23 +4,19 @@ matches:
   - trigger: ":exp1"
     replace: "explain the task so i know you understood"
     label: "explain the task so i know you understood"
-  
+
   - trigger: ":app"
     replace: "dont move to next step until i approve"
     label: "important - dont move to next step until i approve"
-  
+
   - trigger: ":readit"
     replace: "read it carefully and then i'll ask you to help with improving it"
     label: "readit"
-  
+
   - trigger: ":sl1"
     replace: "start from the beginning and move in very slow steps. dont move to next step until i approve"
     label: "important - start from the beginning and move in very slow steps"
-  
+
   - trigger: ":sm1"
     replace: "move in very slow and small steps. dont move to next step until i approve"
     label: "important - move in very slow and small steps"
-  
-  - trigger: ":complex"
-    replace: "this is a complex adoption so i want to do it in steps with verification after each step to see it's working as expected before moving to next step"
-    label: "complex adoption with verification"
