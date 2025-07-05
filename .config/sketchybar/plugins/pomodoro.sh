@@ -40,13 +40,16 @@ CURRENT_MODE=$(cat "$MODE_FILE" 2>/dev/null)
 if [ "$CURRENT_MODE" = "$MODE" ]; then
     # Same button clicked - stop the timer
     stop_timer
-else
-    # Start new timer (stop any existing timer first)
-    stop_timer
-    echo "$MODE" > "$MODE_FILE"
-    
-    # Run timer in background
-    (
+    exit 0
+fi
+
+# Start new timer (stop any existing timer first)
+stop_timer
+sleep 0.1  # Small delay to ensure cleanup completes
+echo "$MODE" > "$MODE_FILE"
+
+# Run timer in background
+(
         # Convert to seconds (handle decimal minutes for testing)
         TIME_LEFT=$(echo "$DURATION * 60" | bc | cut -d. -f1)
         while [ $TIME_LEFT -gt 0 ]; do
@@ -74,8 +77,7 @@ else
         sh "$PLUGIN_DIR/pomodoro_history.sh"
         sketchybar --set "$ITEM" label="$ICON"
         rm -f "$PID_FILE" "$MODE_FILE"
-    ) &
-    
-    # Save PID for stopping later
-    echo $! > "$PID_FILE"
-fi
+) &
+
+# Save PID for stopping later
+echo $! > "$PID_FILE"
