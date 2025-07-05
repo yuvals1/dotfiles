@@ -1,5 +1,6 @@
 # Pomodoro runtime files
 pomodoro/.pomodoro_history
+pomodoro/.pomodoro_history_test
 pomodoro/.reset_time
 pomodoro/.current_title
 pomodoro/.current_work_time
