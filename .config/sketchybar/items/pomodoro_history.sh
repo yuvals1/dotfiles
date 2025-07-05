@@ -6,4 +6,4 @@ sketchybar --add item pomodoro_history center \
                  label.color=$WHITE \
                  update_freq=60 \
                  script="$PLUGIN_DIR/pomodoro_history.sh" \
-                 click_script="$PLUGIN_DIR/pomodoro_history.sh"
+                 click_script="SENDER=mouse.clicked $PLUGIN_DIR/pomodoro_history.sh"
