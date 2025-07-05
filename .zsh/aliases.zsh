@@ -28,6 +28,8 @@ alias s3='pbpaste | say -r 200'
 alias gcalrefresh='rm -f ~/Library/Application\ Support/gcalcli/oauth && gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET" list'
 alias gcalcli='gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET"'
 
+alias t='timr-tui -c'
+
 
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
