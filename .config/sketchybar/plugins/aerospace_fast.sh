@@ -28,13 +28,13 @@ fi
 
 # Update app icons for this workspace
 if [ "$SENDER" = "aerospace_workspace_change" ] || [ "$SENDER" = "forced" ]; then
-    # Get all apps in this workspace (no deduplication)
-    apps=$(aerospace list-windows --workspace $1 --format "%{app-name}" 2>/dev/null)
+    # Get all apps in this workspace with deduplication
+    apps=$(aerospace list-windows --workspace $1 --format "%{app-name}" 2>/dev/null | sort -u)
     
     icon_strip=" "
     if [ "${apps}" != "" ]; then
         while read -r app; do
-            # Get icon for each app instance
+            # Get icon for each unique app
             icon_result=$($CONFIG_DIR/plugins/icon_map_fn.sh "$app")
             icon_strip+="${icon_result} "
         done <<< "${apps}"
