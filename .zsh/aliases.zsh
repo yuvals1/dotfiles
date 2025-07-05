@@ -30,6 +30,7 @@ alias gcalcli='gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIE
 
 alias t='timr-tui -c'
 
+alias pomo="$HOME/dotfiles/.config/sketchybar/pomo"
 
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
