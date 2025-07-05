@@ -119,6 +119,14 @@ echo "$MODE" > "$MODE_FILE"
             echo "$END_TIME [BREAK] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
         fi
         
+        # Send notification
+        NOTIFY_CMD="/Users/yuvalspiegel/dotfiles/tools/notify-wrapper.sh"
+        if [ "$MODE" = "work" ]; then
+            "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TITLE ($ACTUAL_MINS min)"
+        else
+            "$NOTIFY_CMD" "☕️ Break Over" "Ready for next pomodoro?"
+        fi
+        
         # Update history display
         PLUGIN_DIR="$(dirname "$0")"
         sh "$PLUGIN_DIR/pomodoro_history.sh"
