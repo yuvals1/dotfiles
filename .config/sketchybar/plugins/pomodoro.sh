@@ -69,11 +69,9 @@ else
             echo "$END_TIME [BREAK] $BREAK_MINUTES mins" >> "$HISTORY_FILE"
         fi
         
-        sketchybar --set "$ITEM" label="$ICON Done!"
         # Update history display
         PLUGIN_DIR="$(dirname "$0")"
         sh "$PLUGIN_DIR/pomodoro_history.sh"
-        sleep 3
         sketchybar --set "$ITEM" label="$ICON"
         rm -f "$PID_FILE" "$MODE_FILE"
     ) &
