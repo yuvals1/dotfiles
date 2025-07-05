@@ -1,0 +1,5 @@
+# Pomodoro runtime files
+pomodoro/.pomodoro_history
+pomodoro/.reset_time
+pomodoro/*.pid
+pomodoro/mode
