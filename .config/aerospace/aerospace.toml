@@ -95,8 +95,8 @@ alt-semicolon = 'layout tiles vertical accordion'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-h = 'workspace prev --wrap-around'
-alt-j = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace down'
-alt-k = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace up'
+alt-j = ['focus --boundaries workspace --boundaries-action wrap-around-the-workspace down', 'exec-and-forget sketchybar --trigger front_app_switched']
+alt-k = ['focus --boundaries workspace --boundaries-action wrap-around-the-workspace up', 'exec-and-forget sketchybar --trigger front_app_switched']
 alt-l = 'workspace next --wrap-around'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
