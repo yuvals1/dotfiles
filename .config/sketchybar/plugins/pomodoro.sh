@@ -3,12 +3,52 @@
 POMO_DIR="$HOME/.config/sketchybar/pomodoro"
 PID_FILE="$POMO_DIR/timer.pid"
 MODE_FILE="$POMO_DIR/mode"
+TITLE_FILE="$POMO_DIR/.current_title"
+WORK_TIME_FILE="$POMO_DIR/.current_work_time"
+BREAK_TIME_FILE="$POMO_DIR/.current_break_time"
+MULTIPLIER_FILE="$POMO_DIR/.time_multiplier"
 
 mkdir -p "$POMO_DIR"
 
-# Timer durations
-WORK_MINUTES=0.1
-BREAK_MINUTES=0.1
+# Function to get current title
+get_current_title() {
+    if [ -f "$TITLE_FILE" ]; then
+        cat "$TITLE_FILE"
+    else
+        echo "General Task"
+    fi
+}
+
+# Function to get timer durations
+get_work_minutes() {
+    if [ -f "$WORK_TIME_FILE" ]; then
+        cat "$WORK_TIME_FILE"
+    else
+        echo "25"
+    fi
+}
+
+get_break_minutes() {
+    if [ -f "$BREAK_TIME_FILE" ]; then
+        cat "$BREAK_TIME_FILE"
+    else
+        echo "5"
+    fi
+}
+
+# Get time multiplier (default to 1 for normal speed)
+get_time_multiplier() {
+    if [ -f "$MULTIPLIER_FILE" ]; then
+        cat "$MULTIPLIER_FILE"
+    else
+        echo "1"
+    fi
+}
+
+# Timer durations with multiplier applied
+MULTIPLIER=$(get_time_multiplier)
+WORK_MINUTES=$(echo "$(get_work_minutes) * $MULTIPLIER" | bc -l)
+BREAK_MINUTES=$(echo "$(get_break_minutes) * $MULTIPLIER" | bc -l)
 
 # Function to stop any running timer
 stop_timer() {
@@ -52,11 +92,16 @@ echo "$MODE" > "$MODE_FILE"
 (
         # Convert to seconds (handle decimal minutes for testing)
         TIME_LEFT=$(echo "$DURATION * 60" | bc | cut -d. -f1)
+        CURRENT_TITLE=$(get_current_title)
         while [ $TIME_LEFT -gt 0 ]; do
             MINUTES=$((TIME_LEFT / 60))
             SECONDS=$((TIME_LEFT % 60))
             TIME_STR=$(printf "%02d:%02d" $MINUTES $SECONDS)
-            sketchybar --set "$ITEM" label="$ICON $TIME_STR"
+            if [ "$MODE" = "work" ]; then
+                sketchybar --set "$ITEM" label="$ICON $TIME_STR - $CURRENT_TITLE"
+            else
+                sketchybar --set "$ITEM" label="$ICON $TIME_STR"
+            fi
             sleep 1
             TIME_LEFT=$((TIME_LEFT - 1))
         done
@@ -67,9 +112,11 @@ echo "$MODE" > "$MODE_FILE"
         # Log to history file
         HISTORY_FILE="$POMO_DIR/.pomodoro_history"
         if [ "$MODE" = "work" ]; then
-            echo "$END_TIME [WORK] $WORK_MINUTES mins" >> "$HISTORY_FILE"
+            ACTUAL_MINS=$(get_work_minutes)
+            echo "$END_TIME [WORK] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
         else
-            echo "$END_TIME [BREAK] $BREAK_MINUTES mins" >> "$HISTORY_FILE"
+            ACTUAL_MINS=$(get_break_minutes)
+            echo "$END_TIME [BREAK] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
         fi
         
         # Update history display

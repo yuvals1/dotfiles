@@ -1,5 +1,9 @@
 # Pomodoro runtime files
 pomodoro/.pomodoro_history
 pomodoro/.reset_time
+pomodoro/.current_title
+pomodoro/.current_work_time
+pomodoro/.current_break_time
+pomodoro/.time_multiplier
 pomodoro/*.pid
 pomodoro/mode
