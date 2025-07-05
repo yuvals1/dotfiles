@@ -1,0 +1,161 @@
+#!/bin/bash
+
+POMO_DIR="$HOME/.config/sketchybar/pomodoro"
+HISTORY_FILE="$POMO_DIR/.pomodoro_history"
+
+# Default to 7 days
+DAYS=7
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -d|--days)
+            DAYS="$2"
+            shift 2
+            ;;
+        -h|--help)
+            echo "Usage: pomo-vis [options]"
+            echo "Visualize your pomodoro session history"
+            echo ""
+            echo "Options:"
+            echo "  -d, --days N    Show last N days (default: 7)"
+            echo "  -h, --help      Show this help message"
+            echo ""
+            echo "Example:"
+            echo "  pomo-vis -d 2   # Show last 2 days"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Use 'pomo-vis --help' for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Check if history file exists
+if [ ! -f "$HISTORY_FILE" ]; then
+    echo "No pomodoro history found."
+    exit 0
+fi
+
+echo "📊 Pomodoro Sessions (Last $DAYS days)"
+echo ""
+
+# Get the date N days ago
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS date command
+    START_DATE=$(date -v-${DAYS}d "+%Y-%m-%d")
+else
+    # Linux date command
+    START_DATE=$(date -d "$DAYS days ago" "+%Y-%m-%d")
+fi
+
+# Filter history for work sessions in date range
+FILTERED_SESSIONS=$(awk -v start="$START_DATE" '
+    {
+        # Extract date from timestamp
+        date = $1
+        # Only include work sessions (not breaks) from start date onwards
+        if ($3 != "[BREAK]" && date >= start) {
+            print $0
+        }
+    }
+' "$HISTORY_FILE")
+
+# Check if we have any sessions
+if [ -z "$FILTERED_SESSIONS" ]; then
+    echo "No work sessions found in the last $DAYS days."
+    exit 0
+fi
+
+# Calculate total hours per day
+DAILY_HOURS=$(echo "$FILTERED_SESSIONS" | awk '
+    {
+        date = $1
+        # Extract minutes from the log entry (e.g., "30 mins")
+        for (i = 1; i <= NF; i++) {
+            if ($i == "mins") {
+                minutes = $(i-1)
+                hours[date] += minutes / 60.0
+                break
+            }
+        }
+    }
+    END {
+        for (d in hours) {
+            printf "%s %.1f\n", d, hours[d]
+        }
+    }
+' | sort)
+
+# Find max hours for scaling
+MAX_HOURS=$(echo "$DAILY_HOURS" | awk '{if ($2 > max) max = $2} END {print max}')
+
+# Draw bar chart
+echo "Daily Hours:"
+echo ""
+echo "$DAILY_HOURS" | while read date hours; do
+    # Calculate bar length (max 40 chars)
+    if (( $(echo "$MAX_HOURS > 0" | bc -l) )); then
+        BAR_LENGTH=$(echo "scale=0; $hours * 40 / $MAX_HOURS" | bc)
+    else
+        BAR_LENGTH=0
+    fi
+    
+    # Create bar
+    BAR=$(printf '█%.0s' $(seq 1 $BAR_LENGTH))
+    
+    # Print formatted line
+    printf "%-10s  %-40s %.1f hours\n" "$date" "$BAR" "$hours"
+done
+
+# Count task frequency
+echo ""
+echo "Tasks:"
+echo ""
+TASK_HOURS=$(echo "$FILTERED_SESSIONS" | awk -F'[][]' '
+    {
+        # Extract task name and minutes
+        if (NF >= 3) {
+            task = $2
+            # Find minutes in the line
+            for (i = 1; i <= NF; i++) {
+                if (index($0, " mins")) {
+                    split($0, parts, " ")
+                    for (j = 1; j <= length(parts); j++) {
+                        if (parts[j+1] == "mins") {
+                            minutes = parts[j]
+                            hours[task] += minutes / 60.0
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }
+    END {
+        for (t in hours) {
+            printf "%.1f %s\n", hours[t], t
+        }
+    }
+' | sort -nr | head -10)
+
+# Find max task hours for scaling
+MAX_TASK_HOURS=$(echo "$TASK_HOURS" | awk '{if ($1 > max) max = $1} END {print max}')
+
+# Show task breakdown
+echo "$TASK_HOURS" | while read hours task; do
+    # Calculate bar length (max 20 chars for tasks)
+    if (( $(echo "$MAX_TASK_HOURS > 0" | bc -l) )); then
+        BAR_LENGTH=$(echo "scale=0; $hours * 20 / $MAX_TASK_HOURS" | bc)
+    else
+        BAR_LENGTH=0
+    fi
+    
+    # Create bar
+    BAR=$(printf '█%.0s' $(seq 1 $BAR_LENGTH))
+    
+    # Print formatted line
+    printf "• %-30s %-20s %.1fh\n" "$task" "$BAR" "$hours"
+done
