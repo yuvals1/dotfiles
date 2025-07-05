@@ -39,6 +39,9 @@ clipboard_threshold: 100
 
 # For a list of all the available options, visit the official docs at: https://espanso.org/docs/
 
+# Search bar shortcut
+search_shortcut: CMD+SPACE
+
 # Fixes for Claude Code compatibility
 key_delay: 5
 inject_delay: 10
