@@ -26,8 +26,8 @@ if [ -f "$POMO_HISTORY" ]; then
         # Extract timestamp from line
         LINE_TIME=$(echo "$line" | cut -d' ' -f1-2)
         
-        # Only count work sessions after reset time
-        if [[ "$line" == *"[WORK]"* ]] && [[ "$LINE_TIME" > "$RESET_TIME" ]]; then
+        # Only count work sessions (not breaks) after reset time
+        if [[ "$line" != *"[BREAK]"* ]] && [[ "$LINE_TIME" > "$RESET_TIME" ]]; then
             count=$((count + 1))
         fi
     done < "$POMO_HISTORY"

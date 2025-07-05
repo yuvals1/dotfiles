@@ -113,7 +113,7 @@ echo "$MODE" > "$MODE_FILE"
         HISTORY_FILE="$POMO_DIR/.pomodoro_history"
         if [ "$MODE" = "work" ]; then
             ACTUAL_MINS=$(get_work_minutes)
-            echo "$END_TIME [WORK] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
+            echo "$END_TIME [$CURRENT_TITLE] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
         else
             ACTUAL_MINS=$(get_break_minutes)
             echo "$END_TIME [BREAK] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
