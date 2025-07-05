@@ -10,12 +10,9 @@ fn main() {
         _ => (args[1].as_str(), args[2].as_str()),
     };
     
-    match Notification::new()
+    // Just fire and forget the notification
+    let _ = Notification::new()
         .summary(title)
         .body(message)
-        .show() 
-    {
-        Ok(_) => {},
-        Err(e) => eprintln!("Failed to show notification: {}", e),
-    }
+        .show();
 }

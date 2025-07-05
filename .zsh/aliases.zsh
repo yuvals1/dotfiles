@@ -33,6 +33,10 @@ alias t='timr-tui -c'
 alias pomo="$HOME/dotfiles/.config/sketchybar/pomo"
 alias pomo-vis="$HOME/dotfiles/.config/sketchybar/pomo-vis"
 
+# Notification command
+alias notify="$HOME/dotfiles/tools/notify-wrapper.sh"
+alias noti="notify"
+
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     local cdfile="$(mktemp -t "yazi-cd.XXXXXX")"
