@@ -5,6 +5,7 @@ HISTORY_FILE="$POMO_DIR/.pomodoro_history"
 
 # Default to 7 days
 DAYS=7
+VIEW_MODE="chart"  # Default view mode
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -13,16 +14,23 @@ while [[ $# -gt 0 ]]; do
             DAYS="$2"
             shift 2
             ;;
+        --timeline)
+            VIEW_MODE="timeline"
+            shift
+            ;;
         -h|--help)
             echo "Usage: pomo-vis [options]"
             echo "Visualize your pomodoro session history"
             echo ""
             echo "Options:"
             echo "  -d, --days N    Show last N days (default: 7)"
+            echo "  --timeline       Show timeline view instead of bar chart"
             echo "  -h, --help      Show this help message"
             echo ""
-            echo "Example:"
-            echo "  pomo-vis -d 2   # Show last 2 days"
+            echo "Examples:"
+            echo "  pomo-vis -d 2          # Show last 2 days as bar chart"
+            echo "  pomo-vis --timeline    # Show today's timeline"
+            echo "  pomo-vis --timeline -d 3  # Show last 3 days as timeline"
             exit 0
             ;;
         *)
@@ -66,6 +74,105 @@ FILTERED_SESSIONS=$(awk -v start="$START_DATE" '
 # Check if we have any sessions
 if [ -z "$FILTERED_SESSIONS" ]; then
     echo "No work sessions found in the last $DAYS days."
+    exit 0
+fi
+
+# Display based on view mode
+if [ "$VIEW_MODE" = "timeline" ]; then
+    # For timeline, we want ALL sessions (including breaks)
+    ALL_SESSIONS=$(awk -v start="$START_DATE" '
+        {
+            # Extract date from timestamp
+            date = $1
+            # Include all sessions from start date onwards
+            if (date >= start) {
+                print $0
+            }
+        }
+    ' "$HISTORY_FILE")
+    
+    # Check if we have any sessions for timeline
+    if [ -z "$ALL_SESSIONS" ]; then
+        echo "No sessions found in the last $DAYS days."
+        exit 0
+    fi
+    
+    # Sort sessions by timestamp for timeline
+    SORTED_SESSIONS=$(echo "$ALL_SESSIONS" | sort)
+    
+    # Determine title based on days
+    if [ "$DAYS" = "1" ]; then
+        echo "📅 Today's Sessions:"
+    else
+        echo "📅 Last $DAYS days Sessions:"
+    fi
+    echo ""
+    
+    # Process sessions and group by hour
+    CURRENT_HOUR=""
+    CURRENT_DATE=""
+    echo "$SORTED_SESSIONS" | while read line; do
+        # Extract date, time and session info
+        DATE=$(echo "$line" | awk '{print $1}')
+        TIME=$(echo "$line" | awk '{print $2}')
+        HOUR=$(echo "$TIME" | cut -d: -f1)
+        MINUTE=$(echo "$TIME" | cut -d: -f2)
+        
+        # Extract task name and duration
+        TASK=$(echo "$line" | sed -n 's/.*\[\(.*\)\].*/\1/p')
+        DURATION=$(echo "$line" | awk '{for(i=1;i<=NF;i++) if($i=="mins") print $(i-1)}')
+        
+        # Print date header if new date
+        if [ "$DATE" != "$CURRENT_DATE" ] && [ "$DAYS" != "1" ]; then
+            CURRENT_DATE="$DATE"
+            CURRENT_HOUR=""  # Reset hour for new date
+            echo ""
+            echo "── $DATE ──"
+            echo ""
+        fi
+        
+        # Add spacing between different hours
+        if [ "$HOUR" != "$CURRENT_HOUR" ]; then
+            if [ -n "$CURRENT_HOUR" ]; then
+                echo "      │"  # Add a visual separator between hours
+            fi
+            CURRENT_HOUR="$HOUR"
+        fi
+        
+        # Determine icon based on task type
+        if [ "$TASK" = "BREAK" ]; then
+            ICON="☕️"
+        else
+            ICON="🍅"
+        fi
+        
+        # Format time as HH:MM
+        TIME_FORMATTED=$(printf "%s:%s" "$HOUR" "$MINUTE")
+        
+        # Print session with proper alignment
+        # Format: "HH:MM ┤ 🍅 Task Name (25m)"
+        printf "%5s ┤ %s %-30s (%sm)\n" "$TIME_FORMATTED" "$ICON" "$TASK" "$DURATION"
+    done
+    
+    # Calculate and show summary
+    echo ""
+    echo "──────────────────────────────────────────────"
+    TOTAL_MINUTES=$(echo "$SORTED_SESSIONS" | awk '
+        {
+            for (i = 1; i <= NF; i++) {
+                if ($i == "mins") {
+                    total += $(i-1)
+                }
+            }
+        }
+        END { print total }
+    ')
+    TOTAL_HOURS=$(echo "scale=1; $TOTAL_MINUTES / 60" | bc)
+    WORK_SESSIONS=$(echo "$SORTED_SESSIONS" | grep -v "\[BREAK\]" | wc -l | tr -d ' ')
+    BREAK_SESSIONS=$(echo "$SORTED_SESSIONS" | grep "\[BREAK\]" | wc -l | tr -d ' ')
+    
+    echo "Total: $TOTAL_HOURS hours ($WORK_SESSIONS work, $BREAK_SESSIONS breaks)"
+    
     exit 0
 fi
 
