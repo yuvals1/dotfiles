@@ -10,6 +10,7 @@ matches:
     replace: "suggest git commit message according to conventional commits"
     label: "conventional commits full"
 
-  - trigger: ":co"
+  - trigger: ":coc"
     replace: "commit our changes"
     label: "commit our changes"
+
