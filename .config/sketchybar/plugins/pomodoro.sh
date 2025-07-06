@@ -26,8 +26,11 @@ stop_timer() {
         kill $(cat "$PID_FILE") 2>/dev/null
         rm -f "$PID_FILE"
     fi
-    sketchybar --set pomodoro_work label="🍅" \
-               --set pomodoro_break label="☕️"
+    # Show configured times when idle
+    local work_time=$(get_work_minutes)
+    local break_time=$(get_break_minutes)
+    sketchybar --set pomodoro_work label="🍅 ${work_time}" \
+               --set pomodoro_break label="☕️ ${break_time}"
     rm -f "$MODE_FILE"
 }
 
@@ -103,8 +106,13 @@ echo "$MODE" > "$MODE_FILE"
         # Update history display
         sh "$PLUGIN_DIR/pomodoro_history.sh"
         
-        # Reset to default icon
-        sketchybar --set "$ITEM" label="$ICON"
+        # Reset to show configured time
+        if [ "$MODE" = "work" ]; then
+            idle_time=$(get_work_minutes)
+        else
+            idle_time=$(get_break_minutes)
+        fi
+        sketchybar --set "$ITEM" label="$ICON ${idle_time}"
         
         rm -f "$PID_FILE" "$MODE_FILE"
 ) &
