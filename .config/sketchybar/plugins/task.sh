@@ -22,36 +22,19 @@ get_random_emoji() {
 # Function to update task display
 update_task_display() {
     local current_title=$(get_current_title)
-    local needs_save=false
     
-    # Check if title already has an emoji (from pomo command)
-    # Get the first "word" and check if it contains non-ASCII characters
-    local first_word=$(echo "$current_title" | awk '{print $1}')
-    if echo "$first_word" | LC_ALL=C grep -q '[^[:print:][:space:]]'; then
-        # Title has emoji, extract it
-        local icon=$(extract_icon "$current_title")
-        local clean_title=$(extract_task_name "$current_title")
-    else
-        # No emoji in title, try to find one based on keywords
-        local task_lower=$(echo "$current_title" | tr '[:upper:]' '[:lower:]')
-        local icon=$(get_emoji_for_keyword "$task_lower")
-        
-        if [ -z "$icon" ]; then
-            # No keyword match, use random emoji
-            icon=$(get_random_emoji)
-        fi
-        local clean_title="$current_title"
-        needs_save=true
-    fi
+    # Always treat title as plain text and find emoji based on keywords
+    local task_lower=$(echo "$current_title" | tr '[:upper:]' '[:lower:]')
+    local icon=$(get_emoji_for_keyword "$task_lower")
     
-    # Save the emoji-enhanced title back to file if we added an emoji
-    if [ "$needs_save" = true ]; then
-        echo "$icon $clean_title" > "$TITLE_FILE"
+    if [ -z "$icon" ]; then
+        # No keyword match, use random emoji
+        icon=$(get_random_emoji)
     fi
     
     # Update display
     sketchybar --set task icon="$icon" \
-                         label="$clean_title"
+                         label="$current_title"
 }
 
 # Handle click events

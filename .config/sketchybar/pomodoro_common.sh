@@ -130,21 +130,6 @@ is_debug_mode() {
     [ -f "$DEBUG_FILE" ]
 }
 
-
-# Extract icon from task name
-extract_icon() {
-    local task="$1"
-    # Extract first word which should be the icon
-    echo "$task" | awk '{print $1}'
-}
-
-# Extract task name without icon
-extract_task_name() {
-    local task="$1"
-    # Remove first word (icon) and return the rest
-    echo "$task" | cut -d' ' -f2-
-}
-
 # Get recent unique tasks from history
 get_recent_tasks() {
     local limit="${1:-5}"  # Default to 5 recent tasks

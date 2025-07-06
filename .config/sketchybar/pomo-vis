@@ -347,9 +347,13 @@ if [ "$VIEW_MODE" = "timeline" ]; then
             CURRENT_HOUR="$HOUR"
         fi
         
-        # Extract icon and clean task name
-        ICON=$(extract_icon "$TASK")
-        CLEAN_TASK=$(extract_task_name "$TASK")
+        # Get emoji for task
+        TASK_LOWER=$(echo "$TASK" | tr '[:upper:]' '[:lower:]')
+        ICON=$(get_emoji_for_keyword "$TASK_LOWER")
+        if [ -z "$ICON" ]; then
+            ICON="🍅"  # Default pomodoro icon
+        fi
+        CLEAN_TASK="$TASK"
         
         # Format time as HH:MM
         TIME_FORMATTED=$(printf "%s:%s" "$HOUR" "$MINUTE")
@@ -465,9 +469,13 @@ echo "$TASK_HOURS" | while read hours task; do
     # Create bar
     BAR=$(printf '█%.0s' $(seq 1 $BAR_LENGTH))
     
-    # Extract icon and clean task name
-    ICON=$(extract_icon "$task")
-    CLEAN_TASK=$(extract_task_name "$task")
+    # Get emoji for task
+    TASK_LOWER=$(echo "$task" | tr '[:upper:]' '[:lower:]')
+    ICON=$(get_emoji_for_keyword "$TASK_LOWER")
+    if [ -z "$ICON" ]; then
+        ICON="🍅"  # Default pomodoro icon
+    fi
+    CLEAN_TASK="$task"
     
     # Print formatted line with icon
     printf "%s %-30s %-20s %.1fh\n" "$ICON" "$CLEAN_TASK" "$BAR" "$hours"
