@@ -220,6 +220,8 @@ if [ $# -eq 0 ]; then
     if [ -n "$NEW_TITLE" ]; then
         NEW_TITLE=$(add_emoji_to_task "$NEW_TITLE")
         echo "$NEW_TITLE" > "$TITLE_FILE"
+        # Update task display in sketchybar
+        bash "$SCRIPT_DIR/plugins/task.sh"
     fi
     [ -n "$NEW_WORK_TIME" ] && echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
     [ -n "$NEW_BREAK_TIME" ] && echo "$NEW_BREAK_TIME" > "$BREAK_TIME_FILE"
@@ -355,6 +357,8 @@ if [ -n "$TITLE" ]; then
     # This centralizes icon logic here instead of in pomodoro.sh
     TITLE=$(add_emoji_to_task "$TITLE")
     echo "$TITLE" > "$TITLE_FILE"
+    # Update task display in sketchybar
+    bash "$SCRIPT_DIR/plugins/task.sh"
 fi
 [ -n "$WORK_TIME" ] && echo "$WORK_TIME" > "$WORK_TIME_FILE"
 [ -n "$BREAK_TIME" ] && echo "$BREAK_TIME" > "$BREAK_TIME_FILE"
