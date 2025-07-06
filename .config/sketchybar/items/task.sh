@@ -18,7 +18,3 @@ sketchybar --add item task center \
                  script="$PLUGIN_DIR/task.sh" \
                  click_script="$PLUGIN_DIR/task.sh"
 
-# Subscribe to pomodoro events
-sketchybar --subscribe task pomodoro_start \
-                           pomodoro_stop \
-                           pomodoro_update
