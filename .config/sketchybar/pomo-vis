@@ -38,7 +38,7 @@ if [ $# -eq 0 ]; then
         time_options="today|Today's sessions\nlast-week|Last 7 days\nlast-month|Last 30 days\nby-task|View specific task\nall-time|All time statistics\ncustom|Custom days\n"
         
         # Show fzf and get selection
-        selected_line=$(echo -e "$time_options" | fzf --height=8 --layout=reverse --prompt="Time range> ")
+        selected_line=$(echo -e "$time_options" | fzf --height=8 --layout=reverse --prompt="Time range> " --preview-window=hidden)
         
         if [ -n "$selected_line" ]; then
             # Extract option
@@ -69,7 +69,7 @@ if [ $# -eq 0 ]; then
                         grep -v "^[[:space:]]*$" | \
                         sort | uniq -c | sort -rn | \
                         awk '{printf "%3d sessions | %s\n", $1, substr($0, index($0,$2))}' | \
-                        fzf --height=15 --layout=reverse --prompt="Task> " | \
+                        fzf --height=15 --layout=reverse --prompt="Task> " --preview-window=hidden | \
                         sed 's/^[^|]*| //')
                     
                     if [ -n "$selected_task" ]; then
@@ -116,7 +116,7 @@ if [ $# -eq 0 ]; then
         echo "Select view mode:"
         
         view_options="chart|Bar chart summary\ntimeline|Detailed timeline\n"
-        selected_view=$(echo -e "$view_options" | fzf --height=4 --layout=reverse --prompt="View mode> ")
+        selected_view=$(echo -e "$view_options" | fzf --height=4 --layout=reverse --prompt="View mode> " --preview-window=hidden)
         
         if [ -n "$selected_view" ]; then
             VIEW_MODE=$(echo "$selected_view" | cut -d'|' -f1)
@@ -193,7 +193,7 @@ while [[ $# -gt 0 ]]; do
                     grep -v "^[[:space:]]*$" | \
                     sort | uniq -c | sort -rn | \
                     awk '{printf "%3d sessions | %s\n", $1, substr($0, index($0,$2))}' | \
-                    fzf --height=15 --layout=reverse --prompt="Select task> " | \
+                    fzf --height=15 --layout=reverse --prompt="Select task> " --preview-window=hidden | \
                     sed 's/^[^|]*| //')
                 
                 if [ -n "$selected_task" ]; then

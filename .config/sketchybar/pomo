@@ -85,7 +85,7 @@ if [ $# -eq 0 ]; then
         done < <(get_recent_tasks 10)
         
         # Show fzf with print-query to allow custom input
-        result=$(echo -e "$task_list" | fzf --height=12 --layout=reverse --prompt="Task> " --print-query)
+        result=$(echo -e "$task_list" | fzf --height=12 --layout=reverse --prompt="Task> " --print-query --preview-window=hidden)
         
         # fzf returns query on first line, selection on second
         query=$(echo "$result" | head -1)
@@ -151,7 +151,7 @@ if [ $# -eq 0 ]; then
         done < <(list_presets)
         
         # Show fzf and get selection
-        selected_line=$(echo -e "$preset_list" | fzf --height=10 --layout=reverse --prompt="Preset> ")
+        selected_line=$(echo -e "$preset_list" | fzf --height=10 --layout=reverse --prompt="Preset> " --preview-window=hidden)
         
         if [ -n "$selected_line" ]; then
             # Extract preset name (before the |)
@@ -310,7 +310,7 @@ while [[ $# -gt 0 ]]; do
             # Quick fzf mode - select task from recent
             if [ "$HAS_FZF" = "yes" ]; then
                 # Get recent tasks
-                selected_task=$(get_recent_tasks 20 | fzf --height=15 --layout=reverse --prompt="Select task> ")
+                selected_task=$(get_recent_tasks 20 | fzf --height=15 --layout=reverse --prompt="Select task> " --preview-window=hidden)
                 if [ -n "$selected_task" ]; then
                     pomo -n "$selected_task"
                 fi
