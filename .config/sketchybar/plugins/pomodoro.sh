@@ -62,28 +62,12 @@ echo "$MODE" > "$MODE_FILE"
 (
         # Convert to seconds (handle decimal minutes for testing)
         TIME_LEFT=$(echo "$DURATION * 60" | bc | cut -d. -f1)
-        CURRENT_TITLE=$(get_current_title)
-        
-        # Extract icon and clean title for display
-        if [ "$MODE" = "work" ]; then
-            # Title already contains icon from pomo command (e.g., "🍅 task name")
-            # Extract first word (the emoji)
-            DISPLAY_ICON=$(echo "$CURRENT_TITLE" | sed 's/^\([^ ]*\).*/\1/')
-            # Remove emoji for clean display
-            CLEAN_TITLE=$(clean_task_name "$CURRENT_TITLE")
-        else
-            DISPLAY_ICON="☕️"
-        fi
         
         while [ $TIME_LEFT -gt 0 ]; do
             MINUTES=$((TIME_LEFT / 60))
             SECONDS=$((TIME_LEFT % 60))
             TIME_STR=$(printf "%02d:%02d" $MINUTES $SECONDS)
-            if [ "$MODE" = "work" ]; then
-                sketchybar --set "$ITEM" label="$DISPLAY_ICON $CLEAN_TITLE - $TIME_STR"
-            else
-                sketchybar --set "$ITEM" label="$DISPLAY_ICON $TIME_STR"
-            fi
+            sketchybar --set "$ITEM" label="$ICON $TIME_STR"
             sleep 1
             TIME_LEFT=$((TIME_LEFT - 1))
         done
@@ -105,16 +89,14 @@ echo "$MODE" > "$MODE_FILE"
         fi
         
         if [ "$MODE" = "work" ]; then
-            # Title already contains icon, just log it as is
+            # Get current title from file for logging
+            CURRENT_TITLE=$(get_current_title)
             echo "$END_TIME [$CURRENT_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
-        else
-            echo "$END_TIME [☕️ BREAK] $LOG_MINS mins" >> "$HISTORY_FILE"
-        fi
-        
-        # Send notification
-        if [ "$MODE" = "work" ]; then
+            # Send notification
             "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TITLE ($LOG_MINS min)"
         else
+            echo "$END_TIME [☕️ BREAK] $LOG_MINS mins" >> "$HISTORY_FILE"
+            # Send notification
             "$NOTIFY_CMD" "☕️ Break Over" "Ready for next pomodoro?"
         fi
         
@@ -122,11 +104,7 @@ echo "$MODE" > "$MODE_FILE"
         sh "$PLUGIN_DIR/pomodoro_history.sh"
         
         # Reset to default icon
-        if [ "$MODE" = "work" ]; then
-            sketchybar --set "$ITEM" label="🍅"
-        else
-            sketchybar --set "$ITEM" label="☕️"
-        fi
+        sketchybar --set "$ITEM" label="$ICON"
         
         rm -f "$PID_FILE" "$MODE_FILE"
 ) &
