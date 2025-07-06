@@ -199,14 +199,16 @@ if [ $# -eq 0 ]; then
         echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
         # Update display if not running
         if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "work" ]; then
-            sketchybar --set pomodoro_work label="🍅 ${NEW_WORK_TIME}"
+            WORK_DISPLAY=$(printf "%02d:00" $NEW_WORK_TIME)
+            sketchybar --set pomodoro_work label="🍅 ${WORK_DISPLAY}"
         fi
     fi
     if [ -n "$NEW_BREAK_TIME" ]; then
         echo "$NEW_BREAK_TIME" > "$BREAK_TIME_FILE"
         # Update display if not running
         if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "break" ]; then
-            sketchybar --set pomodoro_break label="☕️ ${NEW_BREAK_TIME}"
+            BREAK_DISPLAY=$(printf "%02d:00" $NEW_BREAK_TIME)
+            sketchybar --set pomodoro_break label="☕️ ${BREAK_DISPLAY}"
         fi
     fi
     
@@ -346,14 +348,16 @@ if [ -n "$WORK_TIME" ]; then
     echo "$WORK_TIME" > "$WORK_TIME_FILE"
     # Update display if not running
     if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "work" ]; then
-        sketchybar --set pomodoro_work label="🍅 ${WORK_TIME}"
+        WORK_DISPLAY=$(printf "%02d:00" $WORK_TIME)
+        sketchybar --set pomodoro_work label="🍅 ${WORK_DISPLAY}"
     fi
 fi
 if [ -n "$BREAK_TIME" ]; then
     echo "$BREAK_TIME" > "$BREAK_TIME_FILE"
     # Update display if not running
     if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "break" ]; then
-        sketchybar --set pomodoro_break label="☕️ ${BREAK_TIME}"
+        BREAK_DISPLAY=$(printf "%02d:00" $BREAK_TIME)
+        sketchybar --set pomodoro_break label="☕️ ${BREAK_DISPLAY}"
     fi
 fi
 if [ -n "$DEBUG" ]; then

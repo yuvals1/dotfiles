@@ -29,8 +29,10 @@ stop_timer() {
     # Show configured times when idle
     local work_time=$(get_work_minutes)
     local break_time=$(get_break_minutes)
-    sketchybar --set pomodoro_work label="🍅 ${work_time}" \
-               --set pomodoro_break label="☕️ ${break_time}"
+    local work_display=$(printf "%02d:00" $work_time)
+    local break_display=$(printf "%02d:00" $break_time)
+    sketchybar --set pomodoro_work label="🍅 ${work_display}" \
+               --set pomodoro_break label="☕️ ${break_display}"
     rm -f "$MODE_FILE"
 }
 
@@ -112,7 +114,8 @@ echo "$MODE" > "$MODE_FILE"
         else
             idle_time=$(get_break_minutes)
         fi
-        sketchybar --set "$ITEM" label="$ICON ${idle_time}"
+        idle_display=$(printf "%02d:00" $idle_time)
+        sketchybar --set "$ITEM" label="$ICON ${idle_display}"
         
         rm -f "$PID_FILE" "$MODE_FILE"
 ) &
