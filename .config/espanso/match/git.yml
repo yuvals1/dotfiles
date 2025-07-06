@@ -11,6 +11,5 @@ matches:
     label: "conventional commits full"
 
   - trigger: ":coc"
-    replace: "commit our changes"
-    label: "commit our changes"
-
+    replace: "let's commit our changes"
+    label: "let's commit our changes"
