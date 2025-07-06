@@ -136,7 +136,8 @@ echo "$MODE" > "$MODE_FILE"
         
         # Get the appropriate icon for display
         if [ "$MODE" = "work" ]; then
-            DISPLAY_ICON=$(get_task_icon "$CURRENT_TITLE")
+            # Title already contains icon from pomo command
+            DISPLAY_ICON=$(echo "$CURRENT_TITLE" | sed 's/^\([^ ]*\).*/\1/')
             CLEAN_TITLE=$(clean_task_name "$CURRENT_TITLE")
         else
             DISPLAY_ICON="☕️"
@@ -173,9 +174,8 @@ echo "$MODE" > "$MODE_FILE"
         fi
         
         if [ "$MODE" = "work" ]; then
-            ICON=$(get_task_icon "$CURRENT_TITLE")
-            CLEAN_TITLE=$(clean_task_name "$CURRENT_TITLE")
-            echo "$END_TIME [$ICON $CLEAN_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
+            # Title already contains icon, just log it as is
+            echo "$END_TIME [$CURRENT_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
         else
             echo "$END_TIME [☕️ BREAK] $LOG_MINS mins" >> "$HISTORY_FILE"
         fi

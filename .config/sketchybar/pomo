@@ -77,7 +77,36 @@ if [ $# -eq 0 ]; then
     read DEBUG_RESPONSE
     
     # Apply changes
-    [ -n "$NEW_TITLE" ] && echo "$NEW_TITLE" > "$TITLE_FILE"
+    if [ -n "$NEW_TITLE" ]; then
+        # Check if title already starts with a known emoji
+        first_word=$(echo "$NEW_TITLE" | awk '{print $1}')
+        
+        # List of known emojis we use
+        case "$first_word" in
+            "🍅"|"☕️"|"🎓"|"📦"|"⚙️"|"🧘"|"🎮"|"📚"|*[![:ascii:]]*)
+                # Already has emoji, do nothing
+                :
+                ;;
+            *)
+                # No emoji, add one based on keywords
+                title_lower=$(echo "$NEW_TITLE" | tr '[:upper:]' '[:lower:]')
+                if [[ "$title_lower" == *"break"* ]]; then
+                    NEW_TITLE="☕️ $NEW_TITLE"
+                elif [[ "$title_lower" == *"technion"* ]]; then
+                    NEW_TITLE="🎓 $NEW_TITLE"
+                elif [[ "$title_lower" == *"logistics"* ]]; then
+                    NEW_TITLE="📦 $NEW_TITLE"
+                elif [[ "$title_lower" == *"dotfiles"* ]]; then
+                    NEW_TITLE="⚙️ $NEW_TITLE"
+                elif [[ "$title_lower" == *"therapy"* ]]; then
+                    NEW_TITLE="🧘 $NEW_TITLE"
+                else
+                    NEW_TITLE="🍅 $NEW_TITLE"
+                fi
+                ;;
+        esac
+        echo "$NEW_TITLE" > "$TITLE_FILE"
+    fi
     [ -n "$NEW_WORK_TIME" ] && echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
     [ -n "$NEW_BREAK_TIME" ] && echo "$NEW_BREAK_TIME" > "$BREAK_TIME_FILE"
     
@@ -142,7 +171,36 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Update files if values were provided
-[ -n "$TITLE" ] && echo "$TITLE" > "$TITLE_FILE"
+if [ -n "$TITLE" ]; then
+    # Check if title already starts with a known emoji
+    first_word=$(echo "$TITLE" | awk '{print $1}')
+    
+    # List of known emojis we use
+    case "$first_word" in
+        "🍅"|"☕️"|"🎓"|"📦"|"⚙️"|"🧘"|"🎮"|"📚"|*[![:ascii:]]*)
+            # Already has emoji, do nothing
+            :
+            ;;
+        *)
+        # No emoji, add one based on keywords
+        title_lower=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]')
+        if [[ "$title_lower" == *"break"* ]]; then
+            TITLE="☕️ $TITLE"
+        elif [[ "$title_lower" == *"technion"* ]]; then
+            TITLE="🎓 $TITLE"
+        elif [[ "$title_lower" == *"logistics"* ]]; then
+            TITLE="📦 $TITLE"
+        elif [[ "$title_lower" == *"dotfiles"* ]]; then
+            TITLE="⚙️ $TITLE"
+        elif [[ "$title_lower" == *"therapy"* ]]; then
+            TITLE="🧘 $TITLE"
+        else
+            TITLE="🍅 $TITLE"
+        fi
+        ;;
+    esac
+    echo "$TITLE" > "$TITLE_FILE"
+fi
 [ -n "$WORK_TIME" ] && echo "$WORK_TIME" > "$WORK_TIME_FILE"
 [ -n "$BREAK_TIME" ] && echo "$BREAK_TIME" > "$BREAK_TIME_FILE"
 if [ -n "$DEBUG" ]; then
