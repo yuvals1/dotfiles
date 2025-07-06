@@ -50,6 +50,26 @@ fi
 echo "📊 Pomodoro Sessions (Last $DAYS days)"
 echo ""
 
+# Function to get smart icon based on task name
+get_task_icon() {
+    local task="$1"
+    local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
+    
+    if [[ "$task_lower" == *"break"* ]]; then
+        echo "☕️"
+    elif [[ "$task_lower" == *"technion"* ]]; then
+        echo "🎓"
+    elif [[ "$task_lower" == *"logistics"* ]]; then
+        echo "📦"
+    elif [[ "$task_lower" == *"dotfiles"* ]]; then
+        echo "⚙️"
+    elif [[ "$task_lower" == *"therapy"* ]]; then
+        echo "🧘"
+    else
+        echo "🍅"  # Default
+    fi
+}
+
 # Get the date N days ago
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS date command
@@ -139,12 +159,8 @@ if [ "$VIEW_MODE" = "timeline" ]; then
             CURRENT_HOUR="$HOUR"
         fi
         
-        # Determine icon based on task type
-        if [ "$TASK" = "BREAK" ]; then
-            ICON="☕️"
-        else
-            ICON="🍅"
-        fi
+        # Get smart icon for task
+        ICON=$(get_task_icon "$TASK")
         
         # Format time as HH:MM
         TIME_FORMATTED=$(printf "%s:%s" "$HOUR" "$MINUTE")
@@ -260,6 +276,9 @@ echo "$TASK_HOURS" | while read hours task; do
     # Create bar
     BAR=$(printf '█%.0s' $(seq 1 $BAR_LENGTH))
     
-    # Print formatted line
-    printf "• %-30s %-20s %.1fh\n" "$task" "$BAR" "$hours"
+    # Get smart icon for task
+    ICON=$(get_task_icon "$task")
+    
+    # Print formatted line with icon
+    printf "%s %-30s %-20s %.1fh\n" "$ICON" "$task" "$BAR" "$hours"
 done
