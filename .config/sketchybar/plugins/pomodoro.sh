@@ -80,7 +80,7 @@ echo "$MODE" > "$MODE_FILE"
             SECONDS=$((TIME_LEFT % 60))
             TIME_STR=$(printf "%02d:%02d" $MINUTES $SECONDS)
             if [ "$MODE" = "work" ]; then
-                sketchybar --set "$ITEM" label="$DISPLAY_ICON $TIME_STR - $CLEAN_TITLE"
+                sketchybar --set "$ITEM" label="$DISPLAY_ICON $CLEAN_TITLE - $TIME_STR"
             else
                 sketchybar --set "$ITEM" label="$DISPLAY_ICON $TIME_STR"
             fi
