@@ -31,8 +31,9 @@ add_emoji_to_task() {
     if [ -n "$emoji" ]; then
         echo "$emoji $task"
     else
-        # No keyword match, use default
-        echo "$DEFAULT_EMOJI $task"
+        # No keyword match, return task without emoji
+        # Let task.sh handle random emoji assignment
+        echo "$task"
     fi
 }
 
