@@ -62,13 +62,13 @@ if [ $# -eq 0 ]; then
     
     # Display available presets
     echo "Quick presets:"
-    local idx=1
-    local preset_names=""
+    idx=1
+    preset_names=""
     
     # Show presets
     while IFS= read -r preset_name; do
         if [ $idx -le 9 ]; then
-            local desc=$(get_preset "$preset_name" "desc")
+            desc=$(get_preset "$preset_name" "desc")
             echo "  $idx) $desc"
             preset_names="$preset_names$idx:$preset_name|"
             ((idx++))
@@ -83,16 +83,16 @@ if [ $# -eq 0 ]; then
     case "$PRESET" in
         [1-9])
             # Extract preset name from stored string
-            local selected=$(echo "$preset_names" | grep -o "${PRESET}:[^|]*" | cut -d: -f2)
+            selected=$(echo "$preset_names" | grep -o "${PRESET}:[^|]*" | cut -d: -f2)
             if [ -n "$selected" ]; then
                 NEW_WORK_TIME=$(get_preset "$selected" "work")
                 NEW_BREAK_TIME=$(get_preset "$selected" "break")
-                local preset_desc=$(get_preset "$selected" "desc")
+                preset_desc=$(get_preset "$selected" "desc")
                 echo "Using $preset_desc"
                 
                 # Auto-suggest task name with preset emoji if current task is default
                 if [ "$CURRENT_TASK" = "$DEFAULT_TASK" ] || [ "$CURRENT_TASK" = "$DEFAULT_EMOJI $DEFAULT_TASK" ]; then
-                    local preset_emoji=$(get_preset "$selected" "emoji")
+                    preset_emoji=$(get_preset "$selected" "emoji")
                     SUGGESTED_TASK="$preset_emoji $selected session"
                 fi
             fi
@@ -163,6 +163,22 @@ while [[ $# -gt 0 ]]; do
             BREAK_TIME="$2"
             shift 2
             ;;
+        --preset)
+            PRESET_NAME="$2"
+            WORK_TIME=$(get_preset "$PRESET_NAME" "work")
+            BREAK_TIME=$(get_preset "$PRESET_NAME" "break")
+            if [ -z "$WORK_TIME" ]; then
+                echo "Error: Unknown preset '$PRESET_NAME'"
+                echo "Use 'pomo --presets' to see available presets"
+                exit 1
+            fi
+            # Set task name with preset emoji if not already set
+            if [ -z "$TITLE" ]; then
+                PRESET_EMOJI=$(get_preset "$PRESET_NAME" "emoji")
+                TITLE="$PRESET_EMOJI $PRESET_NAME session"
+            fi
+            shift 2
+            ;;
         --debug)
             DEBUG="1"
             shift
@@ -203,6 +219,7 @@ while [[ $# -gt 0 ]]; do
             echo "  -n, --name NAME          Set the task name/title"
             echo "  --wt, --work-time MINS   Set work session duration in minutes"
             echo "  --bt, --break-time MINS  Set break session duration in minutes"
+            echo "  --preset NAME            Use a preset configuration"
             echo "  --debug                  Enable debug mode (1 second timers)"
             echo "  --emoji                  Show emoji mappings"
             echo "  --presets                Show available presets"
