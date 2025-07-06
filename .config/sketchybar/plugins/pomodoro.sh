@@ -133,14 +133,23 @@ echo "$MODE" > "$MODE_FILE"
         # Convert to seconds (handle decimal minutes for testing)
         TIME_LEFT=$(echo "$DURATION * 60" | bc | cut -d. -f1)
         CURRENT_TITLE=$(get_current_title)
+        
+        # Get the appropriate icon for display
+        if [ "$MODE" = "work" ]; then
+            DISPLAY_ICON=$(get_task_icon "$CURRENT_TITLE")
+            CLEAN_TITLE=$(clean_task_name "$CURRENT_TITLE")
+        else
+            DISPLAY_ICON="☕️"
+        fi
+        
         while [ $TIME_LEFT -gt 0 ]; do
             MINUTES=$((TIME_LEFT / 60))
             SECONDS=$((TIME_LEFT % 60))
             TIME_STR=$(printf "%02d:%02d" $MINUTES $SECONDS)
             if [ "$MODE" = "work" ]; then
-                sketchybar --set "$ITEM" label="$ICON $TIME_STR - $CURRENT_TITLE"
+                sketchybar --set "$ITEM" label="$DISPLAY_ICON $TIME_STR - $CLEAN_TITLE"
             else
-                sketchybar --set "$ITEM" label="$ICON $TIME_STR"
+                sketchybar --set "$ITEM" label="$DISPLAY_ICON $TIME_STR"
             fi
             sleep 1
             TIME_LEFT=$((TIME_LEFT - 1))
@@ -182,7 +191,14 @@ echo "$MODE" > "$MODE_FILE"
         # Update history display
         PLUGIN_DIR="$(dirname "$0")"
         sh "$PLUGIN_DIR/pomodoro_history.sh"
-        sketchybar --set "$ITEM" label="$ICON"
+        
+        # Reset to default icon
+        if [ "$MODE" = "work" ]; then
+            sketchybar --set "$ITEM" label="🍅"
+        else
+            sketchybar --set "$ITEM" label="☕️"
+        fi
+        
         rm -f "$PID_FILE" "$MODE_FILE"
 ) &
 
