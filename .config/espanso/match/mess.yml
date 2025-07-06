@@ -1,0 +1,4 @@
+matches:
+  - trigger: ":mess"
+    replace: "there's a little bit of mess in here. currently... "
+    label: "mess"
