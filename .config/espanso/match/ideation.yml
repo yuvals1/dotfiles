@@ -8,3 +8,7 @@ matches:
   - trigger: ":cw"
     replace: "try to think about creative workarounds"
     label: "creative workarounds"
+  
+  - trigger: ":strat"
+    replace: "first think deeply about the request feature and then suggest a few strategies to implement. explain those strategies thoroughly and ill choose one of them"
+    label: "implementation strategies"
