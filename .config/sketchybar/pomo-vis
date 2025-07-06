@@ -4,6 +4,9 @@
 SCRIPT_DIR="$(dirname "$0")"
 source "$SCRIPT_DIR/pomodoro_common.sh"
 
+# Check if fzf is available
+HAS_FZF=$(command -v fzf >/dev/null 2>&1 && echo "yes" || echo "no")
+
 # Default to 7 days
 DAYS=7
 VIEW_MODE="chart"  # Default view mode
@@ -26,51 +29,145 @@ if [ $# -eq 0 ]; then
         echo ""
     fi
     
-    # Quick options
-    echo "Quick views:"
-    echo "  1) Today"
-    echo "  2) Last 7 days (week)"
-    echo "  3) Last 30 days (month)"
-    echo "  4) Custom range"
-    echo ""
-    echo -n "Choose option (1-4): "
-    read OPTION
-    
-    case "$OPTION" in
-        1)
-            DAYS=1
-            echo "Viewing today's sessions"
-            ;;
-        2)
+    # Select options with fzf
+    if [ "$HAS_FZF" = "yes" ]; then
+        # Step 1: Select time range
+        echo "Select time range:"
+        
+        # Build options list
+        time_options="today|Today's sessions\nlast-week|Last 7 days\nlast-month|Last 30 days\nby-task|View specific task\nall-time|All time statistics\ncustom|Custom days\n"
+        
+        # Show fzf and get selection
+        selected_line=$(echo -e "$time_options" | fzf --height=8 --layout=reverse --prompt="Time range> ")
+        
+        if [ -n "$selected_line" ]; then
+            # Extract option
+            selected=$(echo "$selected_line" | cut -d'|' -f1)
+            
+            case "$selected" in
+                "today")
+                    DAYS=1
+                    echo "Viewing today's sessions"
+                    ;;
+                "last-week")
+                    DAYS=7
+                    echo "Viewing last week"
+                    ;;
+                "last-month")
+                    DAYS=30
+                    echo "Viewing last month"
+                    ;;
+                "by-task")
+                    # Show task selection
+                    echo ""
+                    echo "Select task to view:"
+                    
+                    # Get all unique tasks with counts
+                    selected_task=$(awk -F'[][]' '{print $2}' "$HISTORY_FILE" | \
+                        sed 's/^ *//;s/ *$//' | \
+                        grep -v "BREAK" | \
+                        grep -v "^[[:space:]]*$" | \
+                        sort | uniq -c | sort -rn | \
+                        awk '{printf "%3d sessions | %s\n", $1, substr($0, index($0,$2))}' | \
+                        fzf --height=15 --layout=reverse --prompt="Task> " | \
+                        sed 's/^[^|]*| //')
+                    
+                    if [ -n "$selected_task" ]; then
+                        echo ""
+                        echo "📊 History for: $selected_task"
+                        echo "================================"
+                        echo ""
+                        
+                        # Show task statistics
+                        total_sessions=$(grep "\\[$selected_task\\]" "$HISTORY_FILE" | wc -l | tr -d ' ')
+                        total_time=$(grep "\\[$selected_task\\]" "$HISTORY_FILE" | awk '{print $(NF-1)}' | awk '{sum+=$1} END {print sum}')
+                        avg_time=$(echo "scale=1; $total_time / $total_sessions" | bc)
+                        
+                        echo "📈 Statistics:"
+                        echo "   Total sessions: $total_sessions"
+                        echo "   Total time: $total_time minutes"
+                        echo "   Average session: $avg_time minutes"
+                        echo ""
+                        echo "📅 Recent sessions:"
+                        grep "\\[$selected_task\\]" "$HISTORY_FILE" | tail -10
+                        exit 0
+                    fi
+                    ;;
+                "all-time")
+                    DAYS=9999
+                    echo "Viewing all time statistics"
+                    ;;
+                "custom")
+                    echo -n "Enter number of days: "
+                    read DAYS
+                    echo "Viewing last $DAYS days"
+                    ;;
+                *)
+                    DAYS=7
+                    ;;
+            esac
+        else
+            # Cancelled, use default
             DAYS=7
-            echo "Viewing last week"
-            ;;
-        3)
-            DAYS=30
-            echo "Viewing last month"
-            ;;
-        *)
-            echo -n "Enter number of days to view: "
-            read DAYS
-            ;;
-    esac
-    
-    echo ""
-    echo "View mode:"
-    echo "  1) Bar chart (summary)"
-    echo "  2) Timeline (detailed)"
-    echo ""
-    echo -n "Choose view (1-2): "
-    read VIEW_OPTION
-    
-    case "$VIEW_OPTION" in
-        2)
-            VIEW_MODE="timeline"
-            ;;
-        *)
-            VIEW_MODE="chart"
-            ;;
-    esac
+        fi
+        
+        # Step 2: Select view mode
+        echo ""
+        echo "Select view mode:"
+        
+        view_options="chart|Bar chart summary\ntimeline|Detailed timeline\n"
+        selected_view=$(echo -e "$view_options" | fzf --height=4 --layout=reverse --prompt="View mode> ")
+        
+        if [ -n "$selected_view" ]; then
+            VIEW_MODE=$(echo "$selected_view" | cut -d'|' -f1)
+        fi
+    else
+        # Fallback to numbered menu
+        echo "Quick views:"
+        echo "  1) Today"
+        echo "  2) Last 7 days (week)"
+        echo "  3) Last 30 days (month)"
+        echo "  4) Custom range"
+        echo ""
+        echo -n "Choose option (1-4): "
+        read OPTION
+        
+        case "$OPTION" in
+            1)
+                DAYS=1
+                echo "Viewing today's sessions"
+                ;;
+            2)
+                DAYS=7
+                echo "Viewing last week"
+                ;;
+            3)
+                DAYS=30
+                echo "Viewing last month"
+                ;;
+            *)
+                echo -n "Enter number of days to view: "
+                read DAYS
+                ;;
+        esac
+        
+        echo ""
+        echo "View mode:"
+        echo "  1) Bar chart (summary)"
+        echo "  2) Timeline (detailed)"
+        echo ""
+        echo -n "Choose view (1-2): "
+        read VIEW_OPTION
+        
+        case "$VIEW_OPTION" in
+            2)
+                VIEW_MODE="timeline"
+                ;;
+            *)
+                VIEW_MODE="chart"
+                ;;
+        esac
+    fi
     
     echo ""
 fi
@@ -86,6 +183,45 @@ while [[ $# -gt 0 ]]; do
             VIEW_MODE="timeline"
             shift
             ;;
+        --task)
+            # Quick task view with fzf
+            if [ "$HAS_FZF" = "yes" ]; then
+                # Get all unique tasks with counts
+                selected_task=$(awk -F'[][]' '{print $2}' "$HISTORY_FILE" | \
+                    sed 's/^ *//;s/ *$//' | \
+                    grep -v "BREAK" | \
+                    grep -v "^[[:space:]]*$" | \
+                    sort | uniq -c | sort -rn | \
+                    awk '{printf "%3d sessions | %s\n", $1, substr($0, index($0,$2))}' | \
+                    fzf --height=15 --layout=reverse --prompt="Select task> " | \
+                    sed 's/^[^|]*| //')
+                
+                if [ -n "$selected_task" ]; then
+                    echo ""
+                    echo "📊 History for: $selected_task"
+                    echo "================================"
+                    echo ""
+                    
+                    # Show task statistics
+                    total_sessions=$(grep "\\[$selected_task\\]" "$HISTORY_FILE" | wc -l | tr -d ' ')
+                    total_time=$(grep "\\[$selected_task\\]" "$HISTORY_FILE" | awk '{print $(NF-1)}' | awk '{sum+=$1} END {print sum}')
+                    avg_time=$(echo "scale=1; $total_time / $total_sessions" | bc)
+                    
+                    echo "📈 Statistics:"
+                    echo "   Total sessions: $total_sessions"
+                    echo "   Total time: $total_time minutes"
+                    echo "   Average session: $avg_time minutes"
+                    echo ""
+                    echo "📅 Recent sessions:"
+                    grep "\\[$selected_task\\]" "$HISTORY_FILE" | tail -10
+                fi
+            else
+                echo "Error: fzf is not installed"
+                echo "Install with: brew install fzf"
+                exit 1
+            fi
+            exit 0
+            ;;
         -h|--help)
             echo "Usage: pomo-vis [options]"
             echo "Visualize your pomodoro session history"
@@ -93,12 +229,15 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  -d, --days N    Show last N days (default: 7)"
             echo "  --timeline       Show timeline view instead of bar chart"
+            echo "  --task          Quick task selection with fzf"
             echo "  -h, --help      Show this help message"
             echo ""
             echo "Examples:"
-            echo "  pomo-vis -d 2          # Show last 2 days as bar chart"
-            echo "  pomo-vis --timeline    # Show today's timeline"
-            echo "  pomo-vis --timeline -d 3  # Show last 3 days as timeline"
+            echo "  pomo-vis                   # Interactive mode"
+            echo "  pomo-vis -d 2              # Show last 2 days as bar chart"
+            echo "  pomo-vis --timeline        # Show timeline view"
+            echo "  pomo-vis --timeline -d 3   # Show last 3 days as timeline"
+            echo "  pomo-vis --task            # Select specific task to view"
             exit 0
             ;;
         *)
