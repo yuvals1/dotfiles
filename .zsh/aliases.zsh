@@ -14,6 +14,7 @@ alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 alias tt="taskwarrior-tui"
 alias lsq="lazysql"
 alias lzd="lazydocker"
+alias find="fd"
 alias th="tv files-with-hidden"
 alias glt="python3 ~/dotfiles/scripts/time-calc.py"
 alias zi="zoxide query -i"
