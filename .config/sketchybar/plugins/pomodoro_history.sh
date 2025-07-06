@@ -2,35 +2,32 @@
 
 POMO_DIR="$HOME/.config/sketchybar/pomodoro"
 POMO_HISTORY="$POMO_DIR/.pomodoro_history"
-RESET_FILE="$POMO_DIR/.reset_time"
 
-# Check if this is a click event
-if [ "$SENDER" = "mouse.clicked" ]; then
-    # Reset the counter by saving current time
-    date '+%Y-%m-%d %H:%M:%S' > "$RESET_FILE"
-    sketchybar --set pomodoro_history label="✅ 0"
-    exit 0
-fi
+# Get today's date
+TODAY=$(date '+%Y-%m-%d')
 
-# Get reset time (if exists)
-if [ -f "$RESET_FILE" ]; then
-    RESET_TIME=$(cat "$RESET_FILE")
-else
-    RESET_TIME="1970-01-01 00:00:00"
-fi
-
-count=0
+# Initialize total minutes
+total_minutes=0
 
 if [ -f "$POMO_HISTORY" ]; then
     while IFS= read -r line || [ -n "$line" ]; do
-        # Extract timestamp from line
-        LINE_TIME=$(echo "$line" | cut -d' ' -f1-2)
+        # Extract date from timestamp
+        LINE_DATE=$(echo "$line" | cut -d' ' -f1)
         
-        # Only count work sessions (not breaks) after reset time
-        if [[ "$line" != *"[BREAK]"* ]] && [[ "$LINE_TIME" > "$RESET_TIME" ]]; then
-            count=$((count + 1))
+        # Only process today's sessions (both work and breaks)
+        if [[ "$LINE_DATE" == "$TODAY" ]]; then
+            # Extract minutes from the line (format: "X mins")
+            minutes=$(echo "$line" | grep -o '[0-9]* mins' | awk '{print $1}')
+            if [ -n "$minutes" ]; then
+                total_minutes=$((total_minutes + minutes))
+            fi
         fi
     done < "$POMO_HISTORY"
 fi
 
-sketchybar --set pomodoro_history label="✅ $count"
+# Convert to hours with 1 decimal place
+# Use printf to ensure consistent decimal formatting
+hours=$(printf "%.1f" $(echo "scale=2; $total_minutes / 60" | bc))
+
+# Update display
+sketchybar --set pomodoro_history label="⏱️ ${hours}h"
