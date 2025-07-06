@@ -41,6 +41,9 @@ add_emoji_to_task() {
 [ ! -f "$WORK_TIME_FILE" ] && echo "$DEFAULT_WORK_TIME" > "$WORK_TIME_FILE"
 [ ! -f "$BREAK_TIME_FILE" ] && echo "$DEFAULT_BREAK_TIME" > "$BREAK_TIME_FILE"
 
+# Check if fzf is available
+HAS_FZF=$(command -v fzf >/dev/null 2>&1 && echo "yes" || echo "no")
+
 # Interactive mode if no arguments
 if [ $# -eq 0 ]; then
     echo "🍅 Pomodoro Timer Configuration"
@@ -60,87 +63,173 @@ if [ $# -eq 0 ]; then
     echo "  🐛 Debug mode: $CURRENT_DEBUG"
     echo ""
     
-    # Display available presets
-    echo "Quick presets:"
-    idx=1
-    preset_names=""
-    
-    # Show presets
-    while IFS= read -r preset_name; do
-        if [ $idx -le 9 ]; then
+    # Select preset
+    if [ "$HAS_FZF" = "yes" ]; then
+        # Use fzf for preset selection
+        echo "Select preset (or press Esc for custom values):"
+        
+        # Build preset list for fzf
+        preset_list=""
+        while IFS= read -r preset_name; do
             desc=$(get_preset "$preset_name" "desc")
-            echo "  $idx) $desc"
-            preset_names="$preset_names$idx:$preset_name|"
-            ((idx++))
-        fi
-    done < <(list_presets)
-    
-    echo "  C) Custom values"
-    echo ""
-    echo -n "Choose preset (1-$((idx-1)) or C for custom): "
-    read PRESET
-    
-    case "$PRESET" in
-        [1-9])
-            # Extract preset name from stored string
-            selected=$(echo "$preset_names" | grep -o "${PRESET}:[^|]*" | cut -d: -f2)
-            if [ -n "$selected" ]; then
-                NEW_WORK_TIME=$(get_preset "$selected" "work")
-                NEW_BREAK_TIME=$(get_preset "$selected" "break")
-                preset_desc=$(get_preset "$selected" "desc")
-                echo "Using $preset_desc"
-                
-                # Auto-suggest task name with preset emoji if current task is default
-                if [ "$CURRENT_TASK" = "$DEFAULT_TASK" ] || [ "$CURRENT_TASK" = "$DEFAULT_EMOJI $DEFAULT_TASK" ]; then
-                    preset_emoji=$(get_preset "$selected" "emoji")
-                    SUGGESTED_TASK="$preset_emoji $selected session"
-                fi
+            work=$(get_preset "$preset_name" "work")
+            break=$(get_preset "$preset_name" "break")
+            preset_list="${preset_list}${preset_name}|${desc} (${work}/${break} mins)\n"
+        done < <(list_presets)
+        
+        # Show fzf and get selection
+        selected_line=$(echo -e "$preset_list" | fzf --height=10 --layout=reverse --prompt="Preset> ")
+        
+        if [ -n "$selected_line" ]; then
+            # Extract preset name (before the |)
+            selected=$(echo "$selected_line" | cut -d'|' -f1)
+            NEW_WORK_TIME=$(get_preset "$selected" "work")
+            NEW_BREAK_TIME=$(get_preset "$selected" "break")
+            preset_desc=$(get_preset "$selected" "desc")
+            echo "Using $preset_desc"
+            
+            # Auto-suggest task name with preset emoji if current task is default
+            if [ "$CURRENT_TASK" = "$DEFAULT_TASK" ] || [ "$CURRENT_TASK" = "$DEFAULT_EMOJI $DEFAULT_TASK" ]; then
+                preset_emoji=$(get_preset "$selected" "emoji")
+                SUGGESTED_TASK="$preset_emoji $selected session"
             fi
-            ;;
-        [Cc]|*)
+        else
+            # Custom values
             echo ""
             echo -n "Enter work time in minutes (or press Enter for $CURRENT_WORK): "
             read NEW_WORK_TIME
             
             echo -n "Enter break time in minutes (or press Enter for $CURRENT_BREAK): "
             read NEW_BREAK_TIME
-            ;;
-    esac
-    
-    # Show recent tasks
-    echo ""
-    echo "Recent tasks:"
-    recent_idx=1
-    recent_tasks=""
-    while IFS= read -r recent_task; do
-        if [ -n "$recent_task" ]; then
-            echo "  $recent_idx) $recent_task"
-            recent_tasks="$recent_tasks$recent_idx:$recent_task|"
-            ((recent_idx++))
         fi
-    done < <(get_recent_tasks 5)
-    
-    echo ""
-    if [ -n "$SUGGESTED_TASK" ]; then
-        echo "Enter task:"
-        echo "  - Number (1-$((recent_idx-1))) for recent task"
-        echo "  - Text for new task"
-        echo "  - Enter for suggested: '$SUGGESTED_TASK'"
-        echo -n "> "
     else
-        echo "Enter task:"
-        echo "  - Number (1-$((recent_idx-1))) for recent task"
-        echo "  - Text for new task"
-        echo "  - Enter to keep current"
-        echo -n "> "
+        # Fallback to numbered menu
+        echo "Quick presets:"
+        idx=1
+        preset_names=""
+        
+        # Show presets
+        while IFS= read -r preset_name; do
+            if [ $idx -le 9 ]; then
+                desc=$(get_preset "$preset_name" "desc")
+                echo "  $idx) $desc"
+                preset_names="$preset_names$idx:$preset_name|"
+                ((idx++))
+            fi
+        done < <(list_presets)
+        
+        echo "  C) Custom values"
+        echo ""
+        echo -n "Choose preset (1-$((idx-1)) or C for custom): "
+        read PRESET
+        
+        case "$PRESET" in
+            [1-9])
+                # Extract preset name from stored string
+                selected=$(echo "$preset_names" | grep -o "${PRESET}:[^|]*" | cut -d: -f2)
+                if [ -n "$selected" ]; then
+                    NEW_WORK_TIME=$(get_preset "$selected" "work")
+                    NEW_BREAK_TIME=$(get_preset "$selected" "break")
+                    preset_desc=$(get_preset "$selected" "desc")
+                    echo "Using $preset_desc"
+                    
+                    # Auto-suggest task name with preset emoji if current task is default
+                    if [ "$CURRENT_TASK" = "$DEFAULT_TASK" ] || [ "$CURRENT_TASK" = "$DEFAULT_EMOJI $DEFAULT_TASK" ]; then
+                        preset_emoji=$(get_preset "$selected" "emoji")
+                        SUGGESTED_TASK="$preset_emoji $selected session"
+                    fi
+                fi
+                ;;
+            [Cc]|*)
+                echo ""
+                echo -n "Enter work time in minutes (or press Enter for $CURRENT_WORK): "
+                read NEW_WORK_TIME
+                
+                echo -n "Enter break time in minutes (or press Enter for $CURRENT_BREAK): "
+                read NEW_BREAK_TIME
+                ;;
+        esac
     fi
-    read NEW_TITLE
     
-    # Check if user entered a number for recent task
-    if [[ "$NEW_TITLE" =~ ^[0-9]+$ ]]; then
-        selected_recent=$(echo "$recent_tasks" | grep -o "${NEW_TITLE}:[^|]*" | cut -d: -f2-)
-        if [ -n "$selected_recent" ]; then
-            NEW_TITLE="$selected_recent"
+    # Select task
+    echo ""
+    if [ "$HAS_FZF" = "yes" ]; then
+        # Use fzf for task selection
+        echo "Select or enter task:"
+        
+        # Build task list combining recent and suggested
+        task_list=""
+        
+        # Add suggested task if available
+        if [ -n "$SUGGESTED_TASK" ]; then
+            task_list="[NEW] $SUGGESTED_TASK\n"
+        fi
+        
+        # Add current task
+        task_list="${task_list}[CURRENT] $CURRENT_TASK\n"
+        
+        # Add recent tasks
+        while IFS= read -r recent_task; do
+            if [ -n "$recent_task" ] && [ "$recent_task" != "$CURRENT_TASK" ]; then
+                task_list="${task_list}${recent_task}\n"
+            fi
+        done < <(get_recent_tasks 10)
+        
+        # Show fzf with print-query to allow custom input
+        result=$(echo -e "$task_list" | fzf --height=12 --layout=reverse --prompt="Task> " --print-query)
+        
+        # fzf returns query on first line, selection on second
+        query=$(echo "$result" | head -1)
+        selection=$(echo "$result" | tail -1)
+        
+        if [ -n "$selection" ]; then
+            # User selected an item
+            if [[ "$selection" == "[NEW] "* ]]; then
+                NEW_TITLE="${selection#[NEW] }"
+            elif [[ "$selection" == "[CURRENT] "* ]]; then
+                NEW_TITLE=""  # Keep current
+            else
+                NEW_TITLE="$selection"
+            fi
+        elif [ -n "$query" ]; then
+            # User typed custom text
+            NEW_TITLE="$query"
+        fi
+    else
+        # Fallback to numbered menu
+        echo "Recent tasks:"
+        recent_idx=1
+        recent_tasks=""
+        while IFS= read -r recent_task; do
+            if [ -n "$recent_task" ]; then
+                echo "  $recent_idx) $recent_task"
+                recent_tasks="$recent_tasks$recent_idx:$recent_task|"
+                ((recent_idx++))
+            fi
+        done < <(get_recent_tasks 5)
+        
+        echo ""
+        if [ -n "$SUGGESTED_TASK" ]; then
+            echo "Enter task:"
+            echo "  - Number (1-$((recent_idx-1))) for recent task"
+            echo "  - Text for new task"
+            echo "  - Enter for suggested: '$SUGGESTED_TASK'"
+            echo -n "> "
+        else
+            echo "Enter task:"
+            echo "  - Number (1-$((recent_idx-1))) for recent task"
+            echo "  - Text for new task"
+            echo "  - Enter to keep current"
+            echo -n "> "
+        fi
+        read NEW_TITLE
+        
+        # Check if user entered a number for recent task
+        if [[ "$NEW_TITLE" =~ ^[0-9]+$ ]]; then
+            selected_recent=$(echo "$recent_tasks" | grep -o "${NEW_TITLE}:[^|]*" | cut -d: -f2-)
+            if [ -n "$selected_recent" ]; then
+                NEW_TITLE="$selected_recent"
+            fi
         fi
     fi
     
@@ -242,6 +331,21 @@ while [[ $# -gt 0 ]]; do
             done < <(list_presets)
             exit 0
             ;;
+        --fzf)
+            # Quick fzf mode - select task from recent
+            if [ "$HAS_FZF" = "yes" ]; then
+                # Get recent tasks
+                selected_task=$(get_recent_tasks 20 | fzf --height=15 --layout=reverse --prompt="Select task> ")
+                if [ -n "$selected_task" ]; then
+                    pomo -n "$selected_task"
+                fi
+            else
+                echo "Error: fzf is not installed"
+                echo "Install with: brew install fzf"
+                exit 1
+            fi
+            exit 0
+            ;;
         -h|--help)
             echo "Usage: pomo [options]"
             echo "Options:"
@@ -249,6 +353,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --wt, --work-time MINS   Set work session duration in minutes"
             echo "  --bt, --break-time MINS  Set break session duration in minutes"
             echo "  --preset NAME            Use a preset configuration"
+            echo "  --fzf                    Quick task selection with fzf"
             echo "  --debug                  Enable debug mode (1 second timers)"
             echo "  --emoji                  Show emoji mappings"
             echo "  --presets                Show available presets"
