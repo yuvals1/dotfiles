@@ -7,35 +7,6 @@ source "$SCRIPT_DIR/pomodoro_common.sh"
 # Ensure directory exists
 ensure_pomo_dir
 
-# Function to add appropriate emoji to task name
-add_emoji_to_task() {
-    local task="$1"
-    local first_word=$(echo "$task" | awk '{print $1}')
-    
-    # Check if task already has an emoji (non-ASCII first character)
-    # If first word has only ASCII characters, it needs an emoji
-    if echo "$first_word" | LC_ALL=C grep -q '^[[:print:]]*$'; then
-        # First word is pure ASCII, needs emoji
-        :
-    else
-        # Already has emoji, return as-is
-        echo "$task"
-        return
-    fi
-    
-    # No emoji, add one based on keywords
-    local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
-    
-    # Check against emoji mappings
-    local emoji=$(get_emoji_for_keyword "$task_lower")
-    if [ -n "$emoji" ]; then
-        echo "$emoji $task"
-    else
-        # No keyword match, return task without emoji
-        # Let task.sh handle random emoji assignment
-        echo "$task"
-    fi
-}
 
 # Initialize files with defaults if they don't exist
 [ ! -f "$TITLE_FILE" ] && echo "$DEFAULT_TASK" > "$TITLE_FILE"

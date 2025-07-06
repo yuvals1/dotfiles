@@ -16,7 +16,7 @@ MODE_FILE="$POMO_DIR/mode"
 DEFAULT_WORK_TIME="25"
 DEFAULT_BREAK_TIME="5"
 DEFAULT_TASK="General Task"
-DEFAULT_EMOJI="🍅"
+DEFAULT_EMOJI="🍅"  # Used for display purposes in pomo --emoji
 
 # Function to get emoji for keyword
 get_emoji_for_keyword() {
@@ -130,18 +130,6 @@ is_debug_mode() {
     [ -f "$DEBUG_FILE" ]
 }
 
-# Function to clean task name (remove emoji if present)
-clean_task_name() {
-    local task="$1"
-    # Check if task starts with an emoji
-    local first_chars=$(echo "$task" | cut -c1-4)
-    if echo "$first_chars" | LC_ALL=C grep -q '[^\x00-\x7F]'; then
-        # Remove emoji and any following spaces
-        echo "$task" | sed 's/^[^ ]* *//'
-    else
-        echo "$task"
-    fi
-}
 
 # Extract icon from task name
 extract_icon() {
