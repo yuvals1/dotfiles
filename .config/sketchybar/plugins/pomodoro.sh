@@ -1,57 +1,16 @@
 #!/bin/bash
 
-POMO_DIR="$HOME/.config/sketchybar/pomodoro"
-PID_FILE="$POMO_DIR/timer.pid"
-MODE_FILE="$POMO_DIR/mode"
-TITLE_FILE="$POMO_DIR/.current_title"
-WORK_TIME_FILE="$POMO_DIR/.current_work_time"
-BREAK_TIME_FILE="$POMO_DIR/.current_break_time"
-DEBUG_FILE="$POMO_DIR/.debug_mode"
+# Source common configuration
+PLUGIN_DIR="$(dirname "$0")"
+source "$(dirname "$PLUGIN_DIR")/pomodoro_common.sh"
 
-mkdir -p "$POMO_DIR"
+# Ensure directory exists
+ensure_pomo_dir
 
 
-# Function to clean task name (remove emoji if present)
-clean_task_name() {
-    local task="$1"
-    # Check if task starts with an emoji
-    local first_chars=$(echo "$task" | cut -c1-4)
-    if echo "$first_chars" | LC_ALL=C grep -q '[^\x00-\x7F]'; then
-        # Remove emoji and any following spaces
-        echo "$task" | sed 's/^[^ ]* *//'
-    else
-        echo "$task"
-    fi
-}
-
-# Function to get current title
-get_current_title() {
-    if [ -f "$TITLE_FILE" ]; then
-        cat "$TITLE_FILE"
-    else
-        echo "General Task"
-    fi
-}
-
-# Function to get timer durations
-get_work_minutes() {
-    if [ -f "$WORK_TIME_FILE" ]; then
-        cat "$WORK_TIME_FILE"
-    else
-        echo "25"
-    fi
-}
-
-get_break_minutes() {
-    if [ -f "$BREAK_TIME_FILE" ]; then
-        cat "$BREAK_TIME_FILE"
-    else
-        echo "5"
-    fi
-}
 
 # Timer durations
-if [ -f "$DEBUG_FILE" ]; then
+if is_debug_mode; then
     # Debug mode: 1 second timers
     WORK_MINUTES=0.03
     BREAK_MINUTES=0.03
@@ -133,8 +92,7 @@ echo "$MODE" > "$MODE_FILE"
         END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
         
         # Log to history file
-        HISTORY_FILE="$POMO_DIR/.pomodoro_history"
-        if [ -f "$DEBUG_FILE" ]; then
+        if is_debug_mode; then
             # Debug mode: always log 60 minutes
             LOG_MINS=60
         else
@@ -154,7 +112,6 @@ echo "$MODE" > "$MODE_FILE"
         fi
         
         # Send notification
-        NOTIFY_CMD="/Users/yuvalspiegel/dotfiles/tools/notify-wrapper.sh"
         if [ "$MODE" = "work" ]; then
             "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TITLE ($LOG_MINS min)"
         else
@@ -162,7 +119,6 @@ echo "$MODE" > "$MODE_FILE"
         fi
         
         # Update history display
-        PLUGIN_DIR="$(dirname "$0")"
         sh "$PLUGIN_DIR/pomodoro_history.sh"
         
         # Reset to default icon

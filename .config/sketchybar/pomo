@@ -1,13 +1,11 @@
 #!/bin/bash
 
-POMO_DIR="$HOME/.config/sketchybar/pomodoro"
-TITLE_FILE="$POMO_DIR/.current_title"
-WORK_TIME_FILE="$POMO_DIR/.current_work_time"
-BREAK_TIME_FILE="$POMO_DIR/.current_break_time"
-DEBUG_FILE="$POMO_DIR/.debug_mode"
+# Source common configuration
+SCRIPT_DIR="$(dirname "$0")"
+source "$SCRIPT_DIR/pomodoro_common.sh"
 
-# Create directory if it doesn't exist
-mkdir -p "$POMO_DIR"
+# Ensure directory exists
+ensure_pomo_dir
 
 # Function to add appropriate emoji to task name
 add_emoji_to_task() {
@@ -41,9 +39,9 @@ add_emoji_to_task() {
 }
 
 # Initialize files with defaults if they don't exist
-[ ! -f "$TITLE_FILE" ] && echo "General Task" > "$TITLE_FILE"
-[ ! -f "$WORK_TIME_FILE" ] && echo "25" > "$WORK_TIME_FILE"
-[ ! -f "$BREAK_TIME_FILE" ] && echo "5" > "$BREAK_TIME_FILE"
+[ ! -f "$TITLE_FILE" ] && echo "$DEFAULT_TASK" > "$TITLE_FILE"
+[ ! -f "$WORK_TIME_FILE" ] && echo "$DEFAULT_WORK_TIME" > "$WORK_TIME_FILE"
+[ ! -f "$BREAK_TIME_FILE" ] && echo "$DEFAULT_BREAK_TIME" > "$BREAK_TIME_FILE"
 
 # Interactive mode if no arguments
 if [ $# -eq 0 ]; then
@@ -55,7 +53,7 @@ if [ $# -eq 0 ]; then
     CURRENT_TASK=$(cat "$TITLE_FILE")
     CURRENT_WORK=$(cat "$WORK_TIME_FILE")
     CURRENT_BREAK=$(cat "$BREAK_TIME_FILE")
-    CURRENT_DEBUG=$([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")
+    CURRENT_DEBUG=$(is_debug_mode && echo "enabled" || echo "disabled")
     
     echo "Current settings:"
     echo "  📝 Task: $CURRENT_TASK"
@@ -128,7 +126,7 @@ if [ $# -eq 0 ]; then
     echo "  Task: $(cat "$TITLE_FILE")"
     echo "  Work time: $(cat "$WORK_TIME_FILE") minutes"
     echo "  Break time: $(cat "$BREAK_TIME_FILE") minutes"
-    echo "  Debug mode: $([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")"
+    echo "  Debug mode: $(is_debug_mode && echo "enabled" || echo "disabled")"
     exit 0
 fi
 
@@ -164,7 +162,7 @@ while [[ $# -gt 0 ]]; do
             echo "  Task: $(cat "$TITLE_FILE")"
             echo "  Work time: $(cat "$WORK_TIME_FILE") minutes"
             echo "  Break time: $(cat "$BREAK_TIME_FILE") minutes"
-            echo "  Debug mode: $([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")"
+            echo "  Debug mode: $(is_debug_mode && echo "enabled" || echo "disabled")"
             exit 0
             ;;
         *)
@@ -197,4 +195,4 @@ echo "Pomodoro settings updated:"
 echo "  Task: $(cat "$TITLE_FILE")"
 echo "  Work time: $(cat "$WORK_TIME_FILE") minutes"
 echo "  Break time: $(cat "$BREAK_TIME_FILE") minutes"
-echo "  Debug mode: $([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")"
+echo "  Debug mode: $(is_debug_mode && echo "enabled" || echo "disabled")"

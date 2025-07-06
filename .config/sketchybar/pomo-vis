@@ -1,7 +1,8 @@
 #!/bin/bash
 
-POMO_DIR="$HOME/.config/sketchybar/pomodoro"
-HISTORY_FILE="$POMO_DIR/.pomodoro_history"
+# Source common configuration
+SCRIPT_DIR="$(dirname "$0")"
+source "$SCRIPT_DIR/pomodoro_common.sh"
 
 # Default to 7 days
 DAYS=7
@@ -117,19 +118,6 @@ fi
 echo "📊 Pomodoro Sessions (Last $DAYS days)"
 echo ""
 
-# Function to extract icon from task name (assumes format: "icon task_name")
-extract_icon() {
-    local task="$1"
-    # Extract first word which should be the icon
-    echo "$task" | awk '{print $1}'
-}
-
-# Function to extract task name without icon
-extract_task_name() {
-    local task="$1"
-    # Remove first word (icon) and return the rest
-    echo "$task" | cut -d' ' -f2-
-}
 
 # Get the date N days ago
 if [[ "$OSTYPE" == "darwin"* ]]; then
