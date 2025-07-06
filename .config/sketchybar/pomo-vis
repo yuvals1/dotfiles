@@ -7,6 +7,73 @@ HISTORY_FILE="$POMO_DIR/.pomodoro_history"
 DAYS=7
 VIEW_MODE="chart"  # Default view mode
 
+# Interactive mode if no arguments
+if [ $# -eq 0 ]; then
+    echo "📊 Pomodoro History Viewer"
+    echo "========================="
+    echo ""
+    
+    # Show available data summary
+    if [ -f "$HISTORY_FILE" ]; then
+        TOTAL_SESSIONS=$(grep -v "^\s*$" "$HISTORY_FILE" | wc -l | tr -d ' ')
+        FIRST_DATE=$(head -1 "$HISTORY_FILE" 2>/dev/null | awk '{print $1}')
+        LAST_DATE=$(tail -1 "$HISTORY_FILE" 2>/dev/null | awk '{print $1}')
+        
+        echo "📈 Data available:"
+        echo "   Total sessions: $TOTAL_SESSIONS"
+        echo "   Date range: $FIRST_DATE to $LAST_DATE"
+        echo ""
+    fi
+    
+    # Quick options
+    echo "Quick views:"
+    echo "  1) Today"
+    echo "  2) Last 7 days (week)"
+    echo "  3) Last 30 days (month)"
+    echo "  4) Custom range"
+    echo ""
+    echo -n "Choose option (1-4): "
+    read OPTION
+    
+    case "$OPTION" in
+        1)
+            DAYS=1
+            echo "Viewing today's sessions"
+            ;;
+        2)
+            DAYS=7
+            echo "Viewing last week"
+            ;;
+        3)
+            DAYS=30
+            echo "Viewing last month"
+            ;;
+        *)
+            echo -n "Enter number of days to view: "
+            read DAYS
+            ;;
+    esac
+    
+    echo ""
+    echo "View mode:"
+    echo "  1) Bar chart (summary)"
+    echo "  2) Timeline (detailed)"
+    echo ""
+    echo -n "Choose view (1-2): "
+    read VIEW_OPTION
+    
+    case "$VIEW_OPTION" in
+        2)
+            VIEW_MODE="timeline"
+            ;;
+        *)
+            VIEW_MODE="chart"
+            ;;
+    esac
+    
+    echo ""
+fi
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
