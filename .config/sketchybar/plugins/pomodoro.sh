@@ -10,35 +10,6 @@ DEBUG_FILE="$POMO_DIR/.debug_mode"
 
 mkdir -p "$POMO_DIR"
 
-# Function to get smart icon based on task name
-get_task_icon() {
-    local task="$1"
-    
-    # Check if task already starts with an emoji
-    local first_chars=$(echo "$task" | cut -c1-4)
-    if echo "$first_chars" | LC_ALL=C grep -q '[^\x00-\x7F]'; then
-        # Task likely starts with an emoji, return it
-        echo "$task" | sed 's/^\([^ ]*\).*/\1/'
-        return
-    fi
-    
-    # Otherwise use keyword mapping
-    local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
-    
-    if [[ "$task_lower" == *"break"* ]]; then
-        echo "☕️"
-    elif [[ "$task_lower" == *"technion"* ]]; then
-        echo "🎓"
-    elif [[ "$task_lower" == *"logistics"* ]]; then
-        echo "📦"
-    elif [[ "$task_lower" == *"dotfiles"* ]]; then
-        echo "⚙️"
-    elif [[ "$task_lower" == *"therapy"* ]]; then
-        echo "🧘"
-    else
-        echo "🍅"  # Default
-    fi
-}
 
 # Function to clean task name (remove emoji if present)
 clean_task_name() {
@@ -134,10 +105,12 @@ echo "$MODE" > "$MODE_FILE"
         TIME_LEFT=$(echo "$DURATION * 60" | bc | cut -d. -f1)
         CURRENT_TITLE=$(get_current_title)
         
-        # Get the appropriate icon for display
+        # Extract icon and clean title for display
         if [ "$MODE" = "work" ]; then
-            # Title already contains icon from pomo command
+            # Title already contains icon from pomo command (e.g., "🍅 task name")
+            # Extract first word (the emoji)
             DISPLAY_ICON=$(echo "$CURRENT_TITLE" | sed 's/^\([^ ]*\).*/\1/')
+            # Remove emoji for clean display
             CLEAN_TITLE=$(clean_task_name "$CURRENT_TITLE")
         else
             DISPLAY_ICON="☕️"

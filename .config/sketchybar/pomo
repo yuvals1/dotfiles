@@ -9,6 +9,37 @@ DEBUG_FILE="$POMO_DIR/.debug_mode"
 # Create directory if it doesn't exist
 mkdir -p "$POMO_DIR"
 
+# Function to add appropriate emoji to task name
+add_emoji_to_task() {
+    local task="$1"
+    local first_word=$(echo "$task" | awk '{print $1}')
+    
+    # List of known emojis we use
+    case "$first_word" in
+        "🍅"|"☕️"|"🎓"|"📦"|"⚙️"|"🧘"|"🎮"|"📚"|*[![:ascii:]]*)
+            # Already has emoji, return as-is
+            echo "$task"
+            ;;
+        *)
+            # No emoji, add one based on keywords
+            local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
+            if [[ "$task_lower" == *"break"* ]]; then
+                echo "☕️ $task"
+            elif [[ "$task_lower" == *"technion"* ]]; then
+                echo "🎓 $task"
+            elif [[ "$task_lower" == *"logistics"* ]]; then
+                echo "📦 $task"
+            elif [[ "$task_lower" == *"dotfiles"* ]]; then
+                echo "⚙️ $task"
+            elif [[ "$task_lower" == *"therapy"* ]]; then
+                echo "🧘 $task"
+            else
+                echo "🍅 $task"  # Default tomato
+            fi
+            ;;
+    esac
+}
+
 # Initialize files with defaults if they don't exist
 [ ! -f "$TITLE_FILE" ] && echo "General Task" > "$TITLE_FILE"
 [ ! -f "$WORK_TIME_FILE" ] && echo "25" > "$WORK_TIME_FILE"
@@ -78,33 +109,7 @@ if [ $# -eq 0 ]; then
     
     # Apply changes
     if [ -n "$NEW_TITLE" ]; then
-        # Check if title already starts with a known emoji
-        first_word=$(echo "$NEW_TITLE" | awk '{print $1}')
-        
-        # List of known emojis we use
-        case "$first_word" in
-            "🍅"|"☕️"|"🎓"|"📦"|"⚙️"|"🧘"|"🎮"|"📚"|*[![:ascii:]]*)
-                # Already has emoji, do nothing
-                :
-                ;;
-            *)
-                # No emoji, add one based on keywords
-                title_lower=$(echo "$NEW_TITLE" | tr '[:upper:]' '[:lower:]')
-                if [[ "$title_lower" == *"break"* ]]; then
-                    NEW_TITLE="☕️ $NEW_TITLE"
-                elif [[ "$title_lower" == *"technion"* ]]; then
-                    NEW_TITLE="🎓 $NEW_TITLE"
-                elif [[ "$title_lower" == *"logistics"* ]]; then
-                    NEW_TITLE="📦 $NEW_TITLE"
-                elif [[ "$title_lower" == *"dotfiles"* ]]; then
-                    NEW_TITLE="⚙️ $NEW_TITLE"
-                elif [[ "$title_lower" == *"therapy"* ]]; then
-                    NEW_TITLE="🧘 $NEW_TITLE"
-                else
-                    NEW_TITLE="🍅 $NEW_TITLE"
-                fi
-                ;;
-        esac
+        NEW_TITLE=$(add_emoji_to_task "$NEW_TITLE")
         echo "$NEW_TITLE" > "$TITLE_FILE"
     fi
     [ -n "$NEW_WORK_TIME" ] && echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
@@ -172,33 +177,9 @@ done
 
 # Update files if values were provided
 if [ -n "$TITLE" ]; then
-    # Check if title already starts with a known emoji
-    first_word=$(echo "$TITLE" | awk '{print $1}')
-    
-    # List of known emojis we use
-    case "$first_word" in
-        "🍅"|"☕️"|"🎓"|"📦"|"⚙️"|"🧘"|"🎮"|"📚"|*[![:ascii:]]*)
-            # Already has emoji, do nothing
-            :
-            ;;
-        *)
-        # No emoji, add one based on keywords
-        title_lower=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]')
-        if [[ "$title_lower" == *"break"* ]]; then
-            TITLE="☕️ $TITLE"
-        elif [[ "$title_lower" == *"technion"* ]]; then
-            TITLE="🎓 $TITLE"
-        elif [[ "$title_lower" == *"logistics"* ]]; then
-            TITLE="📦 $TITLE"
-        elif [[ "$title_lower" == *"dotfiles"* ]]; then
-            TITLE="⚙️ $TITLE"
-        elif [[ "$title_lower" == *"therapy"* ]]; then
-            TITLE="🧘 $TITLE"
-        else
-            TITLE="🍅 $TITLE"
-        fi
-        ;;
-    esac
+    # Ensure all tasks have an icon prefix
+    # This centralizes icon logic here instead of in pomodoro.sh
+    TITLE=$(add_emoji_to_task "$TITLE")
     echo "$TITLE" > "$TITLE_FILE"
 fi
 [ -n "$WORK_TIME" ] && echo "$WORK_TIME" > "$WORK_TIME_FILE"
