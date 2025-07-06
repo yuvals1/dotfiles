@@ -219,9 +219,9 @@ if [ $# -eq 0 ]; then
     
     # Apply changes
     if [ -n "$NEW_TITLE" ]; then
-        NEW_TITLE=$(add_emoji_to_task "$NEW_TITLE")
+        # Save plain task - let task.sh handle emoji
         echo "$NEW_TITLE" > "$TITLE_FILE"
-        # Update task display in sketchybar
+        # Update task display in sketchybar (will add emoji)
         bash "$SCRIPT_DIR/plugins/task.sh"
     fi
     [ -n "$NEW_WORK_TIME" ] && echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
@@ -354,11 +354,9 @@ done
 
 # Update files if values were provided
 if [ -n "$TITLE" ]; then
-    # Ensure all tasks have an icon prefix
-    # This centralizes icon logic here instead of in pomodoro.sh
-    TITLE=$(add_emoji_to_task "$TITLE")
+    # Save plain task - let task.sh handle emoji
     echo "$TITLE" > "$TITLE_FILE"
-    # Update task display in sketchybar
+    # Update task display in sketchybar (will add emoji and save back)
     bash "$SCRIPT_DIR/plugins/task.sh"
 fi
 [ -n "$WORK_TIME" ] && echo "$WORK_TIME" > "$WORK_TIME_FILE"

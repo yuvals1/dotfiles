@@ -22,6 +22,7 @@ get_random_emoji() {
 # Function to update task display
 update_task_display() {
     local current_title=$(get_current_title)
+    local needs_save=false
     
     # Check if title already has an emoji (from pomo command)
     # Get the first "word" and check if it contains non-ASCII characters
@@ -40,6 +41,12 @@ update_task_display() {
             icon=$(get_random_emoji)
         fi
         local clean_title="$current_title"
+        needs_save=true
+    fi
+    
+    # Save the emoji-enhanced title back to file if we added an emoji
+    if [ "$needs_save" = true ]; then
+        echo "$icon $clean_title" > "$TITLE_FILE"
     fi
     
     # Update display
