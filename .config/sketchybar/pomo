@@ -14,6 +14,90 @@ mkdir -p "$POMO_DIR"
 [ ! -f "$WORK_TIME_FILE" ] && echo "25" > "$WORK_TIME_FILE"
 [ ! -f "$BREAK_TIME_FILE" ] && echo "5" > "$BREAK_TIME_FILE"
 
+# Interactive mode if no arguments
+if [ $# -eq 0 ]; then
+    echo "🍅 Pomodoro Timer Configuration"
+    echo "=============================="
+    echo ""
+    
+    # Show current settings
+    CURRENT_TASK=$(cat "$TITLE_FILE")
+    CURRENT_WORK=$(cat "$WORK_TIME_FILE")
+    CURRENT_BREAK=$(cat "$BREAK_TIME_FILE")
+    CURRENT_DEBUG=$([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")
+    
+    echo "Current settings:"
+    echo "  📝 Task: $CURRENT_TASK"
+    echo "  🍅 Work time: $CURRENT_WORK minutes"
+    echo "  ☕️ Break time: $CURRENT_BREAK minutes"
+    echo "  🐛 Debug mode: $CURRENT_DEBUG"
+    echo ""
+    
+    # Quick presets
+    echo "Quick presets:"
+    echo "  1) Standard (25/5)"
+    echo "  2) Long focus (50/10)"
+    echo "  3) Short burst (15/3)"
+    echo "  4) Custom"
+    echo ""
+    echo -n "Choose preset (1-4) or press Enter for custom: "
+    read PRESET
+    
+    case "$PRESET" in
+        1)
+            NEW_WORK_TIME="25"
+            NEW_BREAK_TIME="5"
+            echo "Using Standard preset (25/5)"
+            ;;
+        2)
+            NEW_WORK_TIME="50"
+            NEW_BREAK_TIME="10"
+            echo "Using Long focus preset (50/10)"
+            ;;
+        3)
+            NEW_WORK_TIME="15"
+            NEW_BREAK_TIME="3"
+            echo "Using Short burst preset (15/3)"
+            ;;
+        *)
+            echo ""
+            echo -n "Enter work time in minutes (or press Enter for $CURRENT_WORK): "
+            read NEW_WORK_TIME
+            
+            echo -n "Enter break time in minutes (or press Enter for $CURRENT_BREAK): "
+            read NEW_BREAK_TIME
+            ;;
+    esac
+    
+    echo ""
+    echo -n "Enter task name (or press Enter to keep current): "
+    read NEW_TITLE
+    
+    echo -n "Enable debug mode? (y/N): "
+    read DEBUG_RESPONSE
+    
+    # Apply changes
+    [ -n "$NEW_TITLE" ] && echo "$NEW_TITLE" > "$TITLE_FILE"
+    [ -n "$NEW_WORK_TIME" ] && echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
+    [ -n "$NEW_BREAK_TIME" ] && echo "$NEW_BREAK_TIME" > "$BREAK_TIME_FILE"
+    
+    if [[ "$DEBUG_RESPONSE" =~ ^[Yy]$ ]]; then
+        touch "$DEBUG_FILE"
+    elif [[ "$DEBUG_RESPONSE" =~ ^[Nn]$ ]]; then
+        rm -f "$DEBUG_FILE"
+    fi
+    
+    echo ""
+    echo "Settings updated!"
+    echo ""
+    echo "Final settings:"
+    echo "  Task: $(cat "$TITLE_FILE")"
+    echo "  Work time: $(cat "$WORK_TIME_FILE") minutes"
+    echo "  Break time: $(cat "$BREAK_TIME_FILE") minutes"
+    echo "  Debug mode: $([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")"
+    exit 0
+fi
+
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
