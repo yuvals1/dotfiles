@@ -259,11 +259,6 @@ hs.hotkey.bind({ "alt" }, "M", function()
 	io.popen("NAME=break /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro.sh 2>/dev/null &")
 end)
 
--- Reset pomodoro counter (Alt+,)
-hs.hotkey.bind({ "alt" }, ",", function()
-	io.popen("SENDER=mouse.clicked /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_history.sh 2>/dev/null")
-	hs.alert.show("✅ Counter reset to 0")
-end)
 
 -- Alert to show Hammerspoon config loaded successfully
 hs.alert.show("Hammerspoon config loaded with click functionality and TTS")
