@@ -4,7 +4,7 @@ POMO_DIR="$HOME/.config/sketchybar/pomodoro"
 TITLE_FILE="$POMO_DIR/.current_title"
 WORK_TIME_FILE="$POMO_DIR/.current_work_time"
 BREAK_TIME_FILE="$POMO_DIR/.current_break_time"
-MULTIPLIER_FILE="$POMO_DIR/.time_multiplier"
+DEBUG_FILE="$POMO_DIR/.debug_mode"
 
 # Create directory if it doesn't exist
 mkdir -p "$POMO_DIR"
@@ -29,9 +29,9 @@ while [[ $# -gt 0 ]]; do
             BREAK_TIME="$2"
             shift 2
             ;;
-        --speed)
-            SPEED="$2"
-            shift 2
+        --debug)
+            DEBUG="1"
+            shift
             ;;
         -h|--help)
             echo "Usage: pomo [options]"
@@ -39,14 +39,14 @@ while [[ $# -gt 0 ]]; do
             echo "  -n, --name NAME          Set the task name/title"
             echo "  --wt, --work-time MINS   Set work session duration in minutes"
             echo "  --bt, --break-time MINS  Set break session duration in minutes"
-            echo "  --speed MULTIPLIER       Set time speed (0.01 = 100x faster for testing)"
+            echo "  --debug                  Enable debug mode (1 second timers)"
             echo "  -h, --help               Show this help message"
             echo ""
             echo "Current settings:"
             echo "  Task: $(cat "$TITLE_FILE")"
             echo "  Work time: $(cat "$WORK_TIME_FILE") minutes"
             echo "  Break time: $(cat "$BREAK_TIME_FILE") minutes"
-            echo "  Speed: $(cat "$MULTIPLIER_FILE" 2>/dev/null || echo "1")x"
+            echo "  Debug mode: $([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")"
             exit 0
             ;;
         *)
@@ -61,11 +61,17 @@ done
 [ -n "$TITLE" ] && echo "$TITLE" > "$TITLE_FILE"
 [ -n "$WORK_TIME" ] && echo "$WORK_TIME" > "$WORK_TIME_FILE"
 [ -n "$BREAK_TIME" ] && echo "$BREAK_TIME" > "$BREAK_TIME_FILE"
-[ -n "$SPEED" ] && echo "$SPEED" > "$MULTIPLIER_FILE"
+if [ -n "$DEBUG" ]; then
+    if [ "$DEBUG" = "1" ]; then
+        touch "$DEBUG_FILE"
+    else
+        rm -f "$DEBUG_FILE"
+    fi
+fi
 
 # Show current settings
 echo "Pomodoro settings updated:"
 echo "  Task: $(cat "$TITLE_FILE")"
 echo "  Work time: $(cat "$WORK_TIME_FILE") minutes"
 echo "  Break time: $(cat "$BREAK_TIME_FILE") minutes"
-echo "  Speed: $(cat "$MULTIPLIER_FILE" 2>/dev/null || echo "1")x"
+echo "  Debug mode: $([ -f "$DEBUG_FILE" ] && echo "enabled" || echo "disabled")"

@@ -6,9 +6,29 @@ MODE_FILE="$POMO_DIR/mode"
 TITLE_FILE="$POMO_DIR/.current_title"
 WORK_TIME_FILE="$POMO_DIR/.current_work_time"
 BREAK_TIME_FILE="$POMO_DIR/.current_break_time"
-MULTIPLIER_FILE="$POMO_DIR/.time_multiplier"
+DEBUG_FILE="$POMO_DIR/.debug_mode"
 
 mkdir -p "$POMO_DIR"
+
+# Function to get smart icon based on task name
+get_task_icon() {
+    local task="$1"
+    local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
+    
+    if [[ "$task_lower" == *"break"* ]]; then
+        echo "☕️"
+    elif [[ "$task_lower" == *"technion"* ]]; then
+        echo "🎓"
+    elif [[ "$task_lower" == *"logistics"* ]]; then
+        echo "📦"
+    elif [[ "$task_lower" == *"dotfiles"* ]]; then
+        echo "⚙️"
+    elif [[ "$task_lower" == *"therapy"* ]]; then
+        echo "🧘"
+    else
+        echo "🍅"  # Default
+    fi
+}
 
 # Function to get current title
 get_current_title() {
@@ -36,19 +56,16 @@ get_break_minutes() {
     fi
 }
 
-# Get time multiplier (default to 1 for normal speed)
-get_time_multiplier() {
-    if [ -f "$MULTIPLIER_FILE" ]; then
-        cat "$MULTIPLIER_FILE"
-    else
-        echo "1"
-    fi
-}
-
-# Timer durations with multiplier applied
-MULTIPLIER=$(get_time_multiplier)
-WORK_MINUTES=$(echo "$(get_work_minutes) * $MULTIPLIER" | bc -l)
-BREAK_MINUTES=$(echo "$(get_break_minutes) * $MULTIPLIER" | bc -l)
+# Timer durations
+if [ -f "$DEBUG_FILE" ]; then
+    # Debug mode: 1 second timers
+    WORK_MINUTES=0.03
+    BREAK_MINUTES=0.03
+else
+    # Normal mode
+    WORK_MINUTES=$(get_work_minutes)
+    BREAK_MINUTES=$(get_break_minutes)
+fi
 
 # Function to stop any running timer
 stop_timer() {
@@ -111,18 +128,29 @@ echo "$MODE" > "$MODE_FILE"
         
         # Log to history file
         HISTORY_FILE="$POMO_DIR/.pomodoro_history"
-        if [ "$MODE" = "work" ]; then
-            ACTUAL_MINS=$(get_work_minutes)
-            echo "$END_TIME [$CURRENT_TITLE] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
+        if [ -f "$DEBUG_FILE" ]; then
+            # Debug mode: always log 60 minutes
+            LOG_MINS=60
         else
-            ACTUAL_MINS=$(get_break_minutes)
-            echo "$END_TIME [BREAK] $ACTUAL_MINS mins" >> "$HISTORY_FILE"
+            # Normal mode: log actual minutes
+            if [ "$MODE" = "work" ]; then
+                LOG_MINS=$(get_work_minutes)
+            else
+                LOG_MINS=$(get_break_minutes)
+            fi
+        fi
+        
+        if [ "$MODE" = "work" ]; then
+            ICON=$(get_task_icon "$CURRENT_TITLE")
+            echo "$END_TIME [$ICON $CURRENT_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
+        else
+            echo "$END_TIME [☕️ BREAK] $LOG_MINS mins" >> "$HISTORY_FILE"
         fi
         
         # Send notification
         NOTIFY_CMD="/Users/yuvalspiegel/dotfiles/tools/notify-wrapper.sh"
         if [ "$MODE" = "work" ]; then
-            "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TITLE ($ACTUAL_MINS min)"
+            "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TITLE ($LOG_MINS min)"
         else
             "$NOTIFY_CMD" "☕️ Break Over" "Ready for next pomodoro?"
         fi

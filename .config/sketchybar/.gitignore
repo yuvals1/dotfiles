@@ -5,6 +5,6 @@ pomodoro/.reset_time
 pomodoro/.current_title
 pomodoro/.current_work_time
 pomodoro/.current_break_time
-pomodoro/.time_multiplier
+pomodoro/.debug_mode
 pomodoro/*.pid
 pomodoro/mode
