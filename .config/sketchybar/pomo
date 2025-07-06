@@ -12,30 +12,28 @@ add_emoji_to_task() {
     local task="$1"
     local first_word=$(echo "$task" | awk '{print $1}')
     
-    # List of known emojis we use
-    case "$first_word" in
-        "🍅"|"☕️"|"🎓"|"📦"|"⚙️"|"🧘"|"🎮"|"📚"|*[![:ascii:]]*)
-            # Already has emoji, return as-is
-            echo "$task"
-            ;;
-        *)
-            # No emoji, add one based on keywords
-            local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
-            if [[ "$task_lower" == *"break"* ]]; then
-                echo "☕️ $task"
-            elif [[ "$task_lower" == *"technion"* ]]; then
-                echo "🎓 $task"
-            elif [[ "$task_lower" == *"logistics"* ]]; then
-                echo "📦 $task"
-            elif [[ "$task_lower" == *"dotfiles"* ]]; then
-                echo "⚙️ $task"
-            elif [[ "$task_lower" == *"therapy"* ]]; then
-                echo "🧘 $task"
-            else
-                echo "🍅 $task"  # Default tomato
-            fi
-            ;;
-    esac
+    # Check if task already has an emoji (non-ASCII first character)
+    # If first word has only ASCII characters, it needs an emoji
+    if echo "$first_word" | LC_ALL=C grep -q '^[[:print:]]*$'; then
+        # First word is pure ASCII, needs emoji
+        :
+    else
+        # Already has emoji, return as-is
+        echo "$task"
+        return
+    fi
+    
+    # No emoji, add one based on keywords
+    local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
+    
+    # Check against emoji mappings
+    local emoji=$(get_emoji_for_keyword "$task_lower")
+    if [ -n "$emoji" ]; then
+        echo "$emoji $task"
+    else
+        # No keyword match, use default
+        echo "$DEFAULT_EMOJI $task"
+    fi
 }
 
 # Initialize files with defaults if they don't exist
@@ -62,33 +60,44 @@ if [ $# -eq 0 ]; then
     echo "  🐛 Debug mode: $CURRENT_DEBUG"
     echo ""
     
-    # Quick presets
+    # Display available presets
     echo "Quick presets:"
-    echo "  1) Standard (25/5)"
-    echo "  2) Long focus (50/10)"
-    echo "  3) Short burst (15/3)"
-    echo "  4) Custom"
+    local idx=1
+    local preset_names=""
+    
+    # Show presets
+    while IFS= read -r preset_name; do
+        if [ $idx -le 9 ]; then
+            local desc=$(get_preset "$preset_name" "desc")
+            echo "  $idx) $desc"
+            preset_names="$preset_names$idx:$preset_name|"
+            ((idx++))
+        fi
+    done < <(list_presets)
+    
+    echo "  C) Custom values"
     echo ""
-    echo -n "Choose preset (1-4) or press Enter for custom: "
+    echo -n "Choose preset (1-$((idx-1)) or C for custom): "
     read PRESET
     
     case "$PRESET" in
-        1)
-            NEW_WORK_TIME="25"
-            NEW_BREAK_TIME="5"
-            echo "Using Standard preset (25/5)"
+        [1-9])
+            # Extract preset name from stored string
+            local selected=$(echo "$preset_names" | grep -o "${PRESET}:[^|]*" | cut -d: -f2)
+            if [ -n "$selected" ]; then
+                NEW_WORK_TIME=$(get_preset "$selected" "work")
+                NEW_BREAK_TIME=$(get_preset "$selected" "break")
+                local preset_desc=$(get_preset "$selected" "desc")
+                echo "Using $preset_desc"
+                
+                # Auto-suggest task name with preset emoji if current task is default
+                if [ "$CURRENT_TASK" = "$DEFAULT_TASK" ] || [ "$CURRENT_TASK" = "$DEFAULT_EMOJI $DEFAULT_TASK" ]; then
+                    local preset_emoji=$(get_preset "$selected" "emoji")
+                    SUGGESTED_TASK="$preset_emoji $selected session"
+                fi
+            fi
             ;;
-        2)
-            NEW_WORK_TIME="50"
-            NEW_BREAK_TIME="10"
-            echo "Using Long focus preset (50/10)"
-            ;;
-        3)
-            NEW_WORK_TIME="15"
-            NEW_BREAK_TIME="3"
-            echo "Using Short burst preset (15/3)"
-            ;;
-        *)
+        [Cc]|*)
             echo ""
             echo -n "Enter work time in minutes (or press Enter for $CURRENT_WORK): "
             read NEW_WORK_TIME
@@ -99,8 +108,17 @@ if [ $# -eq 0 ]; then
     esac
     
     echo ""
-    echo -n "Enter task name (or press Enter to keep current): "
+    if [ -n "$SUGGESTED_TASK" ]; then
+        echo -n "Enter task name (or press Enter for '$SUGGESTED_TASK'): "
+    else
+        echo -n "Enter task name (or press Enter to keep current): "
+    fi
     read NEW_TITLE
+    
+    # Use suggested task if available and no input given
+    if [ -z "$NEW_TITLE" ] && [ -n "$SUGGESTED_TASK" ]; then
+        NEW_TITLE="$SUGGESTED_TASK"
+    fi
     
     echo -n "Enable debug mode? (y/N): "
     read DEBUG_RESPONSE
@@ -149,6 +167,36 @@ while [[ $# -gt 0 ]]; do
             DEBUG="1"
             shift
             ;;
+        --emoji)
+            echo "🎯 Emoji Keyword Mappings:"
+            echo ""
+            if [ -f "$CONFIG_DIR/emoji_mappings.conf" ]; then
+                while IFS='=' read -r key value; do
+                    [[ "$key" =~ ^[[:space:]]*# ]] && continue
+                    [[ -z "$key" ]] && continue
+                    key=$(echo "$key" | xargs)
+                    value=$(echo "$value" | xargs)
+                    if [ "$key" != "default" ]; then
+                        printf "  %-15s %s\n" "$key" "$value"
+                    fi
+                done < "$CONFIG_DIR/emoji_mappings.conf"
+                echo ""
+                echo "Default emoji: $DEFAULT_EMOJI"
+            fi
+            exit 0
+            ;;
+        --presets)
+            echo "⏱️  Available Presets:"
+            echo ""
+            while IFS= read -r preset; do
+                desc=$(get_preset "$preset" "desc")
+                work=$(get_preset "$preset" "work")
+                break=$(get_preset "$preset" "break")
+                emoji=$(get_preset "$preset" "emoji")
+                printf "  %-12s %s (%s/%s mins)\n" "$preset" "$desc" "$work" "$break"
+            done < <(list_presets)
+            exit 0
+            ;;
         -h|--help)
             echo "Usage: pomo [options]"
             echo "Options:"
@@ -156,6 +204,8 @@ while [[ $# -gt 0 ]]; do
             echo "  --wt, --work-time MINS   Set work session duration in minutes"
             echo "  --bt, --break-time MINS  Set break session duration in minutes"
             echo "  --debug                  Enable debug mode (1 second timers)"
+            echo "  --emoji                  Show emoji mappings"
+            echo "  --presets                Show available presets"
             echo "  -h, --help               Show this help message"
             echo ""
             echo "Current settings:"
