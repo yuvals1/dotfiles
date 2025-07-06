@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Source common configuration for get_daily_goal function
+SCRIPT_DIR="$(dirname "$0")"
+source "$(dirname "$SCRIPT_DIR")/pomodoro_common.sh"
+
 POMO_DIR="$HOME/.config/sketchybar/pomodoro"
 POMO_HISTORY="$POMO_DIR/.pomodoro_history"
 
@@ -29,5 +33,8 @@ fi
 # Use printf to ensure consistent decimal formatting
 hours=$(printf "%.1f" $(echo "scale=2; $total_minutes / 60" | bc))
 
+# Get daily goal
+daily_goal=$(get_daily_goal)
+
 # Update display
-sketchybar --set pomodoro_history label="⏱️ ${hours}h"
+sketchybar --set pomodoro_history label="⏱️ ${hours}/${daily_goal}h"

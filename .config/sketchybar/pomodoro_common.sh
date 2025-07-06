@@ -11,12 +11,14 @@ DEBUG_FILE="$POMO_DIR/.debug_mode"
 HISTORY_FILE="$POMO_DIR/.pomodoro_history"
 PID_FILE="$POMO_DIR/timer.pid"
 MODE_FILE="$POMO_DIR/mode"
+DAILY_GOAL_FILE="$POMO_DIR/.daily_goal"
 
 # Default values
 DEFAULT_WORK_TIME="25"
 DEFAULT_BREAK_TIME="5"
 DEFAULT_TASK="General Task"
 DEFAULT_EMOJI="🍅"  # Used for display purposes in pomo --emoji
+DEFAULT_DAILY_GOAL="8"
 
 # Function to get emoji for keyword
 get_emoji_for_keyword() {
@@ -128,6 +130,15 @@ get_break_minutes() {
 # Check debug mode
 is_debug_mode() {
     [ -f "$DEBUG_FILE" ]
+}
+
+# Get daily goal
+get_daily_goal() {
+    if [ -f "$DAILY_GOAL_FILE" ]; then
+        cat "$DAILY_GOAL_FILE"
+    else
+        echo "$DEFAULT_DAILY_GOAL"
+    fi
 }
 
 # Get recent unique tasks from history
