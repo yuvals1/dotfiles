@@ -156,3 +156,18 @@ extract_task_name() {
     # Remove first word (icon) and return the rest
     echo "$task" | cut -d' ' -f2-
 }
+
+# Get recent unique tasks from history
+get_recent_tasks() {
+    local limit="${1:-5}"  # Default to 5 recent tasks
+    
+    if [ -f "$HISTORY_FILE" ]; then
+        # Extract tasks from history, remove duplicates, get most recent
+        # First get all unique tasks, then get the last N and reverse
+        awk -F'[][]' '{print $2}' "$HISTORY_FILE" | \
+        sed 's/^ *//;s/ *$//' | \
+        grep -v "BREAK" | \
+        grep -v "^[[:space:]]*$" | \
+        awk '!seen[$0]++ {tasks[NR]=$0} END {start=NR-'"$((limit-1))"'; if(start<1)start=1; for(i=NR;i>=start;i--) if(tasks[i]) print tasks[i]}'
+    fi
+}

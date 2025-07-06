@@ -107,13 +107,42 @@ if [ $# -eq 0 ]; then
             ;;
     esac
     
+    # Show recent tasks
+    echo ""
+    echo "Recent tasks:"
+    recent_idx=1
+    recent_tasks=""
+    while IFS= read -r recent_task; do
+        if [ -n "$recent_task" ]; then
+            echo "  $recent_idx) $recent_task"
+            recent_tasks="$recent_tasks$recent_idx:$recent_task|"
+            ((recent_idx++))
+        fi
+    done < <(get_recent_tasks 5)
+    
     echo ""
     if [ -n "$SUGGESTED_TASK" ]; then
-        echo -n "Enter task name (or press Enter for '$SUGGESTED_TASK'): "
+        echo "Enter task:"
+        echo "  - Number (1-$((recent_idx-1))) for recent task"
+        echo "  - Text for new task"
+        echo "  - Enter for suggested: '$SUGGESTED_TASK'"
+        echo -n "> "
     else
-        echo -n "Enter task name (or press Enter to keep current): "
+        echo "Enter task:"
+        echo "  - Number (1-$((recent_idx-1))) for recent task"
+        echo "  - Text for new task"
+        echo "  - Enter to keep current"
+        echo -n "> "
     fi
     read NEW_TITLE
+    
+    # Check if user entered a number for recent task
+    if [[ "$NEW_TITLE" =~ ^[0-9]+$ ]]; then
+        selected_recent=$(echo "$recent_tasks" | grep -o "${NEW_TITLE}:[^|]*" | cut -d: -f2-)
+        if [ -n "$selected_recent" ]; then
+            NEW_TITLE="$selected_recent"
+        fi
+    fi
     
     # Use suggested task if available and no input given
     if [ -z "$NEW_TITLE" ] && [ -n "$SUGGESTED_TASK" ]; then
