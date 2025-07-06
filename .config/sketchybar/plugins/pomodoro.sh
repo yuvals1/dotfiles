@@ -13,6 +13,16 @@ mkdir -p "$POMO_DIR"
 # Function to get smart icon based on task name
 get_task_icon() {
     local task="$1"
+    
+    # Check if task already starts with an emoji
+    local first_chars=$(echo "$task" | cut -c1-4)
+    if echo "$first_chars" | LC_ALL=C grep -q '[^\x00-\x7F]'; then
+        # Task likely starts with an emoji, return it
+        echo "$task" | sed 's/^\([^ ]*\).*/\1/'
+        return
+    fi
+    
+    # Otherwise use keyword mapping
     local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
     
     if [[ "$task_lower" == *"break"* ]]; then
@@ -27,6 +37,19 @@ get_task_icon() {
         echo "🧘"
     else
         echo "🍅"  # Default
+    fi
+}
+
+# Function to clean task name (remove emoji if present)
+clean_task_name() {
+    local task="$1"
+    # Check if task starts with an emoji
+    local first_chars=$(echo "$task" | cut -c1-4)
+    if echo "$first_chars" | LC_ALL=C grep -q '[^\x00-\x7F]'; then
+        # Remove emoji and any following spaces
+        echo "$task" | sed 's/^[^ ]* *//'
+    else
+        echo "$task"
     fi
 }
 
@@ -142,7 +165,8 @@ echo "$MODE" > "$MODE_FILE"
         
         if [ "$MODE" = "work" ]; then
             ICON=$(get_task_icon "$CURRENT_TITLE")
-            echo "$END_TIME [$ICON $CURRENT_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
+            CLEAN_TITLE=$(clean_task_name "$CURRENT_TITLE")
+            echo "$END_TIME [$ICON $CLEAN_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
         else
             echo "$END_TIME [☕️ BREAK] $LOG_MINS mins" >> "$HISTORY_FILE"
         fi

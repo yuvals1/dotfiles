@@ -50,24 +50,18 @@ fi
 echo "📊 Pomodoro Sessions (Last $DAYS days)"
 echo ""
 
-# Function to get smart icon based on task name
-get_task_icon() {
+# Function to extract icon from task name (assumes format: "icon task_name")
+extract_icon() {
     local task="$1"
-    local task_lower=$(echo "$task" | tr '[:upper:]' '[:lower:]')
-    
-    if [[ "$task_lower" == *"break"* ]]; then
-        echo "☕️"
-    elif [[ "$task_lower" == *"technion"* ]]; then
-        echo "🎓"
-    elif [[ "$task_lower" == *"logistics"* ]]; then
-        echo "📦"
-    elif [[ "$task_lower" == *"dotfiles"* ]]; then
-        echo "⚙️"
-    elif [[ "$task_lower" == *"therapy"* ]]; then
-        echo "🧘"
-    else
-        echo "🍅"  # Default
-    fi
+    # Extract first word which should be the icon
+    echo "$task" | awk '{print $1}'
+}
+
+# Function to extract task name without icon
+extract_task_name() {
+    local task="$1"
+    # Remove first word (icon) and return the rest
+    echo "$task" | cut -d' ' -f2-
 }
 
 # Get the date N days ago
@@ -159,15 +153,16 @@ if [ "$VIEW_MODE" = "timeline" ]; then
             CURRENT_HOUR="$HOUR"
         fi
         
-        # Get smart icon for task
-        ICON=$(get_task_icon "$TASK")
+        # Extract icon and clean task name
+        ICON=$(extract_icon "$TASK")
+        CLEAN_TASK=$(extract_task_name "$TASK")
         
         # Format time as HH:MM
         TIME_FORMATTED=$(printf "%s:%s" "$HOUR" "$MINUTE")
         
         # Print session with proper alignment
         # Format: "HH:MM ┤ 🍅 Task Name (25m)"
-        printf "%5s ┤ %s %-30s (%sm)\n" "$TIME_FORMATTED" "$ICON" "$TASK" "$DURATION"
+        printf "%5s ┤ %s %-30s (%sm)\n" "$TIME_FORMATTED" "$ICON" "$CLEAN_TASK" "$DURATION"
     done
     
     # Calculate and show summary
@@ -276,9 +271,10 @@ echo "$TASK_HOURS" | while read hours task; do
     # Create bar
     BAR=$(printf '█%.0s' $(seq 1 $BAR_LENGTH))
     
-    # Get smart icon for task
-    ICON=$(get_task_icon "$task")
+    # Extract icon and clean task name
+    ICON=$(extract_icon "$task")
+    CLEAN_TASK=$(extract_task_name "$task")
     
     # Print formatted line with icon
-    printf "%s %-30s %-20s %.1fh\n" "$ICON" "$task" "$BAR" "$hours"
+    printf "%s %-30s %-20s %.1fh\n" "$ICON" "$CLEAN_TASK" "$BAR" "$hours"
 done
