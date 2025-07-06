@@ -32,6 +32,7 @@ alias t='timr-tui -c'
 
 alias pomo="$HOME/dotfiles/.config/sketchybar/pomo"
 alias pomo-vis="$HOME/dotfiles/.config/sketchybar/pomo-vis"
+alias pv="pomo-vis"
 
 # Notification command
 alias notify="$HOME/dotfiles/tools/notify-wrapper.sh"
