@@ -6,14 +6,10 @@ matches:
     replace: "conventional commits"
     label: "conventional commits"
 
-  - trigger: ":cf"
-    replace: "suggest git commit according to conventional commits\n\n\n"
-    label: "conventional commit full"
-
   - trigger: ":cc"
     replace: "suggest git commit message according to conventional commits"
     label: "conventional commits full"
 
-  - trigger: ":cl"
-    replace: "suggest one line git commit according to conventional commits. put it in code block.\n"
-    label: "conventional commits one line"
+  - trigger: ":co"
+    replace: "commit our changes"
+    label: "commit our changes"

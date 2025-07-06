@@ -8,3 +8,11 @@ matches:
   - trigger: ":dif"
     replace: "difference"
     label: "difference"
+
+  - trigger: ":dt"
+    replace: "do you understand the task?"
+    label: "do you understand the task?"
+
+  - trigger: ":vb"
+    replace: "verify the behavior is as desired"
+    label: "verify the behavior is as desired"
