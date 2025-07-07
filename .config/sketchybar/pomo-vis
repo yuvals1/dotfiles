@@ -347,20 +347,12 @@ if [ "$VIEW_MODE" = "timeline" ]; then
             CURRENT_HOUR="$HOUR"
         fi
         
-        # Get emoji for task
-        TASK_LOWER=$(echo "$TASK" | tr '[:upper:]' '[:lower:]')
-        ICON=$(get_emoji_for_keyword "$TASK_LOWER")
-        if [ -z "$ICON" ]; then
-            ICON="🍅"  # Default pomodoro icon
-        fi
-        CLEAN_TASK="$TASK"
-        
         # Format time as HH:MM
         TIME_FORMATTED=$(printf "%s:%s" "$HOUR" "$MINUTE")
         
         # Print session with proper alignment
-        # Format: "HH:MM ┤ 🍅 Task Name (25m)"
-        printf "%5s ┤ %s %-30s (%sm)\n" "$TIME_FORMATTED" "$ICON" "$CLEAN_TASK" "$DURATION"
+        # Format: "HH:MM ┤ Task Name (25m)"
+        printf "%5s ┤ %-35s (%sm)\n" "$TIME_FORMATTED" "$TASK" "$DURATION"
     done
     
     # Calculate and show summary
@@ -469,14 +461,6 @@ echo "$TASK_HOURS" | while read hours task; do
     # Create bar
     BAR=$(printf '█%.0s' $(seq 1 $BAR_LENGTH))
     
-    # Get emoji for task
-    TASK_LOWER=$(echo "$task" | tr '[:upper:]' '[:lower:]')
-    ICON=$(get_emoji_for_keyword "$TASK_LOWER")
-    if [ -z "$ICON" ]; then
-        ICON="🍅"  # Default pomodoro icon
-    fi
-    CLEAN_TASK="$task"
-    
-    # Print formatted line with icon
-    printf "%s %-30s %-20s %.1fh\n" "$ICON" "$CLEAN_TASK" "$BAR" "$hours"
+    # Print formatted line (task already contains any icon if present)
+    printf "%-35s %-20s %.1fh\n" "$task" "$BAR" "$hours"
 done

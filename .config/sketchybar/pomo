@@ -190,9 +190,15 @@ if [ $# -eq 0 ]; then
     
     # Apply changes
     if [ -n "$NEW_TITLE" ]; then
-        # Save plain task - let task.sh handle emoji
-        echo "$NEW_TITLE" > "$TITLE_FILE"
-        # Update task display in sketchybar (will add emoji)
+        # Add emoji to task before saving
+        task_lower=$(echo "$NEW_TITLE" | tr '[:upper:]' '[:lower:]')
+        icon=$(get_emoji_for_keyword "$task_lower")
+        if [ -z "$icon" ]; then
+            icon=$(get_random_emoji)
+        fi
+        # Save task with emoji
+        echo "$icon $NEW_TITLE" > "$TITLE_FILE"
+        # Update task display in sketchybar
         bash "$SCRIPT_DIR/plugins/task.sh"
     fi
     if [ -n "$NEW_WORK_TIME" ]; then
@@ -339,9 +345,15 @@ done
 
 # Update files if values were provided
 if [ -n "$TITLE" ]; then
-    # Save plain task - let task.sh handle emoji
-    echo "$TITLE" > "$TITLE_FILE"
-    # Update task display in sketchybar (will add emoji and save back)
+    # Add emoji to task before saving
+    task_lower=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]')
+    icon=$(get_emoji_for_keyword "$task_lower")
+    if [ -z "$icon" ]; then
+        icon=$(get_random_emoji)
+    fi
+    # Save task with emoji
+    echo "$icon $TITLE" > "$TITLE_FILE"
+    # Update task display in sketchybar
     bash "$SCRIPT_DIR/plugins/task.sh"
 fi
 if [ -n "$WORK_TIME" ]; then

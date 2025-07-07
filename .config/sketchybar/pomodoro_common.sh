@@ -141,6 +141,18 @@ get_daily_goal() {
     fi
 }
 
+# Function to get random emoji
+get_random_emoji() {
+    # Array of fun emojis to use as defaults
+    local emojis=(
+        "🎯" "💡" "🚀" "⭐" "🎨" "🔧" "📝" "🎪" "🎭" "🎸"
+        "🌟" "💫" "✨" "🔥" "💎" "🎯" "🎲" "🎮" "🎨" "🎬"
+        "🏆" "🎯" "🌈" "🦄" "🐉" "🦋" "🌺" "🌸" "🍄" "🌻"
+    )
+    local random_index=$((RANDOM % ${#emojis[@]}))
+    echo "${emojis[$random_index]}"
+}
+
 # Get recent unique tasks from history
 get_recent_tasks() {
     local limit="${1:-5}"  # Default to 5 recent tasks
