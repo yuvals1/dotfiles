@@ -5,8 +5,11 @@
 
 source "$CONFIG_DIR/colors.sh" # Load colors
 
+# Get the currently focused workspace directly from aerospace
+CURRENT_FOCUSED=$(aerospace list-workspaces --focused)
+
 # Check if this space is the focused one
-if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
+if [ "$1" = "$CURRENT_FOCUSED" ]; then
     # Active workspace - inverted colors with subtle shadow
     sketchybar --set $NAME \
         background.drawing=on \
@@ -28,6 +31,9 @@ fi
 
 # Update app icons for this workspace
 if [ "$SENDER" = "aerospace_workspace_change" ] || [ "$SENDER" = "forced" ]; then
+    # Small delay to let aerospace settle (prevents race conditions)
+    sleep 0.05
+    
     # Get all apps in this workspace with deduplication
     apps=$(aerospace list-windows --workspace $1 --format "%{app-name}" 2>/dev/null | sort -u)
     

@@ -30,8 +30,14 @@ sketchybar --add item space_separator left \
     script="$PLUGIN_DIR/space_windows_fast.sh" \
   --subscribe space_separator aerospace_workspace_change
 
-# Initial update
+# Initial update with slight stagger to prevent flicker
+focused=$(aerospace list-workspaces --focused)
 for sid in $(aerospace list-workspaces --all); do
-  sh $PLUGIN_DIR/aerospace_fast.sh $sid
+  # Update focused workspace first, others with slight delay
+  if [ "$sid" = "$focused" ]; then
+    sh $PLUGIN_DIR/aerospace_fast.sh $sid
+  else
+    (sleep 0.1 && sh $PLUGIN_DIR/aerospace_fast.sh $sid) &
+  fi
 done
 sh $PLUGIN_DIR/space_windows_fast.sh
