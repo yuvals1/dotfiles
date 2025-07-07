@@ -39,6 +39,9 @@ alias pv="pomo-vis"
 alias notify="$HOME/dotfiles/tools/notify-wrapper.sh"
 alias noti="notify"
 
+alias tl='cd ~/commitments/ & y'
+
+
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     local cdfile="$(mktemp -t "yazi-cd.XXXXXX")"
