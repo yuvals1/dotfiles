@@ -31,8 +31,8 @@ fi
 
 # Update app icons for this workspace
 if [ "$SENDER" = "aerospace_workspace_change" ] || [ "$SENDER" = "forced" ]; then
-    # Small delay to let aerospace settle (prevents race conditions)
-    sleep 0.05
+    # Tiny delay to let aerospace settle (prevents race conditions)
+    sleep 0.02
     
     # Get all apps in this workspace with deduplication
     apps=$(aerospace list-windows --workspace $1 --format "%{app-name}" 2>/dev/null | sort -u)
