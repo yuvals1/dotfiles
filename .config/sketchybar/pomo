@@ -269,6 +269,10 @@ while [[ $# -gt 0 ]]; do
             DEBUG="1"
             shift
             ;;
+        --no-debug)
+            DEBUG="0"
+            shift
+            ;;
         --emoji)
             echo "🎯 Emoji Keyword Mappings:"
             echo ""
@@ -323,6 +327,7 @@ while [[ $# -gt 0 ]]; do
             echo "  --preset NAME            Use a preset configuration"
             echo "  --fzf                    Quick task selection with fzf"
             echo "  --debug                  Enable debug mode (1 second timers)"
+            echo "  --no-debug               Disable debug mode"
             echo "  --emoji                  Show emoji mappings"
             echo "  --presets                Show available presets"
             echo "  -h, --help               Show this help message"
