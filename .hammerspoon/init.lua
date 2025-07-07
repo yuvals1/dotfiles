@@ -121,18 +121,18 @@ hs.hotkey.bind({ "cmd", "shift" }, "x", function()
 	hs.alert.show("Stopped speaking")
 end)
 
--- Move to specific coordinate and click - Position 2 (alternative keybind)
-hs.hotkey.bind({ "cmd", "shift" }, "/", function()
-	hs.mouse.absolutePosition({ x = 1442, y = 605 })
+-- Move to specific coordinate and click - Left-center position (alternative keybind)
+hs.hotkey.bind({ "cmd" }, "/", function()
+	hs.mouse.absolutePosition({ x = 1074, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
 		forceClick()
 	end)
 end)
 
--- Move to specific coordinate and click - Position 3 (alternative keybind)
-hs.hotkey.bind({ "cmd" }, "/", function()
-	hs.mouse.absolutePosition({ x = 1074, y = 605 })
+-- Move to specific coordinate and click - Right-center position (alternative keybind)
+hs.hotkey.bind({ "cmd", "shift" }, "/", function()
+	hs.mouse.absolutePosition({ x = 1442, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
 		forceClick()
@@ -148,23 +148,6 @@ hs.hotkey.bind({ "cmd", "shift" }, "q", function()
 	end)
 end)
 
--- Move to specific coordinate and click - Position 2
-hs.hotkey.bind({ "cmd", "shift" }, "w", function()
-	hs.mouse.absolutePosition({ x = 1074, y = 605 })
-	-- Add a delay before clicking
-	hs.timer.doAfter(0.2, function()
-		forceClick()
-	end)
-end)
-
--- Move to specific coordinate and click - Position 3
-hs.hotkey.bind({ "cmd", "shift" }, "e", function()
-	hs.mouse.absolutePosition({ x = 1442, y = 605 })
-	-- Add a delay before clicking
-	hs.timer.doAfter(0.2, function()
-		forceClick()
-	end)
-end)
 
 -- Same as Position 3 but works everywhere except Kitty (Cmd+J)
 -- local cmdJEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
