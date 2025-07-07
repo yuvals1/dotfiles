@@ -6,5 +6,6 @@ pomodoro/.current_title
 pomodoro/.current_work_time
 pomodoro/.current_break_time
 pomodoro/.debug_mode
+pomodoro/.daily_goal
 pomodoro/*.pid
 pomodoro/mode
