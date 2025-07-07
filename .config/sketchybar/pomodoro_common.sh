@@ -164,6 +164,7 @@ get_recent_tasks() {
         sed 's/^ *//;s/ *$//' | \
         grep -v "BREAK" | \
         grep -v "^[[:space:]]*$" | \
+        awk -F'|' '{print (NF>1) ? $2 : $0}' | \
         awk '!seen[$0]++ {tasks[NR]=$0} END {start=NR-'"$((limit-1))"'; if(start<1)start=1; for(i=NR;i>=start;i--) if(tasks[i]) print tasks[i]}'
     fi
 }

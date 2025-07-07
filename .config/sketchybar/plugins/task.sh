@@ -11,9 +11,15 @@ ensure_pomo_dir
 update_task_display() {
     local current_title=$(get_current_title)
     
-    # Extract icon and label from stored task (format: "🎯 Task Name")
-    local icon=$(echo "$current_title" | awk '{print $1}')
-    local label=$(echo "$current_title" | cut -d' ' -f2-)
+    # Extract icon and label from stored task (format: "🎯|Task Name")
+    local icon=$(echo "$current_title" | cut -d'|' -f1)
+    local label=$(echo "$current_title" | cut -d'|' -f2-)
+    
+    # Handle legacy format (space separator) for backward compatibility
+    if [ -z "$label" ]; then
+        icon=$(echo "$current_title" | awk '{print $1}')
+        label=$(echo "$current_title" | cut -d' ' -f2-)
+    fi
     
     # Update display
     sketchybar --set task icon="$icon" \

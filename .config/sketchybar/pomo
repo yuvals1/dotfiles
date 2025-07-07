@@ -196,8 +196,8 @@ if [ $# -eq 0 ]; then
         if [ -z "$icon" ]; then
             icon=$(get_random_emoji)
         fi
-        # Save task with emoji
-        echo "$icon $NEW_TITLE" > "$TITLE_FILE"
+        # Save task with emoji using | separator
+        echo "${icon}|${NEW_TITLE}" > "$TITLE_FILE"
         # Update task display in sketchybar
         bash "$SCRIPT_DIR/plugins/task.sh"
     fi
@@ -351,8 +351,8 @@ if [ -n "$TITLE" ]; then
     if [ -z "$icon" ]; then
         icon=$(get_random_emoji)
     fi
-    # Save task with emoji
-    echo "$icon $TITLE" > "$TITLE_FILE"
+    # Save task with emoji using | separator
+    echo "${icon}|${TITLE}" > "$TITLE_FILE"
     # Update task display in sketchybar
     bash "$SCRIPT_DIR/plugins/task.sh"
 fi
