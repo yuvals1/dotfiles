@@ -78,7 +78,7 @@ echo "$MODE" > "$MODE_FILE"
         done
         
         # Timer finished
-        END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
+        END_TIME=$(date '+%Y-%m-%d %H:%M')
         
         # Log to history file
         if is_debug_mode; then
