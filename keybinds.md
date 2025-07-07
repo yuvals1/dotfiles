@@ -52,15 +52,28 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+shift+s`           | Global       | Insert datetime                   | DD/MM/YYYY HH:MM format                  |
 | `cmd+shift+u`           | Global       | Generate UUID                     | Inserts random UUID                      |
 | `cmd+b`                 | -            | **Available**                     | Reserved by Karabiner for navigation     |
-| `cmd+f`                 | System/Kitty | Find / **Available**              | Standard macOS find (available in Kitty) |
-| `cmd+g`                 | Global       | Duplicate cmd+shift+w mouse click | Hammerspoon action                       |
+| `cmd+f`                 | Chrome       | Click at (2494, 645)              | Chrome-specific click position           |
+| `cmd+f`                 | System/Kitty | Find / **Available**              | Standard macOS find (non-Chrome/Kitty)   |
+| `cmd+g`                 | Chrome       | Click at (1442, 605)              | Right-center position (Chrome only)      |
 | `cmd+n`                 | System       | New                               | Standard macOS new window/document       |
-| `cmd+s`                 | System       | Save                              | Standard macOS save                      |
+| `cmd+s`                 | Chrome       | Click at (2470, 644)              | Chrome-specific click position           |
+| `cmd+s`                 | System       | Save                              | Standard macOS save (non-Chrome)         |
 | `cmd+v`                 | System       | Paste                             | Standard macOS paste                     |
 | `cmd+space`             | System       | Spotlight                         | Standard macOS Spotlight search          |
 | `cmd+tab`               | System       | App Switcher                      | Standard macOS app switcher              |
 | `cmd+shift+z`           | System       | Redo                              | Standard macOS redo                      |
-| `cmd+shift+[others]`    | -            | **Available**                     | Except d, s, u, y, ;, ., z               |
+| `cmd+/`                 | Global       | Click at (1074, 605)              | Left-center position                     |
+| `cmd+shift+/`           | Global       | Click at (1442, 605)              | Right-center position                    |
+| `cmd+shift+a`           | Global       | Speak clipboard (175 wpm)         | Text-to-speech normal speed              |
+| `cmd+shift+f`           | Global       | Speak clipboard (250 wpm)         | Text-to-speech fastest speed             |
+| `cmd+shift+x`           | Global       | Stop speaking                     | Stops text-to-speech                     |
+| `cmd+shift+q`           | Global       | Click at (1377, 149)              | Position 1                               |
+| `cmd+shift+r`           | Global       | Reload Hammerspoon                | Reloads Hammerspoon config               |
+| `cmd+shift+P`           | Global       | Show mouse position               | Displays current mouse coordinates       |
+| `cmd+shift+C`           | Global       | Click at current position         | Test click function                      |
+| `alt+N`                 | Global       | Toggle work pomodoro              | Start/stop work timer                    |
+| `alt+M`                 | Global       | Toggle break pomodoro             | Start/stop break timer                   |
+| `cmd+shift+[others]`    | -            | **Available**                     | Except a,d,f,q,r,s,u,x,y,;,.,z,P,C,/    |
 | `cmd+option+[any key]`  | -            | **Available**                     | -                                        |
 | `cmd+control+[any key]` | -            | **Available**                     | -                                        |
 
