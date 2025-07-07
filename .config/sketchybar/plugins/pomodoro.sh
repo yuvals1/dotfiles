@@ -27,24 +27,27 @@ stop_timer() {
         rm -f "$PID_FILE"
     fi
     # Show configured times when idle
-    local work_time=$(get_work_minutes)
-    local break_time=$(get_break_minutes)
-    local work_display=$(printf "%02d:00" $work_time)
-    local break_display=$(printf "%02d:00" $break_time)
-    sketchybar --set pomodoro_work label="🍅 ${work_display}" \
-               --set pomodoro_break label="☕️ ${break_display}"
+    update_idle_display
     rm -f "$MODE_FILE"
 }
 
 # Determine which button was clicked
 if [ "$NAME" = "work" ]; then
     ITEM="pomodoro_work"
-    ICON="🍅"
+    if is_debug_mode; then
+        ICON="🐛"
+    else
+        ICON="🍅"
+    fi
     DURATION=$WORK_MINUTES
     MODE="work"
 else
     ITEM="pomodoro_break"
-    ICON="☕️"
+    if is_debug_mode; then
+        ICON="🧪"
+    else
+        ICON="☕️"
+    fi
     DURATION=$BREAK_MINUTES
     MODE="break"
 fi
@@ -111,11 +114,13 @@ echo "$MODE" > "$MODE_FILE"
         # Reset to show configured time
         if [ "$MODE" = "work" ]; then
             idle_time=$(get_work_minutes)
+            idle_icon=$(is_debug_mode && echo "🐛" || echo "🍅")
         else
             idle_time=$(get_break_minutes)
+            idle_icon=$(is_debug_mode && echo "🧪" || echo "☕️")
         fi
         idle_display=$(printf "%02d:00" $idle_time)
-        sketchybar --set "$ITEM" label="$ICON ${idle_display}"
+        sketchybar --set "$ITEM" label="$idle_icon ${idle_display}"
         
         rm -f "$PID_FILE" "$MODE_FILE"
 ) &

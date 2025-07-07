@@ -203,25 +203,24 @@ if [ $# -eq 0 ]; then
     fi
     if [ -n "$NEW_WORK_TIME" ]; then
         echo "$NEW_WORK_TIME" > "$WORK_TIME_FILE"
-        # Update display if not running
-        if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "work" ]; then
-            WORK_DISPLAY=$(printf "%02d:00" $NEW_WORK_TIME)
-            sketchybar --set pomodoro_work label="🍅 ${WORK_DISPLAY}"
-        fi
     fi
     if [ -n "$NEW_BREAK_TIME" ]; then
         echo "$NEW_BREAK_TIME" > "$BREAK_TIME_FILE"
-        # Update display if not running
-        if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "break" ]; then
-            BREAK_DISPLAY=$(printf "%02d:00" $NEW_BREAK_TIME)
-            sketchybar --set pomodoro_break label="☕️ ${BREAK_DISPLAY}"
-        fi
+    fi
+    
+    # Update display if timers are not running
+    if [ ! -f "$MODE_FILE" ]; then
+        update_idle_display
     fi
     
     if [[ "$DEBUG_RESPONSE" =~ ^[Yy]$ ]]; then
         touch "$DEBUG_FILE"
+        # Update display to show debug icons if not running
+        [ ! -f "$MODE_FILE" ] && update_idle_display
     elif [[ "$DEBUG_RESPONSE" =~ ^[Nn]$ ]]; then
         rm -f "$DEBUG_FILE"
+        # Update display to show normal icons if not running
+        [ ! -f "$MODE_FILE" ] && update_idle_display
     fi
     
     echo ""
@@ -358,19 +357,14 @@ if [ -n "$TITLE" ]; then
 fi
 if [ -n "$WORK_TIME" ]; then
     echo "$WORK_TIME" > "$WORK_TIME_FILE"
-    # Update display if not running
-    if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "work" ]; then
-        WORK_DISPLAY=$(printf "%02d:00" $WORK_TIME)
-        sketchybar --set pomodoro_work label="🍅 ${WORK_DISPLAY}"
-    fi
 fi
 if [ -n "$BREAK_TIME" ]; then
     echo "$BREAK_TIME" > "$BREAK_TIME_FILE"
-    # Update display if not running
-    if [ ! -f "$MODE_FILE" ] || [ "$(cat "$MODE_FILE" 2>/dev/null)" != "break" ]; then
-        BREAK_DISPLAY=$(printf "%02d:00" $BREAK_TIME)
-        sketchybar --set pomodoro_break label="☕️ ${BREAK_DISPLAY}"
-    fi
+fi
+
+# Update display if timers are not running and we changed time settings
+if ([ -n "$WORK_TIME" ] || [ -n "$BREAK_TIME" ]) && [ ! -f "$MODE_FILE" ]; then
+    update_idle_display
 fi
 if [ -n "$DEBUG" ]; then
     if [ "$DEBUG" = "1" ]; then
@@ -378,6 +372,8 @@ if [ -n "$DEBUG" ]; then
     else
         rm -f "$DEBUG_FILE"
     fi
+    # Update display to reflect debug mode change if not running
+    [ ! -f "$MODE_FILE" ] && update_idle_display
 fi
 
 # Show current settings

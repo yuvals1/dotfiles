@@ -153,6 +153,22 @@ get_random_emoji() {
     echo "${emojis[$random_index]}"
 }
 
+# Function to update idle display for pomodoro buttons
+update_idle_display() {
+    local work_time=$(get_work_minutes)
+    local break_time=$(get_break_minutes)
+    local work_display=$(printf "%02d:00" $work_time)
+    local break_display=$(printf "%02d:00" $break_time)
+    
+    if is_debug_mode; then
+        sketchybar --set pomodoro_work label="🐛 ${work_display}" \
+                   --set pomodoro_break label="🐛 ${break_display}"
+    else
+        sketchybar --set pomodoro_work label="🍅 ${work_display}" \
+                   --set pomodoro_break label="☕️ ${break_display}"
+    fi
+}
+
 # Get recent unique tasks from history
 get_recent_tasks() {
     local limit="${1:-5}"  # Default to 5 recent tasks
