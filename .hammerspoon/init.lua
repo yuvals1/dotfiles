@@ -201,6 +201,8 @@ hs.hotkey.bind({ "cmd", "shift" }, "C", function()
 end)
 -- Chrome-specific keybinds using event tap with auto-restart
 local chromeEventtap = nil
+local restartAttempts = 0
+local maxRestartAttempts = 3
 
 local function createChromeEventtap()
 	return hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
@@ -213,6 +215,13 @@ local function createChromeEventtap()
 			-- Check for Cmd+S (keyCode 1 is 's')
 			if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 1 then
 				hs.mouse.absolutePosition({ x = 2470, y = 644 })
+				hs.timer.doAfter(0.2, function()
+					forceClick()
+				end)
+				return true -- Consume the event
+			-- Check for Cmd+G (keyCode 5 is 'g')
+			elseif flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 5 then
+				hs.mouse.absolutePosition({ x = 1442, y = 605 })
 				hs.timer.doAfter(0.2, function()
 					forceClick()
 				end)
@@ -230,18 +239,53 @@ local function createChromeEventtap()
 	end)
 end
 
--- Create and start the event tap
-chromeEventtap = createChromeEventtap()
-chromeEventtap:start()
+-- Function to safely restart the event tap
+local function restartChromeEventtap()
+	if chromeEventtap then
+		chromeEventtap:stop()
+	end
+	
+	-- Create new event tap
+	chromeEventtap = createChromeEventtap()
+	local started = chromeEventtap:start()
+	
+	if started then
+		restartAttempts = 0
+		return true
+	else
+		restartAttempts = restartAttempts + 1
+		if restartAttempts <= maxRestartAttempts then
+			hs.alert.show("Chrome event tap failed to start, retrying... (" .. restartAttempts .. "/" .. maxRestartAttempts .. ")")
+			hs.timer.doAfter(1, restartChromeEventtap)
+		else
+			hs.alert.show("Chrome event tap failed after " .. maxRestartAttempts .. " attempts. Press Cmd+Shift+R to reload.")
+		end
+		return false
+	end
+end
+
+-- Initial start
+restartChromeEventtap()
 
 -- Monitor and restart the event tap if it stops
-local eventTapWatcher = hs.timer.new(5, function()
+local eventTapWatcher = hs.timer.new(3, function()
 	if not chromeEventtap:isEnabled() then
 		hs.alert.show("Chrome event tap stopped - restarting...")
-		chromeEventtap:start()
+		restartChromeEventtap()
 	end
 end)
 eventTapWatcher:start()
+
+-- Add application watcher to restart event tap when Chrome gains focus
+local appWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
+	if appName == "Google Chrome" and eventType == hs.application.watcher.activated then
+		-- Check if event tap is still working
+		if not chromeEventtap:isEnabled() then
+			restartChromeEventtap()
+		end
+	end
+end)
+appWatcher:start()
 
 -- Reload Hammerspoon configuration
 hs.hotkey.bind({ "cmd", "shift" }, "r", function()
