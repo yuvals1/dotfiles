@@ -250,6 +250,12 @@ hs.hotkey.bind({ "cmd", "shift" }, "r", function()
 	hs.reload()
 end)
 
+-- Reload Sketchybar
+hs.hotkey.bind({ "cmd", "shift" }, "b", function()
+	hs.task.new("/bin/bash", nil, { "-c", "sketchybar --reload" }):start()
+	hs.alert.show("Sketchybar reloaded")
+end)
+
 -- POMODORO TIMER KEYBINDINGS
 -- Toggle work session (Alt+N)
 hs.hotkey.bind({ "alt" }, "N", function()
