@@ -16,3 +16,7 @@ matches:
   - trigger: ":instruct"
     replace: "I have a homework question about LR parsing that I need to solve. I want to work through it using the same methodology we used successfully before: Go very slowly, step by step. Don't move to the next step until I explicitly approve with yes or continue Use multiple concrete examples to explain concepts If I say that I don't understand, completely restart the explanation from a simpler level. Explain technical terms in plain language first before using them"
     label: "important - full instructions"
+  
+  - trigger: ":slow"
+    replace: "explain it more slowly and in small steps"
+    label: "important - explain slowly"
