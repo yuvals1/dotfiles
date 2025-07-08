@@ -3,22 +3,25 @@
 # Get current input source
 INPUT_SOURCE=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleSelectedInputSources | grep -o '"KeyboardLayout Name" = [^;]*' | tail -1 | sed 's/.*= //; s/;//')
 
-# Set display based on language
+# Set flag emoji based on language
 case "$INPUT_SOURCE" in
     "Hebrew")
-        DISPLAY="א"
+        ICON="🇮🇱"
+        LABEL="HE"
         ;;
     "ABC"|"U.S.")
-        DISPLAY="A"
+        ICON="🇺🇸"
+        LABEL="EN"
         ;;
     *)
-        # For other languages, show first letter or abbreviation
-        DISPLAY="${INPUT_SOURCE:0:2}"
+        # For other languages, show generic flag and abbreviation
+        ICON="🏳️"
+        LABEL="${INPUT_SOURCE:0:2}"
         ;;
 esac
 
-# Update sketchybar
-sketchybar --set language label="$DISPLAY"
+# Update sketchybar with icon and label
+sketchybar --set language icon="$ICON" label="$LABEL"
 
 # Handle click to switch input source
 if [ "$SENDER" = "mouse.clicked" ]; then
