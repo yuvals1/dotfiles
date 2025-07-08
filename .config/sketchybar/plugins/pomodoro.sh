@@ -115,8 +115,8 @@ echo "$MODE" > "$MODE_FILE"
             "$NOTIFY_CMD" "☕️ Break Over" "Ready for next pomodoro?"
         fi
         
-        # Update history display
-        sh "$PLUGIN_DIR/pomodoro_history.sh"
+        # Trigger history update event
+        sketchybar --trigger pomodoro_update
         
         # Reset to show configured time
         if [ "$MODE" = "work" ]; then
