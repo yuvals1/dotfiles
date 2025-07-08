@@ -12,6 +12,7 @@ HISTORY_FILE="$POMO_DIR/.pomodoro_history"
 PID_FILE="$POMO_DIR/timer.pid"
 MODE_FILE="$POMO_DIR/mode"
 DAILY_GOAL_FILE="$POMO_DIR/.daily_goal"
+PAUSE_FILE="$POMO_DIR/.paused"
 
 # Default values
 DEFAULT_WORK_TIME="25"

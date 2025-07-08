@@ -279,6 +279,12 @@ hs.hotkey.bind({ "alt" }, "M", function()
 	io.popen("NAME=break /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro.sh 2>/dev/null &")
 end)
 
+-- Toggle pause/resume pomodoro timer (Alt+,)
+hs.hotkey.bind({ "alt" }, ",", function()
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_pause.sh 2>/dev/null &")
+	hs.alert.show("Toggled pause")
+end)
+
 
 -- Alert to show Hammerspoon config loaded successfully
 hs.alert.show("Hammerspoon config loaded with click functionality and TTS")

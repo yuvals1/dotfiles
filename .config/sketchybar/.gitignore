@@ -9,3 +9,4 @@ pomodoro/.debug_mode
 pomodoro/.daily_goal
 pomodoro/*.pid
 pomodoro/mode
+pomodoro/.paused

@@ -28,7 +28,7 @@ stop_timer() {
     fi
     # Show configured times when idle
     update_idle_display
-    rm -f "$MODE_FILE"
+    rm -f "$MODE_FILE" "$PAUSE_FILE"
 }
 
 # Determine which button was clicked
@@ -75,9 +75,16 @@ echo "$MODE" > "$MODE_FILE"
             MINUTES=$((TIME_LEFT / 60))
             SECONDS=$((TIME_LEFT % 60))
             TIME_STR=$(printf "%02d:%02d" $MINUTES $SECONDS)
-            sketchybar --set "$ITEM" label="$ICON $TIME_STR"
+            
+            # Check if paused
+            if [ -f "$PAUSE_FILE" ]; then
+                sketchybar --set "$ITEM" label="⏸️ $TIME_STR"
+            else
+                sketchybar --set "$ITEM" label="$ICON $TIME_STR"
+                TIME_LEFT=$((TIME_LEFT - 1))
+            fi
+            
             sleep 1
-            TIME_LEFT=$((TIME_LEFT - 1))
         done
         
         # Timer finished
@@ -122,7 +129,7 @@ echo "$MODE" > "$MODE_FILE"
         idle_display=$(printf "%02d:00" $idle_time)
         sketchybar --set "$ITEM" label="$idle_icon ${idle_display}"
         
-        rm -f "$PID_FILE" "$MODE_FILE"
+        rm -f "$PID_FILE" "$MODE_FILE" "$PAUSE_FILE"
 ) &
 
 # Save PID for stopping later
