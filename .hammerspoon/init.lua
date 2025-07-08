@@ -243,25 +243,7 @@ end
 -- Initial start
 restartChromeEventtap()
 
--- Monitor and restart the event tap if it stops
-local eventTapWatcher = hs.timer.new(3, function()
-	if not chromeEventtap:isEnabled() then
-		hs.alert.show("Chrome event tap stopped - restarting...")
-		restartChromeEventtap()
-	end
-end)
-eventTapWatcher:start()
 
--- Add application watcher to restart event tap when Chrome gains focus
-local appWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
-	if appName == "Google Chrome" and eventType == hs.application.watcher.activated then
-		-- Check if event tap is still working
-		if not chromeEventtap:isEnabled() then
-			restartChromeEventtap()
-		end
-	end
-end)
-appWatcher:start()
 
 -- Reload Hammerspoon configuration
 hs.hotkey.bind({ "cmd", "shift" }, "r", function()
