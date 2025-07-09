@@ -110,6 +110,13 @@ local function createChromeEventtap()
 					forceClick()
 				end)
 				return true -- Consume the event
+			-- Check for Ctrl+V (keyCode 9 is 'v')
+			elseif flags.ctrl and not flags.shift and not flags.alt and not flags.cmd and keyCode == 9 then
+				hs.mouse.absolutePosition({ x = 1074, y = 605 })
+				hs.timer.doAfter(0.2, function()
+					forceClick()
+				end)
+				return true -- Consume the event
 			end
 		end
 		return false -- Let the event pass through for other apps
