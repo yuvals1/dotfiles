@@ -22,14 +22,6 @@ function forceClick()
 end
 
 
--- Move to specific coordinate and click - Left-center position (alternative keybind)
-hs.hotkey.bind({ "cmd" }, "/", function()
-	hs.mouse.absolutePosition({ x = 1074, y = 605 })
-	-- Add a delay before clicking
-	hs.timer.doAfter(0.2, function()
-		forceClick()
-	end)
-end)
 
 -- Move to specific coordinate and click - Right-center position (alternative keybind)
 hs.hotkey.bind({ "cmd", "shift" }, "/", function()
@@ -154,7 +146,7 @@ restartChromeEventtap()
 
 
 -- Reload Hammerspoon configuration
-hs.hotkey.bind({ "cmd", "shift" }, "r", function()
+hs.hotkey.bind({ "cmd" }, "/", function()
 	hs.reload()
 end)
 
