@@ -18,10 +18,9 @@ matches:
     label: "important - full instructions"
 
   - trigger: ":slow"
-    replace: "explain it more slowly and in small steps"
+    replace: "explain it slowly and in small steps. dont move to next step until i approve"
     label: "important - explain slowly"
 
   - trigger: ":tech"
     replace: "i understand the high level but dont understand the flow in the technical sense"
     label: "understand high level but not technical flow"
-
