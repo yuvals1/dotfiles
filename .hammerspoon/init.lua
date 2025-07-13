@@ -24,7 +24,7 @@ end
 
 
 -- Move to specific coordinate and click - Right-center position (alternative keybind)
-hs.hotkey.bind({ "cmd", "shift" }, "/", function()
+hs.hotkey.bind({ "ctrl", "shift" }, "v", function()
 	hs.mouse.absolutePosition({ x = 1442, y = 605 })
 	-- Add a delay before clicking
 	hs.timer.doAfter(0.2, function()
