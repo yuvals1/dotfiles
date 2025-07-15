@@ -174,5 +174,22 @@ hs.hotkey.bind({ "alt" }, ",", function()
 end)
 
 
+-- Chrome detection timer to reload when switching to Chrome
+local chromeWasActive = false
+local checkInterval = 5  -- Check every 5 seconds
+
+hs.timer.doEvery(checkInterval, function()
+	local currentApp = hs.application.frontmostApplication()
+	local isChromeActive = currentApp and currentApp:name() == "Google Chrome"
+	
+	-- If Chrome just became active (wasn't before, but is now)
+	if isChromeActive and not chromeWasActive then
+		hs.reload()
+	end
+	
+	-- Update our tracking variable
+	chromeWasActive = isChromeActive
+end)
+
 -- Alert to show Hammerspoon config loaded successfully
-hs.alert.show("Hammerspoon config loaded with click functionality")
+-- hs.alert.show("Hammerspoon config loaded with click functionality")
