@@ -48,3 +48,9 @@ alias gt='open https://calendar.google.com/calendar/u/0/r/tasks'
 
 
 export PATH=/usr/local/smlnj/bin:$PATH
+
+# Ensure sketchybar input source monitor is running
+if ! pgrep -f "input_source_monitor.swift" > /dev/null 2>&1; then
+    # Start it in background
+    nohup swift ~/.config/sketchybar/helpers/input_source_monitor.swift > /dev/null 2>&1 &
+fi

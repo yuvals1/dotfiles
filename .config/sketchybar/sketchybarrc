@@ -73,5 +73,3 @@ source $ITEM_DIR/cpu.sh
 
 sketchybar --update
 
-# Launch input source monitor for language indicator
-$CONFIG_DIR/helpers/launch_input_monitor.sh
