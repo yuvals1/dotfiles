@@ -158,6 +158,10 @@ keymap = [
   # Sorting
   { on = [
     ",",
+    ",",
+  ], run = "sort alphabetical --reverse", desc = "Sort alphabetically (reverse)" },
+  { on = [
+    ",",
     "m",
   ], run = [
     "sort mtime --reverse=no",
