@@ -13,3 +13,7 @@ matches:
   - trigger: ":coc"
     replace: "let's commit our changes"
     label: "let's commit our changes"
+
+  - trigger: ":cs"
+    replace: "let's commit our current state"
+    label: "let's commit our current state"
