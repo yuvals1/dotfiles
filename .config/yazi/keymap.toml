@@ -93,6 +93,8 @@ keymap = [
   { on = "z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
   { on = "W", run = "plugin skim", desc = "Jump to a file/directory via skim" },
   { on = ":", run = "plugin jump-back", desc = "Jump to previous directory" },
+  { on = ["g", "h"], run = "cd ~", desc = "Go to home directory" },
+  { on = ["g", "r"], run = "cd /", desc = "Go to root directory" },
 
   # Linemode
   { on = [
