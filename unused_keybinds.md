@@ -2,114 +2,103 @@
 
 This document lists all keybinds that are currently unused in the dotfiles.
 
-## Most Valuable Single Keys (Normal Mode)
+## Single Keys (Normal Mode)
 
-### Home Row & Easy Access
-- `s` - Substitute char (default action can use `cl` instead)
-- `S` - Substitute line (unneeded because `cc` has the same functionality)
-- `K` - Man page lookup (commonly remapped to LSP hover)
-- `;` - Repeat character search (useful but often remapped)
-- `,` - Reverse character search (rarely used after f/F/t/T)
-
-### Near Home Row
-- `Q` - Ex mode (almost never used)
-- `U` - Undo all changes on line (rarely useful)
-- `Y` - Yank line (unneeded because `yy` has the same functionality)
-- `T` - Till before character backward
-- `W` - Word forward (WORD)
-- `+` - Move to first non-blank of next line (redundant with `j^`)
-- `-` - Move to first non-blank of previous line (redundant with `k^`)
-
-### Less Accessible But Available
-- `&` - Repeat last substitute (`:s`) command
-- `_` - Move to first non-blank of current line (redundant with `^`)
-- `\` - Default leader key (but rarely used as such)
-- `Z` - Only used with ZZ/ZQ combinations
-- `M` - Move to middle of screen (less useful than H/L)
+| Key | Default Action | Alternative | Accessibility |
+|-----|----------------|-------------|---------------|
+| `s` | Substitute char | Use `cl` instead | Home row - Tier 1 |
+| `S` | Substitute line | Use `cc` instead | Home row - Tier 1 |
+| `K` | Man page lookup | Often remapped to LSP hover | Home row - Tier 1 |
+| `;` | Repeat char search | Useful but often remapped | Home row - Tier 1 |
+| `,` | Reverse char search | Rarely used after f/F/t/T | Tier 2 |
+| `Q` | Ex mode | Almost never used | Tier 2 |
+| `U` | Undo all on line | Rarely useful | Tier 2 |
+| `Y` | Yank line | Use `yy` instead | Near home row |
+| `T` | Till before char backward | Available | Near home row |
+| `W` | Word forward (WORD) | Available | Near home row |
+| `+` | First non-blank next line | Use `j^` instead | Tier 2 |
+| `-` | First non-blank prev line | Use `k^` instead | Tier 2 |
+| `&` | Repeat last `:s` | Rarely used | Tier 3 |
+| `_` | First non-blank current | Use `^` instead | Tier 3 |
+| `\` | Default leader | Rarely used as such | Tier 3 |
+| `Z` | Only with ZZ/ZQ | Available | Tier 3 |
+| `M` | Middle of screen | Less useful than H/L | Available |
 
 ## Control Key Combinations
 
-### Currently Used
-- ~`<C-u>`~ - used for prev diagnostic
-- ~`<C-d>`~ - used for next diagnostic
-- ~`<C-g>`~ - used for lazygit
+### Currently Used in Config
+| Key | Current Mapping |
+|-----|-----------------|
+| `<C-u>` | Previous diagnostic |
+| `<C-d>` | Next diagnostic |
+| `<C-g>` | Lazygit |
 
-### Commonly Available
-- `<C-q>` - Usually available (terminal flow control)
-- `<C-s>` - Usually available (terminal flow control)
-- Many other `<C-[letter]>` combinations in normal mode
-
-### Insert Mode Control Keys
-- `<C-a>` - Insert previously inserted text (often remapped)
-- `<C-g>` + combinations - Many unmapped
+### Available Control Keys
+| Key | Default Action | Notes |
+|-----|----------------|-------|
+| `<C-q>` | Terminal flow control | Usually available |
+| `<C-s>` | Terminal flow control | Usually available |
+| `<C-a>` | Insert prev text (insert mode) | Often remapped |
+| Many `<C-[letter]>` | Various or unmapped | Check individually |
 
 ## Alt/Meta Combinations
-- Most `<M-[key]>` combinations are unmapped
-- `<M-h>`, `<M-j>`, `<M-k>`, `<M-l>` - Popular for window navigation
-- `<M-[number]>` - Usually free
-- `<M-[letter]>` - Most letters available
+
+| Pattern | Status | Common Usage |
+|---------|--------|--------------|
+| `<M-[letter]>` | Mostly unmapped | Available |
+| `<M-h/j/k/l>` | Usually free | Window navigation |
+| `<M-[number]>` | Usually free | Available |
 
 ## Function Keys
-- `<F1>` through `<F12>` - Usually unmapped
-- `<S-F1>` through `<S-F12>` - Shifted function keys
-- `<F13>` and beyond - Higher function keys
+
+| Range | Status |
+|-------|--------|
+| `<F1>` - `<F12>` | Usually unmapped |
+| `<S-F1>` - `<S-F12>` | Shifted - unmapped |
+| `<F13>+` | Higher keys - unmapped |
 
 ## G-Prefix Combinations (Rarely Used)
-- `gQ` - Enter Ex mode with improved behavior
-- `gR` - Virtual replace mode
-- `go` - Go to byte in file
-- `g&` - Repeat last substitute with flags
-- `g@` - Call operatorfunc
-- `g#` / `g*` - Like # and * but without word boundaries
-- `g'` / `g`  - Jump to mark without/with column
 
-## Leader Key Combinations
-If using a custom leader (like space):
-- Single letters: `<leader>a` through `<leader>z`
-- Double letters: `<leader>aa`, `<leader>bb`, etc.
-- Common patterns: 
-  - `<leader>f` (files)
-  - `<leader>g` (git)
-  - `<leader>b` (buffers)
-  - `<leader>w` (windows)
-  - `<leader>t` (tabs/tests)
+| Combination | Default Action |
+|-------------|----------------|
+| `gQ` | Ex mode improved |
+| `gR` | Virtual replace mode |
+| `go` | Go to byte |
+| `g&` | Repeat substitute with flags |
+| `g@` | Call operatorfunc |
+| `g#`, `g*` | Like #/* without boundaries |
+| `g'`, `g`` | Jump to mark |
+
+## Leader Key Patterns
+
+| Pattern | Common Usage |
+|---------|--------------|
+| `<leader>[a-z]` | Single letter commands |
+| `<leader>[a-z][a-z]` | Double letter commands |
+| `<leader>f` | File operations |
+| `<leader>g` | Git operations |
+| `<leader>b` | Buffer operations |
+| `<leader>w` | Window operations |
+| `<leader>t` | Tab/test operations |
 
 ## Visual Mode Specific
-- `Q` - Same as normal mode
-- `K` - Same as normal mode
-- `&` - Same as normal mode
-- Many `g` combinations
 
-## Remapping Tiers by Accessibility
-
-### Tier 1 (Most Accessible - Home Row)
-- `s` - Very easy to reach, commonly remapped
-- `;` - Pinky position, easy to reach
-- `K` - Right hand home row
-
-### Tier 2 (Very Accessible)
-- `Q` - Close to home row
-- `U` - Close to common keys
-- `,` - Easy to reach
-- `-` and `+` - Right hand accessible
-
-### Tier 3 (Moderate Access)
-- `\` - Default leader, bit of a reach
-- `&` - Requires shift
-- `_` - Requires shift
-- `Z` - Corner key
+The following keys have the same availability in visual mode as normal mode:
+- `Q`, `K`, `&`, and many `g` combinations
 
 ## Common Remapping Patterns
 
-1. **Window Navigation:** `<C-h/j/k/l>`
-2. **Quick Actions:** `s` for substitute/surround plugins
-3. **Search Enhancement:** `;` and `,` for next/previous occurrence
-4. **Leader Combinations:** `<leader>` + letter for plugin commands
-5. **LSP Actions:** `K` for hover, `gd` for go to definition
-6. **Diagnostic Navigation:** `[d` and `]d` or custom mappings
+| Use Case | Common Keys |
+|----------|-------------|
+| Window Navigation | `<C-h/j/k/l>` |
+| Quick Actions | `s` for surround/substitute plugins |
+| Search Enhancement | `;` and `,` for next/prev |
+| LSP Actions | `K` for hover, `gd` for definition |
+| Diagnostics | `[d` and `]d` or custom |
 
 ## Notes
-- Some keys like `<C-c>` and `<C-[>` should generally not be remapped
-- Terminal emulators may intercept some key combinations
-- Some plugins may use these "unused" keys, so check plugin documentation
+
+- Keys like `<C-c>` and `<C-[>` should generally not be remapped
+- Terminal emulators may intercept some combinations
+- Check plugin documentation as they may use "unused" keys
 - Consider mode-specific mappings to maximize available keys
