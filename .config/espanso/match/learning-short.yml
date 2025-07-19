@@ -25,3 +25,7 @@ matches:
   - trigger: ":first"
     replace: "explain from first principles"
     label: "first principles"
+  
+  - trigger: ":sun"
+    replace: "i still not understand"
+    label: "still not understand"
