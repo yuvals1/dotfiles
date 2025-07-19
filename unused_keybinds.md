@@ -11,6 +11,6 @@ This document lists all keybinds that are currently unused in the dotfiles.
 - W
 - Y (unneeded because yy has the same functionality)
 - Z
-- ctrl+u
-- ~ctrl+d~
-- ~ctrl+g (show filename-unneeded)~
+- ~ctrl+u~ - used for prev diagnostic
+- ~ctrl+d~ - used for next diagnostic
+- ~ctrl+g~ - used for lazygit
