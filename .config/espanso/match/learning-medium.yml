@@ -24,3 +24,6 @@ matches:
   - trigger: ":terms"
     replace: "there are a lot of terms i don't know/understand here. please explain all the suspicious terms."
     label: "explain suspicious terms"
+
+  - trigger: ":talkabout"
+    replace: "let's talk about it. ill tell what i understand."

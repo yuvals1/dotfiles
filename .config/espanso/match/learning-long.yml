@@ -24,3 +24,7 @@ matches:
   - trigger: ":tech"
     replace: "i understand the high level but dont understand the flow in the technical sense"
     label: "understand high level but not technical flow"
+
+  - trigger: ":codepa"
+    replace: "show the code parts that relevant to each small step"
+    label: "important - show code parts"
