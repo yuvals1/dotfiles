@@ -24,13 +24,17 @@ return {
 		local url, old_name = get_hovered()
 		if not url then return end
 		
-		-- Calculate new name first
-		-- Remove any existing emoji prefix (including the space)
-		local new_name = old_name
-		-- Try each emoji separately since Lua patterns might not handle Unicode character classes well
-		new_name = new_name:gsub("^❗ ", "")
-		-- Add the new emoji prefix
-		new_name = config.emoji .. " " .. new_name
+		-- Check if file already has the emoji prefix
+		local has_prefix = old_name:match("^❗ ") ~= nil
+		
+		local new_name
+		if has_prefix then
+			-- Remove the emoji prefix (toggle off)
+			new_name = old_name:gsub("^❗ ", "")
+		else
+			-- Add the emoji prefix (toggle on)
+			new_name = config.emoji .. " " .. old_name
+		end
 		
 		-- Build paths
 		local old_path = tostring(url)
