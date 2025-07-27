@@ -10,3 +10,4 @@ pomodoro/.daily_goal
 pomodoro/*.pid
 pomodoro/mode
 pomodoro/.paused
+pomodoro/current-task/*
