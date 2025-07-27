@@ -1,0 +1,150 @@
+#!/bin/bash
+
+# Task symlink manager for Pomodoro system
+# This script helps manage symlinks from ~/tasks to the current-task directory
+
+TASKS_DIR="$HOME/tasks"
+POMO_DIR="$HOME/.config/sketchybar/pomodoro"
+CURRENT_TASK_DIR="$POMO_DIR/current-task"
+
+# Ensure directories exist
+mkdir -p "$CURRENT_TASK_DIR"
+
+# Function to clear current task
+clear_current_task() {
+    rm -f "$CURRENT_TASK_DIR"/*
+}
+
+# Function to set current task
+set_current_task() {
+    local task_path="$1"
+    
+    if [ ! -e "$task_path" ]; then
+        echo "Error: Task '$task_path' does not exist"
+        return 1
+    fi
+    
+    # Clear existing task
+    clear_current_task
+    
+    # Get just the filename/dirname for the symlink
+    local task_name=$(basename "$task_path")
+    
+    # Create symlink
+    ln -s "$task_path" "$CURRENT_TASK_DIR/$task_name"
+    
+    echo "✅ Set current task to: $task_name"
+    
+    # Update sketchybar
+    bash "$HOME/.config/sketchybar/plugins/task.sh"
+}
+
+# Function to list available tasks
+list_tasks() {
+    echo "📋 Available tasks in $TASKS_DIR:"
+    echo ""
+    
+    # Find all files and directories, format nicely
+    fd . "$TASKS_DIR" --type f --type d | while read -r item; do
+        # Remove the base path for cleaner display
+        local relative_path="${item#$TASKS_DIR/}"
+        
+        if [ -f "$item" ]; then
+            echo "  📄 $relative_path"
+        elif [ -d "$item" ] && [ "$item" != "$TASKS_DIR" ]; then
+            echo "  📁 $relative_path/"
+        fi
+    done
+}
+
+# Function to show current task
+show_current_task() {
+    echo "🍅 Current task:"
+    
+    local current=$(ls -l "$CURRENT_TASK_DIR" 2>/dev/null | grep "^l" | head -1)
+    
+    if [ -n "$current" ]; then
+        local task_name=$(echo "$current" | awk '{print $9}')
+        local target=$(echo "$current" | awk '{print $11}')
+        echo "  $task_name -> $target"
+    else
+        echo "  No task currently set"
+    fi
+}
+
+# Interactive mode with fzf
+interactive_mode() {
+    # Check if fzf is available
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "Error: fzf is not installed"
+        echo "Install with: brew install fzf"
+        exit 1
+    fi
+    
+    # Get list of tasks for fzf
+    local selected=$(fd . "$TASKS_DIR" --type f --type d | \
+        sed "s|$TASKS_DIR/||" | \
+        fzf --height=15 --layout=reverse --prompt="Select task> " \
+        --preview="echo 'Path: $TASKS_DIR/{}'; echo ''; ls -la '$TASKS_DIR/{}' 2>/dev/null || echo 'File: {}'" \
+        --preview-window=up:30%)
+    
+    if [ -n "$selected" ]; then
+        set_current_task "$TASKS_DIR/$selected"
+    fi
+}
+
+# Main script logic
+case "${1:-}" in
+    "set")
+        if [ -z "$2" ]; then
+            echo "Usage: task-link set <task-path>"
+            exit 1
+        fi
+        
+        # Handle relative paths from tasks directory
+        if [[ "$2" != /* ]]; then
+            set_current_task "$TASKS_DIR/$2"
+        else
+            set_current_task "$2"
+        fi
+        ;;
+    
+    "clear")
+        clear_current_task
+        echo "✅ Cleared current task"
+        bash "$HOME/.config/sketchybar/plugins/task.sh"
+        ;;
+    
+    "list")
+        list_tasks
+        ;;
+    
+    "current")
+        show_current_task
+        ;;
+    
+    "fzf"|"select")
+        interactive_mode
+        ;;
+    
+    *)
+        echo "📋 Task Link Manager"
+        echo "==================="
+        echo ""
+        echo "Usage: task-link [command]"
+        echo ""
+        echo "Commands:"
+        echo "  set <path>     Set current task (relative to ~/tasks or absolute)"
+        echo "  clear          Clear current task"
+        echo "  list           List all available tasks"
+        echo "  current        Show current task"
+        echo "  fzf, select    Interactive task selection with fzf"
+        echo ""
+        echo "Examples:"
+        echo "  task-link set courses/ose/exam"
+        echo "  task-link set general/send-dan-email"
+        echo "  task-link fzf"
+        echo ""
+        show_current_task
+        ;;
+esac
