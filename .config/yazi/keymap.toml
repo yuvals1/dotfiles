@@ -817,17 +817,17 @@ desc = "Create new task file with template"
 
 [[mgr.prepend_keymap]]
 on = ["e", "i"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_mark_important \"$@\""'
+run = "plugin task-label important"
 desc = "Mark task as important (🧨)"
 
 [[mgr.prepend_keymap]]
 on = ["e", "r"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_mark_ready \"$@\""'
+run = "plugin task-label ready"
 desc = "Mark task as ready (🟢)"
 
 [[mgr.prepend_keymap]]
 on = ["e", "w"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_mark_waiting \"$@\""'
+run = "plugin task-label waiting"
 desc = "Mark task as waiting (🔴)"
 
 [[mgr.prepend_keymap]]
