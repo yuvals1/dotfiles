@@ -108,5 +108,10 @@ use = "yazi-rs/plugins:vcs-files"
 rev = "aeca767"
 hash = "70898957e9e4c1ca291ff26e8fdc434"
 
+[[plugin.deps]]
+use = "boydaihungst/pref-by-location"
+rev = "68f006d"
+hash = "67b7a8c5d39cba04d8e3c2f3581a3ab4"
+
 [flavor]
 deps = []
