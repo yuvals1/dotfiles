@@ -786,6 +786,6 @@ desc = "Move task to backlog"
 [[mgr.prepend_keymap]]
 on = ["e", "i"]
 run = '''
-	shell --confirm 'mkdir -p ~/tasks/"❗ important" && ln -sf "$@" ~/tasks/"❗ important"/'
+	shell --confirm 'file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); if [[ ! "$base" =~ ^❗ ]]; then new_name="❗ $base"; mv "$file" "$dir/$new_name"; file="$dir/$new_name"; fi; mkdir -p ~/tasks/"❗ important" && ln -sf "$file" ~/tasks/"❗ important"/'
 '''
-desc = "Mark task as important (symlink)"
+desc = "Mark task as important (add ❗ prefix and symlink)"
