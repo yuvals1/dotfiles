@@ -339,7 +339,7 @@ keymap = [
   { on = "T", run = "plugin --sync max-preview", desc = "maximize or restore the preview" },
 
   { on = [
-    "e",
+    "E",
   ], run = "plugin eza-preview", desc = "Toggle tree/list dir preview" },
   { on = [
     "]",
@@ -800,18 +800,3 @@ desc = "Move task to backlog"
 on = ["e", "p"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
 desc = "Move task to progress"
-
-[[mgr.prepend_keymap]]
-on = ["e", "i"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_toggle_important \"$@\""'
-desc = "Toggle task importance (❗ prefix and symlink)"
-
-[[mgr.prepend_keymap]]
-on = ["e", "r"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_toggle_ready \"$@\""'
-desc = "Toggle task readiness (🟢 ready / 🔴 blocked) with symlinks"
-
-[[mgr.prepend_keymap]]
-on = ["e", "q"]
-run = 'shell "source ~/.zsh/task-folders.zsh; task_clean_symlinks" --block'
-desc = "Clean up broken symlinks in ~/tasks"
