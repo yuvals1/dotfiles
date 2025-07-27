@@ -56,7 +56,7 @@ local fzf_from = function(job_args, opts_tbl)
 			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
 			prev = "--preview='bat --color=always "
 				.. opts_tbl.bat
-				.. " --highlight-line={2} {1}' --preview-window=~3,+{2}+3/2,up,66%",
+				.. " {}' --preview-window=up,66%",
 			prompt = "--prompt='rg (files)> '",
 			is_files_mode = true,
 		},
