@@ -797,6 +797,11 @@ run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_backlog \"$@\"
 desc = "Move task to backlog"
 
 [[mgr.prepend_keymap]]
+on = ["e", "p"]
+run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
+desc = "Move task to progress"
+
+[[mgr.prepend_keymap]]
 on = ["e", "i"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_toggle_important \"$@\""'
 desc = "Toggle task importance (❗ prefix and symlink)"
