@@ -14,6 +14,18 @@ require('git'):setup {}
 require('full-border'):setup()
 -- require('star_linemode'):setup()
 
+-- Setup pref-by-location for remembering sort order
+local pref_by_location = require("pref-by-location")
+pref_by_location:setup({
+  prefs = {
+    -- Always sort ~/tasks alphabetically
+    { location = ".*/tasks$", 
+      sort = { "alphabetical", reverse = false, dir_first = true },
+      linemode = "none"
+    },
+  },
+})
+
 -- You can configure your bookmarks by lua language
 local bookmarks = {}
 
