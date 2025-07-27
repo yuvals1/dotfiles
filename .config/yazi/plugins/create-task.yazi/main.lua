@@ -19,6 +19,8 @@ Description:
 				file:write(content)
 				file:close()
 				ya.manager_emit("refresh", {})
+				-- Focus on the newly created file (like yazi's create does)
+				ya.manager_emit("reveal", { path })
 			else
 				ya.notify({
 					title = "Failed to create file",
