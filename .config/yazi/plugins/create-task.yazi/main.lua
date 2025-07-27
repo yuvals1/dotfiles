@@ -9,11 +9,8 @@ return {
 			local name = value:match("([^/]+)$") or value
 			
 			-- Create the file with template content
-			local content = string.format([[# Task: %s
-
-## Description
-
-## Notes
+			local content = string.format([[Label:
+Due:
 ]], name)
 			
 			local file = io.open(path, "w")
