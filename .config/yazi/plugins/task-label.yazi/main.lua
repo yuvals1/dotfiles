@@ -26,10 +26,7 @@ return {
 		local url, old_name = get_hovered()
 		if not url then return end
 		
-		-- Update label in file
-		os.execute(string.format("sed -i '' 's/^Label:.*/Label: %s/' '%s'", config.label, tostring(url)))
-		
-		-- Calculate new name
+		-- Calculate new name first
 		-- Remove any existing emoji prefix (including the space)
 		local new_name = old_name
 		-- Try each emoji separately since Lua patterns might not handle Unicode character classes well
@@ -39,28 +36,32 @@ return {
 		-- Add the new emoji prefix
 		new_name = config.emoji .. " " .. new_name
 		
-		-- Only rename if needed
+		-- Build paths
+		local old_path = tostring(url)
+		local dir = old_path:match("(.*/)")
+		if not dir then
+			ya.notify({
+				title = "Error",
+				content = "Could not extract directory",
+				timeout = 2,
+			})
+			return
+		end
+		local new_path = dir .. new_name
+		
+		-- Only do operations if name will change
 		if old_name ~= new_name then
-			-- Build paths using string manipulation
-			local old_path = tostring(url)
-			-- Extract directory path
-			local dir = old_path:match("(.*/)")
-			if not dir then
-				ya.notify({
-					title = "Error",
-					content = "Could not extract directory",
-					timeout = 2,
-				})
-				return
-			end
-			local new_path = dir .. new_name
-			
-			-- Try the rename
+			-- Rename FIRST (before updating label)
 			local ok = os.rename(old_path, new_path)
 			if ok then
+				-- Update label in the renamed file
+				os.execute(string.format("sed -i '' 's/^Label:.*/Label: %s/' '%s'", config.label, new_path))
 				-- Tell yazi to reveal the new file to maintain focus
 				ya.manager_emit("reveal", { new_path })
 			end
+		else
+			-- Just update the label if no rename needed
+			os.execute(string.format("sed -i '' 's/^Label:.*/Label: %s/' '%s'", config.label, old_path))
 		end
 	end,
 }
