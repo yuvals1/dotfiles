@@ -753,14 +753,14 @@ desc = "Quit and change directory"
 
 # Task management
 [[mgr.prepend_keymap]]
-on = "e"
+on = ["e", "e"]
 run = '''
 	shell --confirm 'file="$@"; ~/.config/sketchybar/task-link set "$file"'
 '''
 desc = "Set current file/folder as active task"
 
 [[mgr.prepend_keymap]]
-on = ["E"]
+on = ["e", "f"]
 run = 'shell "~/.config/sketchybar/task-link fzf" --confirm --block'
 desc = "Select task interactively"
 
@@ -768,3 +768,24 @@ desc = "Select task interactively"
 on = ["C"]
 run = 'shell "~/.config/sketchybar/task-link clear" --block'
 desc = "Clear current task"
+
+[[mgr.prepend_keymap]]
+on = ["e", "d"]
+run = '''
+	shell --confirm 'mkdir -p ~/tasks/"✅ done" && mv "$@" ~/tasks/"✅ done"/'
+'''
+desc = "Mark task as done (move to ~/tasks/✅ done)"
+
+[[mgr.prepend_keymap]]
+on = ["e", "b"]
+run = '''
+	shell --confirm 'mkdir -p ~/tasks/"📋 backlog" && mv "$@" ~/tasks/"📋 backlog"/'
+'''
+desc = "Move task to backlog"
+
+[[mgr.prepend_keymap]]
+on = ["e", "i"]
+run = '''
+	shell --confirm 'mkdir -p ~/tasks/"❗ important" && ln -sf "$@" ~/tasks/"❗ important"/'
+'''
+desc = "Mark task as important (symlink)"
