@@ -51,11 +51,8 @@ return {
 		
 		-- Only rename if name will change
 		if old_name ~= new_name then
-			local ok = os.rename(old_path, new_path)
-			if ok then
-				-- Tell yazi to reveal the new file to maintain focus
-				ya.manager_emit("reveal", { new_path })
-			end
+			os.rename(old_path, new_path)
+			-- Skip reveal to see if it reduces the glitch
 		end
 	end,
 }
