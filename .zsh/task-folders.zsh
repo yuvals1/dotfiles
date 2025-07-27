@@ -12,14 +12,27 @@ export TASK_DONE="6-✅ done"
 
 task_move_done() {
   local file="$1"
-  local task_name=$(basename "$file")
+  local actual_file="$file"
+  
+  # If it's a symlink, get the actual file
+  if [ -L "$file" ]; then
+    actual_file=$(readlink -f "$file")
+    # Remove the symlink first
+    rm -f "$file"
+  fi
+  
+  local task_name=$(basename "$actual_file")
   local current_task=$(ls -1 ~/.config/sketchybar/pomodoro/current-task/ 2>/dev/null | head -1)
   
   if [ "$current_task" = "$task_name" ]; then
     ~/.config/sketchybar/task-link clear
   fi
   
-  mkdir -p ~/tasks/"$TASK_DONE" && mv "$file" ~/tasks/"$TASK_DONE"/
+  # Move the actual file (not the symlink) to done
+  mkdir -p ~/tasks/"$TASK_DONE" && mv "$actual_file" ~/tasks/"$TASK_DONE"/
+  
+  # Clean up any broken symlinks after moving
+  find ~/tasks -type l ! -exec test -e {} \; -delete 2>/dev/null
 }
 
 task_move_backlog() {
