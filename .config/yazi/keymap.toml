@@ -786,6 +786,13 @@ desc = "Move task to backlog"
 [[mgr.prepend_keymap]]
 on = ["e", "i"]
 run = '''
-	shell --confirm 'file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); if [[ ! "$base" =~ ^❗ ]]; then new_name="❗ $base"; mv "$file" "$dir/$new_name"; file="$dir/$new_name"; fi; mkdir -p ~/tasks/"❗ important" && ln -sf "$file" ~/tasks/"❗ important"/'
+	shell --confirm 'file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); if [[ "$base" =~ ^❗ ]]; then new_name="${base#❗ }"; mv "$file" "$dir/$new_name"; rm -f ~/tasks/"❗ important/$base"; echo "Removed important marker from: $new_name"; else new_name="❗ $base"; mv "$file" "$dir/$new_name"; mkdir -p ~/tasks/"❗ important" && ln -sf "$dir/$new_name" ~/tasks/"❗ important/"; echo "Marked as important: $new_name"; fi'
 '''
-desc = "Mark task as important (add ❗ prefix and symlink)"
+desc = "Toggle task importance (❗ prefix and symlink)"
+
+[[mgr.prepend_keymap]]
+on = ["e", "r"]
+run = '''
+	shell --confirm 'file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); if [[ "$base" =~ ^🔴 ]]; then new_name="${base#🔴 }"; new_name="🟢 $new_name"; mv "$file" "$dir/$new_name"; echo "Task marked as ready: $new_name"; elif [[ "$base" =~ ^🟢 ]]; then new_name="${base#🟢 }"; new_name="🔴 $new_name"; mv "$file" "$dir/$new_name"; echo "Task marked as blocked: $new_name"; else new_name="🟢 $base"; mv "$file" "$dir/$new_name"; echo "Task marked as ready: $new_name"; fi'
+'''
+desc = "Toggle task readiness (🟢 ready / 🔴 blocked)"
