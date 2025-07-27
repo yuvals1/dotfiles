@@ -788,35 +788,25 @@ desc = "Clear current task"
 
 [[mgr.prepend_keymap]]
 on = ["e", "d"]
-run = '''
-	shell --confirm 'source ~/.zsh/task-folders.zsh; file="$@"; task_name=$(basename "$file"); current_task=$(ls -1 ~/.config/sketchybar/pomodoro/current-task/ 2>/dev/null | head -1); if [ "$current_task" = "$task_name" ]; then ~/.config/sketchybar/task-link clear; fi; mkdir -p ~/tasks/"$TASK_DONE" && mv "$file" ~/tasks/"$TASK_DONE"/'
-'''
+run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_done \"$@\""'
 desc = "Mark task as done (move to done folder and clear if current)"
 
 [[mgr.prepend_keymap]]
 on = ["e", "b"]
-run = '''
-	shell --confirm 'source ~/.zsh/task-folders.zsh; mkdir -p ~/tasks/"$TASK_BACKLOG" && mv "$@" ~/tasks/"$TASK_BACKLOG"/'
-'''
+run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_backlog \"$@\""'
 desc = "Move task to backlog"
 
 [[mgr.prepend_keymap]]
 on = ["e", "i"]
-run = '''
-	shell --confirm 'source ~/.zsh/task-folders.zsh; file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); if [[ "$base" =~ ^❗ ]]; then new_name="${base#❗ }"; mv "$file" "$dir/$new_name"; rm -f ~/tasks/"$TASK_IMPORTANT/$base"; echo "Removed important marker from: $new_name"; else new_name="❗ $base"; mv "$file" "$dir/$new_name"; mkdir -p ~/tasks/"$TASK_IMPORTANT" && ln -sf "$dir/$new_name" ~/tasks/"$TASK_IMPORTANT/"; echo "Marked as important: $new_name"; fi'
-'''
+run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_toggle_important \"$@\""'
 desc = "Toggle task importance (❗ prefix and symlink)"
 
 [[mgr.prepend_keymap]]
 on = ["e", "r"]
-run = '''
-	shell --confirm 'source ~/.zsh/task-folders.zsh; file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); mkdir -p ~/tasks/"$TASK_READY" ~/tasks/"$TASK_WAITING"; if [[ "$base" =~ ^🔴 ]]; then new_name="${base#🔴 }"; new_name="🟢 $new_name"; mv "$file" "$dir/$new_name"; rm -f ~/tasks/"$TASK_WAITING/$base"; ln -sf "$dir/$new_name" ~/tasks/"$TASK_READY/"; echo "Task marked as ready: $new_name"; elif [[ "$base" =~ ^🟢 ]]; then new_name="${base#🟢 }"; new_name="🔴 $new_name"; mv "$file" "$dir/$new_name"; rm -f ~/tasks/"$TASK_READY/$base"; ln -sf "$dir/$new_name" ~/tasks/"$TASK_WAITING/"; echo "Task marked as blocked: $new_name"; else new_name="🟢 $base"; mv "$file" "$dir/$new_name"; ln -sf "$dir/$new_name" ~/tasks/"$TASK_READY/"; echo "Task marked as ready: $new_name"; fi'
-'''
+run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_toggle_ready \"$@\""'
 desc = "Toggle task readiness (🟢 ready / 🔴 blocked) with symlinks"
 
 [[mgr.prepend_keymap]]
 on = ["e", "q"]
-run = '''
-	shell 'count=$(find ~/tasks -type l ! -exec test -e {} \; -delete -print | wc -l); echo "Cleaned up $count broken symlinks in ~/tasks"' --block
-'''
+run = 'shell "source ~/.zsh/task-folders.zsh; task_clean_symlinks" --block'
 desc = "Clean up broken symlinks in ~/tasks"
