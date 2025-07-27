@@ -804,56 +804,42 @@ on = ["e", "p"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
 desc = "Move task to progress"
 
-[[mgr.prepend_keymap]]
-on = ["e", "a"]
-run = "plugin create-task"
-desc = "Create new task file with template"
+# [[mgr.prepend_keymap]]
+# on = ["e", "a"]
+# run = "plugin create-task"
+# desc = "Create new task file with template"
 
 [[mgr.prepend_keymap]]
 on = ["e", "i"]
 run = "plugin task-label important"
-desc = "Mark task as important (🧨)"
+desc = "Mark task as important (❗)"
 
+# Include filter bomb (show only files containing pattern) 
 [[mgr.prepend_keymap]]
-on = ["e", "r"]
-run = "plugin task-label ready"
-desc = "Mark task as ready (🟢)"
+on = ["u", "i"]
+run = "plugin filter-in -- ❗"
+desc = "Filter with 'important'"
 
-[[mgr.prepend_keymap]]
-on = ["e", "w"]
-run = "plugin task-label waiting"
-desc = "Mark task as waiting (🔴)"
+# # Exclude filter red (hide files containing pattern)
+# [[mgr.prepend_keymap]]
+# on = ["u", "2"]
+# run = "plugin filter-out -- 🔴"
+# desc = "Exclude files containing hello"
 
-[[mgr.prepend_keymap]]
-on = ["e", "I"]
-run = "plugin fr rg_files_important"
-desc = "Search for important tasks (❗)"
-
-[[mgr.prepend_keymap]]
-on = ["e", "R"]
-run = "plugin fr rg_files_ready"
-desc = "Search for ready tasks (🟢)"
-
-[[mgr.prepend_keymap]]
-on = ["e", "W"]
-run = "plugin fr rg_files_waiting"
-desc = "Search for waiting tasks (🔴)"
-
-# Example of hardcoded filter using ya send
-[[mgr.prepend_keymap]]
-on = ["u", "u"]
-run = '''
-	ya send mgr filter_do --args='hello'
-'''
-desc = "Filter with 'hello'"
-
-# Example using custom plugin
-[[mgr.prepend_keymap]]
-on = ["u", "h"]
-run = "plugin hardcoded-filter -- hello"
-desc = "Filter with 'hello'"
-
+# include filter 'technion'
 [[mgr.prepend_keymap]]
 on = ["u", "t"]
-run = "plugin hardcoded-filter -- test"
-desc = "Filter with 'test'"
+run = "plugin filter-in -- technion"
+desc = "Filter with 'technion'"
+
+# include filter 'ose'
+[[mgr.prepend_keymap]]
+on = ["u", "o"]
+run = "plugin filter-in -- ose"
+desc = "Filter with 'ose'"
+
+# include filter 'general'
+[[mgr.prepend_keymap]]
+on = ["u", "g"]
+run = "plugin filter-in -- general"
+desc = "Filter with 'general'"
