@@ -50,50 +50,7 @@ get_emoji_for_keyword() {
     return 1
 }
 
-# Function to get preset by name
-get_preset() {
-    local preset_name="$1"
-    local field="$2"
-    local config_file="$CONFIG_DIR/presets.conf"
-    
-    if [ -f "$config_file" ]; then
-        while IFS='|' read -r name work break emoji desc; do
-            # Skip comments and empty lines
-            [[ "$name" =~ ^[[:space:]]*# ]] && continue
-            [[ -z "$name" ]] && continue
-            
-            # Trim whitespace
-            name=$(echo "$name" | xargs)
-            
-            if [ "$name" = "$preset_name" ]; then
-                case "$field" in
-                    "work") echo "$work" ;;
-                    "break") echo "$break" ;;
-                    "emoji") echo "$emoji" ;;
-                    "desc") echo "$desc" ;;
-                esac
-                return 0
-            fi
-        done < "$config_file"
-    fi
-    
-    return 1
-}
-
-# Function to list all presets
-list_presets() {
-    local config_file="$CONFIG_DIR/presets.conf"
-    
-    if [ -f "$config_file" ]; then
-        while IFS='|' read -r name work break emoji desc; do
-            # Skip comments and empty lines
-            [[ "$name" =~ ^[[:space:]]*# ]] && continue
-            [[ -z "$name" ]] && continue
-            
-            echo "$name"
-        done < "$config_file"
-    fi
-}
+# Preset functions removed - no longer needed without pomo script
 
 # Notification command
 NOTIFY_CMD="/Users/yuvalspiegel/dotfiles/tools/notify-wrapper.sh"
@@ -135,17 +92,7 @@ get_daily_goal() {
     fi
 }
 
-# Function to get random emoji
-get_random_emoji() {
-    # Array of fun emojis to use as defaults
-    local emojis=(
-        "🎯" "💡" "🚀" "⭐" "🎨" "🔧" "📝" "🎪" "🎭" "🎸"
-        "🌟" "💫" "✨" "🔥" "💎" "🎯" "🎲" "🎮" "🎨" "🎬"
-        "🏆" "🎯" "🌈" "🦄" "🐉" "🦋" "🌺" "🌸" "🍄" "🌻"
-    )
-    local random_index=$((RANDOM % ${#emojis[@]}))
-    echo "${emojis[$random_index]}"
-}
+# Random emoji function removed - no longer needed
 
 # Function to update idle display for pomodoro buttons
 update_idle_display() {
