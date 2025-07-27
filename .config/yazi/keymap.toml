@@ -809,3 +809,8 @@ desc = "Move task to backlog"
 on = ["e", "p"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
 desc = "Move task to progress"
+
+[[mgr.prepend_keymap]]
+on = ["e", "a"]
+run = "plugin create-task"
+desc = "Create new task file with template"
