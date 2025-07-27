@@ -835,3 +835,18 @@ run = '''
 shell 'for file in "$@"; do if [ -f "$file" ]; then sed -i "" "s/^Label:.*/Label: 🔴/" "$file"; fi; done' --confirm
 '''
 desc = "Mark task as waiting"
+
+[[mgr.prepend_keymap]]
+on = ["e", "I"]
+run = "plugin fr rg_files_important"
+desc = "Search for important tasks (❗)"
+
+[[mgr.prepend_keymap]]
+on = ["e", "R"]
+run = "plugin fr rg_files_ready"
+desc = "Search for ready tasks (🟢)"
+
+[[mgr.prepend_keymap]]
+on = ["e", "W"]
+run = "plugin fr rg_files_waiting"
+desc = "Search for waiting tasks (🔴)"

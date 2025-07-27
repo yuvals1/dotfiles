@@ -67,13 +67,36 @@ local fzf_from = function(job_args, opts_tbl)
 				.. " {}' --preview-window=up,66%",
 			prompt = "--prompt='rg (files)> '",
 			is_files_mode = true,
-			initial_query = "hello",
+		},
+		rg_files_important = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files ❗)> '",
+			is_files_mode = true,
+		},
+		rg_files_ready = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files 🟢)> '",
+			is_files_mode = true,
+		},
+		rg_files_waiting = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files 🔴)> '",
+			is_files_mode = true,
 		},
 	}
 
 	local cmd = cmd_tbl[job_args]
 	if not cmd then
-		return fail("`%s` is not a valid argument. Use `rg`, `rga`, `rg_files`, or `rg_files_hello` instead", job_args)
+		return fail("`%s` is not a valid argument. Use `rg`, `rga`, `rg_files`, `rg_files_hello`, `rg_files_important`, `rg_files_ready`, or `rg_files_waiting` instead", job_args)
 	end
 
 	local fzf_tbl = {
@@ -136,11 +159,18 @@ local function entry(_, job)
 	local cwd = tostring(get_cwd())
 	
 	-- Build command with initial query if needed
-	local args
-	if mode == "rg_files_hello" then
-		args = fzf_from("rg_files", custom_opts) .. " --query='hello'"
-	else
-		args = fzf_from(mode, custom_opts)
+	local args = fzf_from(mode, custom_opts)
+	
+	-- Add initial query if specified
+	local query_map = {
+		rg_files_hello = "hello",
+		rg_files_important = "Label:\\ ❗",
+		rg_files_ready = "Label:\\ 🟢",
+		rg_files_waiting = "Label:\\ 🔴"
+	}
+	
+	if query_map[mode] then
+		args = args .. " --query=" .. query_map[mode]
 	end
 
 	local child, err = Command(shell)

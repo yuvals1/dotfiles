@@ -11,6 +11,7 @@ return {
 			-- Create the file with template content
 			local content = string.format([[Label:
 Due:
+Description:
 ]], name)
 			
 			local file = io.open(path, "w")
