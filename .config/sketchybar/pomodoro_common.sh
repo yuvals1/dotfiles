@@ -4,7 +4,7 @@
 # Directories and files
 POMO_DIR="$HOME/.config/sketchybar/pomodoro"
 CONFIG_DIR="$POMO_DIR/config"
-TITLE_FILE="$POMO_DIR/.current_title"
+# TITLE_FILE removed - tasks now managed via symlinks
 WORK_TIME_FILE="$POMO_DIR/.current_work_time"
 BREAK_TIME_FILE="$POMO_DIR/.current_break_time"
 DEBUG_FILE="$POMO_DIR/.debug_mode"
@@ -17,8 +17,8 @@ PAUSE_FILE="$POMO_DIR/.paused"
 # Default values
 DEFAULT_WORK_TIME="25"
 DEFAULT_BREAK_TIME="5"
-DEFAULT_TASK="General Task"
-DEFAULT_EMOJI="🍅"  # Used for display purposes in pomo --emoji
+# Task management removed - now handled via symlinks
+DEFAULT_EMOJI="🍅"  # Default emoji for activities
 DEFAULT_DAILY_GOAL="8"
 
 # Function to get emoji for keyword
@@ -103,14 +103,7 @@ ensure_pomo_dir() {
     mkdir -p "$POMO_DIR"
 }
 
-# Get current settings with defaults
-get_current_title() {
-    if [ -f "$TITLE_FILE" ]; then
-        cat "$TITLE_FILE"
-    else
-        echo "$DEFAULT_TASK"
-    fi
-}
+# Task title function removed - now handled via symlinks
 
 get_work_minutes() {
     if [ -f "$WORK_TIME_FILE" ]; then
@@ -170,18 +163,4 @@ update_idle_display() {
     fi
 }
 
-# Get recent unique tasks from history
-get_recent_tasks() {
-    local limit="${1:-5}"  # Default to 5 recent tasks
-    
-    if [ -f "$HISTORY_FILE" ]; then
-        # Extract tasks from history, remove duplicates, get most recent
-        # First get all unique tasks, then get the last N and reverse
-        awk -F'[][]' '{print $2}' "$HISTORY_FILE" | \
-        sed 's/^ *//;s/ *$//' | \
-        grep -v "BREAK" | \
-        grep -v "^[[:space:]]*$" | \
-        awk -F'|' '{print (NF>1) ? $2 : $0}' | \
-        awk '!seen[$0]++ {tasks[NR]=$0} END {start=NR-'"$((limit-1))"'; if(start<1)start=1; for(i=NR;i>=start;i--) if(tasks[i]) print tasks[i]}'
-    fi
-}
+# Function removed - tasks now managed via symlinks

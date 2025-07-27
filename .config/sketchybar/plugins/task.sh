@@ -12,7 +12,7 @@ update_task_display() {
     local icon=""
     local label=""
     
-    # First check if there's a symlink in current-task directory
+    # Check if there's a symlink in current-task directory
     CURRENT_TASK_DIR="$POMO_DIR/current-task"
     if [ -d "$CURRENT_TASK_DIR" ]; then
         # Get the first item in current-task directory
@@ -30,22 +30,15 @@ update_task_display() {
             if [ -z "$icon" ]; then
                 icon="📋"
             fi
+        else
+            # No task set
+            label="No task"
+            icon="⏸️"
         fi
-    fi
-    
-    # Fallback to .current_title file if no symlink found
-    if [ -z "$label" ]; then
-        local current_title=$(get_current_title)
-        
-        # Extract icon and label from stored task (format: "🎯|Task Name")
-        icon=$(echo "$current_title" | cut -d'|' -f1)
-        label=$(echo "$current_title" | cut -d'|' -f2-)
-        
-        # Handle legacy format (space separator) for backward compatibility
-        if [ -z "$label" ]; then
-            icon=$(echo "$current_title" | awk '{print $1}')
-            label=$(echo "$current_title" | cut -d' ' -f2-)
-        fi
+    else
+        # Directory doesn't exist
+        label="No task"
+        icon="⏸️"
     fi
     
     # Update display

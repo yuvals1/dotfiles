@@ -760,7 +760,7 @@ on = ["E"]
 run = 'shell "~/.config/sketchybar/task-link fzf" --confirm --block'
 desc = "Select task interactively"
 
-# [[mgr.prepend_keymap]]
-# on = ["g", "C"]
-# run = 'shell "~/.config/sketchybar/task-link clear" --confirm --block'
-# desc = "Clear current task"
+[[mgr.prepend_keymap]]
+on = ["C"]
+run = 'shell "~/.config/sketchybar/task-link clear" --block'
+desc = "Clear current task"

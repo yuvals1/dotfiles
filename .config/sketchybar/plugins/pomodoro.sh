@@ -104,11 +104,15 @@ echo "$MODE" > "$MODE_FILE"
         fi
         
         if [ "$MODE" = "work" ]; then
-            # Get current title from file for logging
-            CURRENT_TITLE=$(get_current_title)
-            echo "$END_TIME [$CURRENT_TITLE] $LOG_MINS mins" >> "$HISTORY_FILE"
+            # Get current task from symlink
+            CURRENT_TASK_DIR="$POMO_DIR/current-task"
+            CURRENT_TASK=$(ls -1 "$CURRENT_TASK_DIR" 2>/dev/null | head -1)
+            if [ -z "$CURRENT_TASK" ]; then
+                CURRENT_TASK="No task"
+            fi
+            echo "$END_TIME [$CURRENT_TASK] $LOG_MINS mins" >> "$HISTORY_FILE"
             # Send notification
-            "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TITLE ($LOG_MINS min)"
+            "$NOTIFY_CMD" "✅ Task Complete" "Finished: $CURRENT_TASK ($LOG_MINS min)"
         else
             echo "$END_TIME [☕️ BREAK] $LOG_MINS mins" >> "$HISTORY_FILE"
             # Send notification
