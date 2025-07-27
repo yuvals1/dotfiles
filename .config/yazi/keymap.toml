@@ -765,16 +765,16 @@ run = 'shell "~/.config/sketchybar/task-link fzf" --confirm --block'
 desc = "Select task interactively"
 
 [[mgr.prepend_keymap]]
-on = ["C"]
+on = ["e", "c"]
 run = 'shell "~/.config/sketchybar/task-link clear" --block'
 desc = "Clear current task"
 
 [[mgr.prepend_keymap]]
 on = ["e", "d"]
 run = '''
-	shell --confirm 'mkdir -p ~/tasks/"✅ done" && mv "$@" ~/tasks/"✅ done"/'
+	shell --confirm 'file="$@"; task_name=$(basename "$file"); current_task=$(ls -1 ~/.config/sketchybar/pomodoro/current-task/ 2>/dev/null | head -1); if [ "$current_task" = "$task_name" ]; then ~/.config/sketchybar/task-link clear; fi; mkdir -p ~/tasks/"✅ done" && mv "$file" ~/tasks/"✅ done"/'
 '''
-desc = "Mark task as done (move to ~/tasks/✅ done)"
+desc = "Mark task as done (move to ~/tasks/✅ done and clear if current)"
 
 [[mgr.prepend_keymap]]
 on = ["e", "b"]
