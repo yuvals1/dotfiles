@@ -741,6 +741,11 @@ run = "plugin fr rg_files"
 desc = "Search files by content (show files only)"
 
 [[mgr.prepend_keymap]]
+on = ["u", "h"]
+run = "plugin fr rg_files_hello"
+desc = "Search files containing 'hello'"
+
+[[mgr.prepend_keymap]]
 on = "p"
 run = "plugin smart-paste"
 desc = "Paste into the hovered directory or CWD"

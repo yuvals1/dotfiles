@@ -60,11 +60,20 @@ local fzf_from = function(job_args, opts_tbl)
 			prompt = "--prompt='rg (files)> '",
 			is_files_mode = true,
 		},
+		rg_files_hello = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files)> '",
+			is_files_mode = true,
+			initial_query = "hello",
+		},
 	}
 
 	local cmd = cmd_tbl[job_args]
 	if not cmd then
-		return fail("`%s` is not a valid argument. Use `rg`, `rga`, or `rg_files` instead", job_args)
+		return fail("`%s` is not a valid argument. Use `rg`, `rga`, `rg_files`, or `rg_files_hello` instead", job_args)
 	end
 
 	local fzf_tbl = {
@@ -122,8 +131,17 @@ end
 local function entry(_, job)
 	local _permit = ya.hide()
 	local custom_opts = get_custom_opts()
-	local args = fzf_from(job.args[1], custom_opts)
+	
+	local mode = job.args[1] or "rg"
 	local cwd = tostring(get_cwd())
+	
+	-- Build command with initial query if needed
+	local args
+	if mode == "rg_files_hello" then
+		args = fzf_from("rg_files", custom_opts) .. " --query='hello'"
+	else
+		args = fzf_from(mode, custom_opts)
+	end
 
 	local child, err = Command(shell)
 		:arg({ "-c", args })
