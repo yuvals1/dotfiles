@@ -778,12 +778,6 @@ run = "plugin quit-cd"
 desc = "Quit and change directory"
 
 # Task management
-[[mgr.prepend_keymap]]
-on = ["e", "e"]
-run = '''
-	shell --confirm 'file="$@"; ~/.config/sketchybar/task-link set "$file"'
-'''
-desc = "Set current file/folder as active task"
 
 [[mgr.prepend_keymap]]
 on = ["e", "f"]
@@ -844,3 +838,22 @@ desc = "Search for ready tasks (🟢)"
 on = ["e", "W"]
 run = "plugin fr rg_files_waiting"
 desc = "Search for waiting tasks (🔴)"
+
+# Example of hardcoded filter using ya send
+[[mgr.prepend_keymap]]
+on = ["u", "u"]
+run = '''
+	ya send mgr filter_do --args='hello'
+'''
+desc = "Filter with 'hello'"
+
+# Example using custom plugin
+[[mgr.prepend_keymap]]
+on = ["u", "h"]
+run = "plugin hardcoded-filter -- hello"
+desc = "Filter with 'hello'"
+
+[[mgr.prepend_keymap]]
+on = ["u", "t"]
+run = "plugin hardcoded-filter -- test"
+desc = "Filter with 'test'"
