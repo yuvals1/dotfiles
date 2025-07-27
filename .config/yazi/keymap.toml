@@ -746,3 +746,21 @@ desc = "Show Git file changes (including untracked)"
 on = "Q"
 run = "plugin quit-cd"
 desc = "Quit and change directory"
+
+# Task management
+[[mgr.prepend_keymap]]
+on = "e"
+run = '''
+	shell --confirm 'file="$@"; ~/.config/sketchybar/task-link set "$file"'
+'''
+desc = "Set current file/folder as active task"
+
+[[mgr.prepend_keymap]]
+on = ["E"]
+run = 'shell "~/.config/sketchybar/task-link fzf" --confirm --block'
+desc = "Select task interactively"
+
+# [[mgr.prepend_keymap]]
+# on = ["g", "C"]
+# run = 'shell "~/.config/sketchybar/task-link clear" --confirm --block'
+# desc = "Clear current task"
