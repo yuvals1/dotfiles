@@ -30,7 +30,6 @@ alias s3='pbpaste | say -r 200'
 alias gcalrefresh='rm -f ~/Library/Application\ Support/gcalcli/oauth && gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET" list'
 alias gcalcli='gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIENT_SECRET"'
 
-alias t='timr-tui -c'
 
 alias pomo="$HOME/dotfiles/.config/sketchybar/pomo"
 alias pomo-vis="$HOME/dotfiles/.config/sketchybar/pomo-vis"
