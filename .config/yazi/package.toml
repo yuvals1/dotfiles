@@ -1,12 +1,12 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "aeca767"
+rev = "de53d90"
 hash = "47865a70cade14a0b9b6bc6a54f16bdb"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:jump-to-char"
-rev = "aeca767"
-hash = "30fc0b37f03a597b92d387268319450f"
+rev = "de53d90"
+hash = "d2f04875bbd4ed3dd5696e8c4b094fde"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
