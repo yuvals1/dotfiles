@@ -30,7 +30,13 @@ return {
 		os.execute(string.format("sed -i '' 's/^Label:.*/Label: %s/' '%s'", config.label, tostring(url)))
 		
 		-- Calculate new name
-		local new_name = old_name:gsub("^[🧨🟢🔴] ", "") -- Remove existing emoji
+		-- Remove any existing emoji prefix (including the space)
+		local new_name = old_name
+		-- Try each emoji separately since Lua patterns might not handle Unicode character classes well
+		new_name = new_name:gsub("^🧨 ", "")
+		new_name = new_name:gsub("^🟢 ", "")
+		new_name = new_name:gsub("^🔴 ", "")
+		-- Add the new emoji prefix
 		new_name = config.emoji .. " " .. new_name
 		
 		-- Only rename if needed
