@@ -796,3 +796,10 @@ run = '''
 	shell --confirm 'file="$@"; dir=$(dirname "$file"); base=$(basename "$file"); mkdir -p ~/tasks/"🟢 ready" ~/tasks/"🔴 waiting"; if [[ "$base" =~ ^🔴 ]]; then new_name="${base#🔴 }"; new_name="🟢 $new_name"; mv "$file" "$dir/$new_name"; rm -f ~/tasks/"🔴 waiting/$base"; ln -sf "$dir/$new_name" ~/tasks/"🟢 ready/"; echo "Task marked as ready: $new_name"; elif [[ "$base" =~ ^🟢 ]]; then new_name="${base#🟢 }"; new_name="🔴 $new_name"; mv "$file" "$dir/$new_name"; rm -f ~/tasks/"🟢 ready/$base"; ln -sf "$dir/$new_name" ~/tasks/"🔴 waiting/"; echo "Task marked as blocked: $new_name"; else new_name="🟢 $base"; mv "$file" "$dir/$new_name"; ln -sf "$dir/$new_name" ~/tasks/"🟢 ready/"; echo "Task marked as ready: $new_name"; fi'
 '''
 desc = "Toggle task readiness (🟢 ready / 🔴 blocked) with symlinks"
+
+[[mgr.prepend_keymap]]
+on = ["e", "q"]
+run = '''
+	shell 'count=$(find ~/tasks -type l ! -exec test -e {} \; -delete -print | wc -l); echo "Cleaned up $count broken symlinks in ~/tasks"' --block
+'''
+desc = "Clean up broken symlinks in ~/tasks"
