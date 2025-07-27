@@ -735,6 +735,10 @@ on = ["u", "a"]
 run = "plugin fr rga"
 desc = "Search file by content (rga)"
 
+[[mgr.prepend_keymap]]
+on = ["u", "u"]
+run = "plugin fr rg_files"
+desc = "Search files by content (show files only)"
 
 [[mgr.prepend_keymap]]
 on = "p"

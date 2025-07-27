@@ -52,11 +52,19 @@ local fzf_from = function(job_args, opts_tbl)
 				.. " {q} {}' --preview-window=up,66%",
 			prompt = "--prompt='rga> '",
 		},
+		rg_files = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " --highlight-line={2} {1}' --preview-window=~3,+{2}+3/2,up,66%",
+			prompt = "--prompt='rg (files)> '",
+			is_files_mode = true,
+		},
 	}
 
 	local cmd = cmd_tbl[job_args]
 	if not cmd then
-		return fail("`%s` is not a valid argument. Use `rg` or `rga` instead", job_args)
+		return fail("`%s` is not a valid argument. Use `rg`, `rga`, or `rg_files` instead", job_args)
 	end
 
 	local fzf_tbl = {
@@ -79,6 +87,20 @@ local fzf_from = function(job_args, opts_tbl)
 
 	if cmd.extra then
 		table.insert(fzf_tbl, cmd.extra(cmd.grep))
+	end
+	
+	-- Special handling for files mode
+	if cmd.is_files_mode then
+		-- Replace the reload bindings with sed pipe
+		for i, v in ipairs(fzf_tbl) do
+			if v:match("'start:reload:") then
+				fzf_tbl[i] = "--bind='start:reload:" .. cmd.grep .. " {q} | sed \"s/:.*//\"'"
+			elseif v:match("'change:reload:") then
+				fzf_tbl[i] = "--bind='change:reload:sleep 0.1; " .. cmd.grep .. " {q} | sed \"s/:.*//\" || true'"
+			elseif v:match("'ctrl%-r:") then
+				fzf_tbl[i] = "--bind='ctrl-r:clear-query+reload:" .. cmd.grep .. " {q} | sed \"s/:.*//\" || true'"
+			end
+		end
 	end
 
 	return table.concat(fzf_tbl, " ")
