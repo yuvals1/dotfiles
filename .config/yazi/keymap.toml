@@ -709,10 +709,10 @@ on = "Z"
 run = "plugin fr rg"
 desc = "Search file by content (rg)"
 
-[[mgr.prepend_keymap]]
-on = ["u", "a"]
-run = "plugin fr rga"
-desc = "Search file by content (rga)"
+# [[mgr.prepend_keymap]]
+# on = ["u", "a"]
+# run = "plugin fr rga"
+# desc = "Search file by content (rga)"
 
 
 [[mgr.prepend_keymap]]
