@@ -91,14 +91,15 @@ local fzf_from = function(job_args, opts_tbl)
 	
 	-- Special handling for files mode
 	if cmd.is_files_mode then
-		-- Replace the reload bindings with sed pipe
+		-- Replace the reload bindings with sed + sort -u for deduplication
+		local filter_cmd = "sed \"s/:.*//\" | sort -u"
 		for i, v in ipairs(fzf_tbl) do
 			if v:match("'start:reload:") then
-				fzf_tbl[i] = "--bind='start:reload:" .. cmd.grep .. " {q} | sed \"s/:.*//\"'"
+				fzf_tbl[i] = "--bind='start:reload:" .. cmd.grep .. " {q} | " .. filter_cmd .. "'"
 			elseif v:match("'change:reload:") then
-				fzf_tbl[i] = "--bind='change:reload:sleep 0.1; " .. cmd.grep .. " {q} | sed \"s/:.*//\" || true'"
+				fzf_tbl[i] = "--bind='change:reload:sleep 0.1; " .. cmd.grep .. " {q} | " .. filter_cmd .. " || true'"
 			elseif v:match("'ctrl%-r:") then
-				fzf_tbl[i] = "--bind='ctrl-r:clear-query+reload:" .. cmd.grep .. " {q} | sed \"s/:.*//\" || true'"
+				fzf_tbl[i] = "--bind='ctrl-r:clear-query+reload:" .. cmd.grep .. " {q} | " .. filter_cmd .. " || true'"
 			end
 		end
 	end
