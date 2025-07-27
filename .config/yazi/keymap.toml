@@ -814,3 +814,24 @@ desc = "Move task to progress"
 on = ["e", "a"]
 run = "plugin create-task"
 desc = "Create new task file with template"
+
+[[mgr.prepend_keymap]]
+on = ["e", "i"]
+run = '''
+shell 'for file in "$@"; do if [ -f "$file" ]; then sed -i "" "s/^Label:.*/Label: ❗/" "$file"; fi; done' --confirm
+'''
+desc = "Mark task as important (!)"
+
+[[mgr.prepend_keymap]]
+on = ["e", "r"]
+run = '''
+shell 'for file in "$@"; do if [ -f "$file" ]; then sed -i "" "s/^Label:.*/Label: 🟢/" "$file"; fi; done' --confirm
+'''
+desc = "Mark task as ready"
+
+[[mgr.prepend_keymap]]
+on = ["e", "w"]
+run = '''
+shell 'for file in "$@"; do if [ -f "$file" ]; then sed -i "" "s/^Label:.*/Label: 🔴/" "$file"; fi; done' --confirm
+'''
+desc = "Mark task as waiting"
