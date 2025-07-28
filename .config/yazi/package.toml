@@ -79,11 +79,6 @@ rev = "a0b4e18"
 hash = "7acba2bb504c67dd7f2da135b88aae1b"
 
 [[plugin.deps]]
-use = "lpnh/fr"
-rev = "6d5e469"
-hash = "d8455f929580ec602b4d0bbd8e96711"
-
-[[plugin.deps]]
 use = "yazi-rs/plugins:piper"
 rev = "aeca767"
 hash = "2bdc137505b8d9a0cc867a57d0e99b01"
@@ -112,6 +107,11 @@ hash = "70898957e9e4c1ca291ff26e8fdc434"
 use = "boydaihungst/pref-by-location"
 rev = "68f006d"
 hash = "67b7a8c5d39cba04d8e3c2f3581a3ab4"
+
+[[plugin.deps]]
+use = "lpnh/fr"
+rev = "3d32e55"
+hash = "f7ab219b58675582ef855a9414dbc659"
 
 [flavor]
 deps = []

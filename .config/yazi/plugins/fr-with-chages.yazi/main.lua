@@ -25,7 +25,7 @@ local get_custom_opts = ya.sync(function(self)
 	}
 end)
 
-local fzf_from = function(job_args, opts_tbl, major, minor)
+local fzf_from = function(job_args, opts_tbl)
 	local cmd_tbl = {
 		rg = {
 			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
@@ -52,11 +52,51 @@ local fzf_from = function(job_args, opts_tbl, major, minor)
 				.. " {q} {}' --preview-window=up,66%",
 			prompt = "--prompt='rga> '",
 		},
+		rg_files = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files)> '",
+			is_files_mode = true,
+		},
+		rg_files_hello = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files)> '",
+			is_files_mode = true,
+		},
+		rg_files_important = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files ❗)> '",
+			is_files_mode = true,
+		},
+		rg_files_ready = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files 🟢)> '",
+			is_files_mode = true,
+		},
+		rg_files_waiting = {
+			grep = "rg --color=always --line-number --smart-case" .. opts_tbl.rg,
+			prev = "--preview='bat --color=always "
+				.. opts_tbl.bat
+				.. " {}' --preview-window=up,66%",
+			prompt = "--prompt='rg (files 🔴)> '",
+			is_files_mode = true,
+		},
 	}
 
 	local cmd = cmd_tbl[job_args]
 	if not cmd then
-		return fail("`%s` is not a valid argument. Use `rg` or `rga` instead", job_args)
+		return fail("`%s` is not a valid argument. Use `rg`, `rga`, `rg_files`, `rg_files_hello`, `rg_files_important`, `rg_files_ready`, or `rg_files_waiting` instead", job_args)
 	end
 
 	local fzf_tbl = {
@@ -69,6 +109,7 @@ local fzf_from = function(job_args, opts_tbl, major, minor)
 		"--nth=3..",
 		cmd.prev,
 		cmd.prompt,
+		"--bind='start:reload:" .. cmd.grep .. " {q}'",
 		"--bind='change:reload:sleep 0.1; " .. cmd.grep .. " {q} || true'",
 		"--bind='ctrl-]:change-preview-window(80%|66%)'",
 		"--bind='ctrl-\\:change-preview-window(right|up)'",
@@ -76,14 +117,23 @@ local fzf_from = function(job_args, opts_tbl, major, minor)
 		opts_tbl.fzf,
 	}
 
-	-- start event requires fzf v0.35 or above
-	if major > 0 or minor >= 35 then
-		table.insert(fzf_tbl, "--bind='start:reload:" .. cmd.grep .. " {q}'")
-	end
-
-	-- transform action requires fzf v0.45 or above
-	if (major > 0 or minor >= 45) and cmd.extra then
+	if cmd.extra then
 		table.insert(fzf_tbl, cmd.extra(cmd.grep))
+	end
+	
+	-- Special handling for files mode
+	if cmd.is_files_mode then
+		-- Replace the reload bindings with sed + sort -u for deduplication
+		local filter_cmd = "sed \"s/:.*//\" | sort -u"
+		for i, v in ipairs(fzf_tbl) do
+			if v:match("'start:reload:") then
+				fzf_tbl[i] = "--bind='start:reload:" .. cmd.grep .. " {q} | " .. filter_cmd .. "'"
+			elseif v:match("'change:reload:") then
+				fzf_tbl[i] = "--bind='change:reload:sleep 0.1; " .. cmd.grep .. " {q} | " .. filter_cmd .. " || true'"
+			elseif v:match("'ctrl%-r:") then
+				fzf_tbl[i] = "--bind='ctrl-r:clear-query+reload:" .. cmd.grep .. " {q} | " .. filter_cmd .. " || true'"
+			end
+		end
 	end
 
 	return table.concat(fzf_tbl, " ")
@@ -103,15 +153,25 @@ end
 
 local function entry(_, job)
 	local _permit = ya.hide()
-	local fzf_version, err = Command("fzf"):arg("--version"):output()
-	if err then
-		return fail("`fzf` was not found")
-	end
-	local major, minor = fzf_version.stdout:match("(%d+)%.(%d+)")
-
 	local custom_opts = get_custom_opts()
-	local args = fzf_from(job.args[1], custom_opts, tonumber(major), tonumber(minor))
+	
+	local mode = job.args[1] or "rg"
 	local cwd = tostring(get_cwd())
+	
+	-- Build command with initial query if needed
+	local args = fzf_from(mode, custom_opts)
+	
+	-- Add initial query if specified
+	local query_map = {
+		rg_files_hello = "hello",
+		rg_files_important = "Label:\\ ❗",
+		rg_files_ready = "Label:\\ 🟢",
+		rg_files_waiting = "Label:\\ 🔴"
+	}
+	
+	if query_map[mode] then
+		args = args .. " --query=" .. query_map[mode]
+	end
 
 	local child, err = Command(shell)
 		:arg({ "-c", args })
