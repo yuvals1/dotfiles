@@ -24,7 +24,7 @@ end, { desc = 'Insert current time' })
 
 -- For insert mode
 vim.keymap.set('i', '<C-z>', function()
-  local time = os.date '%Y-%m-%d'
+  local time = os.date '%Y-%m-%d 00:00'
   vim.api.nvim_put({ time }, 'c', true, true)
 end, { desc = 'Insert current time' })
 --
