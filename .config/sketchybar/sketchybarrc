@@ -74,3 +74,6 @@ source $ITEM_DIR/cpu.sh
 
 sketchybar --update
 
+# Start input source monitor for language switching
+~/.config/sketchybar/helpers/input_source_monitor.swift &
+

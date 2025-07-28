@@ -9,7 +9,7 @@ case "$INPUT_SOURCE" in
         ICON="🇮🇱"
         LABEL="HE"
         ;;
-    "ABC"|"U.S.")
+    "ABC"|"U.S."|"US")
         ICON="🇺🇸"
         LABEL="EN"
         ;;
