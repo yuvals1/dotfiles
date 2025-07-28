@@ -12,6 +12,19 @@ ensure_cargo_installed() {
     fi
 }
 
+# Ensure petname is installed via uv
+ensure_petname_installed() {
+    if ! command -v petname &> /dev/null; then
+        if command -v uv &> /dev/null; then
+            echo "Installing petname using uv..."
+            uv tool install petname
+        else
+            echo "uv not found. Please install uv or petname manually."
+            return 1
+        fi
+    fi
+}
+
 install_tree() {
     if ! command -v tree &> /dev/null; then
         if [[ "$OSTYPE" == "darwin"* ]]; then
