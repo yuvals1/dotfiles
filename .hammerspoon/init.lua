@@ -150,6 +150,11 @@ hs.hotkey.bind({ "cmd" }, "/", function()
 	hs.reload()
 end)
 
+-- Auto-reload Hammerspoon every 60 seconds
+autoReloadTimer = hs.timer.doEvery(60, function()
+	hs.reload()
+end)
+
 -- Reload Sketchybar
 hs.hotkey.bind({ "cmd", "shift" }, "b", function()
 	hs.task.new("/bin/bash", nil, { "-c", "sketchybar --reload" }):start()
