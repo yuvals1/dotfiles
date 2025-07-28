@@ -5,6 +5,7 @@ source "$HOME/.zsh/task-folders.zsh"
 
 PROGRESS_DIR="$HOME/tasks/$TASK_PROGRESS"
 WAITING_DIR="$HOME/tasks/$TASK_WAITING"
+BACKLOG_DIR="$HOME/tasks/$TASK_BACKLOG"
 OVERDUE_EMOJI="⏰"
 
 # Function to check if a file is overdue
@@ -39,26 +40,34 @@ is_overdue() {
     return 1 # false - not overdue
 }
 
-# Check waiting folder first - move overdue tasks to in-progress
-for file in "$WAITING_DIR"/*; do
-    # Skip if not a regular file
-    [ -f "$file" ] || continue
+# Function to move overdue tasks from a folder to in-progress
+move_overdue_to_progress() {
+    local source_dir="$1"
     
-    # Get the filename without path
-    filename=$(basename "$file")
-    
-    if is_overdue "$file"; then
-        # Add overdue emoji if not already present
-        if [[ "$filename" != *"$OVERDUE_EMOJI"* ]]; then
-            new_filename="${OVERDUE_EMOJI} ${filename}"
-        else
-            new_filename="$filename"
+    for file in "$source_dir"/*; do
+        # Skip if not a regular file
+        [ -f "$file" ] || continue
+        
+        # Get the filename without path
+        filename=$(basename "$file")
+        
+        if is_overdue "$file"; then
+            # Add overdue emoji if not already present
+            if [[ "$filename" != *"$OVERDUE_EMOJI"* ]]; then
+                new_filename="${OVERDUE_EMOJI} ${filename}"
+            else
+                new_filename="$filename"
+            fi
+            # Move to in-progress folder
+            mkdir -p "$PROGRESS_DIR"
+            mv "$file" "$PROGRESS_DIR/$new_filename"
         fi
-        # Move to in-progress folder
-        mkdir -p "$PROGRESS_DIR"
-        mv "$file" "$PROGRESS_DIR/$new_filename"
-    fi
-done
+    done
+}
+
+# Check waiting and backlog folders - move overdue tasks to in-progress
+move_overdue_to_progress "$WAITING_DIR"
+move_overdue_to_progress "$BACKLOG_DIR"
 
 # Check in-progress folder - add overdue emoji to filenames
 for file in "$PROGRESS_DIR"/*; do
