@@ -61,6 +61,7 @@ source $ITEM_DIR/media.sh
 
 # -- Right Side Items --
 source $ITEM_DIR/calendar.sh
+source $ITEM_DIR/overdue.sh
 source $ITEM_DIR/language.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
