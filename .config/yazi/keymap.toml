@@ -104,7 +104,7 @@ keymap = [
   { on = [
     "g",
     "t",
-  ], run = "cd ~/tasks/", desc = "Go to tasks directory" },
+  ], run = "cd '~/tasks/1-⭐ in-progress/'", desc = "Go to tasks directory" },
 
   # Linemode
   { on = [
