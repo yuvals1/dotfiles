@@ -780,9 +780,11 @@ desc = "Quit and change directory"
 # Task management
 
 [[mgr.prepend_keymap]]
-on = ["e", "f"]
-run = 'shell "~/.config/sketchybar/task-link fzf" --confirm --block'
-desc = "Select task interactively"
+on = ["e", "e"]
+run = '''
+	shell --confirm 'file="$@"; ~/.config/sketchybar/task-link set "$file"'
+'''
+desc = "Set current file/folder as active task"
 
 [[mgr.prepend_keymap]]
 on = ["e", "c"]
@@ -804,6 +806,11 @@ on = ["e", "p"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
 desc = "Move task to progress"
 
+[[mgr.prepend_keymap]]
+on = ["e", "w"]
+run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_waiting \"$@\""'
+desc = "Move task to waiting"
+
 # [[mgr.prepend_keymap]]
 # on = ["e", "a"]
 # run = "plugin create-task"
@@ -813,6 +820,11 @@ desc = "Move task to progress"
 on = ["e", "i"]
 run = "plugin task-label important"
 desc = "Mark task as important (❗)"
+
+[[mgr.prepend_keymap]]
+on = ["e", "t"]
+run = "plugin task-label clock"
+desc = "Mark task with clock (⏰)"
 
 # Include filter bomb (show only files containing pattern) 
 [[mgr.prepend_keymap]]

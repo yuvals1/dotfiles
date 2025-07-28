@@ -13,6 +13,7 @@ return {
 		-- Map actions to emoji
 		local emoji_map = {
 			important = { emoji = "❗" },
+			clock = { emoji = "⏰" },
 		}
 
 		local config = emoji_map[action]
@@ -25,15 +26,19 @@ return {
 		if not url then return end
 		
 		-- Check if file already has the emoji prefix
-		local has_prefix = old_name:match("^❗ ") ~= nil
+		local has_prefix = old_name:match("^" .. config.emoji .. " ") ~= nil
 		
 		local new_name
 		if has_prefix then
 			-- Remove the emoji prefix (toggle off)
-			new_name = old_name:gsub("^❗ ", "")
+			new_name = old_name:gsub("^" .. config.emoji .. " ", "")
 		else
-			-- Add the emoji prefix (toggle on)
-			new_name = config.emoji .. " " .. old_name
+			-- Remove any other emoji prefix first
+			new_name = old_name
+			new_name = new_name:gsub("^❗ ", "")
+			new_name = new_name:gsub("^⏰ ", "")
+			-- Add the new emoji prefix (toggle on)
+			new_name = config.emoji .. " " .. new_name
 		end
 		
 		-- Build paths
