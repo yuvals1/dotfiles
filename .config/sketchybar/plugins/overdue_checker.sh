@@ -8,6 +8,9 @@ WAITING_DIR="$HOME/tasks/$TASK_WAITING"
 BACKLOG_DIR="$HOME/tasks/$TASK_BACKLOG"
 OVERDUE_EMOJI="⏰"
 
+# Ensure progress directory exists
+mkdir -p "$PROGRESS_DIR"
+
 # Function to check if a file is overdue
 is_overdue() {
     local file="$1"
@@ -59,7 +62,6 @@ move_overdue_to_progress() {
                 new_filename="$filename"
             fi
             # Move to in-progress folder
-            mkdir -p "$PROGRESS_DIR"
             mv "$file" "$PROGRESS_DIR/$new_filename"
         fi
     done
@@ -69,7 +71,7 @@ move_overdue_to_progress() {
 move_overdue_to_progress "$WAITING_DIR"
 move_overdue_to_progress "$BACKLOG_DIR"
 
-# Check in-progress folder - add overdue emoji to filenames
+# Process in-progress folder - add/remove overdue emoji as needed
 for file in "$PROGRESS_DIR"/*; do
     # Skip if not a regular file
     [ -f "$file" ] || continue
@@ -77,59 +79,27 @@ for file in "$PROGRESS_DIR"/*; do
     # Get the filename without path
     filename=$(basename "$file")
     
-    # Skip if already has overdue emoji
-    [[ "$filename" == *"$OVERDUE_EMOJI"* ]] && continue
+    # Check if file has overdue emoji
+    has_emoji=false
+    [[ "$filename" == *"$OVERDUE_EMOJI"* ]] && has_emoji=true
     
+    # Check if file is currently overdue
     if is_overdue "$file"; then
-        # Add overdue emoji to filename
-        new_filename="${OVERDUE_EMOJI} ${filename}"
-        mv "$file" "$PROGRESS_DIR/$new_filename"
-    fi
-done
-
-# Remove overdue emoji from tasks that are no longer overdue
-for file in "$PROGRESS_DIR"/*; do
-    # Skip if not a regular file
-    [ -f "$file" ] || continue
-    
-    # Get the filename without path
-    filename=$(basename "$file")
-    
-    # Only process files with overdue emoji
-    [[ "$filename" == *"$OVERDUE_EMOJI"* ]] || continue
-    
-    # Read the file content to check for due date
-    due_line=$(grep -E "^due: " "$file" 2>/dev/null | head -1)
-    
-    if [ -n "$due_line" ]; then
-        # Extract the date/time
-        due_datetime=$(echo "$due_line" | sed 's/^due: //')
-        
-        # Convert to timestamp for comparison
-        if [[ "$due_datetime" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-            due_timestamp=$(date -j -f "%Y-%m-%d" "$due_datetime" "+%s" 2>/dev/null)
-            due_timestamp=$((due_timestamp + 86399))
-        else
-            due_timestamp=$(date -j -f "%Y-%m-%d %H:%M" "$due_datetime" "+%s" 2>/dev/null)
-        fi
-        
-        # Get current timestamp
-        current_timestamp=$(date "+%s")
-        
-        # Check if no longer overdue
-        if [ -n "$due_timestamp" ] && [ "$current_timestamp" -le "$due_timestamp" ]; then
-            # Remove overdue emoji from filename
-            new_filename=$(echo "$filename" | sed "s/$OVERDUE_EMOJI //g")
+        # Should have emoji - add if missing
+        if [ "$has_emoji" = false ]; then
+            new_filename="${OVERDUE_EMOJI} ${filename}"
             mv "$file" "$PROGRESS_DIR/$new_filename"
         fi
     else
-        # No due date found, remove overdue emoji
-        new_filename=$(echo "$filename" | sed "s/$OVERDUE_EMOJI //g")
-        mv "$file" "$PROGRESS_DIR/$new_filename"
+        # Should not have emoji - remove if present
+        if [ "$has_emoji" = true ]; then
+            new_filename=$(echo "$filename" | sed "s/$OVERDUE_EMOJI //g")
+            mv "$file" "$PROGRESS_DIR/$new_filename"
+        fi
     fi
 done
 
-# Update sketchybar (optional - show count of overdue tasks)
+# Update sketchybar - show count of overdue tasks
 overdue_count=$(find "$PROGRESS_DIR" -name "*$OVERDUE_EMOJI*" -type f | wc -l | tr -d ' ')
 if [ "$overdue_count" -gt 0 ]; then
     sketchybar --set $NAME label="$OVERDUE_EMOJI $overdue_count" drawing=on
