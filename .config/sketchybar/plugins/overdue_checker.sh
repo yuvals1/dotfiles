@@ -47,9 +47,7 @@ is_overdue() {
 move_overdue_to_progress() {
     local source_dir="$1"
     
-    for file in "$source_dir"/*; do
-        # Skip if not a regular file
-        [ -f "$file" ] || continue
+    find "$source_dir" -type f | while read -r file; do
         
         # Get the filename without path
         filename=$(basename "$file")
@@ -72,9 +70,7 @@ move_overdue_to_progress "$WAITING_DIR"
 move_overdue_to_progress "$BACKLOG_DIR"
 
 # Process in-progress folder - add/remove overdue emoji as needed
-for file in "$PROGRESS_DIR"/*; do
-    # Skip if not a regular file
-    [ -f "$file" ] || continue
+find "$PROGRESS_DIR" -type f | while read -r file; do
     
     # Get the filename without path
     filename=$(basename "$file")
