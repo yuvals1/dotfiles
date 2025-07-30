@@ -52,7 +52,6 @@ source $ITEM_DIR/spaces.sh
 source $ITEM_DIR/front_app.sh
 
 # -- Center Items --
-source $ITEM_DIR/overdue.sh
 source $ITEM_DIR/task.sh
 source $ITEM_DIR/pomodoro.sh
 source $ITEM_DIR/pomodoro_history.sh
@@ -66,6 +65,7 @@ source $ITEM_DIR/language.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
 source $ITEM_DIR/cpu.sh
+source $ITEM_DIR/overdue.sh
 
 
 ##### Finalizing Setup #####
