@@ -1,4 +1,0 @@
-matches:
-  - trigger: ":ose1"
-    replace: "look at the @xv6-md-chapters/chapter\\\nthis is chapter 4 of the xv6 book. we have already read and created the slides of chapters 0-3. look inside either of those folders to see how the slides are structured.\\\nnow we are going to create (slowly and incramentally) the slides of chapter 1.\\\nslides should be small, cohesive, prefer diagrams and flow charts over text when possible. you can look at @xv6-slides/examples/  which contains examples of good slides to understand the desired style.\\\nfirst, start from reading the chapter itself and understand it. understand what are the topics. then we will discuss how to continue"
-    label: ":ose1"
