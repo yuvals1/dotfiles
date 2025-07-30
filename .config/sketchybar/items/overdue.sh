@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sketchybar --add item overdue right \
+sketchybar --add item overdue center \
            --set overdue update_freq=60 \
                         icon=⏰ \
                         drawing=off \

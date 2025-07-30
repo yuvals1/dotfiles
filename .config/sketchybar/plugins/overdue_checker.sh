@@ -98,7 +98,7 @@ done
 # Update sketchybar - show count of overdue tasks
 overdue_count=$(find "$PROGRESS_DIR" -name "*$OVERDUE_EMOJI*" -type f | wc -l | tr -d ' ')
 if [ "$overdue_count" -gt 0 ]; then
-    sketchybar --set $NAME label="$OVERDUE_EMOJI $overdue_count" drawing=on
+    sketchybar --set $NAME label="$overdue_count" drawing=on
 else
     sketchybar --set $NAME drawing=off
 fi
