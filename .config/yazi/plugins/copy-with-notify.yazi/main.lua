@@ -32,7 +32,7 @@ local get_hovered = ya.sync(function()
   local hovered = cx.active.current.hovered
   if hovered then
     return {
-      url = hovered.url,
+      url = tostring(hovered.url),
       name = hovered.name
     }
   end
@@ -40,20 +40,25 @@ local get_hovered = ya.sync(function()
 end)
 
 return {
-  entry = function(_, args)
+  entry = function(self, job)
     local hovered = get_hovered()
     if not hovered then
       return info('Copy', 'No item hovered')
     end
 
-    local mode = args[1] or "path"
+    -- Get the mode from job.args
+    local mode = job.args and job.args[1] or "path"
+    
+    -- Debug notification
+    -- info("Debug", string.format("Mode: %s, Args: %s", mode, job.args and table.concat(job.args, ", ") or "nil"))
+    
     local content, title
     
     if mode == "path" then
-      content = tostring(hovered.url)
+      content = hovered.url
       title = "Full Path"
     elseif mode == "relative" then
-      content = get_relative_path(tostring(hovered.url))
+      content = get_relative_path(hovered.url)
       title = "Relative Path"
     elseif mode == "filename" then
       content = hovered.name
