@@ -4,7 +4,7 @@ alias gtc='gt create -m'
 alias cat='bat --style=plain --paging=never'
 alias icat='kitty +kitten icat'
 # alias y='yazi'
-alias t='yazi "~/tasks/1-⭐ in-progress/"'
+alias t='yazi ~/tasks/"$TASK_PROGRESS"'
 alias n='nvim'
 alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
