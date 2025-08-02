@@ -10,6 +10,7 @@ local function require_all(directory)
 end
 -- Load options
 require 'options'
+require 'config.indent'
 -- require 'clipboard.clipboard_keymaps'
 require 'clipboard.yank-with-path'
 require 'highlight-yank'
