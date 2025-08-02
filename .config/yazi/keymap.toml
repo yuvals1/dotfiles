@@ -780,34 +780,34 @@ desc = "Quit and change directory"
 # Task management
 
 [[mgr.prepend_keymap]]
-on = ["e", "e"]
+on = ["t", "t"]
 run = '''
 	shell --confirm 'file="$@"; ~/.config/sketchybar/task-link set "$file"'
 '''
 desc = "Set current file/folder as active task"
 
 [[mgr.prepend_keymap]]
-on = ["e", "c"]
+on = ["t", "c"]
 run = 'shell "~/.config/sketchybar/task-link clear" --block'
 desc = "Clear current task"
 
 [[mgr.prepend_keymap]]
-on = ["e", "d"]
+on = ["t", "d"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_done \"$@\""'
 desc = "Mark task as done (move to done folder and clear if current)"
 
 [[mgr.prepend_keymap]]
-on = ["e", "b"]
+on = ["t", "b"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_backlog \"$@\""'
 desc = "Move task to backlog"
 
 [[mgr.prepend_keymap]]
-on = ["e", "p"]
+on = ["t", "p"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
 desc = "Move task to progress"
 
 [[mgr.prepend_keymap]]
-on = ["e", "w"]
+on = ["t", "w"]
 run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_waiting \"$@\""'
 desc = "Move task to waiting"
 
@@ -817,14 +817,14 @@ desc = "Move task to waiting"
 # desc = "Create new task file with template"
 
 [[mgr.prepend_keymap]]
-on = ["e", "i"]
+on = ["t", "i"]
 run = "plugin task-label important"
 desc = "Mark task as important (❗)"
 
-[[mgr.prepend_keymap]]
-on = ["e", "t"]
-run = "plugin task-label clock"
-desc = "Mark task with clock (⏰)"
+# [[mgr.prepend_keymap]]
+# on = ["e", "t"]
+# run = "plugin task-label clock"
+# desc = "Mark task with clock (⏰)"
 
 # Include filter bomb (show only files containing pattern) 
 [[mgr.prepend_keymap]]
