@@ -39,6 +39,9 @@ alias pv="pomo-vis"
 alias notify="$HOME/dotfiles/tools/notify-wrapper.sh"
 alias noti="notify"
 
+# Fix mpv segfault caused by FZF_DEFAULT_OPTS
+alias mpv='env -u FZF_DEFAULT_OPTS mpv'
+
 alias tl='cd ~/commitments/ && y'
 
 
