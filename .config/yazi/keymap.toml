@@ -140,7 +140,7 @@ keymap = [
   { on = [
     "c",
     "c",
-  ], run = "copy path", desc = "Copy the file path" },
+  ], run = "plugin copy-relative-path", desc = "Copy the file path relative to home" },
   { on = [
     "c",
     "d",
@@ -148,11 +148,15 @@ keymap = [
   { on = [
     "c",
     "f",
-  ], run = "copy filename", desc = "Copy the filename" },
+  ], run = "plugin copy-full-path", desc = "Copy the full path" },
   { on = [
     "c",
     "n",
-  ], run = "copy name_without_ext", desc = "Copy the filename without extension" },
+  ], run = "plugin copy-filename", desc = "Copy the filename" },
+  { on = [
+    "c",
+    "N",
+  ], run = "plugin copy-name-without-ext", desc = "Copy the filename without extension" },
   { on = [
     "c",
     "r",
