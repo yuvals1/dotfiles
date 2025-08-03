@@ -35,7 +35,7 @@ simple-tag is a Yazi plugin that allows you to add tags to files and folders. Ea
 ## Requirements
 
 > [!IMPORTANT]
-> Minimum supported version: Yazi v25.5.28.
+> Minimum supported version: Yazi v25.5.31.
 
 - [Yazi](https://github.com/sxyazi/yazi)
 - Tested on Linux
@@ -46,8 +46,6 @@ Install the plugin:
 
 ```sh
 ya pkg add boydaihungst/simple-tag
-# or
-ya pack -a boydaihungst/simple-tag
 ```
 
 > [!IMPORTANT]
