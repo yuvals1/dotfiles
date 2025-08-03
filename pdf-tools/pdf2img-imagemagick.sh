@@ -39,12 +39,13 @@ magick "$PDF_FILE" -density 300 -quality 95 "$OUTPUT_DIR/page.jpg"
 if [ $? -eq 0 ]; then
     # Rename files to match the format 001.jpg, 002.jpg, etc.
     cd "$OUTPUT_DIR"
-    i=0
     for file in page-*.jpg; do
         if [ -f "$file" ]; then
-            newname=$(printf "%03d.jpg" $((i + 1)))
+            # Extract the page number from the filename (page-N.jpg)
+            pagenum=$(echo "$file" | sed 's/page-\([0-9]*\)\.jpg/\1/')
+            # ImageMagick starts from 0, so add 1
+            newname=$(printf "%03d.jpg" $((pagenum + 1)))
             mv "$file" "$newname"
-            ((i++))
         fi
     done
     
