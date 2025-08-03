@@ -316,6 +316,26 @@ keymap = [
   # Help
   { on = "~", run = "help", desc = "Open help" },
   { on = "<F1>", run = "help", desc = "Open help" },
+  
+  # Content yanking - new c keybinds
+  { on = [
+    "c",
+    "f",
+  ], run = "plugin yank-dir-content", desc = "Yank the content of the selected directory" },
+  { on = [
+    "c",
+    "u",
+  ], run = "plugin yank-file", desc = "Yank the content of the selected file" },
+  { on = [
+    "c",
+    "y",
+  ], run = "plugin yank-selected-content", desc = "Yank the content of the selected file" },
+  { on = [
+    "c",
+    "t",
+  ], run = "plugin tree-to-clipboard", desc = "Copy the tree of the selected directory to the clipboard" },
+  
+  # Content yanking - legacy Y keybinds (kept for compatibility)
   { on = [
     "Y",
     "f",
