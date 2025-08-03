@@ -1,7 +1,7 @@
 {
   "KeyMap": {
-    "next": { "key": "down", "modifiers": [] },
-    "prev": { "key": "up", "modifiers": [] },
+    "next": { "key": "n", "modifiers": [] },
+    "prev": { "key": "p", "modifiers": [] },
     "scroll_up": { "key": "k", "modifiers": [] },
     "scroll_down": { "key": "j", "modifiers": [] },
     "scroll_left": { "key": "h", "modifiers": [] },
