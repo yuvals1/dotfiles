@@ -541,60 +541,60 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
       return true
     elseif special_key_str == '<Left>' then
       ya.manager_emit('leave', {})
-      return false
+      return true
     elseif special_key_str == '<Right>' then
       ya.manager_emit('enter', {})
-      return false
+      return true
     elseif special_key_str == '<Up>' then
       ya.manager_emit('arrow', { '-1' })
-      return false
+      return true
     elseif special_key_str == '<Down>' then
       ya.manager_emit('arrow', { '1' })
-      return false
+      return true
     elseif special_key_str == '<Space>' then
       local under_cursor_file = cx.active.current.window[folder.cursor - folder.offset + 1]
       local toggle_state = under_cursor_file.is_selected and 'false' or 'true'
       ya.manager_emit('toggle', { state = toggle_state })
       ya.manager_emit('arrow', { 1 })
-      return false
+      return true
     elseif special_key_str == 'h' then
       if state.type == 'global' then
         ya.manager_emit('leave', {})
       end
-      return false
+      return true
     elseif special_key_str == 'j' then
       if state.type == 'global' then
         ya.manager_emit('arrow', { '1' })
       end
-      return false
+      return true
     elseif special_key_str == 'k' then
       if state.type == 'global' then
         ya.manager_emit('arrow', { '-1' })
       end
-      return false
+      return true
     elseif special_key_str == 'l' then
       if state.type == 'global' then
         ya.manager_emit('enter', {})
       end
-      return false
+      return true
     elseif special_key_str == 'J' then
       ya.manager_emit('arrow', { '5' })
-      return false
+      return true
     elseif special_key_str == 'K' then
       ya.manager_emit('arrow', { '-5' })
-      return false
+      return true
     elseif special_key_str == '<A-j>' then
       ya.manager_emit('seek', { '5' })
-      return false
+      return true
     elseif special_key_str == '<A-k>' then
       ya.manager_emit('seek', { '-5' })
-      return false
+      return true
     elseif special_key_str == '<C-j>' then
       ya.manager_emit('arrow', { '100%' })
-      return false
+      return true
     elseif special_key_str == '<C-k>' then
       ya.manager_emit('arrow', { '-100%' })
-      return false
+      return true
     elseif special_key_str == 'q' then
       ya.manager_emit('quit', {})
       return true
@@ -627,12 +627,8 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
       ya.manager_emit(cmd[1], { cmd[2] }) -- Bug: async action may let 303 unkonw under cursor file
     end
 
-    -- whether continue global
-    if state.times == 'once' then
-      return true
-    else
-      return false
-    end
+    -- always exit after jump in global mode
+    return true
   end
 
   -- apply select mode
@@ -642,7 +638,8 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
       ya.manager_emit('arrow', { cand - 1 + folder.offset - folder.cursor })
     end
 
-    return false
+    -- always exit after jump in select mode
+    return true
   end
 
   -- apply keep mode and normal mode
@@ -650,14 +647,8 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
     ya.manager_emit('arrow', { cand - 1 + folder.offset - folder.cursor })
   end
 
-  -- keep mode will auto enter when select folder and continue keep mode
-  if state.type == 'keep' and folder.window[cand].cha.is_dir then
-    local folder = cx.active.current
-    ya.manager_emit('enter', {})
-    return false
-  else
-    return true
-  end
+  -- always exit after jump (even in keep mode)
+  return true
 end)
 
 local function read_input_todo(arg_current_num, arg_parent_num, arg_preview_num, arg_type)
