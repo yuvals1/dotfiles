@@ -66,6 +66,12 @@ return {
     elseif mode == "name_without_ext" then
       content = remove_extension(hovered.name)
       title = "Filename without extension"
+    elseif mode == "dirname" then
+      content = hovered.url:match("(.*/)")
+      if not content then
+        content = "/"
+      end
+      title = "Directory Path"
     else
       return info('Copy', 'Unknown mode: ' .. mode)
     end
