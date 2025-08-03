@@ -436,7 +436,7 @@ end
 
 local toggle_ui = ya.sync(function(st)
   if st.keep_hook then
-    ya.render()
+    ui.render()
     return
   end
 
@@ -445,7 +445,7 @@ local toggle_ui = ya.sync(function(st)
     if st.type == 'global' and cx.active.preview.folder then
       ya.manager_emit('peek', { force = true })
     end
-    ya.render()
+    ui.render()
     return
   end
 
@@ -492,7 +492,7 @@ local toggle_ui = ya.sync(function(st)
     ya.manager_emit('peek', { force = true })
   end
 
-  ya.render()
+  ui.render()
 end)
 
 local function split_yazi_cmd_arg(cmd)
@@ -513,7 +513,7 @@ local function count_preview_files(st)
   -- TODO:under_cursor_file maybe nil,because aync task,floder may not ready
   local under_cursor_file = folder.window[folder.cursor - folder.offset + 1]
   if under_cursor_file and under_cursor_file.cha.is_dir then
-    st.preview_num = count_files(tostring(under_cursor_file.url), ui.Rect.default.h)
+    st.preview_num = count_files(tostring(under_cursor_file.url), ui.Rect{}.h)
   else
     st.preview_num = 0
   end
@@ -736,15 +736,15 @@ local init_global_action = ya.sync(function(state, arg_times)
   state.type = 'global'
   -- caculate file numbers of current window
   state.current_num = #cx.active.current.window
-  if state.current_num <= ui.Rect.default.h then -- Maybe the folder has not been full loaded yet
-    state.current_num = count_files(cx.active.current.cwd, ui.Rect.default.h)
+  if state.current_num <= ui.Rect{}.h then -- Maybe the folder has not been full loaded yet
+    state.current_num = count_files(cx.active.current.cwd, ui.Rect{}.h)
   end
 
   -- caculate file numbers of parent window
   if cx.active.parent ~= nil then
     state.parent_num = #cx.active.parent.window
-    if state.parent_num <= ui.Rect.default.h then -- Maybe the folder has not been full loaded yet
-      state.parent_num = count_files(cx.active.parent.cwd, ui.Rect.default.h)
+    if state.parent_num <= ui.Rect{}.h then -- Maybe the folder has not been full loaded yet
+      state.parent_num = count_files(cx.active.parent.cwd, ui.Rect{}.h)
     end
   else
     state.parent_num = 0
@@ -753,7 +753,7 @@ local init_global_action = ya.sync(function(state, arg_times)
   -- caculate file numbers of preview window
   if cx.active.preview.folder ~= nil then
     state.preview_num = #cx.active.preview.folder.window
-    if state.preview_num <= ui.Rect.default.h then -- Maybe the folder has not been full loaded yet
+    if state.preview_num <= ui.Rect{}.h then -- Maybe the folder has not been full loaded yet
       count_preview_files(state)
     end
   else
@@ -765,8 +765,8 @@ end)
 
 local init_normal_action = ya.sync(function(state, action)
   state.current_num = #cx.active.current.window
-  if state.current_num < ui.Rect.default.h then -- Maybe the folder has not been full loaded yet
-    state.current_num = count_files(cx.active.current.cwd, ui.Rect.default.h)
+  if state.current_num < ui.Rect{}.h then -- Maybe the folder has not been full loaded yet
+    state.current_num = count_files(cx.active.current.cwd, ui.Rect{}.h)
   end
 
   state.type = action
