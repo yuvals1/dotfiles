@@ -1,7 +1,7 @@
 {
   "KeyMap": {
-    "next": { "key": "n", "modifiers": [] },
-    "prev": { "key": "p", "modifiers": [] },
+    "next": { "key": "down", "modifiers": [] },
+    "prev": { "key": "up", "modifiers": [] },
     "scroll_up": { "key": "k", "modifiers": [] },
     "scroll_down": { "key": "j", "modifiers": [] },
     "scroll_left": { "key": "h", "modifiers": [] },
@@ -10,7 +10,7 @@
     "zoom_out": { "key": "o", "modifiers": [] },
     "width_mode": { "key": "w", "modifiers": [] },
     "colorize": { "key": "z", "modifiers": [] },
-    "quit": { "key": "c", "modifiers": ["ctrl"] },
+    "quit": { "key": "q", "modifiers": [] },
     "enter_command_mode": { "key": "colon", "modifiers": [] },
     "exit_command_mode": { "key": "escape", "modifiers": [] },
     "execute_command": { "key": "enter", "modifiers": [] }
