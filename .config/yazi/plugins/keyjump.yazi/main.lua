@@ -5,7 +5,7 @@ local SPECIAL_KEYS = {
     "h", "j", "k", "l",
     "J", "K",
     "<A-j>", "<A-k>",
-    "z",
+    "f",
     "<C-j>", "<C-k>",
     "q"
 }
@@ -14,7 +14,7 @@ local SPECIAL_KEYS = {
 -- stylua: ignore
 local SINGLE_KEYS = {
 	"p", "b", "e", "t", "a", "o", "i", "n", "s", "r", "h", "l", "d", "c",
-	"u", "m", "f", "g", "w", "v", "k", "j", "x", "y", "q"
+	"u", "m", "g", "w", "v", "k", "j", "x", "y", "z"
 }
 
 -- stylua: ignore
@@ -139,10 +139,9 @@ local SPECIAL_CANDS = {
     { on = "h" }, { on = "j" }, { on = "k" }, { on = "l" },
     { on = "J" }, { on = "K" },
     { on = "<A-j>" }, { on = "<A-k>" },
-    { on = "z" },
+    { on = "f" },
     { on = "<C-j>" }, { on = "<C-k>" },
-    { on = "q" } ,
-    { on = "f" } -- <-- add q here
+    { on = "q" }
 }
 
 
@@ -151,8 +150,8 @@ local SIGNAL_CANDS = {
 	{ on = "p" }, { on = "b" }, { on = "e" }, { on = "t" }, { on = "a" },
 	{ on = "o" }, { on = "i" }, { on = "n" }, { on = "s" }, { on = "r" },
 	{ on = "h" }, { on = "l" }, { on = "d" }, { on = "c" }, { on = "u" },
-	{ on = "m" }, { on = "f" }, { on = "g" }, { on = "w" }, { on = "v" },
-	{ on = "k" }, { on = "j" }, { on = "x" }, { on = "y" }, { on = "q" },
+	{ on = "m" }, { on = "g" }, { on = "w" }, { on = "v" },
+	{ on = "k" }, { on = "j" }, { on = "x" }, { on = "y" }, { on = "z" },
 }
 
 -- stylua: ignore
@@ -524,8 +523,6 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
   if cand > (current_entry_num + parent_entry_num + preview_entry_num + go_num) then
     local special_key_str = SPECIAL_KEYS[cand - current_entry_num - parent_entry_num - preview_entry_num - go_num]
     if special_key_str == '<Esc>' then
-      return true
-    elseif special_key_str == 'z' then
       return true
     elseif special_key_str == 'f' then
       return true
