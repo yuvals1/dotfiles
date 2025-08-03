@@ -172,7 +172,7 @@ keymap = [
     ",",
     ",",
   ], run = [
-    "sort alphabetical --reverse",
+    "sort alphabetical --reverse=no",
     "plugin pref-by-location -- save",
   ], desc = "Sort alphabetically (reverse)" },
   { on = [
@@ -316,7 +316,7 @@ keymap = [
   # Help
   { on = "~", run = "help", desc = "Open help" },
   { on = "<F1>", run = "help", desc = "Open help" },
-  
+
   # Content yanking - new c keybinds
   { on = [
     "c",
@@ -334,7 +334,7 @@ keymap = [
     "c",
     "t",
   ], run = "plugin tree-to-clipboard", desc = "Copy the tree of the selected directory to the clipboard" },
-  
+
   # Content yanking - legacy Y keybinds (kept for compatibility)
   { on = [
     "Y",
