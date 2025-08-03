@@ -42,6 +42,7 @@ brew 'zk'
 brew 'pandoc'
 brew 'poppler'
 brew 'regclient'
+brew 'fancy-cat'
 # brew 'tabiew'
 # brew 'visidata' # use cmd-s for settings navigation
 # brew 'gcalcli'
@@ -93,3 +94,4 @@ cask 'font-meslo-lg-nerd-font'
 cask 'font-hack-nerd-font'
 cask 'font-sf-pro'
 cask 'sf-symbols'
+
