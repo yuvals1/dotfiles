@@ -60,7 +60,7 @@ local function get_file_info(path)
 end
 
 local function entry()
-  local _permit = ya.hide()
+  local _permit = ui.hide()
 
   -- Get selected files
   local files = get_selected()
