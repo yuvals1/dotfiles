@@ -880,3 +880,25 @@ desc = "Filter with 'ose'"
 on = ["u", "g"]
 run = "plugin filter-in -- general"
 desc = "Filter with 'general'"
+
+# PDF to images conversion
+[[mgr.prepend_keymap]]
+on = ["c", "p", "i"]
+run = '''
+	shell --confirm 'pdf2img-imagemagick "$@"'
+'''
+desc = "Convert PDF to images using ImageMagick"
+
+[[mgr.prepend_keymap]]
+on = ["c", "p", "g"]
+run = '''
+	shell --confirm 'pdf2img-ghostscript "$@"'
+'''
+desc = "Convert PDF to images using Ghostscript"
+
+[[mgr.prepend_keymap]]
+on = ["c", "p", "p"]
+run = '''
+	shell --confirm 'pdf2img-pdftoppm "$@"'
+'''
+desc = "Convert PDF to images using pdftoppm"
