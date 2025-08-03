@@ -442,9 +442,6 @@ local toggle_ui = ya.sync(function(st)
 
   if st.icon or st.mode then
     Entity.icon, Status.mode, st.icon, st.mode = st.icon, st.mode, nil, nil
-    if st.type == 'global' and cx.active.preview.folder then
-      ya.manager_emit('peek', { force = true })
-    end
     ui.render()
     return
   end
@@ -457,15 +454,15 @@ local toggle_ui = ya.sync(function(st)
     local span_icon_before = file.is_hovered and ui.Span(file:icon().text .. ' ') or ui.Span(file:icon().text .. ' '):style(icon.style)
 
     if st.type == 'global' then
-      local pos, view = rel_position(file, 'all')
+      local pos, view = rel_position(file, 'current')
       if pos == nil then
         return st.icon(self, file)
       elseif view == 'current' then
-        return ui.Line { span_icon_before, ui.Span(GLOBAL_CURRENT_DOUBLE_KEYS[pos] .. ' '):fg(st.opt_icon_fg) }
-      elseif view == 'parent' then
-        return ui.Line { span_icon_before, ui.Span(GLOBAL_PARRENT_DOUBLE_KEYS[pos] .. ' '):fg(st.opt_icon_fg) }
-      elseif view == 'preview' then
-        return ui.Line { span_icon_before, ui.Span(GLOBAL_PREVIEW_DOUBLE_KEYS[pos] .. ' '):fg(st.opt_icon_fg) }
+        if st.current_num > #SINGLE_KEYS then
+          return ui.Line { span_icon_before, ui.Span(NORMAL_DOUBLE_KEYS[pos] .. ' '):fg(st.opt_icon_fg) }
+        else
+          return ui.Line { span_icon_before, ui.Span(SINGLE_KEYS[pos] .. ' '):fg(st.opt_icon_fg) }
+        end
       end
     else
       local pos = rel_position(file, 'current')
@@ -486,10 +483,6 @@ local toggle_ui = ya.sync(function(st)
     return ui.Line {
       ui.Span(' KJ-' .. tostring(cx.active.mode):upper() .. ' '):style(style.main),
     }
-  end
-
-  if st.type == 'global' and cx.active.preview.folder then
-    ya.manager_emit('peek', { force = true })
   end
 
   ui.render()
@@ -558,24 +551,16 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
       ya.manager_emit('arrow', { 1 })
       return true
     elseif special_key_str == 'h' then
-      if state.type == 'global' then
-        ya.manager_emit('leave', {})
-      end
+      ya.manager_emit('leave', {})
       return true
     elseif special_key_str == 'j' then
-      if state.type == 'global' then
-        ya.manager_emit('arrow', { '1' })
-      end
+      ya.manager_emit('arrow', { '1' })
       return true
     elseif special_key_str == 'k' then
-      if state.type == 'global' then
-        ya.manager_emit('arrow', { '-1' })
-      end
+      ya.manager_emit('arrow', { '-1' })
       return true
     elseif special_key_str == 'l' then
-      if state.type == 'global' then
-        ya.manager_emit('enter', {})
-      end
+      ya.manager_emit('enter', {})
       return true
     elseif special_key_str == 'J' then
       ya.manager_emit('arrow', { '5' })
@@ -601,30 +586,12 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
     end
   end
 
-  -- apply global mode
+  -- apply global mode (now only handles current directory)
   if state.type == 'global' then
     -- hit current area
     if cand <= current_entry_num then -- hit normal key
       local current_folder = cx.active.current
       ya.manager_emit('arrow', { cand - 1 + current_folder.offset - current_folder.cursor })
-    -- hit parent area
-    elseif cand > current_entry_num and cand <= (current_entry_num + parent_entry_num) then
-      local parent_folder = cx.active.parent
-      ya.manager_emit('leave', {})
-      ya.manager_emit('arrow', { cand - current_entry_num - 1 + parent_folder.offset - parent_folder.cursor })
-    -- hit preview area
-    elseif cand > (current_entry_num + parent_entry_num) and cand <= (current_entry_num + parent_entry_num + preview_entry_num) then
-      local preview_folder = cx.active.preview.folder
-      ya.manager_emit('enter', {})
-      ya.manager_emit('arrow', { cand - current_entry_num - parent_entry_num - 1 + preview_folder.offset - preview_folder.cursor })
-
-    -- hit go
-    elseif
-      cand > (current_entry_num + parent_entry_num + preview_entry_num) and cand <= (current_entry_num + parent_entry_num + preview_entry_num + go_num)
-    then
-      local go_line = cand - current_entry_num - parent_entry_num - preview_entry_num
-      local cmd = split_yazi_cmd_arg(GO_CANDS[go_line].exec)
-      ya.manager_emit(cmd[1], { cmd[2] }) -- Bug: async action may let 303 unkonw under cursor file
     end
 
     -- always exit after jump in global mode
@@ -662,43 +629,21 @@ local function read_input_todo(arg_current_num, arg_parent_num, arg_preview_num,
   -- generate cands of entry of current window
   if current_num == 0 then
     current_cands = {}
-  elseif type == 'global' then -- global mode disable signal key
-    current_cands = { table.unpack(GLOBAL_CURRENT_DOUBLE_CANDS, 1, current_num) }
   elseif current_num > #SINGLE_KEYS then
     current_cands = { table.unpack(NORMAL_DOUBLE_CANDS, 1, current_num) }
   else
     current_cands = { table.unpack(SIGNAL_CANDS, 1, current_num) }
   end
 
-  -- generate cands of entry of parent window
-  if parent_num ~= nil and parent_num ~= 0 then
-    parent_cands = { table.unpack(GLOBAL_PARENT_DOUBLE_CANDS, 1, parent_num) }
-  else
-    parent_cands = {}
-    parent_num = 0
-  end
-
-  -- generate cands of entry of preview window
-  if preview_num ~= nil and preview_num ~= 0 then
-    preview_cands = { table.unpack(GLOBAL_PREVIEW_DOUBLE_CANDS, 1, preview_num) }
-  else
-    preview_cands = {}
-    preview_num = 0
-  end
+  -- skip parent and preview cands since we only work on current directory
+  parent_cands = {}
+  parent_num = 0
+  preview_cands = {}
+  preview_num = 0
 
   --attach current cands to cands table
   for i = 1, #current_cands do
     table.insert(cands, current_cands[i])
-  end
-
-  --attach parent cands to cands table
-  for i = 1, #parent_cands do
-    table.insert(cands, parent_cands[i])
-  end
-
-  --attach preview cands to cands table
-  for i = 1, #preview_cands do
-    table.insert(cands, preview_cands[i])
   end
 
   --attach go cands to cands table
@@ -731,27 +676,11 @@ local init_global_action = ya.sync(function(state, arg_times)
     state.current_num = count_files(cx.active.current.cwd, ui.Rect{}.h)
   end
 
-  -- caculate file numbers of parent window
-  if cx.active.parent ~= nil then
-    state.parent_num = #cx.active.parent.window
-    if state.parent_num <= ui.Rect{}.h then -- Maybe the folder has not been full loaded yet
-      state.parent_num = count_files(cx.active.parent.cwd, ui.Rect{}.h)
-    end
-  else
-    state.parent_num = 0
-  end
+  -- skip parent and preview since we only work on current directory
+  state.parent_num = 0
+  state.preview_num = 0
 
-  -- caculate file numbers of preview window
-  if cx.active.preview.folder ~= nil then
-    state.preview_num = #cx.active.preview.folder.window
-    if state.preview_num <= ui.Rect{}.h then -- Maybe the folder has not been full loaded yet
-      count_preview_files(state)
-    end
-  else
-    count_preview_files(state)
-  end
-
-  return { state.current_num, state.parent_num, state.preview_num }
+  return { state.current_num, 0, 0 }
 end)
 
 local init_normal_action = ya.sync(function(state, action)
