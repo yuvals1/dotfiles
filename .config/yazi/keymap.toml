@@ -43,8 +43,8 @@ keymap = [
   { on = "<Left>", run = "leave", desc = "Go back to the parent directory" },
   { on = "<Right>", run = "enter", desc = "Enter the child directory" },
 
-  { on = "H", run = "back", desc = "Go back to the previous directory" },
-  { on = "L", run = "forward", desc = "Go forward to the next directory" },
+  # { on = "H", run = "back", desc = "Go back to the previous directory" },
+  # { on = "L", run = "forward", desc = "Go forward to the next directory" },
 
   # Toggle
   { on = "<Space>", run = [
@@ -902,3 +902,14 @@ run = '''
 	shell --confirm 'pdf2img-pdftoppm "$@"'
 '''
 desc = "Convert PDF to images using pdftoppm"
+
+# Image zoom keymaps
+[[mgr.prepend_keymap]]
+on = "L"
+run = "plugin zoom 1"
+desc = "Zoom in preview image"
+
+[[mgr.prepend_keymap]]
+on = "H"
+run = "plugin zoom -1"
+desc = "Zoom out preview image"
