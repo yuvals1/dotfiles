@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Source colors
+source "$CONFIG_DIR/colors.sh"
+
 # Path to the daemon-enabled spotify_player binary
 SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
 COVER_PATH="/tmp/spotify_cover.jpg"
@@ -94,7 +97,14 @@ update() {
       controls="${controls}􀊄"  # play.fill
     fi
     
-    sketchybar -m --set spotify.menubar_controls icon="$controls"
+    # Set color based on playing state
+    if [ "$is_playing" = "true" ]; then
+      controls_color="$SPOTIFY_GREEN"  # Green when playing
+    else
+      controls_color="$WHITE"  # White when paused
+    fi
+    
+    sketchybar -m --set spotify.menubar_controls icon="$controls" icon.color="$controls_color"
   fi
   
   # Update playback progress
