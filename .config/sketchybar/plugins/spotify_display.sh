@@ -120,7 +120,10 @@ update() {
     
     # Update menu bar progress if it exists
     if sketchybar --query spotify.progress &>/dev/null; then
-      sketchybar -m --set spotify.progress slider.percentage=$percentage
+      sketchybar -m --set spotify.progress \
+        icon="$(printf "%d:%02d" $progress_min $progress_sec)" \
+        label="$(printf "%d:%02d" $duration_min $duration_sec)" \
+        slider.percentage=$percentage
     fi
   fi
   
