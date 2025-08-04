@@ -1,0 +1,19 @@
+#!/bin/bash
+# Custom script to open files from lazygit in the parent Neovim instance
+
+# Get the file to edit
+FILE="$1"
+
+# Write the file path to a temp file
+echo "$FILE" > /tmp/lazygit-edit-file
+
+# Wait for Neovim to signal that editing is complete
+# We'll monitor a "done" file
+while [ ! -f "/tmp/lazygit-edit-done" ]; do
+    sleep 0.1
+done
+
+# Clean up the done file
+rm -f /tmp/lazygit-edit-done
+
+exit 0
