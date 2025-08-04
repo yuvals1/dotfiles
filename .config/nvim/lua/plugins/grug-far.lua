@@ -19,9 +19,19 @@ return {
         -- For example:
         -- ["<C-j>"] = "next_match",
         -- ["<C-k>"] = "prev_match",
-        ["q"] = "close",
       },
     }
+
+    -- Set up custom keymaps for grug-far buffers
+    vim.api.nvim_create_autocmd('FileType', {
+      group = vim.api.nvim_create_augroup('grug-far-keybindings', { clear = true }),
+      pattern = { 'grug-far' },
+      callback = function()
+        vim.keymap.set('n', 'q', function()
+          require('grug-far').get_instance(0):close()
+        end, { buffer = true, desc = 'Close grug-far' })
+      end,
+    })
 
     -- Set up a keymap to open grug-far
     vim.keymap.set('n', '<leader>fr', require('grug-far').open, { desc = 'Open grug-far' })
