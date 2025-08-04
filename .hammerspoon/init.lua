@@ -204,6 +204,11 @@ hs.hotkey.bind({ "alt" }, "P", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh repeat &")
 end)
 
+-- Save current track to file (Alt+E)
+hs.hotkey.bind({ "alt" }, "E", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_save_track.sh &")
+end)
+
 -- Toggle between music and pomodoro view (Alt+R)
 hs.hotkey.bind({ "alt" }, "R", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh &")

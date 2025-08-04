@@ -776,6 +776,13 @@ run = "paste"
 desc = "regular paste"
 
 [[mgr.prepend_keymap]]
+on = "S"
+run = '''
+	shell 'filename=$(basename "$0"); /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_play_saved.sh "$filename"' --block
+'''
+desc = "Play Spotify track from saved file"
+
+[[mgr.prepend_keymap]]
 on = "b"
 run = "open --interactive extract"
 desc = "Extract archive"
