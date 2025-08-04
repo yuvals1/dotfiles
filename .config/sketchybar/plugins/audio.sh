@@ -13,13 +13,13 @@ color="$WHITE"
 if [[ "$audio_device" == *"AirPods Max"* ]]; then
   icon=""
 elif [[ "$audio_device" == *"AirPods Pro"* ]]; then
-  icon="󱡏"
+  icon="🎧"
 elif [[ "$audio_device" == *"AirPods"* ]]; then
   icon=""
 elif [[ "$audio_device" == *"Headphones"* ]]; then
   icon=""
 elif [[ "$audio_device" == *"MacBook Pro Speakers"* ]] || [[ "$audio_device" == *"MacBook Air Speakers"* ]]; then
-  icon="󰓃"
+  icon="💻"
 elif [[ "$audio_device" == *"Speakers"* ]]; then
   icon="󰓃"
 else
