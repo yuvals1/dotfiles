@@ -3,6 +3,7 @@
 # YouTube Music API endpoint
 API_URL="http://0.0.0.0:26538/api/v1"
 COVER_PATH="/tmp/youtube_music_cover.jpg"
+LAST_ARTWORK_URL_FILE="/tmp/youtube_music_last_artwork_url"
 
 update() {
   # Get song info from YouTube Music API
@@ -59,16 +60,33 @@ update() {
     sketchybar -m --set youtube_music.progress drawing=off
   fi
   
-  # Download and update artwork
+  # Download and update artwork only if URL changed
   if [ -n "$ARTWORK_URL" ] && [ "$ARTWORK_URL" != "null" ]; then
-    curl -s "$ARTWORK_URL" -o "$COVER_PATH" &
-    wait
-    if [ -f "$COVER_PATH" ]; then
-      sketchybar -m --set youtube_music.artwork \
-        background.image="$COVER_PATH"
+    # Check if artwork URL has changed
+    LAST_ARTWORK_URL=""
+    if [ -f "$LAST_ARTWORK_URL_FILE" ]; then
+      LAST_ARTWORK_URL=$(cat "$LAST_ARTWORK_URL_FILE")
+    fi
+    
+    # Only download if URL changed
+    if [ "$ARTWORK_URL" != "$LAST_ARTWORK_URL" ]; then
+      # Kill any existing curl processes to prevent conflicts
+      pkill -f "curl.*$COVER_PATH" 2>/dev/null
+      
+      # Download new artwork
+      curl -s "$ARTWORK_URL" -o "$COVER_PATH" 2>/dev/null
+      
+      if [ -f "$COVER_PATH" ] && [ -s "$COVER_PATH" ]; then
+        sketchybar -m --set youtube_music.artwork \
+          background.image="$COVER_PATH"
+        # Store the current URL
+        echo "$ARTWORK_URL" > "$LAST_ARTWORK_URL_FILE"
+      fi
     fi
   else
     sketchybar -m --set youtube_music.artwork drawing=off
+    # Clear the last URL since there's no artwork
+    rm -f "$LAST_ARTWORK_URL_FILE" 2>/dev/null
   fi
   
   # Smart polling - faster when playing
