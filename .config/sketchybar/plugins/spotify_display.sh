@@ -60,15 +60,23 @@ update() {
     time_display=""
   fi
   
-  # Update main display
+  # Update main display (just track title)
   if [ -n "$track" ]; then
-    if [ -n "$time_display" ]; then
-      sketchybar -m --set spotify.anchor icon="$main_icon" label="$track  $time_display"
-    else
-      sketchybar -m --set spotify.anchor icon="$main_icon" label="$track"
-    fi
+    sketchybar -m --set spotify.anchor label="$track"
   else
-    sketchybar -m --set spotify.anchor icon="$main_icon" label="No Track"
+    sketchybar -m --set spotify.anchor label="No Track"
+  fi
+  
+  # Update menu bar controls
+  if sketchybar --query spotify.menubar_controls &>/dev/null; then
+    # Set shuffle emoji
+    [ "$shuffle_state" = "true" ] && shuffle_emoji="🔀" || shuffle_emoji="🔀"
+    # Set repeat emoji  
+    [ "$repeat_state" != "off" ] && repeat_emoji="🔁" || repeat_emoji="🔁"
+    # Set play/pause emoji
+    [ "$is_playing" = "true" ] && play_emoji="⏸" || play_emoji="▶️"
+    
+    sketchybar -m --set spotify.menubar_controls icon="${shuffle_emoji} ${repeat_emoji} ${play_emoji}"
   fi
   
   # Update popup items

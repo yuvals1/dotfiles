@@ -35,9 +35,7 @@ spotify_anchor=(
   popup.horizontal=on
   popup.align=center
   popup.height=$POPUP_HEIGHT
-  icon.drawing=on
-  icon.font="$FONT:Regular:16.0"
-  icon.color=$ACCENT_COLOR
+  icon.drawing=off
   label.drawing=on
   label.max_chars=25
   label.scroll_texts=on
@@ -213,22 +211,42 @@ spotify_artwork=(
 )
 
 # ────────────────────────────────────
+# ▸ Menu Bar Controls
+# ────────────────────────────────────
+
+spotify_menubar_controls=(
+  script="$PLUGIN_DIR/spotify_display.sh"
+  click_script="$PLUGIN_DIR/spotify_menubar_click.sh"
+  label.drawing=off
+  icon.drawing=on
+  icon.font="$FONT:Regular:16.0"
+  icon="🔀 🔁 ⏸"
+  drawing=on
+  y_offset=0
+  updates=on
+)
+
+# ────────────────────────────────────
 # ▸ SketchyBar Setup
 # ────────────────────────────────────
 
 # Register custom spotify event
 sketchybar --add event spotify_update
 
-# Add artwork first (appears to the right)
-sketchybar --add item spotify.artwork right                      \
-           --set spotify.artwork "${spotify_artwork[@]}"         \
-           --subscribe spotify.artwork spotify_update            \
-                                                                 \
-           --add item spotify.anchor right                       \
-           --set spotify.anchor "${spotify_anchor[@]}"           \
-           --subscribe spotify.anchor mouse.entered mouse.exited \
-                                     mouse.exited.global         \
-                                     spotify_update         \
+# Add items from right to left (controls, title, artwork)
+sketchybar --add item spotify.menubar_controls right                  \
+           --set spotify.menubar_controls "${spotify_menubar_controls[@]}" \
+           --subscribe spotify.menubar_controls spotify_update        \
+                                                                     \
+           --add item spotify.anchor right                           \
+           --set spotify.anchor "${spotify_anchor[@]}"               \
+           --subscribe spotify.anchor mouse.entered mouse.exited     \
+                                     mouse.exited.global             \
+                                     spotify_update                  \
+                                                                     \
+           --add item spotify.artwork right                          \
+           --set spotify.artwork "${spotify_artwork[@]}"             \
+           --subscribe spotify.artwork spotify_update         \
                                                                  \
            --add item spotify.cover popup.spotify.anchor         \
            --set spotify.cover "${spotify_cover[@]}"             \
