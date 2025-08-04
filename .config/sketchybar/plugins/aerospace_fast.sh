@@ -10,20 +10,20 @@ CURRENT_FOCUSED=$(aerospace list-workspaces --focused)
 
 # Check if this space is the focused one
 if [ "$1" = "$CURRENT_FOCUSED" ]; then
-    # Active workspace - bright accent with glow effect
+    # Active workspace - bright green with glow effect
     sketchybar --set $NAME \
         background.drawing=on \
-        background.color=$ACCENT_COLOR \
+        background.color=$WORKSPACE_ACTIVE \
         background.border_color=0x80ffffff \
         background.border_width=1 \
-        icon.color=$BAR_COLOR \
+        icon.color=$WHITE \
         icon.highlight=on \
-        icon.highlight_color=$BAR_COLOR \
-        label.color=$BAR_COLOR \
+        icon.highlight_color=$WHITE \
+        label.color=$WHITE \
         label.highlight=on \
-        label.highlight_color=$BAR_COLOR \
+        label.highlight_color=$WHITE \
         background.shadow.drawing=on \
-        background.shadow.color=$ACCENT_COLOR \
+        background.shadow.color=$WORKSPACE_ACTIVE \
         background.shadow.angle=0 \
         background.shadow.distance=0 \
         background.blur_radius=30
