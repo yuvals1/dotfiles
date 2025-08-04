@@ -72,7 +72,7 @@ update() {
   
   # Update menu bar controls
   if sketchybar --query spotify.menubar_controls &>/dev/null; then
-    # Build control string with only active states
+    # Build control string with play/pause in the middle
     controls=""
     
     # Add shuffle if on
@@ -80,22 +80,22 @@ update() {
       controls="${controls}􀊝 "  # shuffle.on
     fi
     
+    # Always show play/pause in the middle
+    if [ "$is_playing" = "true" ]; then
+      controls="${controls}􀊆 "  # pause.fill
+    else
+      controls="${controls}􀊄 "  # play.fill
+    fi
+    
     # Add repeat if on
     case "$repeat_state" in
       "track")
-        controls="${controls}􀊟 "  # repeat.1
+        controls="${controls}􀊟"  # repeat.1
         ;;
       "context")
-        controls="${controls}􀊞 "  # repeat
+        controls="${controls}􀊞"  # repeat
         ;;
     esac
-    
-    # Always show play/pause
-    if [ "$is_playing" = "true" ]; then
-      controls="${controls}􀊆"  # pause.fill
-    else
-      controls="${controls}􀊄"  # play.fill
-    fi
     
     # Set color based on playing state
     if [ "$is_playing" = "true" ]; then
