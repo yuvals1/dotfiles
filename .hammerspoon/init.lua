@@ -184,24 +184,24 @@ hs.hotkey.bind({ "alt" }, "Y", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh shuffle &")
 end)
 
--- Previous track (Alt+U)
+-- Toggle repeat (Alt+U)
 hs.hotkey.bind({ "alt" }, "U", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh repeat &")
+end)
+
+-- Previous track (Alt+I)
+hs.hotkey.bind({ "alt" }, "I", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh previous &")
 end)
 
--- Play/Pause (Alt+I)
-hs.hotkey.bind({ "alt" }, "I", function()
+-- Play/Pause (Alt+O)
+hs.hotkey.bind({ "alt" }, "O", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh play-pause &")
 end)
 
--- Next track (Alt+O)
-hs.hotkey.bind({ "alt" }, "O", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh next &")
-end)
-
--- Toggle repeat (Alt+P)
+-- Next track (Alt+P)
 hs.hotkey.bind({ "alt" }, "P", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh repeat &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh next &")
 end)
 
 
