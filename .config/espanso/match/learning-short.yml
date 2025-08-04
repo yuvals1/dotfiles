@@ -19,6 +19,9 @@ matches:
     replace: "i don't understand"
     label: "i dont understand copy"
 
+  - trigger: ":nw"
+    replace: "i don't want"
+
   - trigger: ":uf"
     replace: "i don't fucking understand"
 
@@ -33,4 +36,3 @@ matches:
   - trigger: ":di"
     replace: "don't implement yet. let's discuss it first"
     label: "don't implement yet"
-
