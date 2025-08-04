@@ -69,14 +69,32 @@ update() {
   
   # Update menu bar controls
   if sketchybar --query spotify.menubar_controls &>/dev/null; then
-    # Set shuffle emoji
-    [ "$shuffle_state" = "true" ] && shuffle_emoji="🔀" || shuffle_emoji="🔀"
-    # Set repeat emoji  
-    [ "$repeat_state" != "off" ] && repeat_emoji="🔁" || repeat_emoji="🔁"
-    # Set play/pause emoji
-    [ "$is_playing" = "true" ] && play_emoji="⏸" || play_emoji="▶️"
+    # Build control string with only active states
+    controls=""
     
-    sketchybar -m --set spotify.menubar_controls icon="${shuffle_emoji} ${repeat_emoji} ${play_emoji}"
+    # Add shuffle if on
+    if [ "$shuffle_state" = "true" ]; then
+      controls="${controls}🔀 "
+    fi
+    
+    # Add repeat if on
+    case "$repeat_state" in
+      "track")
+        controls="${controls}🔂 "
+        ;;
+      "context")
+        controls="${controls}🔁 "
+        ;;
+    esac
+    
+    # Always show play/pause
+    if [ "$is_playing" = "true" ]; then
+      controls="${controls}⏸️"
+    else
+      controls="${controls}▶️"
+    fi
+    
+    sketchybar -m --set spotify.menubar_controls icon="$controls"
   fi
   
   # Update popup items

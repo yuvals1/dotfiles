@@ -21,6 +21,16 @@ case "$1" in
   "previous")
     $SPOTIFY playback previous
     ;;
+  "shuffle")
+    $SPOTIFY playback shuffle
+    # Trigger immediate update
+    sleep 0.2 && sketchybar --trigger spotify_update &
+    ;;
+  "repeat")
+    $SPOTIFY playback repeat
+    # Trigger immediate update
+    sleep 0.2 && sketchybar --trigger spotify_update &
+    ;;
   *)
     # Handle control button clicks based on NAME
     case "$NAME" in
@@ -38,10 +48,14 @@ case "$1" in
         $SPOTIFY playback previous
         ;;
       "spotify.shuffle")
-        $SPOTIFY playback toggle shuffle
+        $SPOTIFY playback shuffle
+        # Trigger immediate update
+        sleep 0.2 && sketchybar --trigger spotify_update &
         ;;
       "spotify.repeat")
-        $SPOTIFY playback toggle repeat
+        $SPOTIFY playback repeat
+        # Trigger immediate update
+        sleep 0.2 && sketchybar --trigger spotify_update &
         ;;
     esac
     ;;

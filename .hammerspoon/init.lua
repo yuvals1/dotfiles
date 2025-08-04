@@ -179,6 +179,11 @@ hs.hotkey.bind({ "alt" }, ",", function()
 end)
 
 -- SPOTIFY PLAYER KEYBINDINGS
+-- Toggle shuffle (Alt+Y)
+hs.hotkey.bind({ "alt" }, "Y", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh shuffle &")
+end)
+
 -- Previous track (Alt+U)
 hs.hotkey.bind({ "alt" }, "U", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh previous &")
@@ -192,6 +197,11 @@ end)
 -- Next track (Alt+O)
 hs.hotkey.bind({ "alt" }, "O", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh next &")
+end)
+
+-- Toggle repeat (Alt+P)
+hs.hotkey.bind({ "alt" }, "P", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh repeat &")
 end)
 
 
