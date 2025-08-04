@@ -46,7 +46,7 @@ This SketchyBar configuration integrates with several external tools to provide 
 
 ### Music Services
 - **Dispatcher**: `music_keyboard_dispatcher.sh` routes commands based on visible service
-- **State Management**: `.center_state` file tracks current view (0=Pomodoro, 1=Spotify, 2=YouTube)
+- **State Management**: `.center_state` file tracks current view (0=Spotify, 1=YouTube Music, 2=Pomodoro)
 - **Display Scripts**: 
   - `spotify_display.sh`: Updates via daemon queries and event hooks
   - `youtube_music_display.sh`: Polls API for updates

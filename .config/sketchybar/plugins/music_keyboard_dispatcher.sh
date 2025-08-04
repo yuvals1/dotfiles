@@ -13,15 +13,15 @@ fi
 
 # Route to appropriate service based on state
 case $CURRENT_STATE in
-    1)
-        # State 1: Spotify is visible
+    0)
+        # State 0: Spotify is visible
         /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh "$1"
         ;;
-    2)
-        # State 2: YouTube Music is visible
+    1)
+        # State 1: YouTube Music is visible
         /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/youtube_music_keyboard.sh "$1"
         ;;
     *)
-        # State 0 or other: Pomodoro is visible, do nothing
+        # State 2 or other: Pomodoro is visible, do nothing
         ;;
 esac
