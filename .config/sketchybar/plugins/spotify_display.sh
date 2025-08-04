@@ -20,8 +20,8 @@ update() {
   local playback_json=$($SPOTIFY get key playback 2>/dev/null)
   
   if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
-    # No playback data - show stopped state
-    sketchybar -m --set spotify.anchor icon="􀊆" label="Not Playing"
+    # No playback data - show stopped state with Spotify logo
+    sketchybar -m --set spotify.anchor icon=":spotify:" label="Not Playing"
     exit 0
   fi
   
@@ -60,11 +60,11 @@ update() {
     time_display=""
   fi
   
-  # Update main display (just track title)
+  # Update main display (always show Spotify logo with track title)
   if [ -n "$track" ]; then
-    sketchybar -m --set spotify.anchor label="$track"
+    sketchybar -m --set spotify.anchor icon=":spotify:" label="$track"
   else
-    sketchybar -m --set spotify.anchor label="No Track"
+    sketchybar -m --set spotify.anchor icon=":spotify:" label="No Track"
   fi
   
   # Update menu bar controls
