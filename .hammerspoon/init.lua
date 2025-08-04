@@ -248,3 +248,9 @@ end)
 
 -- Alert to show Hammerspoon config loaded successfully
 -- hs.alert.show("Hammerspoon config loaded with click functionality")
+
+-- SLEEP KEYBIND
+-- Put Mac to sleep (Alt+S)
+hs.hotkey.bind({ "alt" }, "s", function()
+	hs.caffeinate.systemSleep()
+end)
