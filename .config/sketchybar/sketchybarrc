@@ -57,7 +57,6 @@ source $ITEM_DIR/pomodoro.sh
 source $ITEM_DIR/pomodoro_history.sh
 
 # -- Right Side Of Notch Items --
-source $ITEM_DIR/media.sh
 
 # -- Right Side Items --
 source $ITEM_DIR/calendar.sh
@@ -66,6 +65,7 @@ source $ITEM_DIR/audio.sh
 source $ITEM_DIR/volume.sh
 source $ITEM_DIR/battery.sh
 source $ITEM_DIR/cpu.sh
+source $ITEM_DIR/spotify.sh
 source $ITEM_DIR/overdue.sh
 
 
