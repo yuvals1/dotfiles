@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Toggle between three states:
-# State 0: Pomodoro (hide Spotify and YouTube Music)
-# State 1: Spotify (hide Pomodoro and YouTube Music)  
-# State 2: YouTube Music (hide Pomodoro and Spotify)
+# State 0: Spotify (hide YouTube Music and Pomodoro)
+# State 1: YouTube Music (hide Spotify and Pomodoro)
+# State 2: Pomodoro (hide Spotify and YouTube Music)
 
 STATE_FILE="$HOME/.config/sketchybar/.center_state"
 
@@ -41,7 +41,21 @@ fi
 # Show items based on new state
 case $NEXT_STATE in
     0)
-        # State 0: Show Pomodoro
+        # State 0: Show Spotify
+        sketchybar --set spotify.artwork drawing=on \
+                   --set spotify.anchor drawing=on \
+                   --set spotify.menubar_controls drawing=on \
+                   --set spotify.progress drawing=on
+        ;;
+    1)
+        # State 1: Show YouTube Music
+        sketchybar --set youtube_music.artwork drawing=on \
+                   --set youtube_music.anchor drawing=on \
+                   --set youtube_music.controls drawing=on \
+                   --set youtube_music.progress drawing=on
+        ;;
+    2)
+        # State 2: Show Pomodoro
         sketchybar --set task drawing=on \
                    --set pomodoro_work drawing=on \
                    --set pomodoro_history drawing=on
@@ -50,19 +64,5 @@ case $NEXT_STATE in
         if sketchybar --query pomodoro_break &>/dev/null; then
             sketchybar --set pomodoro_break drawing=on
         fi
-        ;;
-    1)
-        # State 1: Show Spotify
-        sketchybar --set spotify.artwork drawing=on \
-                   --set spotify.anchor drawing=on \
-                   --set spotify.menubar_controls drawing=on \
-                   --set spotify.progress drawing=on
-        ;;
-    2)
-        # State 2: Show YouTube Music
-        sketchybar --set youtube_music.artwork drawing=on \
-                   --set youtube_music.anchor drawing=on \
-                   --set youtube_music.controls drawing=on \
-                   --set youtube_music.progress drawing=on
         ;;
 esac
