@@ -192,13 +192,39 @@ spotify_controls=(
 )
 
 # ────────────────────────────────────
+# ▸ Album Art Item (in menu bar)
+# ────────────────────────────────────
+
+spotify_artwork=(
+  script="$PLUGIN_DIR/spotify_display.sh"
+  click_script="$POPUP_SCRIPT"
+  label.drawing=off
+  icon.drawing=off
+  padding_left=2
+  padding_right=2
+  background.image.scale=0.08
+  background.image.drawing=on
+  background.drawing=on
+  background.height=24
+  background.corner_radius=4
+  drawing=on
+  y_offset=0
+  updates=on
+)
+
+# ────────────────────────────────────
 # ▸ SketchyBar Setup
 # ────────────────────────────────────
 
 # Register custom spotify event
 sketchybar --add event spotify_update
 
-sketchybar --add item spotify.anchor right                       \
+# Add artwork first (appears to the right)
+sketchybar --add item spotify.artwork right                      \
+           --set spotify.artwork "${spotify_artwork[@]}"         \
+           --subscribe spotify.artwork spotify_update            \
+                                                                 \
+           --add item spotify.anchor right                       \
            --set spotify.anchor "${spotify_anchor[@]}"           \
            --subscribe spotify.anchor mouse.entered mouse.exited \
                                      mouse.exited.global         \

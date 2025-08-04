@@ -108,7 +108,14 @@ update() {
   if [ -n "$cover_url" ]; then
     curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" &
     wait
-    [ -f "$COVER_PATH" ] && sketchybar -m --set spotify.cover background.image="$COVER_PATH"
+    if [ -f "$COVER_PATH" ]; then
+      # Update popup cover
+      sketchybar -m --set spotify.cover background.image="$COVER_PATH"
+      # Update menu bar artwork if it exists
+      if sketchybar --query spotify.artwork &>/dev/null; then
+        sketchybar -m --set spotify.artwork background.image="$COVER_PATH"
+      fi
+    fi
   fi
 }
 
