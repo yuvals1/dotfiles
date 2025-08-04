@@ -5,6 +5,7 @@ alias cat='bat --style=plain --paging=never'
 alias icat='kitty +kitten icat'
 # alias y='yazi'
 alias t='yazi ~/tasks/"$TASK_PROGRESS"'
+alias sp='yazi ~/spotify'
 alias n='nvim'
 alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
