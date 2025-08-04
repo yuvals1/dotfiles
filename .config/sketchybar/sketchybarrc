@@ -56,6 +56,7 @@ source $ITEM_DIR/task.sh
 source $ITEM_DIR/pomodoro.sh
 source $ITEM_DIR/pomodoro_history.sh
 source $ITEM_DIR/spotify.sh
+source $ITEM_DIR/youtube_music.sh
 
 # -- Right Side Of Notch Items --
 
@@ -77,6 +78,9 @@ sketchybar --update
 
 # Start spotify daemon
 $PLUGIN_DIR/spotify_daemon_launch.sh
+
+# Initialize center view
+$PLUGIN_DIR/init_center_view.sh
 
 # Start input source monitor for language switching
 ~/.config/sketchybar/helpers/input_source_monitor.swift &
