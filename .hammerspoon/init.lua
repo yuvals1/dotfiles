@@ -204,6 +204,12 @@ hs.hotkey.bind({ "alt" }, "P", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh next &")
 end)
 
+-- Toggle between music and pomodoro view (Alt+R)
+hs.hotkey.bind({ "alt" }, "R", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh &")
+	-- hs.alert.show("Toggled center view")
+end)
+
 
 -- Chrome detection timer to reload when switching to Chrome
 local chromeWasActive = false

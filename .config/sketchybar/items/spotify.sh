@@ -41,7 +41,7 @@ spotify_anchor=(
   label.scroll_texts=on
   label.font="$FONT:Regular:13.0"
   label.color=$WHITE
-  drawing=on
+  drawing=off
   y_offset=0
   updates=on
 )
@@ -205,7 +205,7 @@ spotify_artwork=(
   background.drawing=on
   background.height=24
   background.corner_radius=4
-  drawing=on
+  drawing=off
   y_offset=0
   updates=on
 )
@@ -221,7 +221,7 @@ spotify_menubar_controls=(
   icon.drawing=on
   icon.font="$FONT:Regular:16.0"
   icon="🔀 🔁 ⏸"
-  drawing=on
+  drawing=off
   y_offset=0
   updates=on
 )
@@ -234,17 +234,17 @@ spotify_menubar_controls=(
 sketchybar --add event spotify_update
 
 # Add items from right to left (controls, title, artwork)
-sketchybar --add item spotify.menubar_controls right                  \
+sketchybar --add item spotify.menubar_controls center                  \
            --set spotify.menubar_controls "${spotify_menubar_controls[@]}" \
            --subscribe spotify.menubar_controls spotify_update        \
                                                                      \
-           --add item spotify.anchor right                           \
+           --add item spotify.anchor center                           \
            --set spotify.anchor "${spotify_anchor[@]}"               \
            --subscribe spotify.anchor mouse.entered mouse.exited     \
                                      mouse.exited.global             \
                                      spotify_update                  \
                                                                      \
-           --add item spotify.artwork right                          \
+           --add item spotify.artwork center                          \
            --set spotify.artwork "${spotify_artwork[@]}"             \
            --subscribe spotify.artwork spotify_update         \
                                                                  \
