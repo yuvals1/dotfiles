@@ -117,6 +117,11 @@ update() {
       icon="$(printf "%02d:%02d" $progress_min $progress_sec)" \
       label="$(printf "%02d:%02d" $duration_min $duration_sec)" \
       slider.percentage=$percentage
+    
+    # Update menu bar progress if it exists
+    if sketchybar --query spotify.progress &>/dev/null; then
+      sketchybar -m --set spotify.progress slider.percentage=$percentage
+    fi
   fi
   
   # Update controls if they exist

@@ -10,6 +10,7 @@ if [ "$SPOTIFY_VISIBLE" = "on" ]; then
     sketchybar --set spotify.artwork drawing=off \
                --set spotify.anchor drawing=off \
                --set spotify.menubar_controls drawing=off \
+               --set spotify.progress drawing=off \
                --set task drawing=on \
                --set pomodoro_work drawing=on \
                --set pomodoro_history drawing=on
@@ -25,7 +26,8 @@ else
                --set pomodoro_history drawing=off \
                --set spotify.artwork drawing=on \
                --set spotify.anchor drawing=on \
-               --set spotify.menubar_controls drawing=on
+               --set spotify.menubar_controls drawing=on \
+               --set spotify.progress drawing=on
     
     # Also hide break button if it exists
     if sketchybar --query pomodoro_break &>/dev/null; then

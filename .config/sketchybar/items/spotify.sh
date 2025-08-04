@@ -227,16 +227,39 @@ spotify_menubar_controls=(
 )
 
 # ────────────────────────────────────
+# ▸ Progress Bar (in menu bar)
+# ────────────────────────────────────
+
+spotify_progress=(
+  script="$PLUGIN_DIR/spotify_display.sh"
+  label.drawing=off
+  icon.drawing=off
+  slider.background.height=4
+  slider.background.corner_radius=2
+  slider.background.color=0x40ffffff
+  slider.highlight_color=$ACCENT_COLOR
+  slider.percentage=0
+  slider.width=100
+  drawing=off
+  y_offset=0
+  updates=on
+)
+
+# ────────────────────────────────────
 # ▸ SketchyBar Setup
 # ────────────────────────────────────
 
 # Register custom spotify event
 sketchybar --add event spotify_update
 
-# Add items from right to left (controls, title, artwork)
+# Add items from right to left (controls, progress, title, artwork)
 sketchybar --add item spotify.menubar_controls center                  \
            --set spotify.menubar_controls "${spotify_menubar_controls[@]}" \
            --subscribe spotify.menubar_controls spotify_update        \
+                                                                     \
+           --add slider spotify.progress center                      \
+           --set spotify.progress "${spotify_progress[@]}"           \
+           --subscribe spotify.progress spotify_update               \
                                                                      \
            --add item spotify.anchor center                           \
            --set spotify.anchor "${spotify_anchor[@]}"               \
