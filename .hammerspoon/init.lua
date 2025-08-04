@@ -264,20 +264,25 @@ function toggleAudioOutput()
 			end, {"-s", "MacBook Pro Speakers"}):start()
 		else
 			-- Currently on speakers (or other device), switch to AirPods
-			-- First ensure Bluetooth connection
+			-- First disconnect to wake up AirPods
 			hs.task.new("/usr/local/bin/blueutil", function(exitCode2, stdOut2, stdErr2)
-				-- Wait a bit for connection to establish
+				-- Reconnect after brief pause
 				hs.timer.doAfter(0.5, function()
-					-- Switch to AirPods using grep to find them
-					hs.task.new("/bin/bash", function(exitCode3, stdOut3, stdErr3)
-						if exitCode3 == 0 and stdOut3:match("AirPods Pro") then
-							hs.alert.show("Switched to AirPods Pro")
-						else
-							hs.alert.show("Failed to connect AirPods Pro")
-						end
-					end, {"-c", 'DEVICE=$(SwitchAudioSource -a -t output | grep -i airpods | head -1); SwitchAudioSource -s "$DEVICE" 2>&1'}):start()
+					hs.task.new("/usr/local/bin/blueutil", function(exitCode3, stdOut3, stdErr3)
+						-- Wait for AirPods to become available as audio device
+						hs.timer.doAfter(2, function()
+							-- Switch to AirPods using grep to find them
+							hs.task.new("/bin/bash", function(exitCode4, stdOut4, stdErr4)
+								if exitCode4 == 0 and stdOut4:match("AirPods Pro") then
+									hs.alert.show("Switched to AirPods Pro")
+								else
+									hs.alert.show("Failed to connect AirPods Pro")
+								end
+							end, {"-c", 'DEVICE=$(SwitchAudioSource -a -t output | grep -i airpods | head -1); SwitchAudioSource -s "$DEVICE" 2>&1'}):start()
+						end)
+					end, {"--connect", airpodsAddress}):start()
 				end)
-			end, {"--connect", airpodsAddress}):start()
+			end, {"--disconnect", airpodsAddress}):start()
 		end
 	end, {"-c"}):start()
 end
