@@ -42,3 +42,7 @@ export ACCENT_COLOR=0xff2cf9ed
 # export BAR_COLOR=0xff2d2b02
 # export ITEM_BG_COLOR=0xff8e7e0a
 # export ACCENT_COLOR=0xfff7fc17
+
+# -- Brand Colors --
+export SPOTIFY_GREEN=0xff1db954
+export YOUTUBE_RED=0xffff0000

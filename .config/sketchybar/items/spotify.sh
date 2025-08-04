@@ -15,6 +15,7 @@ spotify_anchor=(
   icon.drawing=on
   icon.font="sketchybar-app-font:Regular:16.0"
   icon=":spotify:"
+  icon.color=$SPOTIFY_GREEN
   icon.padding_right=8
   label.drawing=on
   label.max_chars=25

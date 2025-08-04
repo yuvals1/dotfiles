@@ -15,6 +15,7 @@ youtube_music_anchor=(
   icon.drawing=on
   icon.font="sketchybar-app-font:Regular:16.0"
   icon=":youtube:"
+  icon.color=$YOUTUBE_RED
   icon.padding_right=8
   label.drawing=on
   label.max_chars=25
