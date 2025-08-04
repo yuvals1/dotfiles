@@ -199,6 +199,19 @@ hs.hotkey.bind({ "alt" }, "O", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh next &")
 end)
 
+-- Seek backward 10 seconds (Alt+Cmd+U)
+hs.hotkey.bind({ "alt", "cmd" }, "U", function()
+	os.execute("/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player playback seek -- -10000 &")
+end)
+
+-- Seek forward 10 seconds (Alt+Cmd+O)
+hs.hotkey.bind({ "alt", "cmd" }, "O", function()
+	os.execute("/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player playback seek 10000 &")
+end)
+
+-- Note: Seek commands only work when spotify-player is the active device
+-- These won't control iPhone/other device playback
+
 -- Toggle repeat (Alt+P)
 hs.hotkey.bind({ "alt" }, "P", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh repeat &")
