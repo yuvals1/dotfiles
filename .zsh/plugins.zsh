@@ -57,7 +57,7 @@ fi
 # Set FZF options for default behavior and history search
 
 # Generate colors based on file extensions
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude "*.mypy" --exclude "*.git" --exclude "*.mypy_cache" --color=always'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --no-ignore --exclude "*.mypy" --exclude "*.git" --exclude "*.mypy_cache" --color=always'
 export FZF_DEFAULT_OPTS="
   --preview='bat -n --color=always {}'
   --bind shift-up:preview-page-up,shift-down:preview-page-down
