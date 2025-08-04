@@ -97,12 +97,6 @@ update() {
     sketchybar -m --set spotify.menubar_controls icon="$controls"
   fi
   
-  # Update popup items
-  sketchybar -m \
-    --set spotify.title label="$(truncate_text "$track" 25)" \
-    --set spotify.artist label="$(truncate_text "$artist")" \
-    --set spotify.album label="$(truncate_text "$album")"
-  
   # Update playback progress
   if [ "$duration_ms" -gt 0 ]; then
     percentage=$(( progress_ms * 100 / duration_ms ))
@@ -113,11 +107,6 @@ update() {
     duration_min=$(( duration_sec / 60 ))
     duration_sec=$(( duration_sec % 60 ))
     
-    sketchybar -m --set spotify.state \
-      icon="$(printf "%02d:%02d" $progress_min $progress_sec)" \
-      label="$(printf "%02d:%02d" $duration_min $duration_sec)" \
-      slider.percentage=$percentage
-    
     # Update menu bar progress if it exists
     if sketchybar --query spotify.progress &>/dev/null; then
       sketchybar -m --set spotify.progress \
@@ -127,24 +116,11 @@ update() {
     fi
   fi
   
-  # Update controls if they exist
-  if sketchybar --query spotify.shuffle &>/dev/null; then
-    [ "$shuffle_state" = "true" ] && shuffle="on" || shuffle="off"
-    [ "$repeat_state" != "off" ] && repeat="on" || repeat="off"
-    
-    sketchybar -m \
-      --set spotify.shuffle icon.highlight=$shuffle \
-      --set spotify.repeat icon.highlight=$repeat \
-      --set spotify.play icon="$play_icon"
-  fi
-  
   # Download cover in background
   if [ -n "$cover_url" ]; then
     curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" &
     wait
     if [ -f "$COVER_PATH" ]; then
-      # Update popup cover
-      sketchybar -m --set spotify.cover background.image="$COVER_PATH"
       # Update menu bar artwork if it exists
       if sketchybar --query spotify.artwork &>/dev/null; then
         sketchybar -m --set spotify.artwork background.image="$COVER_PATH"
@@ -153,15 +129,5 @@ update() {
   fi
 }
 
-# Handle mouse events
-case "$SENDER" in
-  "mouse.entered") 
-    sketchybar -m --set spotify.anchor popup.drawing=on
-    ;;
-  "mouse.exited"|"mouse.exited.global") 
-    sketchybar -m --set spotify.anchor popup.drawing=off
-    ;;
-  *) 
-    update
-    ;;
-esac
+# Always update regardless of sender
+update
