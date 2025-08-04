@@ -20,7 +20,7 @@ case "$1" in
       $SPOTIFY playback play-pause
     fi
     ;;
-  "previous")
+  "previous" | "prev")
     $SPOTIFY playback previous
     ;;
   "shuffle")
