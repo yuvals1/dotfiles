@@ -12,7 +12,10 @@ FONT="SF Pro"
 
 spotify_anchor=(
   script="$PLUGIN_DIR/spotify_display.sh"
-  icon.drawing=off
+  icon.drawing=on
+  icon.font="sketchybar-app-font:Regular:16.0"
+  icon=":spotify:"
+  icon.padding_right=8
   label.drawing=on
   label.max_chars=25
   label.scroll_texts=on

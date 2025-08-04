@@ -425,6 +425,12 @@ function icon_map() {
   "WhatsApp")
     icon_result=":whats_app:"
     ;;
+  "YouTube")
+    icon_result=":youtube:"
+    ;;
+  "YouTube Music")
+    icon_result=":youtube_music:"
+    ;;
   *)
     icon_result=":default:"
     ;;

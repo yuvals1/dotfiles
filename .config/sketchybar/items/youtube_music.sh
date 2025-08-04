@@ -12,7 +12,10 @@ FONT="SF Pro"
 
 youtube_music_anchor=(
   script="$PLUGIN_DIR/youtube_music_display.sh"
-  icon.drawing=off
+  icon.drawing=on
+  icon.font="sketchybar-app-font:Regular:16.0"
+  icon=":youtube:"
+  icon.padding_right=8
   label.drawing=on
   label.max_chars=25
   label.scroll_texts=on
