@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export WHITE=0xffffffff
+export BLACK=0xff000000
 
 # -- Teal Scheme --
 export BAR_COLOR=0xff001f30
