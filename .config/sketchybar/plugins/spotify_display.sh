@@ -116,6 +116,15 @@ update() {
     fi
   fi
   
+  # Smart polling: adjust update frequency based on play state
+  if [ "$is_playing" = "true" ]; then
+    # Update every second when playing
+    sketchybar --set spotify.progress update_freq=1
+  else
+    # Update every 30 seconds when paused (or only on events)
+    sketchybar --set spotify.progress update_freq=30
+  fi
+  
   # Download cover in background
   if [ -n "$cover_url" ]; then
     curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" &

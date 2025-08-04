@@ -83,6 +83,7 @@ spotify_progress=(
   slider.width=80
   drawing=off
   y_offset=0
+  update_freq=30
   updates=on
 )
 
