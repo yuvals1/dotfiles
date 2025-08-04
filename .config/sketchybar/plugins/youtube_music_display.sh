@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Source colors
+CONFIG_DIR="$HOME/.config/sketchybar"
+source "$CONFIG_DIR/colors.sh"
+
 # YouTube Music API endpoint
 API_URL="http://0.0.0.0:26538/api/v1"
 COVER_PATH="/tmp/youtube_music_cover.jpg"
@@ -28,18 +32,25 @@ update() {
   # Format display
   CURRENT_SONG="${TITLE}"
   
-  # Set play/pause icon
+  # Set play/pause icon using SF Symbols
   if [ "$IS_PAUSED" = "true" ]; then
-    PLAY_ICON="▶️"
+    PLAY_ICON="􀊄"  # play.fill
   else
-    PLAY_ICON="⏸️"
+    PLAY_ICON="􀊆"  # pause.fill
   fi
   
   # Update main display
   sketchybar -m --set youtube_music.anchor label="$CURRENT_SONG"
   
-  # Update controls
-  sketchybar -m --set youtube_music.controls icon="$PLAY_ICON"
+  # Set color based on playing state
+  if [ "$IS_PAUSED" = "true" ]; then
+    controls_color="$WHITE"  # White when paused
+  else
+    controls_color="$YOUTUBE_RED"  # YouTube red when playing
+  fi
+  
+  # Update controls with color
+  sketchybar -m --set youtube_music.controls icon="$PLAY_ICON" icon.color="$controls_color"
   
   # Update progress if we have duration
   if [ "$DURATION_SECONDS" != "0" ] && [ "$DURATION_SECONDS" != "null" ]; then
