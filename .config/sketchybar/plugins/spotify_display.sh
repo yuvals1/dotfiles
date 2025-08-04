@@ -74,24 +74,24 @@ update() {
     
     # Add shuffle if on
     if [ "$shuffle_state" = "true" ]; then
-      controls="${controls}🔀 "
+      controls="${controls}􀊝 "  # shuffle.on
     fi
     
     # Add repeat if on
     case "$repeat_state" in
       "track")
-        controls="${controls}🔂 "
+        controls="${controls}􀊟 "  # repeat.1
         ;;
       "context")
-        controls="${controls}🔁 "
+        controls="${controls}􀊞 "  # repeat
         ;;
     esac
     
     # Always show play/pause
     if [ "$is_playing" = "true" ]; then
-      controls="${controls}⏸️"
+      controls="${controls}􀊆"  # pause.fill
     else
-      controls="${controls}▶️"
+      controls="${controls}􀊄"  # play.fill
     fi
     
     sketchybar -m --set spotify.menubar_controls icon="$controls"
