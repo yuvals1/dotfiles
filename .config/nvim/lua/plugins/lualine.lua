@@ -59,15 +59,16 @@ return {
           },
           'filetype',
         },
-        lualine_y = { 'progress' },
-        -- lualine_z = {
-        --         {
-        --           function()
-        --             return tostring(vim.fn.line '$')
-        --           end,
-        --           icon = '☰',
-        --         },
-        --       },
+        lualine_y = {
+          {
+            function()
+              local current_line = vim.fn.line('.')
+              local total_lines = vim.fn.line('$')
+              return current_line .. '/' .. total_lines .. ' lines'
+            end,
+          }
+        },
+        lualine_z = {},
       },
       inactive_sections = {
         lualine_a = {},
