@@ -246,6 +246,47 @@ hs.timer.doEvery(checkInterval, function()
 	chromeWasActive = isChromeActive
 end)
 
+-- AIRPODS CONNECTION
+-- Function to toggle between AirPods Pro and MacBook Speakers
+function toggleAudioOutput()
+	local airpodsAddress = "38:88:A4:F0:56:19"
+	
+	-- First check current audio output
+	hs.task.new("/usr/local/bin/SwitchAudioSource", function(exitCode, stdOut, stdErr)
+		local currentDevice = stdOut:gsub("\n", "")
+		
+		if currentDevice:match("AirPods") then
+			-- Currently on AirPods, switch to speakers
+			hs.task.new("/usr/local/bin/SwitchAudioSource", function(exitCode2, stdOut2, stdErr2)
+				if exitCode2 == 0 then
+					hs.alert.show("Switched to MacBook Speakers")
+				end
+			end, {"-s", "MacBook Pro Speakers"}):start()
+		else
+			-- Currently on speakers (or other device), switch to AirPods
+			-- First ensure Bluetooth connection
+			hs.task.new("/usr/local/bin/blueutil", function(exitCode2, stdOut2, stdErr2)
+				-- Wait a bit for connection to establish
+				hs.timer.doAfter(0.5, function()
+					-- Switch to AirPods using grep to find them
+					hs.task.new("/bin/bash", function(exitCode3, stdOut3, stdErr3)
+						if exitCode3 == 0 and stdOut3:match("AirPods Pro") then
+							hs.alert.show("Switched to AirPods Pro")
+						else
+							hs.alert.show("Failed to connect AirPods Pro")
+						end
+					end, {"-c", 'DEVICE=$(SwitchAudioSource -a -t output | grep -i airpods | head -1); SwitchAudioSource -s "$DEVICE" 2>&1'}):start()
+				end)
+			end, {"--connect", airpodsAddress}):start()
+		end
+	end, {"-c"}):start()
+end
+
+-- Toggle between AirPods Pro and MacBook Speakers (Alt+A)
+hs.hotkey.bind({ "alt" }, "A", function()
+	toggleAudioOutput()
+end)
+
 -- Alert to show Hammerspoon config loaded successfully
 -- hs.alert.show("Hammerspoon config loaded with click functionality")
 
