@@ -35,6 +35,7 @@ alias gcalcli='gcalcli --client-id="$GCAL_CLIENT_ID" --client-secret="$GCAL_CLIE
 alias pomo="$HOME/dotfiles/.config/sketchybar/pomo"
 alias pomo-vis="$HOME/dotfiles/.config/sketchybar/pomo-vis"
 alias pv="pomo-vis"
+alias spotify-restart="$HOME/dotfiles/.config/sketchybar/plugins/spotify_daemon_restart.sh restart"
 
 # Notification command
 alias notify="$HOME/dotfiles/tools/notify-wrapper.sh"
