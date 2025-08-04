@@ -45,7 +45,7 @@ spotify_anchor=(
   label.color=$WHITE
   drawing=on
   y_offset=0
-  update_freq=1
+  updates=on
 )
 
 spotify_cover=(
@@ -195,10 +195,14 @@ spotify_controls=(
 # ▸ SketchyBar Setup
 # ────────────────────────────────────
 
+# Register custom spotify event
+sketchybar --add event spotify_update
+
 sketchybar --add item spotify.anchor right                       \
            --set spotify.anchor "${spotify_anchor[@]}"           \
            --subscribe spotify.anchor mouse.entered mouse.exited \
                                      mouse.exited.global         \
+                                     spotify_update         \
                                                                  \
            --add item spotify.cover popup.spotify.anchor         \
            --set spotify.cover "${spotify_cover[@]}"             \
@@ -214,6 +218,7 @@ sketchybar --add item spotify.anchor right                       \
                                                                  \
            --add slider spotify.state popup.spotify.anchor       \
            --set spotify.state "${spotify_state[@]}"             \
+           --subscribe spotify.state spotify_update             \
 
 # ────────────────────────────────────
 # ▸ Conditionally Add Controls

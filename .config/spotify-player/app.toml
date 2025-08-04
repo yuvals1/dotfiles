@@ -29,6 +29,9 @@ notify_streaming_only = false
 seek_duration_secs = 5
 sort_artist_albums_by_type = false
 
+[player_event_hook_command]
+command = "/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_event_handler.sh"
+
 [notify_format]
 summary = "{track} • {artists}"
 body = "{album}"

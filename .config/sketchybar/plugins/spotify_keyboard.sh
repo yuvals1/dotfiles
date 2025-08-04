@@ -13,6 +13,10 @@ case "$1" in
     ;;
   "next")
     $SPOTIFY playback next
+    # If paused, also start playing
+    if [ "$($SPOTIFY get key playback | jq -r '.is_playing')" = "false" ]; then
+      $SPOTIFY playback play-pause
+    fi
     ;;
   "previous")
     $SPOTIFY playback previous
@@ -25,6 +29,10 @@ case "$1" in
         ;;
       "spotify.next")
         $SPOTIFY playback next
+        # If paused, also start playing
+        if [ "$($SPOTIFY get key playback | jq -r '.is_playing')" = "false" ]; then
+          $SPOTIFY playback play-pause
+        fi
         ;;
       "spotify.back")
         $SPOTIFY playback previous
