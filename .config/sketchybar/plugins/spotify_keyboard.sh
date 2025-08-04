@@ -13,6 +13,8 @@ case "$1" in
     ;;
   "next")
     $SPOTIFY playback next
+    # Wait a moment for the track change to register
+    sleep 0.3
     # If paused, also start playing
     if [ "$($SPOTIFY get key playback | jq -r '.is_playing')" = "false" ]; then
       $SPOTIFY playback play-pause
@@ -39,6 +41,8 @@ case "$1" in
         ;;
       "spotify.next")
         $SPOTIFY playback next
+        # Wait a moment for the track change to register
+        sleep 0.3
         # If paused, also start playing
         if [ "$($SPOTIFY get key playback | jq -r '.is_playing')" = "false" ]; then
           $SPOTIFY playback play-pause
