@@ -6,7 +6,7 @@
 # No special flags needed for client commands - they auto-connect to the daemon
 SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
 
-# Just run the fucking command
+# Handle keyboard shortcuts and control button clicks
 case "$1" in
   "play-pause")
     $SPOTIFY playback play-pause
@@ -16,5 +16,25 @@ case "$1" in
     ;;
   "previous")
     $SPOTIFY playback previous
+    ;;
+  *)
+    # Handle control button clicks based on NAME
+    case "$NAME" in
+      "spotify.play")
+        $SPOTIFY playback play-pause
+        ;;
+      "spotify.next")
+        $SPOTIFY playback next
+        ;;
+      "spotify.back")
+        $SPOTIFY playback previous
+        ;;
+      "spotify.shuffle")
+        $SPOTIFY playback toggle shuffle
+        ;;
+      "spotify.repeat")
+        $SPOTIFY playback toggle repeat
+        ;;
+    esac
     ;;
 esac
