@@ -69,11 +69,31 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+shift+x`           | Global       | Stop speaking                     | Stops text-to-speech                     |
 | `cmd+shift+q`           | Global       | Click at (1377, 149)              | Position 1                               |
 | `cmd+shift+r`           | Global       | Reload Hammerspoon                | Reloads Hammerspoon config               |
+| `cmd+shift+b`           | Global       | Reload Sketchybar                 | Reloads Sketchybar configuration         |
 | `cmd+shift+P`           | Global       | Show mouse position               | Displays current mouse coordinates       |
 | `cmd+shift+C`           | Global       | Click at current position         | Test click function                      |
 | `alt+N`                 | Global       | Toggle work pomodoro              | Start/stop work timer                    |
 | `alt+M`                 | Global       | Toggle break pomodoro             | Start/stop break timer                   |
-| `cmd+shift+[others]`    | -            | **Available**                     | Except a,d,f,q,r,s,u,x,y,;,.,z,P,C,/    |
+| `alt+,`                 | Global       | Pause/resume pomodoro             | Toggle pomodoro timer pause              |
+| `alt+A`                 | Global       | Toggle audio output               | Toggle between AirPods Pro and MacBook Speakers |
+| `alt+Y`                 | Global       | Toggle shuffle                    | Music player shuffle (Spotify/YouTube Music) |
+| `alt+U`                 | Global       | Previous track                    | Music player previous track              |
+| `alt+I`                 | Global       | Play/Pause                        | Music player play/pause                  |
+| `alt+O`                 | Global       | Next track                        | Music player next track                  |
+| `alt+cmd+U`             | Global       | Seek backward 10s                 | Spotify seek backward (spotify-player only) |
+| `alt+cmd+O`             | Global       | Seek forward 10s                  | Spotify seek forward (spotify-player only) |
+| `alt+P`                 | Global       | Toggle repeat                     | Music player repeat mode                 |
+| `alt+E`                 | Global       | Save current track                | Save Spotify track to file               |
+| `alt+R`                 | Global       | Toggle center view                | Switch between music/pomodoro in menu bar |
+| `alt+S`                 | Global       | Sleep Mac                         | Put Mac to sleep                         |
+| `cmd+shift+[others]`    | -            | **Available**                     | Except a,b,d,f,q,r,s,u,x,y,;,.,z,P,C,/  |
 | `cmd+option+[any key]`  | -            | **Available**                     | -                                        |
 | `cmd+control+[any key]` | -            | **Available**                     | -                                        |
+
+## Control Key Combinations
+
+| Key Combination         | Context      | Action                            | Description                              |
+| ----------------------- | ------------ | --------------------------------- | ---------------------------------------- |
+| `ctrl+shift+v`          | Global       | Click at (1442, 605)              | Right-center position (alternative)      |
+| `ctrl+v`                | Chrome       | Click at (1074, 605)              | Left-center position (Chrome only)       |
 
