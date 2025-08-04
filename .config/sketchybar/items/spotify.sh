@@ -39,7 +39,7 @@ spotify_anchor=(
   label.drawing=on
   label.max_chars=25
   label.scroll_texts=on
-  label.font="$FONT:Regular:13.0"
+  label.font="$FONT:Semibold:15.0"
   label.color=$WHITE
   drawing=off
   y_offset=0
@@ -61,7 +61,7 @@ spotify_title=(
   padding_left=0
   padding_right=0
   width=0
-  label.font="$FONT:Heavy:15.0"
+  label.font="$FONT:Bold:16.0"
   y_offset=$((50 + Y_OFFSET))
 )
 
@@ -71,7 +71,7 @@ spotify_artist=(
   padding_left=0
   padding_right=0
   width=0
-  label.font="$FONT:Regular:13.0"
+  label.font="$FONT:Semibold:14.0"
   label.color=$SECONDARY_COLOR
 )
 
@@ -81,7 +81,7 @@ spotify_album=(
   padding_right=0
   y_offset=$((15 + Y_OFFSET))
   width=0
-  label.font="$FONT:Regular:13.0"
+  label.font="$FONT:Regular:14.0"
   label.color=$TERTIARY_COLOR
 )
 
@@ -233,11 +233,11 @@ spotify_menubar_controls=(
 spotify_progress=(
   script="$PLUGIN_DIR/spotify_display.sh"
   label.drawing=on
-  label.font="$FONT:Regular:11.0"
+  label.font="$FONT:Semibold:13.0"
   label.color=$WHITE
   label.padding_left=8
   icon.drawing=on
-  icon.font="$FONT:Regular:11.0"
+  icon.font="$FONT:Semibold:13.0"
   icon.color=$WHITE
   icon.padding_right=8
   slider.background.height=4
