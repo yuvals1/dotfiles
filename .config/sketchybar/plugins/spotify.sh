@@ -65,12 +65,13 @@ update() {
   
   # Set play or pause icon depending on state
   local play_icon=""
-  if [ "$SPOTIFY_DISPLAY_CONTROLS" = "true" ]; then
-    if [ "$state" = "playing" ]; then
-      play_icon="􀊆"  # pause icon
-    else
-      play_icon="􀊄"  # play icon
-    fi
+  local main_icon=""
+  if [ "$state" = "playing" ]; then
+    play_icon="􀊆"  # pause icon for controls
+    main_icon="􀊄"  # play icon for main display
+  else
+    play_icon="􀊄"  # play icon for controls
+    main_icon="􀊆"  # pause icon for main display
   fi
 
   local track artist album cover_url
@@ -79,7 +80,7 @@ update() {
   album=$(osascript -e 'tell application "Spotify" to get album of current track')
   cover_url=$(osascript -e 'tell application "Spotify" to get artwork url of current track')
   
-  # Download cover image with fallback
+  # Download cover image with fallback (only for popup)
   if curl -s --max-time 5 "$cover_url" -o "$COVER_PATH"; then
     sketchybar -m --set spotify.cover background.image="$COVER_PATH" background.color=0x00000000
   else
@@ -87,15 +88,19 @@ update() {
     sketchybar -m --set spotify.cover background.image="" background.color=0x00000000
   fi
 
-  track=$(truncate_text "$track" $((MAX_LABEL_LENGTH * 7/10)))
-  artist=$(truncate_text "$artist")
-  album=$(truncate_text "$album")
+  # Truncate for popup
+  track_truncated=$(truncate_text "$track" $((MAX_LABEL_LENGTH * 7/10)))
+  artist_truncated=$(truncate_text "$artist")
+  album_truncated=$(truncate_text "$album")
   
+  # Update main item with icon and track
+  sketchybar -m --set spotify.anchor icon="$main_icon" label="$track" drawing=on
+  
+  # Update popup items
   sketchybar -m \
-    --set spotify.title label="$track" \
-    --set spotify.artist label="$artist" \
-    --set spotify.album label="$album" \
-    --set spotify.anchor drawing=on
+    --set spotify.title label="$track_truncated" \
+    --set spotify.artist label="$artist_truncated" \
+    --set spotify.album label="$album_truncated"
   
   # Only update these if controls are enabled
   if [ "$SPOTIFY_DISPLAY_CONTROLS" = "true" ]; then
