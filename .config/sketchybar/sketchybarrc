@@ -75,6 +75,9 @@ source $ITEM_DIR/overdue.sh
 
 sketchybar --update
 
+# Start spotify daemon
+$PLUGIN_DIR/spotify_daemon_launch.sh
+
 # Start input source monitor for language switching
 ~/.config/sketchybar/helpers/input_source_monitor.swift &
 
