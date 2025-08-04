@@ -97,8 +97,10 @@ update() {
         ;;
     esac
     
-    # Set color based on playing state
-    if [ "$is_playing" = "true" ]; then
+    # Set color based on playing state and repeat mode
+    if [ "$repeat_state" = "track" ]; then
+      controls_color="$ORANGE"  # Orange when repeat single track
+    elif [ "$is_playing" = "true" ]; then
       controls_color="$SPOTIFY_GREEN"  # Green when playing
     else
       controls_color="$WHITE"  # White when paused

@@ -51,3 +51,4 @@ export YOUTUBE_RED=0xffff0000
 # -- Additional Colors --
 export GREEN=0xff2ecc71  # Nice modern green
 export WORKSPACE_ACTIVE=0xff2ecc71  # Green for active workspace
+export ORANGE=0xfff97716  # Orange for special states
