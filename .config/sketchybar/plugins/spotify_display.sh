@@ -47,9 +47,26 @@ update() {
     play_icon="􀊄"
   fi
   
+  # Format time display
+  if [ "$duration_ms" -gt 0 ] && [ "$is_playing" = "true" -o "$is_playing" = "false" ]; then
+    progress_sec=$(( progress_ms / 1000 ))
+    duration_sec=$(( duration_ms / 1000 ))
+    progress_min=$(( progress_sec / 60 ))
+    progress_sec=$(( progress_sec % 60 ))
+    duration_min=$(( duration_sec / 60 ))
+    duration_sec=$(( duration_sec % 60 ))
+    time_display="$(printf "%02d:%02d/%02d:%02d" $progress_min $progress_sec $duration_min $duration_sec)"
+  else
+    time_display=""
+  fi
+  
   # Update main display
   if [ -n "$track" ]; then
-    sketchybar -m --set spotify.anchor icon="$main_icon" label="$track"
+    if [ -n "$time_display" ]; then
+      sketchybar -m --set spotify.anchor icon="$main_icon" label="$track  $time_display"
+    else
+      sketchybar -m --set spotify.anchor icon="$main_icon" label="$track"
+    fi
   else
     sketchybar -m --set spotify.anchor icon="$main_icon" label="No Track"
   fi
