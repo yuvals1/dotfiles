@@ -30,7 +30,7 @@ Y_OFFSET=$([ "$SPOTIFY_DISPLAY_CONTROLS" = false ] && echo -25 || echo -5)
 # ────────────────────────────────────
 
 spotify_anchor=(
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   click_script="$POPUP_SCRIPT"
   popup.horizontal=on
   popup.align=center
@@ -49,7 +49,7 @@ spotify_anchor=(
 )
 
 spotify_cover=(
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   click_script="$POPUP_SCRIPT"
   label.drawing=off
   icon.drawing=off
@@ -113,7 +113,7 @@ spotify_state=(
   slider.highlight_color=$ACCENT_COLOR
   slider.percentage=0
   slider.width=$SLIDER_WIDTH
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   update_freq=1
   updates=when_shown
 )
@@ -131,7 +131,7 @@ spotify_shuffle=(
   icon.color=$DISABLED_COLOR
   icon.highlight_color=$BACKGROUND
   label.drawing=off
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
 
   y_offset=$CONTROLS_Y_OFFSET
 )
@@ -141,7 +141,7 @@ spotify_back=(
   icon.padding_left=5
   icon.padding_right=5
   icon.color=$BACKGROUND
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   label.drawing=off
   y_offset=$CONTROLS_Y_OFFSET
 )
@@ -161,7 +161,7 @@ spotify_play=(
   icon.color=$ACCENT_COLOR
   updates=on
   label.drawing=off
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   y_offset=$CONTROLS_Y_OFFSET
 )
 
@@ -171,7 +171,7 @@ spotify_next=(
   icon.padding_right=5
   icon.color=$BACKGROUND
   label.drawing=off
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   y_offset=$CONTROLS_Y_OFFSET
 )
 
@@ -182,7 +182,7 @@ spotify_repeat=(
   icon.padding_right=10
   icon.color=$DISABLED_COLOR
   label.drawing=off
-  script="$PLUGIN_DIR/spotify_player.sh $SPOTIFY_DISPLAY_CONTROLS"
+  script="$PLUGIN_DIR/spotify_player_fast.sh $SPOTIFY_DISPLAY_CONTROLS"
   y_offset=$CONTROLS_Y_OFFSET
 )
 

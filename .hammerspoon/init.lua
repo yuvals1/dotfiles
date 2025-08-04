@@ -178,6 +178,22 @@ hs.hotkey.bind({ "alt" }, ",", function()
 	hs.alert.show("Toggled pause")
 end)
 
+-- SPOTIFY PLAYER KEYBINDINGS
+-- Previous track (Alt+U)
+hs.hotkey.bind({ "alt" }, "U", function()
+	os.execute("spotify_player playback previous &")
+end)
+
+-- Play/Pause (Alt+I)
+hs.hotkey.bind({ "alt" }, "I", function()
+	os.execute("spotify_player playback play-pause &")
+end)
+
+-- Next track (Alt+O)
+hs.hotkey.bind({ "alt" }, "O", function()
+	os.execute("spotify_player playback next &")
+end)
+
 
 -- Chrome detection timer to reload when switching to Chrome
 local chromeWasActive = false
