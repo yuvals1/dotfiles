@@ -910,6 +910,12 @@ run = '''
 '''
 desc = "Convert PDF to images using pdftoppm"
 
+# View image with kitty icat plugin
+[[mgr.prepend_keymap]]
+on = "I"
+run = "plugin kitty-view"
+desc = "View image(s) with kitty icat (full quality)"
+
 # Image zoom keymaps
 [[mgr.prepend_keymap]]
 on = "L"
