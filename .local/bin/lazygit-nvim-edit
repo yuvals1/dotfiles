@@ -1,0 +1,8 @@
+#!/bin/bash
+# Yazi-style file selection for lazygit
+# Writes the file path and exits, letting Neovim handle the rest
+
+FILE="$1"
+echo "$FILE" > /tmp/lazygit-selected-file
+# Exit with success - lazygit will continue immediately
+exit 0
