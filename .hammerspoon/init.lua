@@ -181,17 +181,17 @@ end)
 -- SPOTIFY PLAYER KEYBINDINGS
 -- Previous track (Alt+U)
 hs.hotkey.bind({ "alt" }, "U", function()
-	os.execute("spotify_player playback previous &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_player_simple.sh previous &")
 end)
 
 -- Play/Pause (Alt+I)
 hs.hotkey.bind({ "alt" }, "I", function()
-	os.execute("spotify_player playback play-pause &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_player_simple.sh play-pause &")
 end)
 
 -- Next track (Alt+O)
 hs.hotkey.bind({ "alt" }, "O", function()
-	os.execute("spotify_player playback next &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_player_simple.sh next &")
 end)
 
 
