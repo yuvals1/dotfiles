@@ -55,7 +55,7 @@ last_update=""
 is_force_repeat=false
 last_progress_ms=0
 last_duration_ms=0
-music_state="context"  # context, track_radio, artist_radio, album_radio, playlist_radio
+music_state="context"  # context, track_radio, artist_radio, album_radio, playlist_radio, topTracks
 radio_seed=""  # Store the seed name for radio
 radio_toggle_time=0  # Unix timestamp of last radio toggle
 
@@ -202,6 +202,7 @@ show_radio_mode() {
     "artist_radio")   radio_icon="$ICON_ARTIST_RADIO"; radio_label="Artist Radio" ;;
     "album_radio")    radio_icon="$ICON_ALBUM_RADIO"; radio_label="Album Radio" ;;
     "playlist_radio") radio_icon="$ICON_PLAYLIST_RADIO"; radio_label="Playlist Radio" ;;
+    "topTracks")      return ;;  # topTracks is handled separately, not as radio
   esac
   
   local label="${radio_seed} Radio"
@@ -431,6 +432,9 @@ handle_radio_toggle() {
     "playlist_radio") # playlist-radio -> track-radio
       start_radio "$track_id" "track" "$track_name" "track_radio"
       ;;
+    "topTracks") # topTracks -> track-radio
+      start_radio "$track_id" "track" "$track_name" "track_radio"
+      ;;
   esac
 }
 
@@ -453,6 +457,15 @@ handle_command() {
     "seek-forward") $SPOTIFY playback seek +10000 ;;
     "seek-backward") $SPOTIFY playback seek -10000 ;;
     "add-to-playlist") handle_add_to_playlist ;;
+    "go-to-top-tracks")
+      echo "$(date): go-to-top-tracks command received" >> /tmp/spotify.log
+      # Set state to topTracks
+      music_state="topTracks"
+      radio_seed=""
+      # Navigate to top tracks using spotify_player
+      $SPOTIFY get key g t
+      echo "$(date): Navigated to top tracks, state=$music_state" >> /tmp/spotify.log
+      ;;
   esac
 }
 
