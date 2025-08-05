@@ -305,8 +305,40 @@ end)
 -- Alert to show Hammerspoon config loaded successfully
 -- hs.alert.show("Hammerspoon config loaded with click functionality")
 
--- SLEEP KEYBIND
--- Put Mac to sleep (Alt+S)
+-- SPOTIFY DAEMON CONTROL
+-- Toggle both spotify.sh and spotify_player daemons (Alt+S)
 hs.hotkey.bind({ "alt" }, "s", function()
+	-- Check if either daemon is running
+	local checkTask = hs.task.new("/bin/bash", function(exitCode, stdOut, stdErr)
+		if stdOut and stdOut:match("spotify") then
+			-- Daemons are running, kill both
+			os.execute("pkill -f spotify.sh")
+			os.execute("pkill -f spotify_player")
+			-- Update UI to show stopped state
+			os.execute([[
+				sketchybar --set spotify.anchor icon=":spotify:" label="Spotify Stopped" \
+					--set spotify.context drawing=off \
+					--set spotify.menubar_controls icon="" icon.color="0xffffffff" \
+					--set spotify.progress_bar drawing=off
+			]])
+			hs.alert.show("Spotify daemons stopped")
+		else
+			-- Daemons are not running, start both
+			-- Start spotify_player daemon first
+			os.execute("/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player -d &")
+			-- Small delay to let spotify_player initialize
+			hs.timer.doAfter(0.5, function()
+				-- Then start the UI daemon
+				os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify.sh &")
+			end)
+			hs.alert.show("Spotify daemons started")
+		end
+	end, {"-c", "ps aux | grep -E 'spotify\\.sh|spotify_player' | grep -v grep"})
+	checkTask:start()
+end)
+
+-- SLEEP KEYBIND
+-- Put Mac to sleep (Alt+Cmd+S)
+hs.hotkey.bind({ "alt", "cmd" }, "s", function()
 	hs.caffeinate.systemSleep()
 end)
