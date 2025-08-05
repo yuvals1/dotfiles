@@ -610,7 +610,7 @@ handle_command() {
   esac
 }
 
-# Initialize UI on daemon start - show all items
+# Ensure all items are visible when daemon starts
 sketchybar --set spotify.anchor drawing=on \
            --set spotify.context drawing=on \
            --set spotify.menubar_controls drawing=on \

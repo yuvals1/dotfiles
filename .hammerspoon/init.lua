@@ -314,14 +314,6 @@ hs.hotkey.bind({ "alt" }, "s", function()
 			-- Daemons are running, kill both
 			os.execute("pkill -f spotify.sh")
 			os.execute("pkill -f spotify_player")
-			-- Update UI to show stopped state
-			os.execute([[
-				sketchybar --set spotify.anchor drawing=on icon=":spotify:" label="Spotify Stopped" \
-					--set spotify.context drawing=off \
-					--set spotify.menubar_controls drawing=off \
-					--set spotify.progress drawing=off \
-					--set spotify.artwork drawing=off
-			]])
 			hs.alert.show("Spotify daemons stopped")
 		else
 			-- Daemons are not running, start both
