@@ -233,6 +233,7 @@ update_context() {
     fi
   elif [ "$music_state" != "context" ]; then
     # No context but in radio mode
+    echo "$(date): Showing radio mode - state: $music_state, seed: $radio_seed" >&2
     show_radio_mode
   else
     # No context and no radio - hide the item

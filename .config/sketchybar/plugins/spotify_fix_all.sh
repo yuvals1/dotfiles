@@ -8,7 +8,7 @@ echo ""
 
 # Step 1: Kill all existing processes
 echo "1️⃣ Stopping all Spotify processes..."
-pkill -f "spotify.sh" 2>/dev/null
+pkill -f "spotify.*\.sh" 2>/dev/null  # Matches spotify.sh, spotify_refactored.sh, etc.
 pkill -f "spotify_player --daemon" 2>/dev/null
 sleep 2
 
