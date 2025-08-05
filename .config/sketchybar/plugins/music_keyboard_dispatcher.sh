@@ -15,7 +15,7 @@ fi
 case $CURRENT_STATE in
     0)
         # State 0: Spotify is visible
-        /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_keyboard.sh "$1"
+        /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify.sh "$1"
         ;;
     1)
         # State 1: YouTube Music is visible
