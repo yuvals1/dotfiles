@@ -36,6 +36,7 @@ alias pomo="$HOME/dotfiles/.config/sketchybar/pomo"
 alias pomo-vis="$HOME/dotfiles/.config/sketchybar/pomo-vis"
 alias pv="pomo-vis"
 alias spotify-restart="$HOME/dotfiles/.config/sketchybar/plugins/spotify_daemon_restart.sh restart"
+alias spotify-fix="$HOME/dotfiles/.config/sketchybar/plugins/spotify_fix_all.sh"
 
 # Notification command
 alias notify="$HOME/dotfiles/tools/notify-wrapper.sh"
