@@ -350,10 +350,10 @@ handle_command() {
       esac
       ;;
     "seek-forward")
-      $SPOTIFY playback seek +10
+      $SPOTIFY playback seek +10000
       ;;
     "seek-backward")
-      $SPOTIFY playback seek -10
+      $SPOTIFY playback seek -10000
       ;;
   esac
 }
