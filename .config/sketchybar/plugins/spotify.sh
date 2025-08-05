@@ -365,34 +365,16 @@ handle_add_to_playlist() {
   
   echo "Newest playlist: $newest_playlist_name (ID: $newest_playlist_id)" >&2
   
-  # Add track to the playlist using Spotify Web API
+  # Add track to the playlist using our new spotify_player command
   echo "Adding track to playlist..." >&2
   
-  # Get access token from spotify_player
-  local token_file="$HOME/.cache/spotify-player/.spotify_token_cache.json"
-  if [ ! -f "$token_file" ]; then
-    echo "Token file not found: $token_file" >&2
-    return
-  fi
+  local add_result=$($SPOTIFY playlist add-track --playlist "$newest_playlist_id" --track "$track_id" 2>&1)
   
-  local access_token=$(jq -r '.access_token' "$token_file")
-  if [ -z "$access_token" ] || [ "$access_token" = "null" ]; then
-    echo "Failed to get access token" >&2
-    return
-  fi
-  
-  # Add track to playlist using Spotify Web API
-  local api_url="https://api.spotify.com/v1/playlists/$newest_playlist_id/tracks"
-  local response=$(curl -s -X POST "$api_url" \
-    -H "Authorization: Bearer $access_token" \
-    -H "Content-Type: application/json" \
-    -d "{\"uris\": [\"$track_uri\"]}")
-  
-  # Check if successful (response contains snapshot_id)
-  if echo "$response" | jq -e '.snapshot_id' >/dev/null 2>&1; then
+  if [ $? -eq 0 ]; then
     echo "Successfully added '$track_name' to playlist '$newest_playlist_name'" >&2
+    echo "$add_result" >&2
   else
-    echo "Failed to add track to playlist. Response: $response" >&2
+    echo "Failed to add track to playlist: $add_result" >&2
   fi
 }
 
