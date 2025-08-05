@@ -18,3 +18,4 @@ pomodoro/current-task/*
 .spotify_radio_starting
 .spotify_radio_seed
 .spotify_markers/
+.spotify_cache/

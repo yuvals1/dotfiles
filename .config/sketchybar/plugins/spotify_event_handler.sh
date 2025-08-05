@@ -5,7 +5,6 @@
 
 # Path to spotify command wrapper
 SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
-export SPOTIFY_SOURCE="event_handler"
 
 # Function to trigger sketchybar update
 trigger_update() {

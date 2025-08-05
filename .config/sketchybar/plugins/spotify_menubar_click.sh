@@ -2,7 +2,6 @@
 
 # Path to spotify command wrapper
 SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
-export SPOTIFY_SOURCE="menubar_click"
 
 # Get the current control icons to determine positions
 CONTROLS=$(sketchybar --query spotify.menubar_controls | jq -r '.icon.value')

@@ -2,7 +2,6 @@
 
 # Path to spotify command wrapper
 SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
-export SPOTIFY_SOURCE="save_track"
 
 # Directory to save song info
 SAVE_DIR="$HOME/spotify/songs/current"

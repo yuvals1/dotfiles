@@ -8,9 +8,6 @@
 # Get the directory of this script
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Set source for the wrapper
-export SPOTIFY_SOURCE="keyboard"
-
 # Use the wrapper to prevent hanging processes
 SPOTIFY="$PLUGIN_DIR/spotify_command.sh"
 
