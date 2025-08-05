@@ -7,7 +7,7 @@ COMMAND_FILE="/tmp/spotify_command"
 
 # Validate command argument
 if [ $# -eq 0 ]; then
-    echo "Usage: $0 {play-pause|next|previous|shuffle|repeat|radio_toggle|radio_1|radio_2|radio_3|seek-forward|seek-backward|add-to-playlist|go-to-top-tracks}"
+    echo "Usage: $0 {play-pause|next|previous|shuffle|repeat|radio_toggle|radio_1|radio_2|radio_3|seek-forward|seek-backward|add-to-playlist|go-to-top-tracks|create-daily-top-tracks}"
     echo ""
     echo "Commands:"
     echo "  play-pause       - Toggle play/pause"
@@ -23,6 +23,7 @@ if [ $# -eq 0 ]; then
     echo "  seek-backward    - Seek backward 10 seconds"
     echo "  add-to-playlist  - Add current track to newest dd-mm-yy playlist"
     echo "  go-to-top-tracks - Navigate to your top tracks"
+    echo "  create-daily-top-tracks - Create/update daily top tracks playlist"
     exit 1
 fi
 
@@ -30,12 +31,12 @@ COMMAND="$1"
 
 # Validate command
 case "$COMMAND" in
-    "play-pause"|"next"|"previous"|"shuffle"|"repeat"|"radio_toggle"|"radio_1"|"radio_2"|"radio_3"|"seek-forward"|"seek-backward"|"add-to-playlist"|"go-to-top-tracks")
+    "play-pause"|"next"|"previous"|"shuffle"|"repeat"|"radio_toggle"|"radio_1"|"radio_2"|"radio_3"|"seek-forward"|"seek-backward"|"add-to-playlist"|"go-to-top-tracks"|"create-daily-top-tracks")
         # Valid command
         ;;
     *)
         echo "Error: Invalid command '$COMMAND'"
-        echo "Valid commands: play-pause, next, previous, shuffle, repeat, radio_toggle, radio_1, radio_2, radio_3, seek-forward, seek-backward, add-to-playlist, go-to-top-tracks"
+        echo "Valid commands: play-pause, next, previous, shuffle, repeat, radio_toggle, radio_1, radio_2, radio_3, seek-forward, seek-backward, add-to-playlist, go-to-top-tracks, create-daily-top-tracks"
         exit 1
         ;;
 esac

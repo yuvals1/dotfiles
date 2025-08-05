@@ -55,7 +55,7 @@ last_update=""
 is_force_repeat=false
 last_progress_ms=0
 last_duration_ms=0
-music_state="context"  # context, track_radio, artist_radio, album_radio, playlist_radio, topTracks
+music_state="context"  # context, track_radio, artist_radio, album_radio, playlist_radio
 radio_seed=""  # Store the seed name for radio
 radio_toggle_time=0  # Unix timestamp of last radio toggle
 
@@ -202,7 +202,6 @@ show_radio_mode() {
     "artist_radio")   radio_icon="$ICON_ARTIST_RADIO"; radio_label="Artist Radio" ;;
     "album_radio")    radio_icon="$ICON_ALBUM_RADIO"; radio_label="Album Radio" ;;
     "playlist_radio") radio_icon="$ICON_PLAYLIST_RADIO"; radio_label="Playlist Radio" ;;
-    "topTracks")      return ;;  # topTracks is handled separately, not as radio
   esac
   
   local label="${radio_seed} Radio"
@@ -432,9 +431,6 @@ handle_radio_toggle() {
     "playlist_radio") # playlist-radio -> track-radio
       start_radio "$track_id" "track" "$track_name" "track_radio"
       ;;
-    "topTracks") # topTracks -> track-radio
-      start_radio "$track_id" "track" "$track_name" "track_radio"
-      ;;
   esac
 }
 
@@ -457,14 +453,39 @@ handle_command() {
     "seek-forward") $SPOTIFY playback seek +10000 ;;
     "seek-backward") $SPOTIFY playback seek -10000 ;;
     "add-to-playlist") handle_add_to_playlist ;;
+    "create-daily-top-tracks")
+      echo "$(date): create-daily-top-tracks command received" >> /tmp/spotify.log
+      nohup "$PLUGIN_DIR/create_daily_top_tracks.sh" &
+      ;;
     "go-to-top-tracks")
       echo "$(date): go-to-top-tracks command received" >> /tmp/spotify.log
-      # Set state to topTracks
-      music_state="topTracks"
-      radio_seed=""
-      # Navigate to top tracks using spotify_player
-      $SPOTIFY get key g t
-      echo "$(date): Navigated to top tracks, state=$music_state" >> /tmp/spotify.log
+      
+      # Get all user playlists
+      local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
+      if [ -z "$playlists" ]; then
+        echo "$(date): Failed to get playlists" >> /tmp/spotify.log
+        return
+      fi
+      
+      # Try today's playlist first
+      local today=$(date +%Y-%m-%d)
+      local today_name="Top Tracks - $today"
+      local playlist_id=$(echo "$playlists" | jq -r --arg name "$today_name" '.[] | select(.name == $name) | .id // empty' 2>/dev/null)
+      
+      # If today's doesn't exist, try yesterday's
+      if [ -z "$playlist_id" ]; then
+        local yesterday=$(date -d "1 day ago" +%Y-%m-%d 2>/dev/null || date -v-1d +%Y-%m-%d 2>/dev/null)
+        local yesterday_name="Top Tracks - $yesterday"
+        playlist_id=$(echo "$playlists" | jq -r --arg name "$yesterday_name" '.[] | select(.name == $name) | .id // empty' 2>/dev/null)
+      fi
+      
+      # Play the playlist if found
+      if [ -n "$playlist_id" ]; then
+        echo "$(date): Playing top tracks playlist: $playlist_id" >> /tmp/spotify.log
+        $SPOTIFY playback start context --id "$playlist_id" playlist
+      else
+        echo "$(date): No top tracks playlist found for today or yesterday" >> /tmp/spotify.log
+      fi
       ;;
   esac
 }
