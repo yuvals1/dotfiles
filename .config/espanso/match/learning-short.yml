@@ -43,3 +43,7 @@ matches:
   - trigger: ":2pass"
     replace: "this is a complex refactoring so i want to do it in small steps with verification after each step. we will do it in 2 passes: first pass we extract things out without changing logic, second pass we organize and eliminate redundancy. do you understand?"
     label: "two-pass refactoring strategy"
+
+  - trigger: ":stepv"
+    replace: "if it's complex do it slowly step after step with verifications for each step"
+    label: "step by step with verification"
