@@ -39,3 +39,7 @@ matches:
 
   - trigger: ":exp"
     replace: "explain it to me so i know you understand it"
+
+  - trigger: ":2pass"
+    replace: "this is a complex refactoring so i want to do it in small steps with verification after each step. we will do it in 2 passes: first pass we extract things out without changing logic, second pass we organize and eliminate redundancy. do you understand?"
+    label: "two-pass refactoring strategy"
