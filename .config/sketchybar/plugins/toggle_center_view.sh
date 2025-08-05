@@ -25,6 +25,7 @@ sketchybar --set spotify.artwork drawing=off \
            --set spotify.anchor drawing=off \
            --set spotify.menubar_controls drawing=off \
            --set spotify.progress drawing=off \
+           --set spotify.context drawing=off \
            --set youtube_music.artwork drawing=off \
            --set youtube_music.anchor drawing=off \
            --set youtube_music.controls drawing=off \
@@ -45,7 +46,8 @@ case $NEXT_STATE in
         sketchybar --set spotify.artwork drawing=on \
                    --set spotify.anchor drawing=on \
                    --set spotify.menubar_controls drawing=on \
-                   --set spotify.progress drawing=on
+                   --set spotify.progress drawing=on \
+                   --set spotify.context drawing=on
         ;;
     1)
         # State 1: Show YouTube Music

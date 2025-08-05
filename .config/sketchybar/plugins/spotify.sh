@@ -53,6 +53,19 @@ radio_state=0  # 0=no-radio, 1=track-radio, 2=artist-radio, 3=album-radio
 radio_seed=""  # Store the seed name for radio
 
 update_state_and_ui() {
+  # Check if we're in Spotify view (state 0) before doing any updates
+  local center_state_file="$HOME/.config/sketchybar/.center_state"
+  local current_center_state=0
+  if [ -f "$center_state_file" ]; then
+    current_center_state=$(cat "$center_state_file")
+  fi
+  
+  # Only update Spotify items if we're in Spotify view (state 0)
+  if [ "$current_center_state" -ne 0 ]; then
+    # Not in Spotify view - don't update any Spotify items
+    return
+  fi
+  
   # Get current playback state
   local playback_json=$($SPOTIFY get key playback 2>/dev/null)
   
