@@ -233,6 +233,11 @@ hs.hotkey.bind({ "alt" }, "R", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh radio_toggle &")
 end)
 
+-- Go to top tracks playlist (Alt+G)
+hs.hotkey.bind({ "alt" }, "G", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh go-to-top-tracks &")
+end)
+
 
 -- Chrome detection timer to reload when switching to Chrome
 local chromeWasActive = false
