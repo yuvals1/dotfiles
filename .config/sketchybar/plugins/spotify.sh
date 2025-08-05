@@ -610,6 +610,13 @@ handle_command() {
   esac
 }
 
+# Initialize UI on daemon start - show all items
+sketchybar --set spotify.anchor drawing=on \
+           --set spotify.context drawing=on \
+           --set spotify.menubar_controls drawing=on \
+           --set spotify.progress drawing=on \
+           --set spotify.artwork drawing=on
+
 # Main event loop
 while true; do
   # Handle external commands (if any)

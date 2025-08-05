@@ -21,7 +21,6 @@ spotify_anchor=(
   label.scroll_texts=on
   label.font="$FONT:Semibold:15.0"
   label.color=$WHITE
-  drawing=off
   y_offset=0
   updates=on
 )
@@ -40,7 +39,6 @@ spotify_context=(
   label.color=$WHITE
   label.padding_left=0
   label.padding_right=8
-  drawing=off
   y_offset=0
   updates=on
 )
@@ -59,7 +57,6 @@ spotify_artwork=(
   background.drawing=on
   background.height=24
   background.corner_radius=4
-  drawing=off
   y_offset=0
   updates=on
 )
@@ -74,7 +71,6 @@ spotify_menubar_controls=(
   icon.drawing=on
   icon.font="$FONT:Regular:16.0"
   icon="🔀 🔁 ⏸"
-  drawing=off
   y_offset=0
   updates=on
 )
@@ -100,7 +96,6 @@ spotify_progress=(
   slider.highlight_color=$ACCENT_COLOR
   slider.percentage=0
   slider.width=80
-  drawing=off
   y_offset=0
   update_freq=30
   updates=on
@@ -113,23 +108,34 @@ spotify_progress=(
 # Register custom spotify event
 sketchybar --add event spotify_update
 
-# Add items from right to left (controls, progress, context, title, artwork)
+# ────────────────────────────────────
+# ▸ Simple daemon check - if off, only show anchor with "Spotify Stopped"
+# ────────────────────────────────────
+
+DAEMON_RUNNING=$(pgrep -f "spotify.sh|spotify_player" | head -1)
+
+# Add items - all hidden by default except anchor when daemon is off
 sketchybar --add item spotify.menubar_controls center                  \
-           --set spotify.menubar_controls "${spotify_menubar_controls[@]}" \
+           --set spotify.menubar_controls "${spotify_menubar_controls[@]}" drawing=off \
            --subscribe spotify.menubar_controls spotify_update        \
                                                                      \
            --add slider spotify.progress center                      \
-           --set spotify.progress "${spotify_progress[@]}"           \
+           --set spotify.progress "${spotify_progress[@]}" drawing=off \
            --subscribe spotify.progress spotify_update               \
                                                                      \
            --add item spotify.context center                          \
-           --set spotify.context "${spotify_context[@]}"              \
+           --set spotify.context "${spotify_context[@]}" drawing=off \
            --subscribe spotify.context spotify_update                 \
                                                                      \
            --add item spotify.anchor center                           \
-           --set spotify.anchor "${spotify_anchor[@]}"               \
+           --set spotify.anchor "${spotify_anchor[@]}" \
            --subscribe spotify.anchor spotify_update                 \
                                                                      \
            --add item spotify.artwork center                          \
-           --set spotify.artwork "${spotify_artwork[@]}"             \
+           --set spotify.artwork "${spotify_artwork[@]}" drawing=off \
            --subscribe spotify.artwork spotify_update
+
+# If daemon not running, show "Spotify Stopped" on anchor
+if [ -z "$DAEMON_RUNNING" ]; then
+  sketchybar --set spotify.anchor drawing=on label="Spotify Stopped"
+fi
