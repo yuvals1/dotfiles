@@ -25,6 +25,7 @@ return {
 		local emoji_list = {
 			{ emoji = "✅", name = "done" },
 			{ emoji = "❗", name = "important" },
+			{ emoji = "❌", name = "cancelled" },
 			{ emoji = "💤", name = "not important" },
 			{ emoji = nil, name = "none" }  -- No emoji state
 		}
