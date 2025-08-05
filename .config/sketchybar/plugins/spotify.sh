@@ -13,9 +13,6 @@ CONFIG_DIR="$(dirname "$PLUGIN_DIR")"
 # Source colors
 source "$CONFIG_DIR/colors.sh"
 
-# Force-repeat state file
-FORCE_REPEAT_FILE="$HOME/.config/sketchybar/.force_repeat"
-
 # Cover art file
 COVER_PATH="/tmp/spotify_cover.jpg"
 
@@ -27,6 +24,7 @@ current_track=""
 current_artist=""
 is_playing=""
 last_update=""
+is_force_repeat=false
 
 update_state_and_ui() {
   # Get current playback state
@@ -68,11 +66,7 @@ update_state_and_ui() {
     controls="${controls}􀊝 "  # shuffle.on
   fi
   
-  # Check force-repeat state
-  local is_force_repeat=false
-  if [ -f "$FORCE_REPEAT_FILE" ]; then
-    is_force_repeat=true
-  fi
+  # Use global force-repeat state (no file needed)
   
   if [ "$playing" = "true" ] && [ "$is_force_repeat" = "false" ]; then
     # Playing without force-repeat - green SF style without repeat button
@@ -183,11 +177,11 @@ handle_command() {
       $SPOTIFY playback shuffle
       ;;
     "repeat")
-      # Toggle force-repeat file
-      if [ -f "$FORCE_REPEAT_FILE" ]; then
-        rm "$FORCE_REPEAT_FILE"
+      # Toggle force-repeat state variable
+      if [ "$is_force_repeat" = "true" ]; then
+        is_force_repeat=false
       else
-        touch "$FORCE_REPEAT_FILE"
+        is_force_repeat=true
       fi
       ;;
     "radio_toggle")
