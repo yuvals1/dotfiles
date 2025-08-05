@@ -72,7 +72,7 @@ update() {
   
   # Update menu bar controls
   if sketchybar --query spotify.menubar_controls &>/dev/null; then
-    # Build control string with play/pause in the middle
+    # Build control string with force-repeat indicator
     controls=""
     
     # Add shuffle if on
@@ -80,26 +80,21 @@ update() {
       controls="${controls}􀊝 "  # shuffle.on
     fi
     
-    # Always show play/pause in the middle
+    # Always show play/pause
     if [ "$is_playing" = "true" ]; then
       controls="${controls}􀊆 "  # pause.fill
     else
       controls="${controls}􀊄 "  # play.fill
     fi
     
-    # Add repeat if on
-    case "$repeat_state" in
-      "track")
-        controls="${controls}􀊟"  # repeat.1
-        ;;
-      "context")
-        controls="${controls}􀊞"  # repeat
-        ;;
-    esac
+    # Add force-repeat icon if active
+    if [ -f "$HOME/.config/sketchybar/.force_repeat" ]; then
+      controls="${controls}􀊞"  # repeat icon
+    fi
     
-    # Set color based on playing state and repeat mode
-    if [ "$repeat_state" = "track" ]; then
-      controls_color="$ORANGE"  # Orange when repeat single track
+    # Set color based on playing state and force-repeat
+    if [ "$is_playing" = "true" ] && [ -f "$HOME/.config/sketchybar/.force_repeat" ]; then
+      controls_color="$ORANGE"  # Orange when playing with force-repeat
     elif [ "$is_playing" = "true" ]; then
       controls_color="$SPOTIFY_GREEN"  # Green when playing
     else

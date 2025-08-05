@@ -12,3 +12,4 @@ pomodoro/mode
 pomodoro/.paused
 pomodoro/current-task/*
 .center_state
+.force_repeat

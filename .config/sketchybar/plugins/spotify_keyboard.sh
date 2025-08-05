@@ -29,9 +29,9 @@ case "$1" in
     sleep 0.2 && sketchybar --trigger spotify_update &
     ;;
   "repeat")
-    $SPOTIFY playback repeat
-    # Trigger immediate update
-    sleep 0.2 && sketchybar --trigger spotify_update &
+    # Use our force-repeat toggle instead of Spotify's repeat
+    /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_toggle_force_repeat.sh
+    # No need for sleep since toggle script already triggers update
     ;;
   *)
     # Handle control button clicks based on NAME
@@ -57,9 +57,9 @@ case "$1" in
         sleep 0.2 && sketchybar --trigger spotify_update &
         ;;
       "spotify.repeat")
-        $SPOTIFY playback repeat
-        # Trigger immediate update
-        sleep 0.2 && sketchybar --trigger spotify_update &
+        # Use our force-repeat toggle instead of Spotify's repeat
+        /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_toggle_force_repeat.sh
+        # No need for sleep since toggle script already triggers update
         ;;
     esac
     ;;

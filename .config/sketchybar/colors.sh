@@ -47,6 +47,7 @@ export ACCENT_COLOR=0xff2cf9ed
 # -- Brand Colors --
 export SPOTIFY_GREEN=0xff1db954
 export YOUTUBE_RED=0xffff0000
+export ORANGE=0xfff97716
 
 # -- Additional Colors --
 export GREEN=0xff2ecc71  # Nice modern green

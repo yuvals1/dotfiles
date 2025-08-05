@@ -35,9 +35,22 @@ case "$1" in
     ;;
   
   "EndOfTrack")
-    # Track ended - might switch to next track automatically
-    # Add small delay to catch the next track
-    sleep 0.5
+    # Check if force-repeat is enabled
+    if [ -f "$HOME/.config/sketchybar/.force_repeat" ]; then
+      # Log for debugging
+      echo "$(date): Force repeat active, sending previous command" >> /tmp/spotify_force_repeat.log
+      
+      # Small delay to ensure track has actually ended
+      sleep 0.5
+      
+      # Send previous command to restart the track
+      $SPOTIFY playback previous
+      
+      # Log result
+      echo "$(date): Previous command sent" >> /tmp/spotify_force_repeat.log
+    fi
+    
+    # Always trigger update after track end
     trigger_update
     ;;
 esac
