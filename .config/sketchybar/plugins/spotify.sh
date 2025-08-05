@@ -308,6 +308,79 @@ update_state_and_ui() {
   store_current_state
 }
 
+# Handle radio toggle command - cycle through radio modes
+handle_radio_toggle() {
+  # Get current playback info for IDs
+  local current_playback=$($SPOTIFY get key playback 2>/dev/null)
+  
+  if [ -z "$current_playback" ] || [ "$current_playback" = "null" ]; then
+    echo "No track playing - cannot start radio"
+    return
+  fi
+  
+  # Extract IDs we'll need
+  local track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
+  local track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
+  local artist_id=$(echo "$current_playback" | jq -r '.item.artists[0].id // ""')
+  local artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
+  local album_id=$(echo "$current_playback" | jq -r '.item.album.id // ""')
+  local album_name=$(echo "$current_playback" | jq -r '.item.album.name // ""')
+  local context_uri=$(echo "$current_playback" | jq -r '.context.uri // ""')
+  
+  # Cycle through radio modes: no-radio -> track -> artist -> album -> (playlist) -> no-radio
+  case "$radio_state" in
+    0) # no-radio -> track-radio
+      if [ -n "$track_id" ]; then
+        echo "$(date): Starting Track Radio for: $track_name" >> /tmp/spotify_radio.log
+        $SPOTIFY playback start radio --id "$track_id" track
+        radio_state=1
+        radio_seed="$track_name"
+        radio_toggle_time=$(date +%s)
+      fi
+      ;;
+    1) # track-radio -> artist-radio
+      if [ -n "$artist_id" ]; then
+        echo "$(date): Starting Artist Radio for: $artist_name" >> /tmp/spotify_radio.log
+        $SPOTIFY playback start radio --id "$artist_id" artist
+        radio_state=2
+        radio_seed="$artist_name"
+        radio_toggle_time=$(date +%s)
+      fi
+      ;;
+    2) # artist-radio -> album-radio
+      if [ -n "$album_id" ]; then
+        echo "$(date): Starting Album Radio for: $album_name" >> /tmp/spotify_radio.log
+        $SPOTIFY playback start radio --id "$album_id" album
+        radio_state=3
+        radio_seed="$album_name"
+        radio_toggle_time=$(date +%s)
+      fi
+      ;;
+    3) # album-radio -> playlist-radio (if in playlist context) or back to no-radio
+      if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
+        playlist_id="${BASH_REMATCH[1]}"
+        # Get playlist name
+        playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // "Playlist"')
+        echo "$(date): Starting Playlist Radio for: $playlist_name" >> /tmp/spotify_radio.log
+        $SPOTIFY playback start radio --id "$playlist_id" playlist
+        radio_state=4
+        radio_seed="$playlist_name"
+        radio_toggle_time=$(date +%s)
+      else
+        # Skip playlist radio, go back to normal
+        radio_state=0
+        radio_seed=""
+        echo "$(date): Back to normal playback" >> /tmp/spotify_radio.log
+      fi
+      ;;
+    4) # playlist-radio -> no-radio
+      radio_state=0
+      radio_seed=""
+      echo "$(date): Back to normal playback" >> /tmp/spotify_radio.log
+      ;;
+  esac
+}
+
 handle_command() {
   local cmd="$1"
   
@@ -333,75 +406,7 @@ handle_command() {
       fi
       ;;
     "radio_toggle")
-      # Get current playback info for radio starting
-      local current_playback=$($SPOTIFY get key playback 2>/dev/null)
-      
-      if [ -z "$current_playback" ] || [ "$current_playback" = "null" ]; then
-        echo "No track playing - cannot start radio"
-        return
-      fi
-      
-      # Parse IDs and names for radio commands
-      local track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
-      local track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
-      local artist_id=$(echo "$current_playback" | jq -r '.item.artists[0].id // ""') 
-      local artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
-      local album_id=$(echo "$current_playback" | jq -r '.item.album.id // ""')
-      local album_name=$(echo "$current_playback" | jq -r '.item.album.name // ""')
-      local context_uri=$(echo "$current_playback" | jq -r '.context.uri // ""')
-      
-      # Cycle through radio modes: no-radio -> track -> artist -> album -> (playlist) -> no-radio
-      case "$radio_state" in
-        0) # no-radio -> track-radio
-          if [ -n "$track_id" ]; then
-            echo "$(date): Starting Track Radio for: $track_name" >> /tmp/spotify_radio.log
-            $SPOTIFY playback start radio --id "$track_id" track
-            radio_state=1
-            radio_seed="$track_name"
-            radio_toggle_time=$(date +%s)
-          fi
-          ;;
-        1) # track-radio -> artist-radio
-          if [ -n "$artist_id" ]; then
-            echo "$(date): Starting Artist Radio for: $artist_name" >> /tmp/spotify_radio.log
-            $SPOTIFY playback start radio --id "$artist_id" artist
-            radio_state=2
-            radio_seed="$artist_name"
-            radio_toggle_time=$(date +%s)
-          fi
-          ;;
-        2) # artist-radio -> album-radio
-          if [ -n "$album_id" ]; then
-            echo "$(date): Starting Album Radio for: $album_name" >> /tmp/spotify_radio.log
-            $SPOTIFY playback start radio --id "$album_id" album
-            radio_state=3
-            radio_seed="$album_name"
-            radio_toggle_time=$(date +%s)
-          fi
-          ;;
-        3) # album-radio -> playlist-radio (if in playlist context) or back to no-radio
-          if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
-            playlist_id="${BASH_REMATCH[1]}"
-            # Get playlist name
-            playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // "Playlist"')
-            echo "$(date): Starting Playlist Radio for: $playlist_name" >> /tmp/spotify_radio.log
-            $SPOTIFY playback start radio --id "$playlist_id" playlist
-            radio_state=4
-            radio_seed="$playlist_name"
-            radio_toggle_time=$(date +%s)
-          else
-            # Skip playlist radio, go back to normal
-            radio_state=0
-            radio_seed=""
-            echo "$(date): Back to normal playback" >> /tmp/spotify_radio.log
-          fi
-          ;;
-        4) # playlist-radio -> no-radio
-          radio_state=0
-          radio_seed=""
-          echo "$(date): Back to normal playback" >> /tmp/spotify_radio.log
-          ;;
-      esac
+      handle_radio_toggle
       ;;
     "seek-forward")
       $SPOTIFY playback seek +10000
