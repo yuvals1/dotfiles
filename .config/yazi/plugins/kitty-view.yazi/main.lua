@@ -88,10 +88,10 @@ return {
             cmd = cmd .. " && kitty +kitten icat \"" .. image .. "\""
             
             if i < #images then
-                cmd = cmd .. " && echo '' && echo 'Press Enter for next image...' && read"
+                cmd = cmd .. " && echo '' && echo 'Press Space for next image...' && read -n 1 -s"
                 cmd = cmd .. " && kitty +kitten icat --clear"
             else
-                cmd = cmd .. " && echo '' && echo 'Press Enter to return to yazi...' && read"
+                cmd = cmd .. " && echo '' && echo 'Press Space to return to yazi...' && read -n 1 -s"
             end
         end
         
