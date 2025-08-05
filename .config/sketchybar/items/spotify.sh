@@ -27,7 +27,22 @@ spotify_anchor=(
   updates=on
 )
 
-# Popup items removed - no longer needed
+# ────────────────────────────────────
+# ▸ Context/Radio Mode Item
+# ────────────────────────────────────
+
+spotify_context=(
+  script="$PLUGIN_DIR/spotify_display.sh"
+  icon.drawing=off
+  label.drawing=on
+  label.font="$FONT:Semibold:15.0"
+  label.color=$WHITE
+  label.padding_left=0
+  label.padding_right=8
+  drawing=off
+  y_offset=0
+  updates=on
+)
 
 # ────────────────────────────────────
 # ▸ Album Art Item (in menu bar)
@@ -98,7 +113,7 @@ spotify_progress=(
 # Register custom spotify event
 sketchybar --add event spotify_update
 
-# Add items from right to left (controls, progress, title, artwork)
+# Add items from right to left (controls, progress, context, title, artwork)
 sketchybar --add item spotify.menubar_controls center                  \
            --set spotify.menubar_controls "${spotify_menubar_controls[@]}" \
            --subscribe spotify.menubar_controls spotify_update        \
@@ -106,6 +121,10 @@ sketchybar --add item spotify.menubar_controls center                  \
            --add slider spotify.progress center                      \
            --set spotify.progress "${spotify_progress[@]}"           \
            --subscribe spotify.progress spotify_update               \
+                                                                     \
+           --add item spotify.context center                          \
+           --set spotify.context "${spotify_context[@]}"              \
+           --subscribe spotify.context spotify_update                 \
                                                                      \
            --add item spotify.anchor center                           \
            --set spotify.anchor "${spotify_anchor[@]}"               \

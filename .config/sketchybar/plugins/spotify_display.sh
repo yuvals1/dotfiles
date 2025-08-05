@@ -25,6 +25,8 @@ update() {
   if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
     # No playback data - show stopped state with Spotify logo
     sketchybar -m --set spotify.anchor icon=":spotify:" label="Not Playing"
+    # Hide context when not playing
+    sketchybar -m --set spotify.context drawing=off
     exit 0
   fi
   
@@ -38,7 +40,9 @@ update() {
      shuffle_state=\(.shuffle_state)
      repeat_state=\"\(.repeat_state)\"
      progress_ms=\(.progress_ms // 0)
-     duration_ms=\(.item.duration_ms // 0)"
+     duration_ms=\(.item.duration_ms // 0)
+     context_type=\"\(.context.type // "")\"
+     context_uri=\"\(.context.uri // "")\""
   ')"
   
   # Set main icon based on playing state
@@ -68,6 +72,37 @@ update() {
     sketchybar -m --set spotify.anchor icon=":spotify:" label="$track"
   else
     sketchybar -m --set spotify.anchor icon=":spotify:" label="No Track"
+  fi
+  
+  # Update context item
+  if sketchybar --query spotify.context &>/dev/null; then
+    case "$context_type" in
+      "album")
+        sketchybar -m --set spotify.context label="$album" drawing=on
+        ;;
+      "artist")
+        sketchybar -m --set spotify.context label="$artist" drawing=on
+        ;;
+      "playlist")
+        # Extract playlist ID from URI
+        if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
+          playlist_id="${BASH_REMATCH[1]}"
+          # Get playlist name
+          playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
+          if [ -n "$playlist_name" ]; then
+            sketchybar -m --set spotify.context label="$playlist_name" drawing=on
+          else
+            sketchybar -m --set spotify.context label="Playlist" drawing=on
+          fi
+        else
+          sketchybar -m --set spotify.context label="Playlist" drawing=on
+        fi
+        ;;
+      *)
+        # No context - hide the item
+        sketchybar -m --set spotify.context drawing=off
+        ;;
+    esac
   fi
   
   # Update menu bar controls
