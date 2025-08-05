@@ -53,51 +53,51 @@ radio_state=0  # 0=no-radio, 1=track-radio, 2=artist-radio, 3=album-radio
 radio_seed=""  # Store the seed name for radio
 radio_toggle_time=0  # Unix timestamp of last radio toggle
 
-update_state_and_ui() {
-  # Check if we're in Spotify view (state 0) before doing any updates
+# Check if we're currently in Spotify view
+is_spotify_view() {
   local center_state_file="$HOME/.config/sketchybar/.center_state"
   local current_center_state=0
   if [ -f "$center_state_file" ]; then
     current_center_state=$(cat "$center_state_file")
   fi
-  
-  # Only update Spotify items if we're in Spotify view (state 0)
-  if [ "$current_center_state" -ne 0 ]; then
-    # Not in Spotify view - don't update any Spotify items
-    return
-  fi
-  
-  # Get current playback state
-  local playback_json=$($SPOTIFY get key playback 2>/dev/null)
-  
-  if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
-    # No playback data - show stopped state
-    sketchybar --set spotify.anchor icon=":spotify:" label="Not Playing"
-    sketchybar --set spotify.context drawing=off
-    sketchybar --set spotify.menubar_controls icon="" icon.color="$WHITE"
-    return
-  fi
+  [ "$current_center_state" -eq 0 ]
+}
+
+# Show UI when Spotify is not playing anything
+show_stopped_state() {
+  sketchybar --set spotify.anchor icon=":spotify:" label="Not Playing"
+  sketchybar --set spotify.context drawing=off
+  sketchybar --set spotify.menubar_controls icon="" icon.color="$WHITE"
+}
+
+# Parse playback JSON and set global variables
+parse_playback_json() {
+  local playback_json="$1"
   
   # Parse basic info
-  local track=$(echo "$playback_json" | jq -r '.item.name // ""')
-  local artist=$(echo "$playback_json" | jq -r '.item.artists[0].name // ""')
-  local playing=$(echo "$playback_json" | jq -r '.is_playing')
-  local shuffle_state=$(echo "$playback_json" | jq -r '.shuffle_state')
-  local cover_url=$(echo "$playback_json" | jq -r '.item.album.images[1].url // ""')
-  local progress_ms=$(echo "$playback_json" | jq -r '.progress_ms // 0')
-  local duration_ms=$(echo "$playback_json" | jq -r '.item.duration_ms // 0')
-  local album=$(echo "$playback_json" | jq -r '.item.album.name // ""')
-  local context_type=$(echo "$playback_json" | jq -r '.context.type // ""')
-  local context_uri=$(echo "$playback_json" | jq -r '.context.uri // ""')
-  
-  # Update main display
+  track=$(echo "$playback_json" | jq -r '.item.name // ""')
+  artist=$(echo "$playback_json" | jq -r '.item.artists[0].name // ""')
+  playing=$(echo "$playback_json" | jq -r '.is_playing')
+  shuffle_state=$(echo "$playback_json" | jq -r '.shuffle_state')
+  cover_url=$(echo "$playback_json" | jq -r '.item.album.images[1].url // ""')
+  progress_ms=$(echo "$playback_json" | jq -r '.progress_ms // 0')
+  duration_ms=$(echo "$playback_json" | jq -r '.item.duration_ms // 0')
+  album=$(echo "$playback_json" | jq -r '.item.album.name // ""')
+  context_type=$(echo "$playback_json" | jq -r '.context.type // ""')
+  context_uri=$(echo "$playback_json" | jq -r '.context.uri // ""')
+}
+
+# Update anchor item (track name display)
+update_anchor() {
   if [ -n "$track" ]; then
     sketchybar --set spotify.anchor icon=":spotify:" label="$track"
   else
     sketchybar --set spotify.anchor icon=":spotify:" label="No Track"
   fi
-  
-  # Update controls based on state
+}
+
+# Update menu bar controls (play/pause button and color)
+update_menubar_controls() {
   local controls=""
   local controls_color=""
   
@@ -105,8 +105,6 @@ update_state_and_ui() {
   if [ "$shuffle_state" = "true" ]; then
     controls="${controls}􀊝 "  # shuffle.on
   fi
-  
-  # Use global force-repeat state (no file needed)
   
   if [ "$playing" = "true" ] && [ "$is_force_repeat" = "false" ]; then
     # Playing without force-repeat - green SF style without repeat button
@@ -126,8 +124,10 @@ update_state_and_ui() {
   fi
   
   sketchybar --set spotify.menubar_controls icon="$controls" icon.color="$controls_color"
-  
-  # Download and set album artwork
+}
+
+# Update album artwork
+update_artwork() {
   if [ -n "$cover_url" ]; then
     # Download cover art in background (with timeout)
     curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" &
@@ -140,30 +140,36 @@ update_state_and_ui() {
       fi
     fi
   fi
-  
-  # Update progress bar and times
+}
+
+# Update progress bar
+update_progress_bar() {
+  # Calculate progress percentage
+  local percentage=0
   if [ "$duration_ms" -gt 0 ]; then
-    # Calculate percentage for slider
-    percentage=$(( progress_ms * 100 / duration_ms ))
-    
-    # Convert milliseconds to minutes:seconds
-    progress_sec=$(( progress_ms / 1000 ))
-    duration_sec=$(( duration_ms / 1000 ))
-    progress_min=$(( progress_sec / 60 ))
-    progress_sec=$(( progress_sec % 60 ))
-    duration_min=$(( duration_sec / 60 ))
-    duration_sec=$(( duration_sec % 60 ))
-    
-    # Update progress item if it exists
-    if sketchybar --query spotify.progress &>/dev/null; then
-      sketchybar --set spotify.progress \
-        icon="$(printf "%d:%02d" $progress_min $progress_sec)" \
-        label="$(printf "%d:%02d" $duration_min $duration_sec)" \
-        slider.percentage=$percentage
-    fi
+    percentage=$(( (progress_ms * 100) / duration_ms ))
+    [ $percentage -gt 100 ] && percentage=100
   fi
   
-  # Update context item
+  # Convert to seconds for display
+  local progress_sec=$(( progress_ms / 1000 ))
+  local duration_sec=$(( duration_ms / 1000 ))
+  local progress_min=$(( progress_sec / 60 ))
+  local progress_sec=$(( progress_sec % 60 ))
+  local duration_min=$(( duration_sec / 60 ))
+  local duration_sec=$(( duration_sec % 60 ))
+  
+  # Update progress item if it exists
+  if sketchybar --query spotify.progress &>/dev/null; then
+    sketchybar --set spotify.progress \
+      icon="$(printf "%d:%02d" $progress_min $progress_sec)" \
+      label="$(printf "%d:%02d" $duration_min $duration_sec)" \
+      slider.percentage=$percentage
+  fi
+}
+
+# Update context item (playlist/album/radio display)
+update_context() {
   if sketchybar --query spotify.context &>/dev/null; then
     if [ "$context_type" != "null" ] && [ -n "$context_type" ]; then
       # Context exists: show normal context (overrides radio mode)
@@ -212,21 +218,17 @@ update_state_and_ui() {
           radio_icon="􀑪"  # music.note
           radio_label="Track Radio"
           ;;
-        2) 
-          radio_icon="􀉩"  # person
+        2)
+          radio_icon="􀑫"  # mic.fill
           radio_label="Artist Radio"
           ;;
-        3) 
-          radio_icon="􀑷"  # square.stack
+        3)
+          radio_icon="􁐱"  # record.circle
           radio_label="Album Radio"
           ;;
-        4) 
-          radio_icon="􀋲"  # list.bullet
+        4)
+          radio_icon="􀑬"  # list.bullet
           radio_label="Playlist Radio"
-          ;;
-        *) 
-          radio_icon="􀑱"  # antenna.radiowaves.left.and.right
-          radio_label="Radio"
           ;;
       esac
       
@@ -242,8 +244,10 @@ update_state_and_ui() {
       sketchybar --set spotify.context drawing=off
     fi
   fi
-  
-  # Check for force-repeat when track is ending
+}
+
+# Check and handle force-repeat at track end
+check_force_repeat() {
   if [ "$is_force_repeat" = "true" ] && [ "$playing" = "true" ] && [ "$duration_ms" -gt 0 ]; then
     # Check if track is near the end (within last 2 seconds)
     local remaining_ms=$((duration_ms - progress_ms))
@@ -253,14 +257,55 @@ update_state_and_ui() {
       $SPOTIFY playback previous
     fi
   fi
-  
-  # Store current state
+}
+
+# Store current state for next iteration
+store_current_state() {
   current_track="$track"
   current_artist="$artist"
   current_album="$album"
   is_playing="$playing"
   last_progress_ms="$progress_ms"
   last_duration_ms="$duration_ms"
+}
+
+update_state_and_ui() {
+  # Only update Spotify items if we're in Spotify view (state 0)
+  if ! is_spotify_view; then
+    return
+  fi
+  
+  # Get current playback state
+  local playback_json=$($SPOTIFY get key playback 2>/dev/null)
+  
+  if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
+    show_stopped_state
+    return
+  fi
+  
+  # Parse playback data into global variables
+  parse_playback_json "$playback_json"
+  
+  # Update main display
+  update_anchor
+  
+  # Update controls
+  update_menubar_controls
+  
+  # Update artwork
+  update_artwork
+  
+  # Update progress bar
+  update_progress_bar
+  
+  # Update context item
+  update_context
+  
+  # Check for force-repeat when track is ending
+  check_force_repeat
+  
+  # Store current state for next iteration
+  store_current_state
 }
 
 handle_command() {
