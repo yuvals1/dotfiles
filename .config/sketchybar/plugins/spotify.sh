@@ -621,6 +621,6 @@ while true; do
   # Tick: Update state and UI every iteration
   update_state_and_ui
   
-  # Sleep for 0.2 seconds (5 FPS)
-  sleep 0.2
+  # Sleep for 0.1 seconds (10 FPS)
+  sleep 0.1
 done
