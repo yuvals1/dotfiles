@@ -83,8 +83,8 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `alt+cmd+U`             | Global       | Seek backward 10s                 | Spotify seek backward (spotify-player only) |
 | `alt+cmd+O`             | Global       | Seek forward 10s                  | Spotify seek forward (spotify-player only) |
 | `alt+P`                 | Global       | Toggle repeat                     | Music player repeat mode                 |
-| `alt+E`                 | Global       | Save current track                | Save Spotify track to file               |
-| `alt+R`                 | Global       | Toggle center view                | Switch between music/pomodoro in menu bar |
+| `alt+T`                 | Global       | Save current track                | Save Spotify track to file               |
+| `alt+E`                 | Global       | Toggle center view                | Switch between music/pomodoro in menu bar |
 | `alt+S`                 | Global       | Sleep Mac                         | Put Mac to sleep                         |
 | `cmd+shift+[others]`    | -            | **Available**                     | Except a,b,d,f,q,r,s,u,x,y,;,.,z,P,C,/  |
 | `cmd+option+[any key]`  | -            | **Available**                     | -                                        |
