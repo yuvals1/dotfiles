@@ -20,7 +20,8 @@ trigger_update() {
 
 case "$1" in
   "Changed")
-    # New track started - immediate update needed
+    # New track started - for now just trigger update
+    # Auto-reset is handled in display script with better context detection
     trigger_update
     ;;
   

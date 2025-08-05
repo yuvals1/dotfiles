@@ -13,3 +13,5 @@ pomodoro/.paused
 pomodoro/current-task/*
 .center_state
 .force_repeat
+.spotify_radio_state
+.spotify_radio_cycling

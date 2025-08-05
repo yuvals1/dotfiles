@@ -228,6 +228,11 @@ hs.hotkey.bind({ "alt" }, "E", function()
 	-- hs.alert.show("Toggled center view")
 end)
 
+-- Cycle through Spotify radio modes (Alt+R)
+hs.hotkey.bind({ "alt" }, "R", function()
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_cycle_radio.sh &")
+end)
+
 
 -- Chrome detection timer to reload when switching to Chrome
 local chromeWasActive = false
