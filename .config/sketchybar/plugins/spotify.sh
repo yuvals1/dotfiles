@@ -55,7 +55,7 @@ last_update=""
 is_force_repeat=false
 last_progress_ms=0
 last_duration_ms=0
-radio_state=0  # 0=no-radio, 1=track-radio, 2=artist-radio, 3=album-radio
+music_state="context"  # context, track_radio, artist_radio, album_radio, playlist_radio
 radio_seed=""  # Store the seed name for radio
 radio_toggle_time=0  # Unix timestamp of last radio toggle
 
@@ -197,11 +197,11 @@ show_normal_context() {
 show_radio_mode() {
   local radio_icon radio_label
   
-  case "$radio_state" in
-    1) radio_icon="$ICON_TRACK_RADIO"; radio_label="Track Radio" ;;
-    2) radio_icon="$ICON_ARTIST_RADIO"; radio_label="Artist Radio" ;;
-    3) radio_icon="$ICON_ALBUM_RADIO"; radio_label="Album Radio" ;;
-    4) radio_icon="$ICON_PLAYLIST_RADIO"; radio_label="Playlist Radio" ;;
+  case "$music_state" in
+    "track_radio")    radio_icon="$ICON_TRACK_RADIO"; radio_label="Track Radio" ;;
+    "artist_radio")   radio_icon="$ICON_ARTIST_RADIO"; radio_label="Artist Radio" ;;
+    "album_radio")    radio_icon="$ICON_ALBUM_RADIO"; radio_label="Album Radio" ;;
+    "playlist_radio") radio_icon="$ICON_PLAYLIST_RADIO"; radio_label="Playlist Radio" ;;
   esac
   
   local label="${radio_seed} Radio"
@@ -212,7 +212,7 @@ show_radio_mode() {
 
 # Check if enough time passed to reset radio state
 should_reset_radio() {
-  [ "$radio_state" -ne 0 ] && [ $(($(date +%s) - radio_toggle_time)) -gt 2 ]
+  [ "$music_state" != "context" ] && [ $(($(date +%s) - radio_toggle_time)) -gt 2 ]
 }
 
 # Update context item (playlist/album/radio display)
@@ -227,11 +227,11 @@ update_context() {
     
     # Reset radio state if enough time passed
     if should_reset_radio; then
-      radio_state=0
+      music_state="context"
       radio_seed=""
       # Radio ended - context restored
     fi
-  elif [ "$radio_state" -ne 0 ]; then
+  elif [ "$music_state" != "context" ]; then
     # No context but in radio mode
     show_radio_mode
   else
@@ -301,7 +301,7 @@ start_radio() {
   if [ -n "$id" ]; then
     # Starting radio mode
     $SPOTIFY playback start radio --id "$id" "$type"
-    radio_state=$next_state
+    music_state=$next_state
     radio_seed="$name"
     radio_toggle_time=$(date +%s)
   fi
@@ -326,26 +326,29 @@ handle_radio_toggle() {
   local album_name=$(echo "$current_playback" | jq -r '.item.album.name // ""')
   local context_uri=$(echo "$current_playback" | jq -r '.context.uri // ""')
   
-  # Cycle through radio modes: no-radio -> track -> artist -> album -> (playlist) -> no-radio
-  case "$radio_state" in
-    0) # no-radio -> track-radio
-      start_radio "$track_id" "track" "$track_name" 1
+  # Cycle through music modes: context -> track -> artist -> album -> (playlist) -> track
+  case "$music_state" in
+    "context") # normal playback -> track-radio
+      start_radio "$track_id" "track" "$track_name" "track_radio"
       ;;
-    1) # track-radio -> artist-radio
-      start_radio "$artist_id" "artist" "$artist_name" 2
+    "track_radio") # track-radio -> artist-radio
+      start_radio "$artist_id" "artist" "$artist_name" "artist_radio"
       ;;
-    2) # artist-radio -> album-radio
-      start_radio "$album_id" "album" "$album_name" 3
+    "artist_radio") # artist-radio -> album-radio
+      start_radio "$album_id" "album" "$album_name" "album_radio"
       ;;
-    3) # album-radio -> playlist-radio (if in playlist context) or back to track-radio
+    "album_radio") # album-radio -> playlist-radio (if in playlist context) or back to track-radio
       if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
         local playlist_id="${BASH_REMATCH[1]}"
         # Get playlist name
         local playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // "Playlist"')
-        start_radio "$playlist_id" "playlist" "$playlist_name" 4
+        start_radio "$playlist_id" "playlist" "$playlist_name" "playlist_radio"
       else
-        start_radio "$track_id" "track" "$track_name" 1
+        start_radio "$track_id" "track" "$track_name" "track_radio"
       fi
+      ;;
+    "playlist_radio") # playlist-radio -> track-radio
+      start_radio "$track_id" "track" "$track_name" "track_radio"
       ;;
   esac
 }
