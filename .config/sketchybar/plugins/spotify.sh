@@ -48,6 +48,9 @@ update_state_and_ui() {
   local cover_url=$(echo "$playback_json" | jq -r '.item.album.images[1].url // ""')
   local progress_ms=$(echo "$playback_json" | jq -r '.progress_ms // 0')
   local duration_ms=$(echo "$playback_json" | jq -r '.item.duration_ms // 0')
+  local album=$(echo "$playback_json" | jq -r '.item.album.name // ""')
+  local context_type=$(echo "$playback_json" | jq -r '.context.type // ""')
+  local context_uri=$(echo "$playback_json" | jq -r '.context.uri // ""')
   
   # Update main display
   if [ -n "$track" ]; then
@@ -124,6 +127,37 @@ update_state_and_ui() {
         label="$(printf "%d:%02d" $duration_min $duration_sec)" \
         slider.percentage=$percentage
     fi
+  fi
+  
+  # Update context item
+  if sketchybar --query spotify.context &>/dev/null; then
+    case "$context_type" in
+      "album")
+        sketchybar --set spotify.context icon.drawing=off label="$album" drawing=on
+        ;;
+      "artist")
+        sketchybar --set spotify.context icon.drawing=off label="$artist" drawing=on
+        ;;
+      "playlist")
+        # Extract playlist ID from URI and get actual name
+        if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
+          playlist_id="${BASH_REMATCH[1]}"
+          # Get playlist name from API
+          playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
+          if [ -n "$playlist_name" ]; then
+            sketchybar --set spotify.context icon.drawing=off label="$playlist_name" drawing=on
+          else
+            sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
+          fi
+        else
+          sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
+        fi
+        ;;
+      *)
+        # No context - hide the item
+        sketchybar --set spotify.context drawing=off
+        ;;
+    esac
   fi
   
   # Store current state
