@@ -1,0 +1,139 @@
+#!/bin/bash
+
+# Unified Spotify state machine with infinite loop
+# Handles all commands and UI updates in a single process
+
+# Path to spotify_player binary
+SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+
+# Get script directory for accessing config
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$(dirname "$PLUGIN_DIR")"
+
+# Source colors
+source "$CONFIG_DIR/colors.sh"
+
+# Force-repeat state file
+FORCE_REPEAT_FILE="$HOME/.config/sketchybar/.force_repeat"
+
+# Command communication file
+COMMAND_FILE="/tmp/spotify_command"
+
+# State variables (will be updated each tick)
+current_track=""
+current_artist=""
+is_playing=""
+last_update=""
+
+update_state_and_ui() {
+  # Get current playback state
+  local playback_json=$($SPOTIFY get key playback 2>/dev/null)
+  
+  if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
+    # No playback data - show stopped state
+    sketchybar --set spotify.anchor icon=":spotify:" label="Not Playing"
+    sketchybar --set spotify.context drawing=off
+    sketchybar --set spotify.menubar_controls icon="" icon.color="$WHITE"
+    return
+  fi
+  
+  # Parse basic info
+  local track=$(echo "$playback_json" | jq -r '.item.name // ""')
+  local artist=$(echo "$playback_json" | jq -r '.item.artists[0].name // ""')
+  local playing=$(echo "$playback_json" | jq -r '.is_playing')
+  local shuffle_state=$(echo "$playback_json" | jq -r '.shuffle_state')
+  
+  # Update main display
+  if [ -n "$track" ]; then
+    sketchybar --set spotify.anchor icon=":spotify:" label="$track"
+  else
+    sketchybar --set spotify.anchor icon=":spotify:" label="No Track"
+  fi
+  
+  # Update controls based on state
+  local controls=""
+  local controls_color=""
+  
+  # Add shuffle if on
+  if [ "$shuffle_state" = "true" ]; then
+    controls="${controls}􀊝 "  # shuffle.on
+  fi
+  
+  # Check force-repeat state
+  local is_repeat=false
+  if [ -f "$FORCE_REPEAT_FILE" ]; then
+    is_repeat=true
+  fi
+  
+  if [ "$playing" = "true" ] && [ "$is_repeat" = "false" ]; then
+    # Playing without repeat - green SF style without repeat button
+    controls="${controls}􀊆"  # pause.fill
+    controls_color="$SPOTIFY_GREEN"
+  elif [ "$playing" = "true" ] && [ "$is_repeat" = "true" ]; then
+    # Playing with repeat - orange SF style with repeat button
+    controls="${controls}􀊆 􀊞"  # pause.fill + repeat
+    controls_color="$ORANGE"
+  else
+    # Not playing - grey
+    controls="${controls}􀊄"  # play.fill
+    controls_color="$WHITE"
+    if [ "$is_repeat" = "true" ]; then
+      controls="${controls} 􀊞"  # add repeat icon even when paused
+    fi
+  fi
+  
+  sketchybar --set spotify.menubar_controls icon="$controls" icon.color="$controls_color"
+  
+  # Store current state
+  current_track="$track"
+  current_artist="$artist"
+  is_playing="$playing"
+}
+
+handle_command() {
+  local cmd="$1"
+  
+  case "$cmd" in
+    "play-pause")
+      $SPOTIFY playback play-pause
+      ;;
+    "next")
+      $SPOTIFY playback next
+      ;;
+    "previous")
+      $SPOTIFY playback previous
+      ;;
+    "shuffle")
+      $SPOTIFY playback shuffle
+      ;;
+    "repeat")
+      # Toggle force-repeat file
+      if [ -f "$FORCE_REPEAT_FILE" ]; then
+        rm "$FORCE_REPEAT_FILE"
+      else
+        touch "$FORCE_REPEAT_FILE"
+      fi
+      ;;
+    "radio_toggle")
+      # TODO: Implement radio mode cycling
+      echo "Radio toggle not yet implemented"
+      ;;
+  esac
+}
+
+# Main event loop
+while true; do
+  # Handle external commands (if any)
+  if [ -f "$COMMAND_FILE" ]; then
+    command=$(cat "$COMMAND_FILE")
+    rm "$COMMAND_FILE"
+    
+    handle_command "$command"
+  fi
+  
+  # Tick: Update state and UI every iteration
+  update_state_and_ui
+  
+  # Sleep for 0.2 seconds (5 FPS)
+  sleep 0.2
+done
