@@ -1,13 +1,17 @@
 #!/bin/bash
 
+# Get the directory of this script
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$(dirname "$PLUGIN_DIR")"
+
 # Source colors
 source "$CONFIG_DIR/colors.sh"
 
 # Source radio state functions
 source "$CONFIG_DIR/plugins/spotify_radio_state.sh"
 
-# Path to the daemon-enabled spotify_player binary
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Path to the defensive wrapper (prevents hanging processes)
+SPOTIFY="$CONFIG_DIR/plugins/spotify_command.sh"
 COVER_PATH="/tmp/spotify_cover.jpg"
 MAX_LABEL_LENGTH=35
 
