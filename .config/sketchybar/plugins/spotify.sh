@@ -307,6 +307,75 @@ start_radio() {
   fi
 }
 
+# Handle adding current track to playlist
+handle_add_to_playlist() {
+  # Get current track URI
+  local current_playback=$($SPOTIFY get key playback 2>/dev/null)
+  
+  if [ -z "$current_playback" ] || [ "$current_playback" = "null" ]; then
+    echo "No track playing"
+    return
+  fi
+  
+  local track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
+  local track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
+  local artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
+  
+  if [ -z "$track_id" ]; then
+    echo "Failed to get track ID"
+    return
+  fi
+  
+  # Construct URI from ID
+  local track_uri="spotify:track:$track_id"
+  
+  echo "Track to add: $track_name by $artist_name (URI: $track_uri)" >&2
+  
+  # Get all user playlists
+  local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
+  
+  if [ -z "$playlists" ] || [ "$playlists" = "null" ]; then
+    echo "Failed to get playlists" >&2
+    return
+  fi
+  
+  # Filter playlists matching dd-mm-yy format and convert to JSON array
+  local matching_playlists=$(echo "$playlists" | jq '[.[] | select(.name | test("^[0-9]{2}-[0-9]{2}-[0-9]{2}$")) | {id: .id, name: .name}]')
+  
+  local playlist_count=$(echo "$matching_playlists" | jq 'length')
+  echo "Found $playlist_count playlists matching dd-mm-yy format" >&2
+  
+  if [ "$playlist_count" -eq 0 ]; then
+    echo "No playlists matching dd-mm-yy format found" >&2
+    # TODO: Create new playlist
+    return
+  fi
+  
+  echo "All matching playlists:" >&2
+  echo "$matching_playlists" | jq -r '.[] | .name' >&2
+  
+  # Sort playlists by date (newest first)
+  # Convert dd-mm-yy to yy-mm-dd for proper sorting
+  local sorted_playlists=$(echo "$matching_playlists" | jq 'sort_by(.name | split("-") | "\(.[2])-\(.[1])-\(.[0])") | reverse')
+  
+  # Get the newest playlist
+  local newest_playlist=$(echo "$sorted_playlists" | jq '.[0]')
+  local newest_playlist_name=$(echo "$newest_playlist" | jq -r '.name')
+  local newest_playlist_id=$(echo "$newest_playlist" | jq -r '.id')
+  
+  echo "Newest playlist: $newest_playlist_name (ID: $newest_playlist_id)" >&2
+  
+  # Add track to the playlist
+  echo "Adding track to playlist..." >&2
+  local add_result=$($SPOTIFY add uri "$track_uri" playlist "$newest_playlist_id" 2>&1)
+  
+  if [ $? -eq 0 ]; then
+    echo "Successfully added '$track_name' to playlist '$newest_playlist_name'" >&2
+  else
+    echo "Failed to add track to playlist: $add_result" >&2
+  fi
+}
+
 # Handle radio toggle command - cycle through radio modes
 handle_radio_toggle() {
   # Get current playback info for IDs
@@ -371,6 +440,7 @@ handle_command() {
     "radio_toggle") handle_radio_toggle ;;
     "seek-forward") $SPOTIFY playback seek +10000 ;;
     "seek-backward") $SPOTIFY playback seek -10000 ;;
+    "add-to-playlist") handle_add_to_playlist ;;
   esac
 }
 
