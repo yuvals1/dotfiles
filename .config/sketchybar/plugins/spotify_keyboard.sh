@@ -4,7 +4,15 @@
 # Built with: cargo build --release --no-default-features --features daemon,image,notify,rodio-backend
 # The daemon runs in background (spotify_player --daemon) and accepts instant commands
 # No special flags needed for client commands - they auto-connect to the daemon
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+
+# Get the directory of this script
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set source for the wrapper
+export SPOTIFY_SOURCE="keyboard"
+
+# Use the wrapper to prevent hanging processes
+SPOTIFY="$PLUGIN_DIR/spotify_command_wrapper.sh"
 
 # Handle keyboard shortcuts and control button clicks
 case "$1" in

@@ -3,8 +3,14 @@
 # Source radio state functions
 source "$HOME/.config/sketchybar/plugins/spotify_radio_state.sh"
 
-# Path to spotify-player
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Get the directory of this script
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set source for the wrapper
+export SPOTIFY_SOURCE="radio"
+
+# Use the wrapper to prevent hanging processes
+SPOTIFY="$PLUGIN_DIR/spotify_command_wrapper.sh"
 
 # Get current state
 current_state=$(get_radio_state)
@@ -39,8 +45,14 @@ echo "Radio state: $current_state -> $next_state ($(get_radio_label $next_state)
 # Trigger sketchybar update to show new state
 sketchybar --trigger spotify_update
 
-# Path to spotify-player
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Get the directory of this script
+PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set source for the wrapper
+export SPOTIFY_SOURCE="radio"
+
+# Use the wrapper to prevent hanging processes
+SPOTIFY="$PLUGIN_DIR/spotify_command_wrapper.sh"
 
 # Handle state transitions
 if [ "$next_state" -eq 0 ]; then
