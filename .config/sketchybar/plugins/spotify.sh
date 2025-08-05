@@ -188,6 +188,12 @@ handle_command() {
       # TODO: Implement radio mode cycling
       echo "Radio toggle not yet implemented"
       ;;
+    "seek-forward")
+      $SPOTIFY playback seek +10
+      ;;
+    "seek-backward")
+      $SPOTIFY playback seek -10
+      ;;
   esac
 }
 

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Spotify command dispatcher script
+# Sends commands to the unified spotify.sh state machine via file communication
+
+COMMAND_FILE="/tmp/spotify_command"
+
+# Validate command argument
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 {play-pause|next|previous|shuffle|repeat|radio_toggle|seek-forward|seek-backward}"
+    echo ""
+    echo "Commands:"
+    echo "  play-pause     - Toggle play/pause"
+    echo "  next           - Skip to next track"
+    echo "  previous       - Skip to previous track"
+    echo "  shuffle        - Toggle shuffle mode"
+    echo "  repeat         - Toggle force-repeat mode"
+    echo "  radio_toggle   - Cycle radio modes (not yet implemented)"
+    echo "  seek-forward   - Seek forward 10 seconds"
+    echo "  seek-backward  - Seek backward 10 seconds"
+    exit 1
+fi
+
+COMMAND="$1"
+
+# Validate command
+case "$COMMAND" in
+    "play-pause"|"next"|"previous"|"shuffle"|"repeat"|"radio_toggle"|"seek-forward"|"seek-backward")
+        # Valid command
+        ;;
+    *)
+        echo "Error: Invalid command '$COMMAND'"
+        echo "Valid commands: play-pause, next, previous, shuffle, repeat, radio_toggle, seek-forward, seek-backward"
+        exit 1
+        ;;
+esac
+
+# Send command to state machine
+echo "$COMMAND" > "$COMMAND_FILE"
+
+# Optional: Show confirmation
+echo "Sent command: $COMMAND"
