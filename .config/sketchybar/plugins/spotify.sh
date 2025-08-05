@@ -22,11 +22,14 @@ COMMAND_FILE="/tmp/spotify_command"
 # State variables (will be updated each tick)
 current_track=""
 current_artist=""
+current_album=""
 is_playing=""
 last_update=""
 is_force_repeat=false
 last_progress_ms=0
 last_duration_ms=0
+radio_state=0  # 0=no-radio, 1=track-radio, 2=artist-radio, 3=album-radio
+radio_seed=""  # Store the seed name for radio
 
 update_state_and_ui() {
   # Get current playback state
@@ -127,33 +130,65 @@ update_state_and_ui() {
   
   # Update context item
   if sketchybar --query spotify.context &>/dev/null; then
-    case "$context_type" in
-      "album")
-        sketchybar --set spotify.context icon.drawing=off label="$album" drawing=on
-        ;;
-      "artist")
-        sketchybar --set spotify.context icon.drawing=off label="$artist" drawing=on
-        ;;
-      "playlist")
-        # Extract playlist ID from URI and get actual name
-        if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
-          playlist_id="${BASH_REMATCH[1]}"
-          # Get playlist name from API
-          playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
-          if [ -n "$playlist_name" ]; then
-            sketchybar --set spotify.context icon.drawing=off label="$playlist_name" drawing=on
+    if [ "$radio_state" -ne 0 ]; then
+      # Radio mode: show radio type with icon
+      local radio_icon radio_label
+      case "$radio_state" in
+        1) 
+          radio_icon="􀑪"  # music.note
+          radio_label="Track Radio"
+          ;;
+        2) 
+          radio_icon="􀉩"  # person
+          radio_label="Artist Radio"
+          ;;
+        3) 
+          radio_icon="􀑷"  # square.stack
+          radio_label="Album Radio"
+          ;;
+        *) 
+          radio_icon="􀑱"  # antenna.radiowaves.left.and.right
+          radio_label="Radio"
+          ;;
+      esac
+      
+      if [ -n "$radio_seed" ]; then
+        # Show seed name with "Radio" suffix and icon
+        sketchybar --set spotify.context icon="$radio_icon" icon.drawing=on label="${radio_seed} Radio" drawing=on
+      else
+        # Show generic radio label with icon
+        sketchybar --set spotify.context icon="$radio_icon" icon.drawing=on label="$radio_label" drawing=on
+      fi
+    else
+      # Normal mode: show context without icon
+      case "$context_type" in
+        "album")
+          sketchybar --set spotify.context icon.drawing=off label="$album" drawing=on
+          ;;
+        "artist")
+          sketchybar --set spotify.context icon.drawing=off label="$artist" drawing=on
+          ;;
+        "playlist")
+          # Extract playlist ID from URI and get actual name
+          if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
+            playlist_id="${BASH_REMATCH[1]}"
+            # Get playlist name from API
+            playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
+            if [ -n "$playlist_name" ]; then
+              sketchybar --set spotify.context icon.drawing=off label="$playlist_name" drawing=on
+            else
+              sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
+            fi
           else
             sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
           fi
-        else
-          sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
-        fi
-        ;;
-      *)
-        # No context - hide the item
-        sketchybar --set spotify.context drawing=off
-        ;;
-    esac
+          ;;
+        *)
+          # No context - hide the item
+          sketchybar --set spotify.context drawing=off
+          ;;
+      esac
+    fi
   fi
   
   # Check for force-repeat when track is ending
@@ -170,6 +205,7 @@ update_state_and_ui() {
   # Store current state
   current_track="$track"
   current_artist="$artist"
+  current_album="$album"
   is_playing="$playing"
   last_progress_ms="$progress_ms"
   last_duration_ms="$duration_ms"
@@ -200,8 +236,39 @@ handle_command() {
       fi
       ;;
     "radio_toggle")
-      # TODO: Implement radio mode cycling
-      echo "Radio toggle not yet implemented"
+      # Cycle through radio modes: no-radio -> track -> artist -> album -> no-radio
+      # Note: This is UI-only since spotify_player doesn't support radio commands
+      case "$radio_state" in
+        0) # no-radio -> track-radio
+          if [ -n "$current_track" ]; then
+            radio_state=1
+            radio_seed="$current_track"
+            echo "$(date): UI showing track radio for: $radio_seed" >> /tmp/spotify_radio.log
+            echo "Note: Use Spotify app to start actual radio - this only updates the display"
+          fi
+          ;;
+        1) # track-radio -> artist-radio
+          if [ -n "$current_artist" ]; then
+            radio_state=2
+            radio_seed="$current_artist"
+            echo "$(date): UI showing artist radio for: $radio_seed" >> /tmp/spotify_radio.log
+            echo "Note: Use Spotify app to start actual radio - this only updates the display"
+          fi
+          ;;
+        2) # artist-radio -> album-radio
+          if [ -n "$current_album" ]; then
+            radio_state=3
+            radio_seed="$current_album"
+            echo "$(date): UI showing album radio for: $radio_seed" >> /tmp/spotify_radio.log
+            echo "Note: Use Spotify app to start actual radio - this only updates the display"
+          fi
+          ;;
+        3) # album-radio -> no-radio
+          radio_state=0
+          radio_seed=""
+          echo "$(date): UI back to normal mode" >> /tmp/spotify_radio.log
+          ;;
+      esac
       ;;
     "seek-forward")
       $SPOTIFY playback seek +10
