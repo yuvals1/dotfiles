@@ -59,6 +59,76 @@ music_state="context"  # context, track_radio, artist_radio, album_radio, playli
 radio_seed=""  # Store the seed name for radio
 radio_toggle_time=0  # Unix timestamp of last radio toggle
 
+# API Utility Functions
+get_playback_info() {
+  $SPOTIFY get key playback 2>/dev/null
+}
+
+get_user_playlists() {
+  $SPOTIFY get key user-playlists 2>/dev/null
+}
+
+get_playlist_by_id() {
+  local playlist_id="$1"
+  get_user_playlists | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""'
+}
+
+# JSON Parsing Utilities
+extract_track_info() {
+  local json="$1"
+  track_id=$(echo "$json" | jq -r '.item.id // ""')
+  track_name=$(echo "$json" | jq -r '.item.name // ""')
+  track_uri=$(echo "$json" | jq -r '.item.uri // ""')
+}
+
+extract_artist_info() {
+  local json="$1"
+  artist_id=$(echo "$json" | jq -r '.item.artists[0].id // ""')
+  artist_name=$(echo "$json" | jq -r '.item.artists[0].name // ""')
+}
+
+extract_album_info() {
+  local json="$1"
+  album_id=$(echo "$json" | jq -r '.item.album.id // ""')
+  album_name=$(echo "$json" | jq -r '.item.album.name // ""')
+}
+
+extract_context_info() {
+  local json="$1"
+  context_uri=$(echo "$json" | jq -r '.context.uri // ""')
+}
+
+extract_playback_details() {
+  local json="$1"
+  extract_track_info "$json"
+  extract_artist_info "$json"
+  extract_album_info "$json"
+  extract_context_info "$json"
+}
+
+# UI Utility Functions
+set_spotify_anchor() {
+  local icon="$1"
+  local label="$2"
+  sketchybar --set spotify.anchor icon="$icon" label="$label"
+}
+
+set_spotify_context() {
+  local drawing="$1"
+  local label="$2"
+  if [ -n "$label" ]; then
+    sketchybar --set spotify.context drawing="$drawing" label="$label"
+  else
+    sketchybar --set spotify.context drawing="$drawing"
+  fi
+}
+
+set_menubar_controls() {
+  local icon="$1"
+  local color="$2"
+  sketchybar --set spotify.menubar_controls icon="$icon" icon.color="$color"
+}
+
 # Check if we're currently in Spotify view
 is_spotify_view() {
   [ -f "$HOME/.config/sketchybar/.center_state" ] && [ "$(cat "$HOME/.config/sketchybar/.center_state")" -eq 0 ]
@@ -66,9 +136,9 @@ is_spotify_view() {
 
 # Show UI when Spotify is not playing anything
 show_stopped_state() {
-  sketchybar --set spotify.anchor icon=":spotify:" label="Not Playing" \
-    --set spotify.context drawing=off \
-    --set spotify.menubar_controls icon="" icon.color="$WHITE"
+  set_spotify_anchor ":spotify:" "Not Playing"
+  set_spotify_context "off"
+  set_menubar_controls "" "$WHITE"
 }
 
 # Parse playback JSON and set global variables
@@ -166,7 +236,7 @@ update_progress_bar() {
 # Get playlist name from ID
 get_playlist_name() {
   local playlist_id="$1"
-  local name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
+  local name=$(get_playlist_by_id "$playlist_id")
   [ -n "$name" ] && echo "$name" || echo "Playlist"
 }
 
@@ -268,7 +338,7 @@ update_state_and_ui() {
   is_spotify_view || return
   
   # Get current playback state
-  local playback_json=$($SPOTIFY get key playback 2>/dev/null)
+  local playback_json=$(get_playback_info)
   
   if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
     show_stopped_state
@@ -310,16 +380,15 @@ start_radio() {
 
 # Get current track info for adding to playlist
 get_current_track_info() {
-  local current_playback=$($SPOTIFY get key playback 2>/dev/null)
+  local current_playback=$(get_playback_info)
   
   if [ -z "$current_playback" ] || [ "$current_playback" = "null" ]; then
     echo "No track playing"
     return 1
   fi
   
-  track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
-  track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
-  artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
+  extract_track_info "$current_playback"
+  extract_artist_info "$current_playback"
   
   if [ -z "$track_id" ]; then
     echo "Failed to get track ID"
@@ -332,7 +401,7 @@ get_current_track_info() {
 
 # Find newest dd-mm-yy playlist
 find_newest_daily_playlist() {
-  local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
+  local playlists=$(get_user_playlists)
   
   if [ -z "$playlists" ] || [ "$playlists" = "null" ]; then
     echo "Failed to get playlists" >&2
@@ -418,26 +487,34 @@ handle_add_to_playlist() {
   add_track_to_playlist "$newest_playlist_id" "$track_id" "$track_name" "$newest_playlist_name"
 }
 
-# Handle radio toggle command - cycle through radio modes
-handle_radio_toggle() {
-  # Get current playback info for IDs
-  local current_playback=$($SPOTIFY get key playback 2>/dev/null)
+# Get current playback context for radio toggle
+get_radio_context() {
+  local current_playback=$(get_playback_info)
   
   if [ -z "$current_playback" ] || [ "$current_playback" = "null" ]; then
     echo "No track playing - cannot start radio"
-    return
+    return 1
   fi
   
-  # Extract IDs we'll need
-  local track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
-  local track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
-  local artist_id=$(echo "$current_playback" | jq -r '.item.artists[0].id // ""')
-  local artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
-  local album_id=$(echo "$current_playback" | jq -r '.item.album.id // ""')
-  local album_name=$(echo "$current_playback" | jq -r '.item.album.name // ""')
-  local context_uri=$(echo "$current_playback" | jq -r '.context.uri // ""')
-  
-  # Cycle through music modes: context -> track -> artist -> album -> (playlist) -> track
+  # Extract all needed info
+  extract_playback_details "$current_playback"
+  return 0
+}
+
+# Handle album radio transition (may go to playlist radio)
+handle_album_radio_transition() {
+  if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
+    local playlist_id="${BASH_REMATCH[1]}"
+    local playlist_name=$(get_playlist_by_id "$playlist_id")
+    [ -z "$playlist_name" ] && playlist_name="Playlist"
+    start_radio "$playlist_id" "playlist" "$playlist_name" "playlist_radio"
+  else
+    start_radio "$track_id" "track" "$track_name" "track_radio"
+  fi
+}
+
+# Cycle to next radio state
+cycle_radio_state() {
   case "$music_state" in
     "context") # normal playback -> track-radio
       start_radio "$track_id" "track" "$track_name" "track_radio"
@@ -449,19 +526,23 @@ handle_radio_toggle() {
       start_radio "$album_id" "album" "$album_name" "album_radio"
       ;;
     "album_radio") # album-radio -> playlist-radio (if in playlist context) or back to track-radio
-      if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
-        local playlist_id="${BASH_REMATCH[1]}"
-        # Get playlist name
-        local playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // "Playlist"')
-        start_radio "$playlist_id" "playlist" "$playlist_name" "playlist_radio"
-      else
-        start_radio "$track_id" "track" "$track_name" "track_radio"
-      fi
+      handle_album_radio_transition
       ;;
     "playlist_radio") # playlist-radio -> track-radio
       start_radio "$track_id" "track" "$track_name" "track_radio"
       ;;
   esac
+}
+
+# Handle radio toggle command - cycle through radio modes
+handle_radio_toggle() {
+  local track_id track_name artist_id artist_name album_id album_name context_uri
+  
+  # Get current playback context
+  get_radio_context || return
+  
+  # Cycle to next radio state
+  cycle_radio_state
 }
 
 # Handle next command with auto-play
@@ -484,7 +565,7 @@ handle_go_to_top_tracks() {
   echo "$(date): go-to-top-tracks command received" >> /tmp/spotify.log
   
   # Get all user playlists
-  local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
+  local playlists=$(get_user_playlists)
   if [ -z "$playlists" ]; then
     echo "$(date): Failed to get playlists" >> /tmp/spotify.log
     return
