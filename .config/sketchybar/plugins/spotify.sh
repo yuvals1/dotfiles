@@ -358,7 +358,13 @@ handle_command() {
   
   case "$cmd" in
     "play-pause")   $SPOTIFY playback play-pause ;;
-    "next")         $SPOTIFY playback next ;;
+    "next")         
+      $SPOTIFY playback next
+      # If paused, also start playing
+      if [ "$is_playing" != "true" ]; then
+        $SPOTIFY playback play-pause
+      fi
+      ;;
     "previous")     $SPOTIFY playback previous ;;
     "shuffle")      $SPOTIFY playback shuffle ;;
     "repeat")       is_force_repeat=$([ "$is_force_repeat" = "true" ] && echo false || echo true) ;;
