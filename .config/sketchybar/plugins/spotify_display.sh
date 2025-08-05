@@ -81,31 +81,57 @@ update() {
   radio_state=$(get_radio_state)
   radio_seed=$(get_radio_seed)
   
-  # Check if we recently cycled radio modes (within 30 seconds)
+  # Check if we're starting radio (within 5 seconds)
+  is_starting=false
+  if [ -f "$HOME/.config/sketchybar/.spotify_radio_starting" ]; then
+    is_starting=true
+  fi
+  
+  # Check if we recently cycled radio modes (within 5 seconds)
   recently_cycled=false
   if [ -f "$HOME/.config/sketchybar/.spotify_radio_cycling" ]; then
     cycle_time=$(cat "$HOME/.config/sketchybar/.spotify_radio_cycling")
     current_time=$(date +%s)
     time_diff=$((current_time - cycle_time))
-    if [ "$time_diff" -lt 30 ]; then
+    if [ "$time_diff" -lt 5 ]; then
       recently_cycled=true
+    else
+      # Protection expired, clear the flag
+      rm -f "$HOME/.config/sketchybar/.spotify_radio_cycling"
     fi
   fi
   
-  # Auto-reset radio state if context changed unexpectedly
-  if [ "$radio_state" -ne 0 ] && [ "$recently_cycled" = false ]; then
-    # In radio mode but didn't recently cycle - check if we should reset
+  # Validate radio state
+  if [ "$radio_state" -ne 0 ]; then
+    # We think we're in radio mode - validate this
     if [ -n "$context_type" ] && [ -n "$context_uri" ]; then
-      # We have a specific context - radio mode should have no context
-      echo "$(date): Playing from $context_type while in radio mode - resetting" >> /tmp/spotify_radio_debug.log
-      reset_radio_state
-      radio_state=0
-      radio_seed=""
+      # We have a specific context (playlist/album) - not radio!
+      if [ "$recently_cycled" = false ]; then
+        # Protection expired, reset immediately
+        echo "$(date): Context detected ($context_type) - resetting radio state" >> /tmp/spotify_radio_debug.log
+        reset_radio_state
+        radio_state=0
+        radio_seed=""
+        is_starting=false
+        rm -f "$HOME/.config/sketchybar/.spotify_radio_starting"
+      fi
+    elif [ -z "$context_type" ] && [ "$is_starting" = true ]; then
+      # No context and we're starting - radio might be loading
+      # Check if enough time has passed
+      if [ "$recently_cycled" = false ]; then
+        # Too much time has passed, radio probably failed
+        rm -f "$HOME/.config/sketchybar/.spotify_radio_starting"
+        is_starting=false
+      fi
+    elif [ -z "$context_type" ] && [ "$is_starting" = false ]; then
+      # No context and not starting - we're in radio!
+      # All good, keep the state
+      :
+    elif [ -z "$context_type" ] && [ "$is_starting" = true ] && [ "$recently_cycled" = true ]; then
+      # No context, still within protection window - might be transitioning
+      # Keep showing starting state
+      :
     fi
-  elif [ "$radio_state" -eq 0 ] && [ -z "$context_type" ]; then
-    # Not in radio mode but no context - this is fine, could be single track
-    # Don't do anything
-    :
   fi
   
   # Update context item
@@ -121,7 +147,15 @@ update() {
         *) radio_icon="􀑱" ;;  # antenna.radiowaves.left.and.right - Generic Radio
       esac
       
-      if [ -n "$radio_seed" ]; then
+      if [ "$is_starting" = true ]; then
+        # Show loading state
+        if [ -n "$radio_seed" ]; then
+          sketchybar -m --set spotify.context icon="􀖇" icon.drawing=on label="Starting ${radio_seed} Radio..." drawing=on
+        else
+          radio_label=$(get_radio_label "$radio_state")
+          sketchybar -m --set spotify.context icon="􀖇" icon.drawing=on label="Starting $radio_label..." drawing=on
+        fi
+      elif [ -n "$radio_seed" ]; then
         # Show seed name with "Radio" suffix and icon
         sketchybar -m --set spotify.context icon="$radio_icon" icon.drawing=on label="${radio_seed} Radio" drawing=on
       else

@@ -15,3 +15,5 @@ pomodoro/current-task/*
 .force_repeat
 .spotify_radio_state
 .spotify_radio_cycling
+.spotify_radio_starting
+.spotify_radio_seed

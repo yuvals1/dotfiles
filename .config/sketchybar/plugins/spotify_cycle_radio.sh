@@ -26,9 +26,11 @@ fi
 # Set the new state
 set_radio_state "$next_state"
 
-# Set a flag to indicate we just cycled (expires after 30 seconds)
+# Set a flag to indicate we just cycled (expires after 5 seconds)
 if [ "$next_state" -ne 0 ]; then
     date +%s > "$HOME/.config/sketchybar/.spotify_radio_cycling"
+    # Also set a "starting" flag to show loading state
+    echo "starting" > "$HOME/.config/sketchybar/.spotify_radio_starting"
 fi
 
 # Log for debugging
@@ -44,8 +46,9 @@ SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
 if [ "$next_state" -eq 0 ]; then
     # Returning to normal playback - no action needed
     echo "Returned to normal playback"
-    # Clear the cycling flag
+    # Clear the cycling and starting flags
     rm -f "$HOME/.config/sketchybar/.spotify_radio_cycling"
+    rm -f "$HOME/.config/sketchybar/.spotify_radio_starting"
 else
     # Get current track info for radio seed
     playback_json=$($SPOTIFY get key playback 2>/dev/null)
