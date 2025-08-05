@@ -11,7 +11,6 @@ FONT="SF Pro"
 # ────────────────────────────────────
 
 spotify_anchor=(
-  script="$PLUGIN_DIR/spotify_display.sh"
   icon.drawing=on
   icon.font="sketchybar-app-font:Regular:16.0"
   icon=":spotify:"
@@ -32,7 +31,6 @@ spotify_anchor=(
 # ────────────────────────────────────
 
 spotify_context=(
-  script="$PLUGIN_DIR/spotify_display.sh"
   icon.drawing=off
   icon.font="$FONT:Regular:16.0"
   icon.color=$WHITE
@@ -52,7 +50,6 @@ spotify_context=(
 # ────────────────────────────────────
 
 spotify_artwork=(
-  script="$PLUGIN_DIR/spotify_display.sh"
   label.drawing=off
   icon.drawing=off
   padding_left=2
@@ -72,7 +69,6 @@ spotify_artwork=(
 # ────────────────────────────────────
 
 spotify_menubar_controls=(
-  script="$PLUGIN_DIR/spotify_display.sh"
   click_script="$PLUGIN_DIR/spotify_menubar_click.sh"
   label.drawing=off
   icon.drawing=on
@@ -88,7 +84,6 @@ spotify_menubar_controls=(
 # ────────────────────────────────────
 
 spotify_progress=(
-  script="$PLUGIN_DIR/spotify_display.sh"
   label.drawing=on
   label.font="$FONT:Semibold:13.0"
   label.color=$WHITE
