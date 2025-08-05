@@ -15,6 +15,8 @@ SPOTIFY="$PLUGIN_DIR/spotify_command.sh"
 case "$1" in
   "play-pause")
     $SPOTIFY playback play-pause
+    # Trigger immediate update
+    sleep 0.2 && sketchybar --trigger spotify_update &
     ;;
   "next")
     $SPOTIFY playback next
@@ -27,6 +29,8 @@ case "$1" in
     ;;
   "previous" | "prev")
     $SPOTIFY playback previous
+    # Trigger immediate update
+    sleep 0.2 && sketchybar --trigger spotify_update &
     ;;
   "shuffle")
     $SPOTIFY playback shuffle
@@ -43,6 +47,8 @@ case "$1" in
     case "$NAME" in
       "spotify.play")
         $SPOTIFY playback play-pause
+        # Trigger immediate update
+        sleep 0.2 && sketchybar --trigger spotify_update &
         ;;
       "spotify.next")
         $SPOTIFY playback next
@@ -55,6 +61,8 @@ case "$1" in
         ;;
       "spotify.back")
         $SPOTIFY playback previous
+        # Trigger immediate update
+        sleep 0.2 && sketchybar --trigger spotify_update &
         ;;
       "spotify.shuffle")
         $SPOTIFY playback shuffle
