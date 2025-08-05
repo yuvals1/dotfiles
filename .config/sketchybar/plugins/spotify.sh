@@ -130,8 +130,43 @@ update_state_and_ui() {
   
   # Update context item
   if sketchybar --query spotify.context &>/dev/null; then
-    if [ "$radio_state" -ne 0 ]; then
-      # Radio mode: show radio type with icon
+    if [ "$context_type" != "null" ] && [ -n "$context_type" ]; then
+      # Context exists: show normal context (overrides radio mode)
+      case "$context_type" in
+        "album")
+          sketchybar --set spotify.context icon.drawing=off label="$album" drawing=on
+          ;;
+        "artist")
+          sketchybar --set spotify.context icon.drawing=off label="$artist" drawing=on
+          ;;
+        "playlist")
+          # Extract playlist ID from URI and get actual name
+          if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
+            playlist_id="${BASH_REMATCH[1]}"
+            # Get playlist name from API
+            playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
+            if [ -n "$playlist_name" ]; then
+              sketchybar --set spotify.context icon.drawing=off label="$playlist_name" drawing=on
+            else
+              sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
+            fi
+          else
+            sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
+          fi
+          ;;
+        *)
+          # Unknown context type - hide the item
+          sketchybar --set spotify.context drawing=off
+          ;;
+      esac
+      # Reset radio state since we have context
+      if [ "$radio_state" -ne 0 ]; then
+        radio_state=0
+        radio_seed=""
+        echo "$(date): Radio ended, context restored: $context_type" >> /tmp/spotify_radio.log
+      fi
+    elif [ "$radio_state" -ne 0 ]; then
+      # No context but in radio mode: show radio type with icon
       local radio_icon radio_label
       case "$radio_state" in
         1) 
@@ -164,34 +199,8 @@ update_state_and_ui() {
         sketchybar --set spotify.context icon="$radio_icon" icon.drawing=on label="$radio_label" drawing=on
       fi
     else
-      # Normal mode: show context without icon
-      case "$context_type" in
-        "album")
-          sketchybar --set spotify.context icon.drawing=off label="$album" drawing=on
-          ;;
-        "artist")
-          sketchybar --set spotify.context icon.drawing=off label="$artist" drawing=on
-          ;;
-        "playlist")
-          # Extract playlist ID from URI and get actual name
-          if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
-            playlist_id="${BASH_REMATCH[1]}"
-            # Get playlist name from API
-            playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // ""')
-            if [ -n "$playlist_name" ]; then
-              sketchybar --set spotify.context icon.drawing=off label="$playlist_name" drawing=on
-            else
-              sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
-            fi
-          else
-            sketchybar --set spotify.context icon.drawing=off label="Playlist" drawing=on
-          fi
-          ;;
-        *)
-          # No context - hide the item
-          sketchybar --set spotify.context drawing=off
-          ;;
-      esac
+      # No context and no radio - hide the item
+      sketchybar --set spotify.context drawing=off
     fi
   fi
   
