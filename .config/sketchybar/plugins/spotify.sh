@@ -51,6 +51,7 @@ last_progress_ms=0
 last_duration_ms=0
 radio_state=0  # 0=no-radio, 1=track-radio, 2=artist-radio, 3=album-radio
 radio_seed=""  # Store the seed name for radio
+radio_toggle_time=0  # Unix timestamp of last radio toggle
 
 update_state_and_ui() {
   # Check if we're in Spotify view (state 0) before doing any updates
@@ -193,11 +194,15 @@ update_state_and_ui() {
           sketchybar --set spotify.context drawing=off
           ;;
       esac
-      # Reset radio state since we have context
+      # Reset radio state since we have context (but wait 2 seconds after toggle)
       if [ "$radio_state" -ne 0 ]; then
-        radio_state=0
-        radio_seed=""
-        echo "$(date): Radio ended, context restored: $context_type" >> /tmp/spotify_radio.log
+        local current_time=$(date +%s)
+        local time_since_toggle=$((current_time - radio_toggle_time))
+        if [ "$time_since_toggle" -gt 2 ]; then
+          radio_state=0
+          radio_seed=""
+          echo "$(date): Radio ended, context restored: $context_type" >> /tmp/spotify_radio.log
+        fi
       fi
     elif [ "$radio_state" -ne 0 ]; then
       # No context but in radio mode: show radio type with icon
@@ -308,6 +313,7 @@ handle_command() {
             $SPOTIFY playback start radio --id "$track_id" track
             radio_state=1
             radio_seed="$track_name"
+            radio_toggle_time=$(date +%s)
           fi
           ;;
         1) # track-radio -> artist-radio
@@ -316,6 +322,7 @@ handle_command() {
             $SPOTIFY playback start radio --id "$artist_id" artist
             radio_state=2
             radio_seed="$artist_name"
+            radio_toggle_time=$(date +%s)
           fi
           ;;
         2) # artist-radio -> album-radio
@@ -324,6 +331,7 @@ handle_command() {
             $SPOTIFY playback start radio --id "$album_id" album
             radio_state=3
             radio_seed="$album_name"
+            radio_toggle_time=$(date +%s)
           fi
           ;;
         3) # album-radio -> playlist-radio (if in playlist context) or back to no-radio
@@ -335,6 +343,7 @@ handle_command() {
             $SPOTIFY playback start radio --id "$playlist_id" playlist
             radio_state=4
             radio_seed="$playlist_name"
+            radio_toggle_time=$(date +%s)
           else
             # Skip playlist radio, go back to normal
             radio_state=0
