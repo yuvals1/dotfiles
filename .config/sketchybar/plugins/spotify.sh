@@ -69,24 +69,24 @@ update_state_and_ui() {
   fi
   
   # Check force-repeat state
-  local is_repeat=false
+  local is_force_repeat=false
   if [ -f "$FORCE_REPEAT_FILE" ]; then
-    is_repeat=true
+    is_force_repeat=true
   fi
   
-  if [ "$playing" = "true" ] && [ "$is_repeat" = "false" ]; then
-    # Playing without repeat - green SF style without repeat button
+  if [ "$playing" = "true" ] && [ "$is_force_repeat" = "false" ]; then
+    # Playing without force-repeat - green SF style without repeat button
     controls="${controls}􀊆"  # pause.fill
     controls_color="$SPOTIFY_GREEN"
-  elif [ "$playing" = "true" ] && [ "$is_repeat" = "true" ]; then
-    # Playing with repeat - orange SF style with repeat button
+  elif [ "$playing" = "true" ] && [ "$is_force_repeat" = "true" ]; then
+    # Playing with force-repeat - orange SF style with repeat button
     controls="${controls}􀊆 􀊞"  # pause.fill + repeat
     controls_color="$ORANGE"
   else
     # Not playing - grey
     controls="${controls}􀊄"  # play.fill
     controls_color="$WHITE"
-    if [ "$is_repeat" = "true" ]; then
+    if [ "$is_force_repeat" = "true" ]; then
       controls="${controls} 􀊞"  # add repeat icon even when paused
     fi
   fi
