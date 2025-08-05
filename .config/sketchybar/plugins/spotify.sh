@@ -19,6 +19,27 @@ COVER_PATH="/tmp/spotify_cover.jpg"
 # Command communication file
 COMMAND_FILE="/tmp/spotify_command"
 
+# PID file for daemon management
+PID_FILE="/tmp/spotify_daemon.pid"
+
+# Check if daemon is already running
+if [ -f "$PID_FILE" ]; then
+  old_pid=$(cat "$PID_FILE")
+  if kill -0 "$old_pid" 2>/dev/null; then
+    echo "Spotify daemon already running (PID: $old_pid). Exiting."
+    exit 0
+  else
+    # Stale PID file, remove it
+    rm -f "$PID_FILE"
+  fi
+fi
+
+# Write current PID to file
+echo $$ > "$PID_FILE"
+
+# Clean up PID file on exit
+trap 'rm -f "$PID_FILE"; exit' INT TERM EXIT
+
 # State variables (will be updated each tick)
 current_track=""
 current_artist=""
