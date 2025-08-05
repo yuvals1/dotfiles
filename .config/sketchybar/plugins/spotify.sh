@@ -308,39 +308,38 @@ start_radio() {
   fi
 }
 
-# Handle adding current track to playlist
-handle_add_to_playlist() {
-  # Get current track URI
+# Get current track info for adding to playlist
+get_current_track_info() {
   local current_playback=$($SPOTIFY get key playback 2>/dev/null)
   
   if [ -z "$current_playback" ] || [ "$current_playback" = "null" ]; then
     echo "No track playing"
-    return
+    return 1
   fi
   
-  local track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
-  local track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
-  local artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
+  track_id=$(echo "$current_playback" | jq -r '.item.id // ""')
+  track_name=$(echo "$current_playback" | jq -r '.item.name // ""')
+  artist_name=$(echo "$current_playback" | jq -r '.item.artists[0].name // ""')
   
   if [ -z "$track_id" ]; then
     echo "Failed to get track ID"
-    return
+    return 1
   fi
   
-  # Construct URI from ID
-  local track_uri="spotify:track:$track_id"
-  
-  echo "Track to add: $track_name by $artist_name (URI: $track_uri)" >&2
-  
-  # Get all user playlists
+  echo "Track to add: $track_name by $artist_name (ID: $track_id)" >&2
+  return 0
+}
+
+# Find newest dd-mm-yy playlist
+find_newest_daily_playlist() {
   local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
   
   if [ -z "$playlists" ] || [ "$playlists" = "null" ]; then
     echo "Failed to get playlists" >&2
-    return
+    return 1
   fi
   
-  # Filter playlists matching dd-mm-yy format and convert to JSON array
+  # Filter playlists matching dd-mm-yy format
   local matching_playlists=$(echo "$playlists" | jq '[.[] | select(.name | test("^[0-9]{2}-[0-9]{2}-[0-9]{2}$")) | {id: .id, name: .name}]')
   
   local playlist_count=$(echo "$matching_playlists" | jq 'length')
@@ -348,44 +347,75 @@ handle_add_to_playlist() {
   
   if [ "$playlist_count" -eq 0 ]; then
     echo "No playlists matching dd-mm-yy format found" >&2
-    # TODO: Create new playlist
-    return
+    return 1
   fi
   
   echo "All matching playlists:" >&2
   echo "$matching_playlists" | jq -r '.[] | .name' >&2
   
   # Sort playlists by date (newest first)
-  # Convert dd-mm-yy to yy-mm-dd for proper sorting
   local sorted_playlists=$(echo "$matching_playlists" | jq 'sort_by(.name | split("-") | "\(.[2])-\(.[1])-\(.[0])") | reverse')
   
   # Get the newest playlist
   local newest_playlist=$(echo "$sorted_playlists" | jq '.[0]')
-  local newest_playlist_name=$(echo "$newest_playlist" | jq -r '.name')
-  local newest_playlist_id=$(echo "$newest_playlist" | jq -r '.id')
+  newest_playlist_name=$(echo "$newest_playlist" | jq -r '.name')
+  newest_playlist_id=$(echo "$newest_playlist" | jq -r '.id')
   
   echo "Newest playlist: $newest_playlist_name (ID: $newest_playlist_id)" >&2
+  return 0
+}
+
+# Check if track exists in playlist
+check_track_exists_in_playlist() {
+  local playlist_id="$1"
+  local track_id="$2"
   
-  # Check if track already exists in playlist
   echo "Checking if track already exists in playlist..." >&2
-  local playlist_tracks=$($SPOTIFY get item playlist --id "$newest_playlist_id" 2>/dev/null | jq -r '.tracks[].id' 2>/dev/null)
+  local playlist_tracks=$($SPOTIFY get item playlist --id "$playlist_id" 2>/dev/null | jq -r '.tracks[].id' 2>/dev/null)
   
   if echo "$playlist_tracks" | grep -q "^${track_id}$"; then
-    echo "Track '$track_name' already exists in playlist '$newest_playlist_name'" >&2
-    return
+    return 0  # Track exists
+  else
+    return 1  # Track doesn't exist
   fi
+}
+
+# Add track to playlist
+add_track_to_playlist() {
+  local playlist_id="$1"
+  local track_id="$2"
+  local track_name="$3"
+  local playlist_name="$4"
   
-  # Add track to the playlist using our new spotify_player command
   echo "Adding track to playlist..." >&2
-  
-  local add_result=$($SPOTIFY playlist add-track --playlist "$newest_playlist_id" --track "$track_id" 2>&1)
+  local add_result=$($SPOTIFY playlist add-track --playlist "$playlist_id" --track "$track_id" 2>&1)
   
   if [ $? -eq 0 ]; then
-    echo "Successfully added '$track_name' to playlist '$newest_playlist_name'" >&2
+    echo "Successfully added '$track_name' to playlist '$playlist_name'" >&2
     echo "$add_result" >&2
   else
     echo "Failed to add track to playlist: $add_result" >&2
   fi
+}
+
+# Handle adding current track to playlist
+handle_add_to_playlist() {
+  local track_id track_name artist_name newest_playlist_name newest_playlist_id
+  
+  # Get current track info
+  get_current_track_info || return
+  
+  # Find newest daily playlist
+  find_newest_daily_playlist || return
+  
+  # Check if track already exists
+  if check_track_exists_in_playlist "$newest_playlist_id" "$track_id"; then
+    echo "Track '$track_name' already exists in playlist '$newest_playlist_name'" >&2
+    return
+  fi
+  
+  # Add track to playlist
+  add_track_to_playlist "$newest_playlist_id" "$track_id" "$track_name" "$newest_playlist_name"
 }
 
 # Handle radio toggle command - cycle through radio modes
@@ -434,18 +464,59 @@ handle_radio_toggle() {
   esac
 }
 
+# Handle next command with auto-play
+handle_next() {
+  $SPOTIFY playback next
+  # If paused, also start playing
+  if [ "$is_playing" != "true" ]; then
+    $SPOTIFY playback play-pause
+  fi
+}
+
+# Handle create daily top tracks command
+handle_create_daily_top_tracks() {
+  echo "$(date): create-daily-top-tracks command received" >> /tmp/spotify.log
+  nohup "$PLUGIN_DIR/create_daily_top_tracks.sh" &
+}
+
+# Handle go to top tracks command
+handle_go_to_top_tracks() {
+  echo "$(date): go-to-top-tracks command received" >> /tmp/spotify.log
+  
+  # Get all user playlists
+  local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
+  if [ -z "$playlists" ]; then
+    echo "$(date): Failed to get playlists" >> /tmp/spotify.log
+    return
+  fi
+  
+  # Try today's playlist first
+  local today=$(date +%Y-%m-%d)
+  local today_name="Top Tracks - $today"
+  local playlist_id=$(echo "$playlists" | jq -r --arg name "$today_name" '.[] | select(.name == $name) | .id // empty' 2>/dev/null)
+  
+  # If today's doesn't exist, try yesterday's
+  if [ -z "$playlist_id" ]; then
+    local yesterday=$(date -d "1 day ago" +%Y-%m-%d 2>/dev/null || date -v-1d +%Y-%m-%d 2>/dev/null)
+    local yesterday_name="Top Tracks - $yesterday"
+    playlist_id=$(echo "$playlists" | jq -r --arg name "$yesterday_name" '.[] | select(.name == $name) | .id // empty' 2>/dev/null)
+  fi
+  
+  # Play the playlist if found
+  if [ -n "$playlist_id" ]; then
+    echo "$(date): Playing top tracks playlist: $playlist_id" >> /tmp/spotify.log
+    $SPOTIFY playback start context --id "$playlist_id" playlist
+  else
+    echo "$(date): No top tracks playlist found for today or yesterday" >> /tmp/spotify.log
+  fi
+}
+
 handle_command() {
   local cmd="$1"
   
   case "$cmd" in
     "play-pause")   $SPOTIFY playback play-pause ;;
-    "next")         
-      $SPOTIFY playback next
-      # If paused, also start playing
-      if [ "$is_playing" != "true" ]; then
-        $SPOTIFY playback play-pause
-      fi
-      ;;
+    "next")         handle_next ;;
     "previous")     $SPOTIFY playback previous ;;
     "shuffle")      $SPOTIFY playback shuffle ;;
     "repeat")       is_force_repeat=$([ "$is_force_repeat" = "true" ] && echo false || echo true) ;;
@@ -453,40 +524,8 @@ handle_command() {
     "seek-forward") $SPOTIFY playback seek +10000 ;;
     "seek-backward") $SPOTIFY playback seek -10000 ;;
     "add-to-playlist") handle_add_to_playlist ;;
-    "create-daily-top-tracks")
-      echo "$(date): create-daily-top-tracks command received" >> /tmp/spotify.log
-      nohup "$PLUGIN_DIR/create_daily_top_tracks.sh" &
-      ;;
-    "go-to-top-tracks")
-      echo "$(date): go-to-top-tracks command received" >> /tmp/spotify.log
-      
-      # Get all user playlists
-      local playlists=$($SPOTIFY get key user-playlists 2>/dev/null)
-      if [ -z "$playlists" ]; then
-        echo "$(date): Failed to get playlists" >> /tmp/spotify.log
-        return
-      fi
-      
-      # Try today's playlist first
-      local today=$(date +%Y-%m-%d)
-      local today_name="Top Tracks - $today"
-      local playlist_id=$(echo "$playlists" | jq -r --arg name "$today_name" '.[] | select(.name == $name) | .id // empty' 2>/dev/null)
-      
-      # If today's doesn't exist, try yesterday's
-      if [ -z "$playlist_id" ]; then
-        local yesterday=$(date -d "1 day ago" +%Y-%m-%d 2>/dev/null || date -v-1d +%Y-%m-%d 2>/dev/null)
-        local yesterday_name="Top Tracks - $yesterday"
-        playlist_id=$(echo "$playlists" | jq -r --arg name "$yesterday_name" '.[] | select(.name == $name) | .id // empty' 2>/dev/null)
-      fi
-      
-      # Play the playlist if found
-      if [ -n "$playlist_id" ]; then
-        echo "$(date): Playing top tracks playlist: $playlist_id" >> /tmp/spotify.log
-        $SPOTIFY playback start context --id "$playlist_id" playlist
-      else
-        echo "$(date): No top tracks playlist found for today or yesterday" >> /tmp/spotify.log
-      fi
-      ;;
+    "create-daily-top-tracks") handle_create_daily_top_tracks ;;
+    "go-to-top-tracks") handle_go_to_top_tracks ;;
   esac
 }
 
