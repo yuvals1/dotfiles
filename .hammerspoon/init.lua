@@ -181,32 +181,32 @@ end)
 -- MUSIC PLAYER KEYBINDINGS (works with both Spotify and YouTube Music)
 -- Toggle shuffle (Alt+Y)
 hs.hotkey.bind({ "alt" }, "Y", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh shuffle &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh shuffle &")
 end)
 
 -- Previous track (Alt+U)
 hs.hotkey.bind({ "alt" }, "U", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh prev &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh previous &")
 end)
 
 -- Play/Pause (Alt+I)
 hs.hotkey.bind({ "alt" }, "I", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh play-pause &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh play-pause &")
 end)
 
 -- Next track (Alt+O)
 hs.hotkey.bind({ "alt" }, "O", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh next &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh next &")
 end)
 
 -- Seek backward 10 seconds (Alt+Cmd+U)
 hs.hotkey.bind({ "alt", "cmd" }, "U", function()
-	os.execute("/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player playback seek -- -10000 &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh seek-backward &")
 end)
 
 -- Seek forward 10 seconds (Alt+Cmd+O)
 hs.hotkey.bind({ "alt", "cmd" }, "O", function()
-	os.execute("/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player playback seek 10000 &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh seek-forward &")
 end)
 
 -- Note: Seek commands only work when spotify-player is the active device
@@ -214,7 +214,7 @@ end)
 
 -- Toggle repeat (Alt+P)
 hs.hotkey.bind({ "alt" }, "P", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/music_keyboard_dispatcher.sh repeat &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh repeat &")
 end)
 
 -- Save current track to file (Alt+T)
@@ -230,7 +230,7 @@ end)
 
 -- Cycle through Spotify radio modes (Alt+R)
 hs.hotkey.bind({ "alt" }, "R", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_cycle_radio.sh &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh radio_toggle &")
 end)
 
 
