@@ -46,6 +46,8 @@ update_state_and_ui() {
   local playing=$(echo "$playback_json" | jq -r '.is_playing')
   local shuffle_state=$(echo "$playback_json" | jq -r '.shuffle_state')
   local cover_url=$(echo "$playback_json" | jq -r '.item.album.images[1].url // ""')
+  local progress_ms=$(echo "$playback_json" | jq -r '.progress_ms // 0')
+  local duration_ms=$(echo "$playback_json" | jq -r '.item.duration_ms // 0')
   
   # Update main display
   if [ -n "$track" ]; then
@@ -99,6 +101,28 @@ update_state_and_ui() {
       if sketchybar --query spotify.artwork &>/dev/null; then
         sketchybar --set spotify.artwork background.image="$COVER_PATH"
       fi
+    fi
+  fi
+  
+  # Update progress bar and times
+  if [ "$duration_ms" -gt 0 ]; then
+    # Calculate percentage for slider
+    percentage=$(( progress_ms * 100 / duration_ms ))
+    
+    # Convert milliseconds to minutes:seconds
+    progress_sec=$(( progress_ms / 1000 ))
+    duration_sec=$(( duration_ms / 1000 ))
+    progress_min=$(( progress_sec / 60 ))
+    progress_sec=$(( progress_sec % 60 ))
+    duration_min=$(( duration_sec / 60 ))
+    duration_sec=$(( duration_sec % 60 ))
+    
+    # Update progress item if it exists
+    if sketchybar --query spotify.progress &>/dev/null; then
+      sketchybar --set spotify.progress \
+        icon="$(printf "%d:%02d" $progress_min $progress_sec)" \
+        label="$(printf "%d:%02d" $duration_min $duration_sec)" \
+        slider.percentage=$percentage
     fi
   fi
   
