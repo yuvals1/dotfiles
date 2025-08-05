@@ -6,12 +6,17 @@
 SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
 TIMEOUT=5
 
-# Kill ALL existing spotify_player commands except daemon
-# This is safe because we only care about the latest state/action
-# Note: macOS pkill doesn't support negative lookahead, so we do it differently
+# Kill only spotify_player API commands (not TUI or daemon)
+# Only kill if command contains known subcommands
 for pid in $(pgrep -f "spotify_player"); do
-    if ! ps -p "$pid" -o args= | grep -q "daemon"; then
-        kill -9 "$pid" 2>/dev/null
+    args=$(ps -p "$pid" -o args= 2>/dev/null)
+    
+    # Only kill if it's an API command (contains "get", "playback", "play", "search", etc.)
+    if [[ "$args" =~ spotify_player.*(get|playback|play|search|like|playlist|device) ]]; then
+        # Don't kill daemon
+        if [[ ! "$args" =~ --daemon ]]; then
+            kill -9 "$pid" 2>/dev/null
+        fi
     fi
 done
 
