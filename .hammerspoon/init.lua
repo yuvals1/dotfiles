@@ -217,9 +217,9 @@ hs.hotkey.bind({ "alt" }, "P", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh repeat &")
 end)
 
--- Save current track to file (Alt+T)
+-- Add current track to playlist (Alt+T)
 hs.hotkey.bind({ "alt" }, "T", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_save_track.sh &")
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh add-to-playlist &")
 end)
 
 -- Toggle between music and pomodoro view (Alt+E)

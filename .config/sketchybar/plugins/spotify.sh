@@ -366,6 +366,15 @@ handle_add_to_playlist() {
   
   echo "Newest playlist: $newest_playlist_name (ID: $newest_playlist_id)" >&2
   
+  # Check if track already exists in playlist
+  echo "Checking if track already exists in playlist..." >&2
+  local playlist_tracks=$($SPOTIFY get item playlist --id "$newest_playlist_id" 2>/dev/null | jq -r '.tracks[].id' 2>/dev/null)
+  
+  if echo "$playlist_tracks" | grep -q "^${track_id}$"; then
+    echo "Track '$track_name' already exists in playlist '$newest_playlist_name'" >&2
+    return
+  fi
+  
   # Add track to the playlist using our new spotify_player command
   echo "Adding track to playlist..." >&2
   
