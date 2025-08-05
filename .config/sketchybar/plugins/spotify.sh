@@ -337,23 +337,15 @@ handle_radio_toggle() {
     2) # artist-radio -> album-radio
       start_radio "$album_id" "album" "$album_name" 3
       ;;
-    3) # album-radio -> playlist-radio (if in playlist context) or back to no-radio
+    3) # album-radio -> playlist-radio (if in playlist context) or back to track-radio
       if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
         local playlist_id="${BASH_REMATCH[1]}"
         # Get playlist name
         local playlist_name=$($SPOTIFY get key user-playlists 2>/dev/null | jq -r --arg id "$playlist_id" '.[] | select(.id == $id) | .name // "Playlist"')
         start_radio "$playlist_id" "playlist" "$playlist_name" 4
       else
-        # Skip playlist radio, go back to normal
-        radio_state=0
-        radio_seed=""
-        # Back to normal playback
+        start_radio "$track_id" "track" "$track_name" 1
       fi
-      ;;
-    4) # playlist-radio -> no-radio
-      radio_state=0
-      radio_seed=""
-      # Back to normal playback
       ;;
   esac
 }
