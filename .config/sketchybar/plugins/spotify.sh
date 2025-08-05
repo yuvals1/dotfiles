@@ -13,13 +13,19 @@ CONFIG_DIR="$(dirname "$PLUGIN_DIR")"
 # Source colors
 source "$CONFIG_DIR/colors.sh"
 
-# Cover art file
+# Icon definitions
+ICON_PLAY="􀊄"            # play.fill
+ICON_PAUSE="􀊆"           # pause.fill
+ICON_SHUFFLE="􀊝"         # shuffle.on
+ICON_REPEAT="􀊞"          # repeat
+ICON_TRACK_RADIO="􀑪"     # music.note
+ICON_ARTIST_RADIO="􀑫"    # mic.fill  
+ICON_ALBUM_RADIO="􁐱"     # record.circle
+ICON_PLAYLIST_RADIO="􀑬"  # list.bullet
+
+# File paths
 COVER_PATH="/tmp/spotify_cover.jpg"
-
-# Command communication file
 COMMAND_FILE="/tmp/spotify_command"
-
-# PID file for daemon management
 PID_FILE="/tmp/spotify_daemon.pid"
 
 # Check if daemon is already running
@@ -55,19 +61,14 @@ radio_toggle_time=0  # Unix timestamp of last radio toggle
 
 # Check if we're currently in Spotify view
 is_spotify_view() {
-  local center_state_file="$HOME/.config/sketchybar/.center_state"
-  local current_center_state=0
-  if [ -f "$center_state_file" ]; then
-    current_center_state=$(cat "$center_state_file")
-  fi
-  [ "$current_center_state" -eq 0 ]
+  [ -f "$HOME/.config/sketchybar/.center_state" ] && [ "$(cat "$HOME/.config/sketchybar/.center_state")" -eq 0 ]
 }
 
 # Show UI when Spotify is not playing anything
 show_stopped_state() {
-  sketchybar --set spotify.anchor icon=":spotify:" label="Not Playing"
-  sketchybar --set spotify.context drawing=off
-  sketchybar --set spotify.menubar_controls icon="" icon.color="$WHITE"
+  sketchybar --set spotify.anchor icon=":spotify:" label="Not Playing" \
+    --set spotify.context drawing=off \
+    --set spotify.menubar_controls icon="" icon.color="$WHITE"
 }
 
 # Parse playback JSON and set global variables
@@ -89,39 +90,31 @@ parse_playback_json() {
 
 # Update anchor item (track name display)
 update_anchor() {
-  if [ -n "$track" ]; then
-    sketchybar --set spotify.anchor icon=":spotify:" label="$track"
-  else
-    sketchybar --set spotify.anchor icon=":spotify:" label="No Track"
-  fi
+  local label="${track:-No Track}"
+  sketchybar --set spotify.anchor icon=":spotify:" label="$label"
 }
 
 # Update menu bar controls (play/pause button and color)
 update_menubar_controls() {
   local controls=""
-  local controls_color=""
   
   # Add shuffle if on
-  if [ "$shuffle_state" = "true" ]; then
-    controls="${controls}􀊝 "  # shuffle.on
+  [ "$shuffle_state" = "true" ] && controls="${ICON_SHUFFLE} "
+  
+  # Add play/pause icon
+  if [ "$playing" = "true" ]; then
+    controls="${controls}${ICON_PAUSE}"
+  else
+    controls="${controls}${ICON_PLAY}"
   fi
   
-  if [ "$playing" = "true" ] && [ "$is_force_repeat" = "false" ]; then
-    # Playing without force-repeat - green SF style without repeat button
-    controls="${controls}􀊆"  # pause.fill
-    controls_color="$SPOTIFY_GREEN"
-  elif [ "$playing" = "true" ] && [ "$is_force_repeat" = "true" ]; then
-    # Playing with force-repeat - orange SF style with repeat button
-    controls="${controls}􀊆 􀊞"  # pause.fill + repeat
-    controls_color="$ORANGE"
-  else
-    # Not playing - grey
-    controls="${controls}􀊄"  # play.fill
-    controls_color="$WHITE"
-    if [ "$is_force_repeat" = "true" ]; then
-      controls="${controls} 􀊞"  # add repeat icon even when paused
-    fi
-  fi
+  # Add repeat icon if force-repeat is on
+  [ "$is_force_repeat" = "true" ] && controls="${controls} ${ICON_REPEAT}"
+  
+  # Set color based on state
+  local controls_color="$WHITE"
+  [ "$playing" = "true" ] && controls_color="$SPOTIFY_GREEN"
+  [ "$is_force_repeat" = "true" ] && controls_color="$ORANGE"
   
   sketchybar --set spotify.menubar_controls icon="$controls" icon.color="$controls_color"
 }
@@ -134,16 +127,18 @@ update_artwork() {
     wait
     
     # Update artwork if download succeeded
-    if [ -f "$COVER_PATH" ]; then
-      if sketchybar --query spotify.artwork &>/dev/null; then
-        sketchybar --set spotify.artwork background.image="$COVER_PATH"
-      fi
+    if [ -f "$COVER_PATH" ] && sketchybar --query spotify.artwork &>/dev/null; then
+      sketchybar --set spotify.artwork background.image="$COVER_PATH"
     fi
   fi
 }
 
 # Update progress bar
 update_progress_bar() {
+  # Validate inputs
+  [ -z "$progress_ms" ] && progress_ms=0
+  [ -z "$duration_ms" ] && duration_ms=0
+  
   # Calculate progress percentage
   local percentage=0
   if [ "$duration_ms" -gt 0 ]; then
@@ -177,24 +172,25 @@ get_playlist_name() {
 
 # Display normal context (album/artist/playlist)
 show_normal_context() {
+  local label=""
+  
   case "$context_type" in
-    "album")
-      sketchybar --set spotify.context icon.drawing=off label="$album" drawing=on
-      ;;
-    "artist")
-      sketchybar --set spotify.context icon.drawing=off label="$artist" drawing=on
-      ;;
-    "playlist")
-      local label="Playlist"
+    "album")    label="$album" ;;
+    "artist")   label="$artist" ;;
+    "playlist") 
       if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
         label=$(get_playlist_name "${BASH_REMATCH[1]}")
+      else
+        label="Playlist"
       fi
-      sketchybar --set spotify.context icon.drawing=off label="$label" drawing=on
-      ;;
-    *)
-      sketchybar --set spotify.context drawing=off
       ;;
   esac
+  
+  if [ -n "$label" ]; then
+    sketchybar --set spotify.context icon.drawing=off label="$label" drawing=on
+  else
+    sketchybar --set spotify.context drawing=off
+  fi
 }
 
 # Display radio mode with icon
@@ -202,10 +198,10 @@ show_radio_mode() {
   local radio_icon radio_label
   
   case "$radio_state" in
-    1) radio_icon="􀑪"; radio_label="Track Radio" ;;
-    2) radio_icon="􀑫"; radio_label="Artist Radio" ;;
-    3) radio_icon="􁐱"; radio_label="Album Radio" ;;
-    4) radio_icon="􀑬"; radio_label="Playlist Radio" ;;
+    1) radio_icon="$ICON_TRACK_RADIO"; radio_label="Track Radio" ;;
+    2) radio_icon="$ICON_ARTIST_RADIO"; radio_label="Artist Radio" ;;
+    3) radio_icon="$ICON_ALBUM_RADIO"; radio_label="Album Radio" ;;
+    4) radio_icon="$ICON_PLAYLIST_RADIO"; radio_label="Playlist Radio" ;;
   esac
   
   local label="${radio_seed} Radio"
@@ -233,7 +229,7 @@ update_context() {
     if should_reset_radio; then
       radio_state=0
       radio_seed=""
-      echo "$(date): Radio ended, context restored: $context_type" >> /tmp/spotify_radio.log
+      # Radio ended - context restored
     fi
   elif [ "$radio_state" -ne 0 ]; then
     # No context but in radio mode
@@ -251,7 +247,6 @@ check_force_repeat() {
     local remaining_ms=$((duration_ms - progress_ms))
     if [ "$remaining_ms" -le 2000 ] && [ "$remaining_ms" -gt 0 ]; then
       # Track is ending and force-repeat is on - restart the track
-      echo "$(date): Force-repeat active, restarting track (${remaining_ms}ms remaining)" >> /tmp/spotify_force_repeat.log
       $SPOTIFY playback previous
     fi
   fi
@@ -269,9 +264,7 @@ store_current_state() {
 
 update_state_and_ui() {
   # Only update Spotify items if we're in Spotify view (state 0)
-  if ! is_spotify_view; then
-    return
-  fi
+  is_spotify_view || return
   
   # Get current playback state
   local playback_json=$($SPOTIFY get key playback 2>/dev/null)
@@ -284,19 +277,11 @@ update_state_and_ui() {
   # Parse playback data into global variables
   parse_playback_json "$playback_json"
   
-  # Update main display
+  # Update all UI components
   update_anchor
-  
-  # Update controls
   update_menubar_controls
-  
-  # Update artwork
   update_artwork
-  
-  # Update progress bar
   update_progress_bar
-  
-  # Update context item
   update_context
   
   # Check for force-repeat when track is ending
@@ -314,7 +299,7 @@ start_radio() {
   local next_state="$4"
   
   if [ -n "$id" ]; then
-    echo "$(date): Starting ${type^} Radio for: $name" >> /tmp/spotify_radio.log
+    # Starting radio mode
     $SPOTIFY playback start radio --id "$id" "$type"
     radio_state=$next_state
     radio_seed="$name"
@@ -362,13 +347,13 @@ handle_radio_toggle() {
         # Skip playlist radio, go back to normal
         radio_state=0
         radio_seed=""
-        echo "$(date): Back to normal playback" >> /tmp/spotify_radio.log
+        # Back to normal playback
       fi
       ;;
     4) # playlist-radio -> no-radio
       radio_state=0
       radio_seed=""
-      echo "$(date): Back to normal playback" >> /tmp/spotify_radio.log
+      # Back to normal playback
       ;;
   esac
 }
@@ -377,35 +362,14 @@ handle_command() {
   local cmd="$1"
   
   case "$cmd" in
-    "play-pause")
-      $SPOTIFY playback play-pause
-      ;;
-    "next")
-      $SPOTIFY playback next
-      ;;
-    "previous")
-      $SPOTIFY playback previous
-      ;;
-    "shuffle")
-      $SPOTIFY playback shuffle
-      ;;
-    "repeat")
-      # Toggle force-repeat state variable
-      if [ "$is_force_repeat" = "true" ]; then
-        is_force_repeat=false
-      else
-        is_force_repeat=true
-      fi
-      ;;
-    "radio_toggle")
-      handle_radio_toggle
-      ;;
-    "seek-forward")
-      $SPOTIFY playback seek +10000
-      ;;
-    "seek-backward")
-      $SPOTIFY playback seek -10000
-      ;;
+    "play-pause")   $SPOTIFY playback play-pause ;;
+    "next")         $SPOTIFY playback next ;;
+    "previous")     $SPOTIFY playback previous ;;
+    "shuffle")      $SPOTIFY playback shuffle ;;
+    "repeat")       is_force_repeat=$([ "$is_force_repeat" = "true" ] && echo false || echo true) ;;
+    "radio_toggle") handle_radio_toggle ;;
+    "seek-forward") $SPOTIFY playback seek +10000 ;;
+    "seek-backward") $SPOTIFY playback seek -10000 ;;
   esac
 }
 
@@ -413,10 +377,8 @@ handle_command() {
 while true; do
   # Handle external commands (if any)
   if [ -f "$COMMAND_FILE" ]; then
-    command=$(cat "$COMMAND_FILE")
-    rm "$COMMAND_FILE"
-    
-    handle_command "$command"
+    handle_command "$(cat "$COMMAND_FILE")"
+    rm -f "$COMMAND_FILE"
   fi
   
   # Tick: Update state and UI every iteration
