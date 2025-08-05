@@ -25,6 +25,8 @@ current_artist=""
 is_playing=""
 last_update=""
 is_force_repeat=false
+last_progress_ms=0
+last_duration_ms=0
 
 update_state_and_ui() {
   # Get current playback state
@@ -154,10 +156,23 @@ update_state_and_ui() {
     esac
   fi
   
+  # Check for force-repeat when track is ending
+  if [ "$is_force_repeat" = "true" ] && [ "$playing" = "true" ] && [ "$duration_ms" -gt 0 ]; then
+    # Check if track is near the end (within last 2 seconds)
+    local remaining_ms=$((duration_ms - progress_ms))
+    if [ "$remaining_ms" -le 2000 ] && [ "$remaining_ms" -gt 0 ]; then
+      # Track is ending and force-repeat is on - restart the track
+      echo "$(date): Force-repeat active, restarting track (${remaining_ms}ms remaining)" >> /tmp/spotify_force_repeat.log
+      $SPOTIFY playback previous
+    fi
+  fi
+  
   # Store current state
   current_track="$track"
   current_artist="$artist"
   is_playing="$playing"
+  last_progress_ms="$progress_ms"
+  last_duration_ms="$duration_ms"
 }
 
 handle_command() {
