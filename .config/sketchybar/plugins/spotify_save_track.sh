@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Path to spotify-player
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Path to spotify command wrapper
+SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
+export SPOTIFY_SOURCE="save_track"
 
 # Directory to save song info
 SAVE_DIR="$HOME/spotify/songs/current"
@@ -10,7 +11,7 @@ SAVE_DIR="$HOME/spotify/songs/current"
 mkdir -p "$SAVE_DIR"
 
 # Get current playback info
-playback_json=$($SPOTIFY get key playback 2>/dev/null)
+playback_json=$($SPOTIFY_CMD get key playback 2>/dev/null)
 
 if [ -z "$playback_json" ] || [ "$playback_json" = "null" ]; then
     echo "No track currently playing"

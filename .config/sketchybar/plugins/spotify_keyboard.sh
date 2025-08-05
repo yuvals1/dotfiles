@@ -12,7 +12,7 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SPOTIFY_SOURCE="keyboard"
 
 # Use the wrapper to prevent hanging processes
-SPOTIFY="$PLUGIN_DIR/spotify_command_wrapper.sh"
+SPOTIFY="$PLUGIN_DIR/spotify_command.sh"
 
 # Handle keyboard shortcuts and control button clicks
 case "$1" in

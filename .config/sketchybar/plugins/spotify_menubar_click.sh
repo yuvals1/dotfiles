@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Path to spotify_player
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Path to spotify command wrapper
+SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
+export SPOTIFY_SOURCE="menubar_click"
 
 # Get the current control icons to determine positions
 CONTROLS=$(sketchybar --query spotify.menubar_controls | jq -r '.icon.value')
@@ -12,10 +13,10 @@ if [[ "$CONTROLS" == *"􀊝"* ]] && [[ "$CONTROLS" == *"􀊞"* ]]; then
     # Shuffle + Play/Pause + Repeat (3 controls)
     if [ "$CLICK_X" -lt 20 ]; then
         # Clicked shuffle
-        $SPOTIFY playback shuffle
+        $SPOTIFY_CMD playback shuffle
     elif [ "$CLICK_X" -lt 40 ]; then
         # Clicked play/pause
-        $SPOTIFY playback play-pause
+        $SPOTIFY_CMD playback play-pause
     else
         # Clicked repeat
         /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_toggle_force_repeat.sh
@@ -24,12 +25,12 @@ elif [[ "$CONTROLS" == *"􀊝"* ]]; then
     # Shuffle + Play/Pause (2 controls)
     if [ "$CLICK_X" -lt 20 ]; then
         # Clicked shuffle
-        $SPOTIFY playback shuffle
+        $SPOTIFY_CMD playback shuffle
     else
         # Clicked play/pause
-        $SPOTIFY playback play-pause
+        $SPOTIFY_CMD playback play-pause
     fi
 else
     # Only Play/Pause (1 control) or fallback
-    $SPOTIFY playback play-pause
+    $SPOTIFY_CMD playback play-pause
 fi

@@ -10,7 +10,7 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SPOTIFY_SOURCE="radio"
 
 # Use the wrapper to prevent hanging processes
-SPOTIFY="$PLUGIN_DIR/spotify_command_wrapper.sh"
+SPOTIFY="$PLUGIN_DIR/spotify_command.sh"
 
 # Get current state
 current_state=$(get_radio_state)
@@ -52,7 +52,7 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SPOTIFY_SOURCE="radio"
 
 # Use the wrapper to prevent hanging processes
-SPOTIFY="$PLUGIN_DIR/spotify_command_wrapper.sh"
+SPOTIFY="$PLUGIN_DIR/spotify_command.sh"
 
 # Handle state transitions
 if [ "$next_state" -eq 0 ]; then

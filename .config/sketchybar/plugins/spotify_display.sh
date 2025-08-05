@@ -13,7 +13,7 @@ source "$CONFIG_DIR/plugins/spotify_radio_state.sh"
 # Path to the smart wrapper (prevents hanging processes)
 # Set source for proper isolation
 export SPOTIFY_SOURCE="display"
-SPOTIFY="$CONFIG_DIR/plugins/spotify_command_wrapper.sh"
+SPOTIFY="$CONFIG_DIR/plugins/spotify_command.sh"
 COVER_PATH="/tmp/spotify_cover.jpg"
 MAX_LABEL_LENGTH=35
 

@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Path to spotify-player
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Path to spotify command wrapper
+SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
+export SPOTIFY_SOURCE="play_saved"
 
 # Directory with saved songs
 SAVE_DIR="$HOME/spotify/songs/current"
@@ -14,7 +15,7 @@ fi
 
 # If a filename is provided as argument, play it
 if [ -n "$1" ]; then
-    $SPOTIFY playback start track --name "$1"
+    $SPOTIFY_CMD playback start track --name "$1"
     exit 0
 fi
 

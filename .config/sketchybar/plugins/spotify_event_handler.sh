@@ -3,8 +3,9 @@
 # This script is called by spotify_player whenever a player event occurs
 # Arguments: $1 = event_type, $2 = track_id, $3 = position_ms (for Playing/Paused)
 
-# Path to spotify_player for getting detailed info
-SPOTIFY="/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player"
+# Path to spotify command wrapper
+SPOTIFY_CMD="/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh"
+export SPOTIFY_SOURCE="event_handler"
 
 # Function to trigger sketchybar update
 trigger_update() {
@@ -45,7 +46,7 @@ case "$1" in
       sleep 0.5
       
       # Send previous command to restart the track
-      $SPOTIFY playback previous
+      $SPOTIFY_CMD playback previous
       
       # Log result
       echo "$(date): Previous command sent" >> /tmp/spotify_force_repeat.log
