@@ -16,6 +16,9 @@ source "$CONFIG_DIR/colors.sh"
 # Force-repeat state file
 FORCE_REPEAT_FILE="$HOME/.config/sketchybar/.force_repeat"
 
+# Cover art file
+COVER_PATH="/tmp/spotify_cover.jpg"
+
 # Command communication file
 COMMAND_FILE="/tmp/spotify_command"
 
@@ -42,6 +45,7 @@ update_state_and_ui() {
   local artist=$(echo "$playback_json" | jq -r '.item.artists[0].name // ""')
   local playing=$(echo "$playback_json" | jq -r '.is_playing')
   local shuffle_state=$(echo "$playback_json" | jq -r '.shuffle_state')
+  local cover_url=$(echo "$playback_json" | jq -r '.item.album.images[1].url // ""')
   
   # Update main display
   if [ -n "$track" ]; then
@@ -83,6 +87,20 @@ update_state_and_ui() {
   fi
   
   sketchybar --set spotify.menubar_controls icon="$controls" icon.color="$controls_color"
+  
+  # Download and set album artwork
+  if [ -n "$cover_url" ]; then
+    # Download cover art in background (with timeout)
+    curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" &
+    wait
+    
+    # Update artwork if download succeeded
+    if [ -f "$COVER_PATH" ]; then
+      if sketchybar --query spotify.artwork &>/dev/null; then
+        sketchybar --set spotify.artwork background.image="$COVER_PATH"
+      fi
+    fi
+  fi
   
   # Store current state
   current_track="$track"
