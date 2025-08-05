@@ -36,3 +36,6 @@ matches:
   - trigger: ":di"
     replace: "don't implement yet. let's discuss it first"
     label: "don't implement yet"
+
+  - trigger: ":exp"
+    replace: "explain it to me so i know you understand it"
