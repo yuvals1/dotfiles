@@ -45,6 +45,11 @@ if [ -d "$HOME/.local/bin" ]; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
+# Add dotfiles scripts to PATH
+if [ -d "$HOME/dotfiles/scripts" ]; then
+  export PATH="$HOME/dotfiles/scripts:$PATH"
+fi
+
 # Cargo
 if [ ! -f "$HOME/.cargo/env" ]; then
   echo "Cargo not found. Installing Rust and Cargo..."

@@ -47,9 +47,6 @@ alias mpv='env -u FZF_DEFAULT_OPTS mpv'
 
 alias tl='cd ~/commitments/ && y'
 
-# AirPods connection
-alias airpods='$HOME/dotfiles/scripts/airpods'
-
 
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
