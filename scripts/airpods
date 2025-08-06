@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# AirPods connection script
+
+# Disconnect first
+/usr/local/bin/blueutil --disconnect 38:88:A4:F0:56:19 >/dev/null 2>&1
+sleep 2
+
+# Reconnect
+/usr/local/bin/blueutil --connect 38:88:A4:F0:56:19 >/dev/null 2>&1
+
+# Wait for AirPods to appear as audio device
+for i in {1..10}; do
+    sleep 1
+    if SwitchAudioSource -a -t output | grep -q -i "airpods"; then
+        break
+    fi
+done
+
+# Switch to AirPods
+DEVICE=$(SwitchAudioSource -a -t output | grep -i airpods | head -1)
+if [ -n "$DEVICE" ]; then
+    SwitchAudioSource -s "$DEVICE" >/dev/null 2>&1
+    echo "SUCCESS"
+else
+    echo "FAILED" >&2
+    exit 1
+fi
