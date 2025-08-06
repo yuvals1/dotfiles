@@ -858,11 +858,11 @@ desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
 # run = "plugin task-label clock"
 # desc = "Mark task with clock (⏰)"
 
-# Include filter bomb (show only files containing pattern) 
+# Rotating filter (cycles through ✅ → ❗ → 💤 → ❌ → none)
 [[mgr.prepend_keymap]]
 on = ["<"]
-run = "plugin filter-in -- ❗"
-desc = "Filter with 'important'"
+run = "plugin filter-rotate"
+desc = "Rotate filter (✅ → ❗ → 💤 → ❌ → none)"
 
 # # Exclude filter red (hide files containing pattern)
 # [[mgr.prepend_keymap]]
