@@ -934,15 +934,14 @@ on = "u"
 run = "plugin mactag-toggle toggle"
 desc = "Toggle red tag on selected files"
 
-# Keep jump keybindings with mactag-red for now (will move to mactag-jump later)
 [[mgr.prepend_keymap]]
 on = "J"
-run = "plugin mactag-red jump-next"
+run = "plugin mactag-jump next"
 desc = "Jump to next tagged file"
 
 [[mgr.prepend_keymap]]
 on = "K"
-run = "plugin mactag-red jump-prev"
+run = "plugin mactag-jump prev"
 desc = "Jump to previous tagged file"
 
 # Keep the old keybindings commented for reference
