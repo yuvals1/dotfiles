@@ -57,22 +57,6 @@ local function setup(st, opts)
 		return original
 	end
 
-	-- Keep the linemode for now (can be removed later)
-	Linemode:children_add(function(self)
-		local url = tostring(self._file.url)
-		local spans = {}
-		for _, tag in ipairs(st.tags[url] or {}) do
-			-- Only show red tags
-			if tag == "Red" then
-				if self._file.is_hovered then
-					spans[#spans + 1] = ui.Span(" ●"):bg(st.red_color)
-				else
-					spans[#spans + 1] = ui.Span(" ●"):fg(st.red_color)
-				end
-			end
-		end
-		return ui.Line(spans)
-	end, 500)
 end
 
 local function fetch(_, job)
