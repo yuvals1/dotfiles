@@ -90,96 +90,9 @@ end
 
 
 
--- Get info about current folder and tagged files
-local get_jump_info = ya.sync(function(st)
-	local folder = cx.active.current
-	local tagged_positions = {}
-	
-	-- Check each file in the visible window
-	for i, file in ipairs(folder.window) do
-		local url = tostring(file.url)
-		-- Check against our stored tags
-		if st.tags and st.tags[url] then
-			for _, tag in ipairs(st.tags[url]) do
-				if tag == "Red" then
-					-- Store the position in the window (1-based)
-					table.insert(tagged_positions, i)
-					break
-				end
-			end
-		end
-	end
-	
-	return {
-		positions = tagged_positions,
-		cursor = folder.cursor,
-		offset = folder.offset,
-		window_size = #folder.window
-	}
-end)
-
 local function entry(self, job)
-	-- Add jump-next and jump-prev to valid actions
-	local valid_actions = {"add", "remove", "toggle", "jump-next", "jump-prev"}
-	local is_valid = false
-	for _, action in ipairs(valid_actions) do
-		if job.args[1] == action then
-			is_valid = true
-			break
-		end
-	end
-	assert(is_valid, "Invalid action")
-	
-	-- Handle jump actions separately
-	if job.args[1] == "jump-next" or job.args[1] == "jump-prev" then
-		-- Get folder info and tagged positions
-		-- Sync functions are called without passing self - state is automatic
-		local info = get_jump_info()
-		
-		if #info.positions == 0 then
-			ya.notify {
-				title = "Tag Jump",
-				content = "No tagged files found",
-				timeout = 1,
-			}
-			return
-		end
-		
-		-- Calculate current position in window
-		local current_window_pos = info.cursor - info.offset + 1
-		local target_pos = nil
-		
-		if job.args[1] == "jump-next" then
-			-- Find next tagged position after current
-			for _, pos in ipairs(info.positions) do
-				if pos > current_window_pos then
-					target_pos = pos
-					break
-				end
-			end
-			-- Wrap to first if none found
-			target_pos = target_pos or info.positions[1]
-		else
-			-- Find previous tagged position before current
-			for i = #info.positions, 1, -1 do
-				if info.positions[i] < current_window_pos then
-					target_pos = info.positions[i]
-					break
-				end
-			end
-			-- Wrap to last if none found
-			target_pos = target_pos or info.positions[#info.positions]
-		end
-		
-		-- Calculate jump distance using keyjump's formula
-		-- target_pos is 1-based position in window
-		-- Formula: (target_pos - 1) + offset - cursor
-		local jump_distance = (target_pos - 1) + info.offset - info.cursor
-		
-		ya.manager_emit("arrow", { jump_distance })
-		return
-	end
-	
+	-- Only toggle-related actions
+	assert(job.args[1] == "add" or job.args[1] == "remove" or job.args[1] == "toggle", "Invalid action")
 	ya.emit("escape", { visual = true })
 
 	local action = job.args[1]
