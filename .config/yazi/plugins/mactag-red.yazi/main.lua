@@ -89,11 +89,35 @@ local function fetch(_, job)
 end
 
 local function entry(self, job)
-	assert(job.args[1] == "add" or job.args[1] == "remove", "Invalid action")
+	assert(job.args[1] == "add" or job.args[1] == "remove" or job.args[1] == "toggle", "Invalid action")
 	ya.emit("escape", { visual = true })
 
+	local action = job.args[1]
+	
+	-- For toggle, we need to check if files are already tagged
+	if action == "toggle" then
+		-- Get selected files
+		local urls = selected_or_hovered()
+		if #urls == 0 then
+			return
+		end
+		
+		-- Check if the first file is tagged by running the tag command
+		local first_url = tostring(urls[1])
+		local output = Command("tag"):arg("-l"):arg(first_url):output()
+		local is_tagged = false
+		
+		if output and output.stdout then
+			-- Check if "Red" tag is in the output
+			is_tagged = string.find(output.stdout, "Red") ~= nil
+		end
+		
+		-- If tagged, remove; if not tagged, add
+		action = is_tagged and "remove" or "add"
+	end
+
 	-- Always use "Red" tag without asking
-	local t = { job.args[1] == "remove" and "-r" or "-a", "Red" }
+	local t = { action == "remove" and "-r" or "-a", "Red" }
 	local files = {}
 	for _, url in ipairs(selected_or_hovered()) do
 		t[#t + 1] = tostring(url)

@@ -930,11 +930,17 @@ desc = "Convert PDF to images using Ghostscript"
 
 
 [[mgr.prepend_keymap]]
-on = ["b", "a"]
-run = "plugin mactag-red add"
-desc = "Add red tag to selected files"
+on = "b"
+run = "plugin mactag-red toggle"
+desc = "Toggle red tag on selected files"
 
-[[mgr.prepend_keymap]]
-on = ["b", "r"]
-run = "plugin mactag-red remove"
-desc = "Remove red tag from selected files"
+# Keep the old keybindings commented for reference
+# [[mgr.prepend_keymap]]
+# on = ["b", "r"]
+# run = "plugin mactag-red remove"
+# desc = "Remove red tag from selected files"
+
+# [[mgr.prepend_keymap]]
+# on = ["b", "t"]
+# run = "plugin mactag-red toggle"
+# desc = "Toggle red tag on selected files (test)"
