@@ -930,7 +930,7 @@ desc = "Convert PDF to images using Ghostscript"
 
 
 [[mgr.prepend_keymap]]
-on = "b"
+on = "u"
 run = "plugin mactag-red toggle"
 desc = "Toggle red tag on selected files"
 
