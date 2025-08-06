@@ -113,5 +113,10 @@ use = "lpnh/fr"
 rev = "3d32e55"
 hash = "f7ab219b58675582ef855a9414dbc659"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:mactag"
+rev = "de53d90"
+hash = "72dfb25e9d0c015365827431e28df322"
+
 [flavor]
 deps = []
