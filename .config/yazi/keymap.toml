@@ -944,6 +944,11 @@ on = "K"
 run = "plugin mactag-jump prev"
 desc = "Jump to previous tagged file"
 
+[[mgr.prepend_keymap]]
+on = "U"
+run = "plugin mactag-filter"
+desc = "Filter to show only tagged files"
+
 # Keep the old keybindings commented for reference
 # [[mgr.prepend_keymap]]
 # on = ["b", "r"]
