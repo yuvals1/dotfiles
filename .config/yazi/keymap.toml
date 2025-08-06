@@ -750,10 +750,10 @@ on = "Z"
 run = "plugin fr rg"
 desc = "Search file by content (rg)"
 
-[[mgr.prepend_keymap]]
-on = ["u", "a"]
-run = "plugin fr rga"
-desc = "Search file by content (rga)"
+# [[mgr.prepend_keymap]]
+# on = ["u", "a"]
+# run = "plugin fr rga"
+# desc = "Search file by content (rga)"
 
 # [[mgr.prepend_keymap]]
 # on = ["u", "u"]
@@ -860,7 +860,7 @@ desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
 
 # Include filter bomb (show only files containing pattern) 
 [[mgr.prepend_keymap]]
-on = ["u", "i"]
+on = ["<"]
 run = "plugin filter-in -- ❗"
 desc = "Filter with 'important'"
 
@@ -870,24 +870,24 @@ desc = "Filter with 'important'"
 # run = "plugin filter-out -- 🔴"
 # desc = "Exclude files containing hello"
 
-# include filter 'technion'
-[[mgr.prepend_keymap]]
-on = ["u", "t"]
-run = "plugin filter-in -- technion"
-desc = "Filter with 'technion'"
-
-# include filter 'ose'
-[[mgr.prepend_keymap]]
-on = ["u", "o"]
-run = "plugin filter-in -- ose"
-desc = "Filter with 'ose'"
-
-# include filter 'general'
-[[mgr.prepend_keymap]]
-on = ["u", "g"]
-run = "plugin filter-in -- general"
-desc = "Filter with 'general'"
-
+# # include filter 'technion'
+# [[mgr.prepend_keymap]]
+# on = ["u", "t"]
+# run = "plugin filter-in -- technion"
+# desc = "Filter with 'technion'"
+#
+# # include filter 'ose'
+# [[mgr.prepend_keymap]]
+# on = ["u", "o"]
+# run = "plugin filter-in -- ose"
+# desc = "Filter with 'ose'"
+#
+# # include filter 'general'
+# [[mgr.prepend_keymap]]
+# on = ["u", "g"]
+# run = "plugin filter-in -- general"
+# desc = "Filter with 'general'"
+#
 # PDF to images conversion
 
 [[mgr.prepend_keymap]]
