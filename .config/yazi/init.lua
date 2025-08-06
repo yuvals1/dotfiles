@@ -192,6 +192,9 @@ require("mactag-toggle"):setup {
 	color = "#ee7b70"  -- Red color
 }
 
+-- Tag filter plugin
+require("mactag-filter"):setup()
+
 -- Test icon plugin (kept for reference/debugging)
 -- require("test-icon"):setup()
 
