@@ -28,6 +28,36 @@ local function setup(st, opts)
 	-- Hardcode red color
 	st.red_color = opts and opts.color or "#ee7b70"
 
+	-- Save the original icon function
+	st.original_icon = Entity.icon
+	
+	-- Override the icon function to show dots on the left
+	Entity.icon = function(self)
+		-- Get the original icon
+		local original = st.original_icon(self)
+		
+		-- Get the file URL
+		local url = tostring(self._file.url)
+		
+		-- Check if this file has the Red tag
+		local file_tags = st.tags[url]
+		
+		-- Only add red dot if file is tagged with "Red"
+		if file_tags then
+			for _, tag in ipairs(file_tags) do
+				if tag == "Red" then
+					-- File is tagged - add red dot before icon
+					local red_dot = ui.Span("● "):fg(st.red_color)
+					return ui.Line { red_dot, original }
+				end
+			end
+		end
+		
+		-- File is not tagged - show original icon only
+		return original
+	end
+
+	-- Keep the linemode for now (can be removed later)
 	Linemode:children_add(function(self)
 		local url = tostring(self._file.url)
 		local spans = {}
