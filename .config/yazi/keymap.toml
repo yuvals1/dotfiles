@@ -931,10 +931,10 @@ desc = "Convert PDF to images using Ghostscript"
 
 [[mgr.prepend_keymap]]
 on = ["b", "a"]
-run = "plugin mactag add"
-desc = "Tag selected files"
+run = "plugin mactag-red add"
+desc = "Add red tag to selected files"
 
 [[mgr.prepend_keymap]]
 on = ["b", "r"]
-run = "plugin mactag remove"
-desc = "Untag selected files"
+run = "plugin mactag-red remove"
+desc = "Remove red tag from selected files"
