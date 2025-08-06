@@ -187,8 +187,8 @@ require('session'):setup {
 -- 	},
 -- }
 
--- Simplified red-only tag plugin
-require("mactag-red"):setup {
+-- Tag toggle plugin (was mactag-red)
+require("mactag-toggle"):setup {
 	color = "#ee7b70"  -- Red color
 }
 

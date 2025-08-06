@@ -338,11 +338,11 @@ run = "hexyl"
 
 
 [[plugin.prepend_fetchers]]
-id = "mactag-red"
+id = "mactag-toggle"
 name = "*"
-run = "mactag-red"
+run = "mactag-toggle"
 
 [[plugin.prepend_fetchers]]
-id = "mactag-red"
+id = "mactag-toggle"
 name = "*/"
-run = "mactag-red"
+run = "mactag-toggle"

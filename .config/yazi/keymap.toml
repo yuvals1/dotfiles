@@ -931,9 +931,10 @@ desc = "Convert PDF to images using Ghostscript"
 
 [[mgr.prepend_keymap]]
 on = "u"
-run = "plugin mactag-red toggle"
+run = "plugin mactag-toggle toggle"
 desc = "Toggle red tag on selected files"
 
+# Keep jump keybindings with mactag-red for now (will move to mactag-jump later)
 [[mgr.prepend_keymap]]
 on = "J"
 run = "plugin mactag-red jump-next"
