@@ -84,6 +84,7 @@ brew 'docker-compose'
 brew 'gh'
 brew 'hexyl'
 brew 'ouch'
+brew 'tag'
 # SML/NJ
 cask 'smlnj'
 

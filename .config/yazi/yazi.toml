@@ -335,3 +335,14 @@ run = "git"
 [[plugin.append_previewers]]
 name = "*"
 run = "hexyl"
+
+
+[[plugin.prepend_fetchers]]
+id = "mactag"
+name = "*"
+run = "mactag"
+
+[[plugin.prepend_fetchers]]
+id = "mactag"
+name = "*/"
+run = "mactag"

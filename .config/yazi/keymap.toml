@@ -782,10 +782,10 @@ run = '''
 '''
 desc = "Play Spotify track from saved file"
 
-[[mgr.prepend_keymap]]
-on = "b"
-run = "open --interactive extract"
-desc = "Extract archive"
+# [[mgr.prepend_keymap]]
+# on = "b"
+# run = "open --interactive extract"
+# desc = "Extract archive"
 
 [[mgr.prepend_keymap]]
 on = "D"
@@ -927,3 +927,14 @@ desc = "Convert PDF to images using Ghostscript"
 # on = "H"
 # run = "plugin zoom -1"
 # desc = "Zoom out preview image"
+
+
+[[mgr.prepend_keymap]]
+on = ["b", "a"]
+run = "plugin mactag add"
+desc = "Tag selected files"
+
+[[mgr.prepend_keymap]]
+on = ["b", "r"]
+run = "plugin mactag remove"
+desc = "Untag selected files"
