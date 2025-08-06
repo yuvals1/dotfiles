@@ -192,5 +192,6 @@ require("mactag-red"):setup {
 	color = "#ee7b70"  -- Red color
 }
 
--- Test icon plugin (disabled - functionality moved to mactag-red)
+-- Test icon plugin (kept for reference/debugging)
 -- require("test-icon"):setup()
+
