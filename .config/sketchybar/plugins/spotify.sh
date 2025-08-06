@@ -257,7 +257,11 @@ show_normal_context() {
   esac
   
   if [ -n "$label" ]; then
-    sketchybar --set spotify.context icon.drawing=off label="$label" drawing=on
+    if is_spotify_view; then
+      sketchybar --set spotify.context icon.drawing=off label="$label" drawing=on
+    else
+      sketchybar --set spotify.context icon.drawing=off label="$label" drawing=off
+    fi
   else
     sketchybar --set spotify.context drawing=off
   fi
@@ -277,7 +281,11 @@ show_radio_mode() {
   local label="${radio_seed} Radio"
   [ -z "$radio_seed" ] && label="$radio_label"
   
-  sketchybar --set spotify.context icon="$radio_icon" icon.drawing=on label="$label" drawing=on
+  if is_spotify_view; then
+    sketchybar --set spotify.context icon="$radio_icon" icon.drawing=on label="$label" drawing=on
+  else
+    sketchybar --set spotify.context icon="$radio_icon" icon.drawing=on label="$label" drawing=off
+  fi
 }
 
 # Check if enough time passed to reset radio state
