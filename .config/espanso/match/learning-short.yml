@@ -47,3 +47,7 @@ matches:
   - trigger: ":stepv"
     replace: "if it's complex do it slowly step after step with verifications for each step"
     label: "step by step with verification"
+
+  - trigger: ":conf"
+    replace: "i'm still confused about the exact technicalities"
+    label: "confused about technicalities"
