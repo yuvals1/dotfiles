@@ -22,7 +22,7 @@ matches:
     label: "important - move in very slow and small steps"
 
   - trigger: ":terms"
-    replace: "there are a lot of terms i don't know/understand here. please explain all the suspicious terms."
+    replace: "there are a lot of terms here i don't know/understand. please explain all the suspicious terms."
     label: "explain suspicious terms"
 
   - trigger: ":talkabout"
