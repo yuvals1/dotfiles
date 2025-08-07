@@ -15,7 +15,7 @@ else
 fi
 
 # Calculate next state (cycle through 0, 1, 2)
-NEXT_STATE=$(( (CURRENT_STATE + 1) % 3 ))
+NEXT_STATE=$(( (CURRENT_STATE + 1) % 2 ))
 
 # Save new state
 echo "$NEXT_STATE" > "$STATE_FILE"
@@ -50,13 +50,13 @@ case $NEXT_STATE in
                    --set spotify.context drawing=on
         ;;
     1)
-        # State 1: Show YouTube Music
-        sketchybar --set youtube_music.artwork drawing=on \
-                   --set youtube_music.anchor drawing=on \
-                   --set youtube_music.controls drawing=on \
-                   --set youtube_music.progress drawing=on
-        ;;
-    2)
+    #     # State 1: Show YouTube Music
+    #     sketchybar --set youtube_music.artwork drawing=on \
+    #                --set youtube_music.anchor drawing=on \
+    #                --set youtube_music.controls drawing=on \
+    #                --set youtube_music.progress drawing=on
+    #     ;;
+    # 2)
         # State 2: Show Pomodoro
         sketchybar --set task drawing=on \
                    --set pomodoro_work drawing=on \
