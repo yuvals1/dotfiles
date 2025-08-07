@@ -954,6 +954,17 @@ on = "b"
 run = "plugin mactag-rotate"
 desc = "Rotate tag between Red/Done/None"
 
+# Test unified plugin
+[[mgr.prepend_keymap]]
+on = ["t", "u", "t"]
+run = "plugin mactag-unified toggle"
+desc = "Test unified toggle"
+
+[[mgr.prepend_keymap]]
+on = ["t", "u", "r"]
+run = "plugin mactag-unified rotate"
+desc = "Test unified rotate"
+
 # Keep the old keybindings commented for reference
 # [[mgr.prepend_keymap]]
 # on = ["b", "r"]
