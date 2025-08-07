@@ -42,6 +42,34 @@ local function get_current_state(file_path)
 	end
 end
 
+-- Function to apply tag changes
+local function apply_tag_change(urls, current_state, next_state)
+	local files = {}
+	for _, url in ipairs(urls) do
+		files[#files + 1] = tostring(url)
+	end
+	
+	-- First, remove old tags if needed
+	if STATES[current_state].tag then
+		-- Remove the current tag
+		local remove_cmd = Command("tag"):arg("-r"):arg(STATES[current_state].tag)
+		for _, file in ipairs(files) do
+			remove_cmd = remove_cmd:arg(file)
+		end
+		remove_cmd:status()
+	end
+	
+	-- Then add new tag if needed
+	if STATES[next_state].tag then
+		-- Add the new tag
+		local add_cmd = Command("tag"):arg("-a"):arg(STATES[next_state].tag)
+		for _, file in ipairs(files) do
+			add_cmd = add_cmd:arg(file)
+		end
+		add_cmd:status()
+	end
+end
+
 local function entry(_, job)
 	-- Get selected files
 	local urls = selected_or_hovered()
@@ -59,25 +87,32 @@ local function entry(_, job)
 	local current_state = get_current_state(first_file)
 	local next_state = (current_state % #STATES) + 1
 	
+	-- Apply the tag change
+	apply_tag_change(urls, current_state, next_state)
+	
+	-- Show notification
 	ya.notify {
 		title = "Tag Rotate",
 		content = string.format(
-			"Current: %s → Next: %s (%d file(s))",
+			"Rotated %d file(s): %s → %s",
+			#urls,
 			STATES[current_state].display,
-			STATES[next_state].display,
-			#urls
+			STATES[next_state].display
 		),
 		timeout = 2,
 	}
 	
-	-- Debug: also show raw tag output for the first file
-	local debug_output = Command("tag"):arg("-l"):arg(first_file):output()
-	if debug_output and debug_output.stdout then
-		ya.notify {
-			title = "Debug: Current tags",
-			content = debug_output.stdout == "" and "(no tags)" or debug_output.stdout,
-			timeout = 3,
-		}
+	-- Trigger mactag-toggle's fetch to update the visual state
+	-- We need to create file objects for the fetch
+	local files = {}
+	for _, url in ipairs(urls) do
+		files[#files + 1] = { url = url }
+	end
+	
+	-- Try to call mactag-toggle's fetch if it exists
+	local toggle_module = package.loaded["mactag-toggle"]
+	if toggle_module and toggle_module.fetch then
+		toggle_module.fetch(nil, { files = files })
 	end
 end
 
