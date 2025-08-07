@@ -2,9 +2,11 @@
 
 -- Define the rotation states
 local STATES = {
-	{ tag = nil,    display = "None" },      -- No tag
-	{ tag = "Red",  display = "Red (●)" },   -- Red dot
-	{ tag = "Done", display = "Done (✅)" }, -- Done emoji
+	{ tag = nil,     display = "None" },       -- No tag
+	{ tag = "Red",   display = "Red (●)" },    -- Red dot
+	{ tag = "Done",  display = "Done (✅)" },  -- Done emoji
+	{ tag = "X",     display = "X (❌)" },     -- X emoji
+	{ tag = "Sleep", display = "Sleep (💤)" }, -- Sleep emoji
 }
 
 -- Update mactag-toggle's state and trigger render (similar to mactag-toggle's update function)
@@ -49,7 +51,11 @@ local function get_current_state(file_path)
 	local tags_str = output.stdout
 	
 	-- Check for our specific tags
-	if string.find(tags_str, "Done") then
+	if string.find(tags_str, "Sleep") then
+		return 5  -- State 5 = Sleep
+	elseif string.find(tags_str, "X") then
+		return 4  -- State 4 = X
+	elseif string.find(tags_str, "Done") then
 		return 3  -- State 3 = Done
 	elseif string.find(tags_str, "Red") then
 		return 2  -- State 2 = Red

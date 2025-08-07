@@ -46,7 +46,15 @@ local function setup(st, opts)
 		
 		if file_tags then
 			for _, tag in ipairs(file_tags) do
-				if tag == "Done" then
+				if tag == "Sleep" then
+					-- File is sleeping - add sleep emoji before icon
+					local sleep_emoji = ui.Span("💤 ")
+					return ui.Line { sleep_emoji, original }
+				elseif tag == "X" then
+					-- File is X'd - add X emoji before icon
+					local x_emoji = ui.Span("❌ ")
+					return ui.Line { x_emoji, original }
+				elseif tag == "Done" then
 					-- File is done - add checkmark emoji before icon
 					local done_emoji = ui.Span("✅ ")
 					return ui.Line { done_emoji, original }
