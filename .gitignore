@@ -12,3 +12,4 @@ __pycache__/
 .config/lazysql/config.toml
 
 .claude.json
+.config/btop/btop.conf
