@@ -1,5 +1,4 @@
 --- Rotate between different macOS tag states
---- Step 3: Read current tag state from files
 
 -- Define the rotation states
 local STATES = {
@@ -7,6 +6,23 @@ local STATES = {
 	{ tag = "Red",  display = "Red (●)" },   -- Red dot
 	{ tag = "Done", display = "Done (✅)" }, -- Done emoji
 }
+
+-- Update mactag-toggle's state and trigger render (similar to mactag-toggle's update function)
+local update_toggle_state = ya.sync(function(st, tags)
+	-- Access mactag-toggle's state
+	local toggle_module = package.loaded["mactag-toggle"]
+	if toggle_module then
+		for path, tag in pairs(tags) do
+			toggle_module.tags[path] = #tag > 0 and tag or nil
+		end
+	end
+	-- Trigger render
+	if ui.render then
+		ui.render()
+	else
+		ya.render()
+	end
+end)
 
 -- Helper to get selected or hovered files (same as mactag-toggle)
 local selected_or_hovered = ya.sync(function()
@@ -102,18 +118,17 @@ local function entry(_, job)
 		timeout = 2,
 	}
 	
-	-- Trigger mactag-toggle's fetch to update the visual state
-	-- We need to create file objects for the fetch
-	local files = {}
+	-- Update mactag-toggle's state for immediate visual update
+	local tags_update = {}
 	for _, url in ipairs(urls) do
-		files[#files + 1] = { url = url }
+		local path = tostring(url)
+		if STATES[next_state].tag then
+			tags_update[path] = { STATES[next_state].tag }
+		else
+			tags_update[path] = {}
+		end
 	end
-	
-	-- Try to call mactag-toggle's fetch if it exists
-	local toggle_module = package.loaded["mactag-toggle"]
-	if toggle_module and toggle_module.fetch then
-		toggle_module.fetch(nil, { files = files })
-	end
+	update_toggle_state(tags_update)
 end
 
 return { entry = entry }

@@ -27,11 +27,13 @@ local function setup(st, opts)
 	st.tags = {}
 	-- Hardcode red color
 	st.red_color = opts and opts.color or "#ee7b70"
+	-- Add green color for Done
+	st.green_color = "#50fa7b"  -- A nice green color
 
 	-- Save the original icon function
 	st.original_icon = Entity.icon
 	
-	-- Override the icon function to show dots on the left
+	-- Override the icon function to show dots/emojis on the left
 	Entity.icon = function(self)
 		-- Get the original icon
 		local original = st.original_icon(self)
@@ -39,14 +41,17 @@ local function setup(st, opts)
 		-- Get the file URL
 		local url = tostring(self._file.url)
 		
-		-- Check if this file has the Red tag
+		-- Check if this file has tags
 		local file_tags = st.tags[url]
 		
-		-- Only add red dot if file is tagged with "Red"
 		if file_tags then
 			for _, tag in ipairs(file_tags) do
-				if tag == "Red" then
-					-- File is tagged - add red dot before icon
+				if tag == "Done" then
+					-- File is done - add checkmark emoji before icon
+					local done_emoji = ui.Span("✅ ")
+					return ui.Line { done_emoji, original }
+				elseif tag == "Red" then
+					-- File is tagged with Red - add red dot before icon
 					local red_dot = ui.Span("● "):fg(st.red_color)
 					return ui.Line { red_dot, original }
 				end
