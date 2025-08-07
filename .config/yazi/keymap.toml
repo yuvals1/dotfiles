@@ -949,6 +949,11 @@ on = "U"
 run = "plugin mactag-filter"
 desc = "Filter to show only tagged files"
 
+[[mgr.prepend_keymap]]
+on = "b"
+run = "plugin mactag-rotate"
+desc = "Rotate tag between Red/Done/None"
+
 # Keep the old keybindings commented for reference
 # [[mgr.prepend_keymap]]
 # on = ["b", "r"]
