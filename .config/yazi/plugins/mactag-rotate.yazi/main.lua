@@ -106,18 +106,6 @@ local function entry(_, job)
 	-- Apply the tag change
 	apply_tag_change(urls, current_state, next_state)
 	
-	-- Show notification
-	ya.notify {
-		title = "Tag Rotate",
-		content = string.format(
-			"Rotated %d file(s): %s → %s",
-			#urls,
-			STATES[current_state].display,
-			STATES[next_state].display
-		),
-		timeout = 2,
-	}
-	
 	-- Update mactag-toggle's state for immediate visual update
 	local tags_update = {}
 	for _, url in ipairs(urls) do

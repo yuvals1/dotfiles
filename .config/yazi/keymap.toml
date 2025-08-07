@@ -929,10 +929,10 @@ desc = "Convert PDF to images using Ghostscript"
 # desc = "Zoom out preview image"
 
 
-[[mgr.prepend_keymap]]
-on = "u"
-run = "plugin mactag-toggle toggle"
-desc = "Toggle red tag on selected files"
+# [[mgr.prepend_keymap]]
+# on = "u"
+# run = "plugin mactag-toggle toggle"
+# desc = "Toggle red tag on selected files"
 
 [[mgr.prepend_keymap]]
 on = "J"
@@ -950,7 +950,7 @@ run = "plugin mactag-filter"
 desc = "Filter to show only tagged files"
 
 [[mgr.prepend_keymap]]
-on = "b"
+on = "u"
 run = "plugin mactag-rotate"
 desc = "Rotate tag between Red/Done/None"
 
