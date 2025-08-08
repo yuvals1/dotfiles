@@ -848,10 +848,10 @@ desc = "Move task to waiting"
 # run = "plugin task-label important"
 # desc = "Mark task as important (❗)"
 
-[[mgr.prepend_keymap]]
-on = "M"
-run = "plugin mark-label"
-desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
+# [[mgr.prepend_keymap]]
+# on = "M"
+# run = "plugin mark-label"
+# desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
 
 # [[mgr.prepend_keymap]]
 # on = ["e", "t"]
