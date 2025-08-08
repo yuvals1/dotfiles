@@ -13,7 +13,8 @@ sketchybar --set youtube_music.artwork drawing=off \
            --set youtube_music.progress drawing=off \
            --set task drawing=off \
            --set pomodoro_work drawing=off \
-           --set pomodoro_history drawing=off
+           --set pomodoro_history drawing=off \
+           --set pomodoro_break_history drawing=off
 
 # Hide pomodoro break if it exists
 if sketchybar --query pomodoro_break &>/dev/null; then

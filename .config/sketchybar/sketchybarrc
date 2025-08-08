@@ -55,6 +55,7 @@ source $ITEM_DIR/front_app.sh
 source $ITEM_DIR/task.sh
 source $ITEM_DIR/pomodoro.sh
 source $ITEM_DIR/pomodoro_history.sh
+source $ITEM_DIR/pomodoro_break_history.sh
 source $ITEM_DIR/spotify.sh
 source $ITEM_DIR/youtube_music.sh
 
