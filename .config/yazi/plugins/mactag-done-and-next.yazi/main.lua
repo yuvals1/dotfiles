@@ -35,17 +35,6 @@ local update_visual = ya.sync(function(st, tags)
 end)
 
 -- Function to check if file has Done tag
-local function has_done_tag(file_path)
-	local output = Command("tag"):arg("-l"):arg(file_path):output()
-	
-	if not output or not output.stdout then
-		return false
-	end
-	
-	local tags_str = output.stdout
-	return string.find(tags_str, "Done") ~= nil
-end
-
 -- Function to add Done tag to a file
 local function add_done_tag(file_path)
 	local cmd = Command("tag"):arg("-a"):arg("Done"):arg(file_path)
@@ -100,26 +89,16 @@ return {
         end
 
         local file_path = tostring(hovered_url)
-        local already_done = has_done_tag(file_path)
-
-        if already_done then
+        local success = add_done_tag(file_path)
+        if success then
+            update_visual({ [file_path] = { "Done" } })
+        else
             ya.notify({
                 title = "Done and Next",
-                content = "Already marked as Done ✅",
-                timeout = 1,
+                content = "Failed to add Done tag",
+                timeout = 2,
+                level = "error",
             })
-        else
-            local success = add_done_tag(file_path)
-            if success then
-                update_visual({ [file_path] = { "Done" } })
-            else
-                ya.notify({
-                    title = "Done and Next",
-                    content = "Failed to add Done tag",
-                    timeout = 2,
-                    level = "error",
-                })
-            end
         end
 
         ya.manager_emit("arrow", { 1 })
