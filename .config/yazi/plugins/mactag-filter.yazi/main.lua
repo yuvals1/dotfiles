@@ -1,5 +1,5 @@
 --- Filter to show only files tagged with macOS Red tag
---- Depends on mactag-toggle plugin for tag state
+--- Depends on mactag-unified plugin for tag state
 
 -- Store filter state in plugin state
 local get_filter_state = ya.sync(function(st)
@@ -10,10 +10,10 @@ local set_filter_state = ya.sync(function(st, active)
 	st.filter_active = active
 end)
 
--- Get tagged files from mactag-toggle's state
+-- Get tagged files from unified plugin's state
 local get_tagged_files = ya.sync(function()
-	-- Access mactag-toggle's state
-	local toggle_state = package.loaded["mactag-toggle"]
+    -- Access unified state
+    local toggle_state = package.loaded["mactag-unified"]
 	if not toggle_state or not toggle_state.tags then
 		return {}
 	end
@@ -24,9 +24,9 @@ local get_tagged_files = ya.sync(function()
 	-- Check each file in the current directory
 	for _, file in ipairs(folder.window) do
 		local url = tostring(file.url)
-		-- Check if this file has the Red tag
-		if toggle_state.tags[url] then
-			for _, tag in ipairs(toggle_state.tags[url]) do
+        -- Check if this file has the Red tag
+        if toggle_state.tags[url] then
+            for _, tag in ipairs(toggle_state.tags[url]) do
 				if tag == "Red" then
 					-- Store just the filename
 					table.insert(tagged_names, file.name)

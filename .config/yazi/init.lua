@@ -187,12 +187,10 @@ require('session'):setup {
 -- 	},
 -- }
 
--- Tag toggle plugin (was mactag-red)
-require("mactag-toggle"):setup {
-	color = "#ee7b70"  -- Red color
-}
+-- Unified macOS tag plugin
+require("mactag-unified"):setup()
 
--- Tag filter plugin
+-- Tag filter plugin (works with unified state)
 require("mactag-filter"):setup()
 
 -- Test icon plugin (kept for reference/debugging)

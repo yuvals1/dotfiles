@@ -17,13 +17,13 @@ local get_selected_paths = ya.sync(function()
     return selected_paths
 end)
 
--- Update visual state (similar to mactag-toggle's update function)
+-- Update visual state (similar to unified update function)
 local update_visual = ya.sync(function(st, tags)
-	-- Access mactag-toggle's state to update visual
-	local toggle_module = package.loaded["mactag-toggle"]
-	if toggle_module then
+	-- Access unified state to update visual
+	local unified = package.loaded["mactag-unified"]
+	if unified and unified.tags then
 		for path, tag in pairs(tags) do
-			toggle_module.tags[path] = #tag > 0 and tag or nil
+			unified.tags[path] = #tag > 0 and tag or nil
 		end
 	end
 	-- Trigger render

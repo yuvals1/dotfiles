@@ -1,10 +1,10 @@
 --- Jump between files tagged with macOS Red tag
---- Depends on mactag-toggle plugin for tag state
+--- Depends on mactag-unified plugin for tag state
 
--- Get info about current folder and tagged files from mactag-toggle's state
+-- Get info about current folder and tagged files from unified state
 local get_jump_info = ya.sync(function()
-	-- Access mactag-toggle's state
-	local toggle_state = package.loaded["mactag-toggle"]
+    -- Access unified tag state
+    local toggle_state = package.loaded["mactag-unified"]
 	if not toggle_state or not toggle_state.tags then
 		return { positions = {}, cursor = 0, offset = 0 }
 	end
@@ -15,7 +15,7 @@ local get_jump_info = ya.sync(function()
 	-- Check each file in the visible window
 	for i, file in ipairs(folder.window) do
 		local url = tostring(file.url)
-		-- Check against mactag-toggle's stored tags
+        -- Check against unified stored tags
 		if toggle_state.tags[url] then
 			for _, tag in ipairs(toggle_state.tags[url]) do
 				if tag == "Red" then

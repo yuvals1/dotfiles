@@ -853,11 +853,11 @@ desc = "Move task to waiting"
 # run = "plugin mark-label"
 # desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
 
-# Testing new done-and-next plugin
+# Unified tagging: Done on hovered/selected
 [[mgr.prepend_keymap]]
 on = "m"
-run = "plugin mactag-done-and-next"
-desc = "Mark as done and move to next file"
+run = "plugin mactag-unified done"
+desc = "Tag as Done"
 
 # [[mgr.prepend_keymap]]
 # on = ["e", "t"]
@@ -955,21 +955,28 @@ on = "U"
 run = "plugin mactag-filter"
 desc = "Filter to show only tagged files"
 
+# Unified tagging combos under M
 [[mgr.prepend_keymap]]
-on = "M"
-run = "plugin mactag-rotate"
-desc = "Rotate tag between Red/Done/None"
-
-# Test unified plugin
-[[mgr.prepend_keymap]]
-on = ["t", "u", "t"]
-run = "plugin mactag-unified toggle"
-desc = "Test unified toggle"
+on = ["M", "r"]
+run = "plugin mactag-unified red"
+desc = "Tag as Red"
 
 [[mgr.prepend_keymap]]
-on = ["t", "u", "r"]
-run = "plugin mactag-unified rotate"
-desc = "Test unified rotate"
+on = ["M", "s"]
+run = "plugin mactag-unified sleep"
+desc = "Tag as Sleep"
+
+[[mgr.prepend_keymap]]
+on = ["M", "x"]
+run = "plugin mactag-unified x"
+desc = "Tag as X"
+
+[[mgr.prepend_keymap]]
+on = ["M", "n"]
+run = "plugin mactag-unified none"
+desc = "Clear tag"
+
+# Unified plugin test bindings removed
 
 # Keep the old keybindings commented for reference
 # [[mgr.prepend_keymap]]
