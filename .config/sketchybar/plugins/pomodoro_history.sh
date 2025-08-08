@@ -37,8 +37,5 @@ fi
 # Use printf to ensure consistent decimal formatting
 hours=$(printf "%.1f" $(echo "scale=2; $total_minutes / 60" | bc))
 
-# Get daily goal
-daily_goal=$(get_daily_goal)
-
-# Update display (work-only)
-sketchybar --set pomodoro_history label="🍅 ${hours}/${daily_goal}h"
+# Update display (work-only, no goal)
+sketchybar --set pomodoro_history label="🍅 ${hours}h"
