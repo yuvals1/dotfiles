@@ -26,10 +26,13 @@ stop_timer() {
         kill $(cat "$PID_FILE") 2>/dev/null
         rm -f "$PID_FILE"
     fi
-    # Reset background to normal color
-    sketchybar --set "$ITEM" background.color="0xff003547" \
-                             background.drawing=on \
-                             label.color="0xffffffff"  # White text
+    # Reset history item backgrounds to normal
+    sketchybar --set pomodoro_history background.color="0xff003547" \
+                                     background.drawing=on \
+                                     label.color="0xffffffff" \
+               --set pomodoro_break_history background.color="0xff003547" \
+                                           background.drawing=on \
+                                           label.color="0xffffffff"
     # Show configured times when idle
     update_idle_display
     rm -f "$MODE_FILE" "$PAUSE_FILE"
@@ -75,21 +78,24 @@ rm -f "$POMO_DIR/.completed_pomodoro"
 # Trigger update to hide the completion indicator
 sketchybar --trigger pomodoro_update
 
-# Set bright background color when timer starts
+# Highlight the appropriate history item based on timer mode
 if [ "$MODE" = "work" ]; then
-    # Bright green for work timer
-    TIMER_BG_COLOR="0xff2ecc71"  # Green
-    TEXT_COLOR="0xff000000"  # Black text for green background
+    # Highlight work history with green background
+    sketchybar --set pomodoro_history background.color="0xff2ecc71" \
+                                      background.drawing=on \
+                                      label.color="0xff000000" \
+               --set pomodoro_break_history background.color="0xff003547" \
+                                           background.drawing=on \
+                                           label.color="0xffffffff"
 else
-    # Git diff style red for break timer
-    TIMER_BG_COLOR="0xffcc3333"  # Git diff red
-    TEXT_COLOR="0xffffffff"  # White text for red background
+    # Highlight break history with red background
+    sketchybar --set pomodoro_break_history background.color="0xffcc3333" \
+                                            background.drawing=on \
+                                            label.color="0xffffffff" \
+               --set pomodoro_history background.color="0xff003547" \
+                                     background.drawing=on \
+                                     label.color="0xffffffff"
 fi
-
-# Apply the bright background
-sketchybar --set "$ITEM" background.color="$TIMER_BG_COLOR" \
-                         background.drawing=on \
-                         label.color="$TEXT_COLOR"
 
 # Run timer in background
 (
@@ -158,11 +164,15 @@ sketchybar --set "$ITEM" background.color="$TIMER_BG_COLOR" \
         break_display=$(printf "%02d:00" $break_time)
         work_icon=$(is_debug_mode && echo "🐛" || echo "🍅")
         break_icon=$(is_debug_mode && echo "🧪" || echo "☕️")
-        # Reset background to normal color
-        sketchybar --set "$ITEM" label="$work_icon ${work_display} · $break_icon ${break_display}" \
-                                 background.color="0xff003547" \
-                                 background.drawing=on \
-                                 label.color="0xffffffff"
+        sketchybar --set "$ITEM" label="$work_icon ${work_display} · $break_icon ${break_display}"
+        
+        # Reset history item backgrounds to normal
+        sketchybar --set pomodoro_history background.color="0xff003547" \
+                                         background.drawing=on \
+                                         label.color="0xffffffff" \
+                   --set pomodoro_break_history background.color="0xff003547" \
+                                               background.drawing=on \
+                                               label.color="0xffffffff"
         
         rm -f "$PID_FILE" "$MODE_FILE" "$PAUSE_FILE"
 ) &
