@@ -77,11 +77,11 @@ sketchybar --trigger pomodoro_update
 
 # Set bright background color when timer starts
 if [ "$MODE" = "work" ]; then
-    # Bright blue for work timer
-    TIMER_BG_COLOR="0xff2cf9ed"  # Bright cyan/blue
-else
-    # Bright green for break timer
+    # Bright green for work timer
     TIMER_BG_COLOR="0xff2ecc71"  # Green
+else
+    # Bright red for break timer
+    TIMER_BG_COLOR="0xffff453a"  # Bright red
 fi
 
 # Apply the bright background
