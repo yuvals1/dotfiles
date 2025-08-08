@@ -80,8 +80,8 @@ if [ "$MODE" = "work" ]; then
     # Bright green for work timer
     TIMER_BG_COLOR="0xff2ecc71"  # Green
 else
-    # Bright red for break timer
-    TIMER_BG_COLOR="0xffff453a"  # Bright red
+    # Very bright red/pink closer to white
+    TIMER_BG_COLOR="0xffffcccc"  # Light pink/red
 fi
 
 # Apply the bright background
