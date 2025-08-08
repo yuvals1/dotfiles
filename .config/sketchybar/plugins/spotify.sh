@@ -59,6 +59,12 @@ music_state="context"  # context, track_radio, artist_radio, album_radio, playli
 radio_seed=""  # Store the seed name for radio
 radio_toggle_time=0  # Unix timestamp of last radio toggle
 
+# UI/Fetch optimization state
+last_cover_url=""
+cached_playlist_id=""
+cached_playlist_name=""
+last_context_uri=""
+
 # API Utility Functions
 get_playback_info() {
   $SPOTIFY get key playback 2>/dev/null
@@ -191,15 +197,17 @@ update_menubar_controls() {
 
 # Update album artwork
 update_artwork() {
-  if [ -n "$cover_url" ]; then
-    # Download cover art in background (with timeout)
-    curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" &
-    wait
-    
-    # Update artwork if download succeeded
-    if [ -f "$COVER_PATH" ] && sketchybar --query spotify.artwork &>/dev/null; then
-      sketchybar --set spotify.artwork background.image="$COVER_PATH"
-    fi
+  # Only fetch when the cover URL changes and never block the main loop
+  if [ -n "$cover_url" ] && [ "$cover_url" != "$last_cover_url" ]; then
+    last_cover_url="$cover_url"
+    (
+      curl -s --max-time 2 "$cover_url" -o "$COVER_PATH" && \
+      { \
+        if [ -f "$COVER_PATH" ] && sketchybar --query spotify.artwork &>/dev/null; then \
+          sketchybar --set spotify.artwork background.image="$COVER_PATH"; \
+        fi; \
+      }
+    ) &
   fi
 }
 
@@ -236,8 +244,20 @@ update_progress_bar() {
 # Get playlist name from ID
 get_playlist_name() {
   local playlist_id="$1"
+  # Return cached name if ID hasn't changed
+  if [ "$playlist_id" = "$cached_playlist_id" ] && [ -n "$cached_playlist_name" ]; then
+    echo "$cached_playlist_name"
+    return
+  fi
+
   local name=$(get_playlist_by_id "$playlist_id")
-  [ -n "$name" ] && echo "$name" || echo "Playlist"
+  if [ -n "$name" ]; then
+    cached_playlist_id="$playlist_id"
+    cached_playlist_name="$name"
+    echo "$name"
+  else
+    echo "Playlist"
+  fi
 }
 
 # Display normal context (album/artist/playlist)
@@ -249,7 +269,13 @@ show_normal_context() {
     "artist")   label="$artist" ;;
     "playlist") 
       if [[ "$context_uri" =~ spotify:playlist:(.+) ]]; then
-        label=$(get_playlist_name "${BASH_REMATCH[1]}")
+        local playlist_id="${BASH_REMATCH[1]}"
+        # If cached ID matches, use cached name without resolving
+        if [ "$playlist_id" = "$cached_playlist_id" ] && [ -n "$cached_playlist_name" ]; then
+          label="$cached_playlist_name"
+        else
+          label=$(get_playlist_name "$playlist_id")
+        fi
       else
         label="Playlist"
       fi
@@ -339,6 +365,7 @@ store_current_state() {
   is_playing="$playing"
   last_progress_ms="$progress_ms"
   last_duration_ms="$duration_ms"
+  last_context_uri="$context_uri"
 }
 
 update_state_and_ui() {
@@ -636,6 +663,6 @@ while true; do
   # Tick: Update state and UI every iteration
   update_state_and_ui
   
-  # Sleep for 0.1 seconds (10 FPS)
-  sleep 0.1
+  # Sleep for 0.05 seconds (20 FPS) for snappier updates
+  sleep 0.05
 done
