@@ -79,15 +79,17 @@ sketchybar --trigger pomodoro_update
 if [ "$MODE" = "work" ]; then
     # Bright green for work timer
     TIMER_BG_COLOR="0xff2ecc71"  # Green
+    TEXT_COLOR="0xff000000"  # Black text for green background
 else
-    # Very bright red/pink closer to white
-    TIMER_BG_COLOR="0xffffcccc"  # Light pink/red
+    # Git diff style red for break timer
+    TIMER_BG_COLOR="0xffcc3333"  # Git diff red
+    TEXT_COLOR="0xffffffff"  # White text for red background
 fi
 
 # Apply the bright background
 sketchybar --set "$ITEM" background.color="$TIMER_BG_COLOR" \
                          background.drawing=on \
-                         label.color="0xff000000"  # Black text for contrast
+                         label.color="$TEXT_COLOR"
 
 # Run timer in background
 (
