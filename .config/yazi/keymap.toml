@@ -68,7 +68,7 @@ keymap = [
   # Operation
   { on = "o", run = "open", desc = "Open selected files" },
   { on = "O", run = "open --interactive", desc = "Open selected files interactively" },
-  { on = "F", run = '''shell 'open -R "$0"' --confirm''', desc = "Reveal file in Finder" },
+  { on = "F", run = '''shell --confirm 'osascript -e "tell application \"Finder\"" -e "set fileList to {}" -e "$(for f in "$@"; do echo "set end of fileList to POSIX file \"$f\""; done)" -e "reveal fileList" -e "activate" -e "end tell"' ''', desc = "Reveal file(s) in Finder" },
   { on = "<Enter>", run = "open", desc = "Open selected files" },
   { on = "<S-Enter>", run = "open --interactive", desc = "Open selected files interactively" },
   { on = "y", run = "yank", desc = "Yank selected files (copy)" },
