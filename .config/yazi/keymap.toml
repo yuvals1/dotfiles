@@ -68,6 +68,7 @@ keymap = [
   # Operation
   { on = "o", run = "open", desc = "Open selected files" },
   { on = "O", run = "open --interactive", desc = "Open selected files interactively" },
+  { on = "F", run = '''shell 'open -R "$0"' --confirm''', desc = "Reveal file in Finder" },
   { on = "<Enter>", run = "open", desc = "Open selected files" },
   { on = "<S-Enter>", run = "open --interactive", desc = "Open selected files interactively" },
   { on = "y", run = "yank", desc = "Yank selected files (copy)" },
@@ -735,10 +736,10 @@ desc = "Maximize or restore the preview pane"
 # on = [":", "d"]
 # run = "plugin bunny delete"
 
-[[mgr.prepend_keymap]]
-on = "F"
-run = "plugin smart-filter"
-desc = "Smart filter"
+# [[mgr.prepend_keymap]]
+# on = "F"
+# run = "plugin smart-filter"
+# desc = "Smart filter"
 
 [[mgr.prepend_keymap]]
 on = ["c", "m"]
