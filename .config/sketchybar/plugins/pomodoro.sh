@@ -68,10 +68,10 @@ echo "$MODE" > "$MODE_FILE"
 
 # Highlight the appropriate history item based on timer mode
 if [ "$MODE" = "work" ]; then
-    # Highlight work history with green background
-    sketchybar --set pomodoro_history background.color="0xff2ecc71" \
+    # Highlight work history with light mint background and dark text
+    sketchybar --set pomodoro_history background.color="0xff98ff98" \
                                       background.drawing=on \
-                                      label.color="0xff000000" \
+                                      label.color="0xff003300" \
                --set pomodoro_break_history background.color="0xff003547" \
                                            background.drawing=on \
                                            label.color="0xffffffff"
