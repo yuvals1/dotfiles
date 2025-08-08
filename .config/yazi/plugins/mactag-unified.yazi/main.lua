@@ -116,14 +116,33 @@ local function apply_tag(paths, tag_key)
     local tag_name = tag_key and MANAGED_TAGS[tag_key] or nil
 
     for _, p in ipairs(paths) do
-        -- Remove every managed tag individually for this file
-        for _, tname in pairs(MANAGED_TAGS) do
-            Command("tag"):arg("-r"):arg(tname):arg(p):status()
+        -- Fast no-op: already exactly has desired managed tag and no others
+        local current = M.tags[p]
+        if tag_name and current then
+            local has_target = false
+            local has_other_managed = false
+            for _, t in ipairs(current) do
+                if t == tag_name then has_target = true end
+                if MANAGED_TAGS[string.lower(t)] or t == "Red" or t == "Done" or t == "X" or t == "Sleep" then
+                    if t ~= tag_name then has_other_managed = true end
+                end
+            end
+            if has_target and not has_other_managed then
+                goto continue
+            end
         end
+
+        -- Remove all managed tags for this single file in one command
+        local remove_cmd = Command("tag")
+        for _, tname in pairs(MANAGED_TAGS) do
+            remove_cmd = remove_cmd:arg("-r"):arg(tname)
+        end
+        remove_cmd:arg(p):status()
         -- Add new tag if requested and not "none"
         if tag_name then
             Command("tag"):arg("-a"):arg(tag_name):arg(p):status()
         end
+        ::continue::
     end
 
     -- Update visual state immediately
