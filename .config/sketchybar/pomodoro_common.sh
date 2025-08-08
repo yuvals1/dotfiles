@@ -96,8 +96,8 @@ get_daily_goal() {
 
 # Function to update idle display for pomodoro buttons
 update_idle_display() {
-    # Just show a clock emoji when idle
-    sketchybar --set pomodoro_timer label="⏰"
+    # Just show a timer emoji when idle
+    sketchybar --set pomodoro_timer label="⏲️"
 }
 
 # Function removed - tasks now managed via symlinks

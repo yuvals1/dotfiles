@@ -41,12 +41,12 @@ stop_timer() {
 # Determine which button was clicked
 if [ "$NAME" = "work" ]; then
     ITEM="pomodoro_timer"
-    ICON="⏰"  # Always use clock emoji
+    ICON="⏲️"  # Always use timer emoji
     DURATION=$WORK_MINUTES
     MODE="work"
 else
     ITEM="pomodoro_timer"
-    ICON="⏰"  # Always use clock emoji
+    ICON="⏲️"  # Always use timer emoji
     DURATION=$BREAK_MINUTES
     MODE="break"
 fi
@@ -148,8 +148,8 @@ fi
         # Trigger history update event
         sketchybar --trigger pomodoro_update
         
-        # Reset to show just clock emoji when idle
-        sketchybar --set "$ITEM" label="⏰"
+        # Reset to show just timer emoji when idle
+        sketchybar --set "$ITEM" label="⏲️"
         
         # Reset history item backgrounds to normal
         sketchybar --set pomodoro_history background.color="0xff003547" \
