@@ -26,6 +26,10 @@ stop_timer() {
         kill $(cat "$PID_FILE") 2>/dev/null
         rm -f "$PID_FILE"
     fi
+    # Reset background to normal color
+    sketchybar --set "$ITEM" background.color="0xff003547" \
+                             background.drawing=on \
+                             label.color="0xffffffff"  # White text
     # Show configured times when idle
     update_idle_display
     rm -f "$MODE_FILE" "$PAUSE_FILE"
@@ -70,6 +74,20 @@ echo "$MODE" > "$MODE_FILE"
 rm -f "$POMO_DIR/.completed_pomodoro"
 # Trigger update to hide the completion indicator
 sketchybar --trigger pomodoro_update
+
+# Set bright background color when timer starts
+if [ "$MODE" = "work" ]; then
+    # Bright blue for work timer
+    TIMER_BG_COLOR="0xff2cf9ed"  # Bright cyan/blue
+else
+    # Bright green for break timer
+    TIMER_BG_COLOR="0xff2ecc71"  # Green
+fi
+
+# Apply the bright background
+sketchybar --set "$ITEM" background.color="$TIMER_BG_COLOR" \
+                         background.drawing=on \
+                         label.color="0xff000000"  # Black text for contrast
 
 # Run timer in background
 (
@@ -138,7 +156,11 @@ sketchybar --trigger pomodoro_update
         break_display=$(printf "%02d:00" $break_time)
         work_icon=$(is_debug_mode && echo "🐛" || echo "🍅")
         break_icon=$(is_debug_mode && echo "🧪" || echo "☕️")
-        sketchybar --set "$ITEM" label="$work_icon ${work_display} · $break_icon ${break_display}"
+        # Reset background to normal color
+        sketchybar --set "$ITEM" label="$work_icon ${work_display} · $break_icon ${break_display}" \
+                                 background.color="0xff003547" \
+                                 background.drawing=on \
+                                 label.color="0xffffffff"
         
         rm -f "$PID_FILE" "$MODE_FILE" "$PAUSE_FILE"
 ) &
