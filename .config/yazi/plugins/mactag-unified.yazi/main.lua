@@ -71,9 +71,9 @@ local function fetch(_, job)
         tags[paths[i]] = tags[paths[i]] or {}
         local joint = line:match("\t(.+)$") or ""
         for s in joint:gmatch("[^,]+") do
-            -- trim spaces around tag names
+            -- trim spaces around tag names and keep only managed tags
             local clean = s:gsub("^%s+", ""):gsub("%s+$", "")
-            if #clean > 0 then
+            if #clean > 0 and MANAGED_TAGS[string.lower(clean)] then
                 table.insert(tags[paths[i]], clean)
             end
         end
@@ -132,12 +132,10 @@ local function apply_tag(paths, tag_key)
             end
         end
 
-        -- Remove all managed tags for this single file in one command
-        local remove_cmd = Command("tag")
+        -- Remove all managed tags with reliable per-tag calls
         for _, tname in pairs(MANAGED_TAGS) do
-            remove_cmd = remove_cmd:arg("-r"):arg(tname)
+            Command("tag"):arg("-r"):arg(tname):arg(p):status()
         end
-        remove_cmd:arg(p):status()
         -- Add new tag if requested and not "none"
         if tag_name then
             Command("tag"):arg("-a"):arg(tag_name):arg(p):status()
