@@ -972,7 +972,7 @@ run = "plugin mactag-unified x"
 desc = "Tag as X"
 
 [[mgr.prepend_keymap]]
-on = ["M", "n"]
+on = ["M", "M"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"
 

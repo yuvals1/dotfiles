@@ -45,7 +45,7 @@ local function setup(st, _)
                 elseif tag == "X" then
                     return ui.Line { ui.Span("❌ "), original }
                 elseif tag == "Sleep" then
-                    return ui.Line { ui.Span("💤 "), original }
+                    return ui.Line { ui.Span("⏸️ "), original }
                 end
             end
         end
