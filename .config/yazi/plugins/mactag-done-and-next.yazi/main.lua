@@ -7,6 +7,23 @@ local get_hovered = ya.sync(function()
 	return nil
 end)
 
+-- Update visual state (similar to mactag-toggle's update function)
+local update_visual = ya.sync(function(st, tags)
+	-- Access mactag-toggle's state to update visual
+	local toggle_module = package.loaded["mactag-toggle"]
+	if toggle_module then
+		for path, tag in pairs(tags) do
+			toggle_module.tags[path] = #tag > 0 and tag or nil
+		end
+	end
+	-- Trigger render
+	if ui.render then
+		ui.render()
+	else
+		ya.render()
+	end
+end)
+
 -- Function to check if file has Done tag
 local function has_done_tag(file_path)
 	local output = Command("tag"):arg("-l"):arg(file_path):output()
@@ -58,6 +75,8 @@ return {
 					content = "Marked as Done ✅",
 					timeout = 1,
 				})
+				-- Update visual state immediately
+				update_visual({ [file_path] = { "Done" } })
 			else
 				ya.notify({
 					title = "Done and Next",
