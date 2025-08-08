@@ -20,7 +20,7 @@ DEFAULT_BREAK_TIME="5"
 # Task management removed - now handled via symlinks
 DEFAULT_EMOJI="🍅"  # Default emoji for activities
 DEFAULT_DAILY_GOAL="8"
-TIMER_EMOJI="⏲️"  # Single source of truth for timer emoji
+TIMER_EMOJI="⏳️"  # Single source of truth for timer emoji
 
 # Function to get emoji for keyword
 get_emoji_for_keyword() {

@@ -65,10 +65,6 @@ stop_timer
 sleep 0.1  # Small delay to ensure cleanup completes
 echo "$MODE" > "$MODE_FILE"
 
-# Remove completed pomodoro indicator when starting new timer
-rm -f "$POMO_DIR/.completed_pomodoro"
-# Trigger update to hide the completion indicator
-sketchybar --trigger pomodoro_update
 
 # Highlight the appropriate history item based on timer mode
 if [ "$MODE" = "work" ]; then
@@ -113,8 +109,6 @@ fi
         # Timer finished
         END_TIME=$(date '+%Y-%m-%d %H:%M')
         
-        # Create completed pomodoro indicator file
-        touch "$POMO_DIR/.completed_pomodoro"
         
         # Log to history file
         if is_debug_mode; then
