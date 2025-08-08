@@ -3,8 +3,8 @@
 -- Define the rotation states
 local STATES = {
 	{ tag = nil,     display = "None" },       -- No tag
-	{ tag = "Done",  display = "Done (✅)" },  -- Done emoji
 	{ tag = "Red",   display = "Red (●)" },    -- Red dot
+	{ tag = "Done",  display = "Done (✅)" },  -- Done emoji
 	{ tag = "X",     display = "X (❌)" },     -- X emoji
 	{ tag = "Sleep", display = "Sleep (💤)" }, -- Sleep emoji
 }
@@ -55,10 +55,10 @@ local function get_current_state(file_path)
 		return 5  -- State 5 = Sleep
 	elseif string.find(tags_str, "X") then
 		return 4  -- State 4 = X
-	elseif string.find(tags_str, "Red") then
-		return 3  -- State 3 = Red
 	elseif string.find(tags_str, "Done") then
-		return 2  -- State 2 = Done
+		return 3  -- State 3 = Done
+	elseif string.find(tags_str, "Red") then
+		return 2  -- State 2 = Red
 	else
 		return 1  -- State 1 = None
 	end
