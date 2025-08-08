@@ -1,10 +1,10 @@
 #!/bin/zsh
 # Task folder names for yazi task management
 
-export TASK_PROGRESS="1-⭐ in-progress"
-export TASK_WAITING="2-⏸️ waiting"
-export TASK_BACKLOG="3-📦 backlog"
-export TASK_DONE="4-✅ done"
+export TASK_PROGRESS="in-progress"
+export TASK_WAITING="waiting"
+export TASK_BACKLOG="backlog"
+export TASK_DONE="done"
 
 # Task management functions for yazi
 
