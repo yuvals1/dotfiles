@@ -96,14 +96,8 @@ get_daily_goal() {
 
 # Function to update idle display for pomodoro buttons
 update_idle_display() {
-    local work_time=$(get_work_minutes)
-    local break_time=$(get_break_minutes)
-    local work_display=$(printf "%02d:00" $work_time)
-    local break_display=$(printf "%02d:00" $break_time)
-    local work_icon="$(is_debug_mode && echo "🐛" || echo "🍅")"
-    local break_icon="$(is_debug_mode && echo "🧪" || echo "☕️")"
-
-    sketchybar --set pomodoro_timer label="$work_icon ${work_display} · $break_icon ${break_display}"
+    # Just show a clock emoji when idle
+    sketchybar --set pomodoro_timer label="⏰"
 }
 
 # Function removed - tasks now managed via symlinks
