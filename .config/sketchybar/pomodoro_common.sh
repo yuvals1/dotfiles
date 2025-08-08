@@ -100,14 +100,10 @@ update_idle_display() {
     local break_time=$(get_break_minutes)
     local work_display=$(printf "%02d:00" $work_time)
     local break_display=$(printf "%02d:00" $break_time)
-    
-    if is_debug_mode; then
-        sketchybar --set pomodoro_work label="🐛 ${work_display}" \
-                   --set pomodoro_break label="🐛 ${break_display}"
-    else
-        sketchybar --set pomodoro_work label="🍅 ${work_display}" \
-                   --set pomodoro_break label="☕️ ${break_display}"
-    fi
+    local work_icon="$(is_debug_mode && echo "🐛" || echo "🍅")"
+    local break_icon="$(is_debug_mode && echo "🧪" || echo "☕️")"
+
+    sketchybar --set pomodoro_timer label="$work_icon ${work_display} · $break_icon ${break_display}"
 }
 
 # Function removed - tasks now managed via symlinks

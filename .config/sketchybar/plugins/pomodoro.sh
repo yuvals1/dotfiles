@@ -33,7 +33,7 @@ stop_timer() {
 
 # Determine which button was clicked
 if [ "$NAME" = "work" ]; then
-    ITEM="pomodoro_work"
+    ITEM="pomodoro_timer"
     if is_debug_mode; then
         ICON="🐛"
     else
@@ -42,7 +42,7 @@ if [ "$NAME" = "work" ]; then
     DURATION=$WORK_MINUTES
     MODE="work"
 else
-    ITEM="pomodoro_break"
+    ITEM="pomodoro_timer"
     if is_debug_mode; then
         ICON="🧪"
     else
@@ -131,15 +131,14 @@ sketchybar --trigger pomodoro_update
         sketchybar --trigger pomodoro_update
         
         # Reset to show configured time
-        if [ "$MODE" = "work" ]; then
-            idle_time=$(get_work_minutes)
-            idle_icon=$(is_debug_mode && echo "🐛" || echo "🍅")
-        else
-            idle_time=$(get_break_minutes)
-            idle_icon=$(is_debug_mode && echo "🧪" || echo "☕️")
-        fi
-        idle_display=$(printf "%02d:00" $idle_time)
-        sketchybar --set "$ITEM" label="$idle_icon ${idle_display}"
+        # After finish, show both configured times again on the single item
+        work_time=$(get_work_minutes)
+        break_time=$(get_break_minutes)
+        work_display=$(printf "%02d:00" $work_time)
+        break_display=$(printf "%02d:00" $break_time)
+        work_icon=$(is_debug_mode && echo "🐛" || echo "🍅")
+        break_icon=$(is_debug_mode && echo "🧪" || echo "☕️")
+        sketchybar --set "$ITEM" label="$work_icon ${work_display} · $break_icon ${break_display}"
         
         rm -f "$PID_FILE" "$MODE_FILE" "$PAUSE_FILE"
 ) &

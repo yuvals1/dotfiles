@@ -12,14 +12,11 @@ sketchybar --set youtube_music.artwork drawing=off \
            --set youtube_music.controls drawing=off \
            --set youtube_music.progress drawing=off \
            --set task drawing=off \
-           --set pomodoro_work drawing=off \
+           --set pomodoro_timer drawing=off \
            --set pomodoro_history drawing=off \
            --set pomodoro_break_history drawing=off
 
-# Hide pomodoro break if it exists
-if sketchybar --query pomodoro_break &>/dev/null; then
-    sketchybar --set pomodoro_break drawing=off
-fi
+# No separate break button anymore
 
 # Show Spotify items
 sketchybar --set spotify.artwork drawing=on \

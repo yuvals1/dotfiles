@@ -31,7 +31,7 @@ sketchybar --set spotify.artwork drawing=off \
            --set youtube_music.controls drawing=off \
            --set youtube_music.progress drawing=off \
            --set task drawing=off \
-           --set pomodoro_work drawing=off \
+           --set pomodoro_timer drawing=off \
            --set pomodoro_history drawing=off \
            --set pomodoro_break_history drawing=off
 
@@ -60,13 +60,11 @@ case $NEXT_STATE in
     # 2)
         # State 2: Show Pomodoro
         sketchybar --set task drawing=on \
-                   --set pomodoro_work drawing=on \
+                   --set pomodoro_timer drawing=on \
                    --set pomodoro_history drawing=on \
                    --set pomodoro_break_history drawing=on
         
         # Show break button if it exists
-        if sketchybar --query pomodoro_break &>/dev/null; then
-            sketchybar --set pomodoro_break drawing=on
-        fi
+        # No separate break button anymore
         ;;
 esac
