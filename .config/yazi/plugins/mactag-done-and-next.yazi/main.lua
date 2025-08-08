@@ -70,12 +70,7 @@ return {
 			-- Add the Done tag
 			local success = add_done_tag(file_path)
 			if success then
-				ya.notify({
-					title = "Done and Next",
-					content = "Marked as Done ✅",
-					timeout = 1,
-				})
-				-- Update visual state immediately
+				-- Update visual state immediately (no notification)
 				update_visual({ [file_path] = { "Done" } })
 			else
 				ya.notify({

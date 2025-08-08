@@ -855,7 +855,7 @@ desc = "Move task to waiting"
 
 # Testing new done-and-next plugin
 [[mgr.prepend_keymap]]
-on = "M"
+on = "m"
 run = "plugin mactag-done-and-next"
 desc = "Mark as done and move to next file"
 
@@ -956,7 +956,7 @@ run = "plugin mactag-filter"
 desc = "Filter to show only tagged files"
 
 [[mgr.prepend_keymap]]
-on = "m"
+on = "M"
 run = "plugin mactag-rotate"
 desc = "Rotate tag between Red/Done/None"
 
