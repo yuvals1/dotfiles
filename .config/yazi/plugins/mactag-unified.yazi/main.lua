@@ -71,7 +71,11 @@ local function fetch(_, job)
         tags[paths[i]] = tags[paths[i]] or {}
         local joint = line:match("\t(.+)$") or ""
         for s in joint:gmatch("[^,]+") do
-            table.insert(tags[paths[i]], s)
+            -- trim spaces around tag names
+            local clean = s:gsub("^%s+", ""):gsub("%s+$", "")
+            if #clean > 0 then
+                table.insert(tags[paths[i]], clean)
+            end
         end
         i = i + 1
     end
@@ -106,19 +110,20 @@ local function remove_managed_tags_from(cmd)
 end
 
 local function apply_tag(paths, tag_key)
-    -- Remove all managed tags first
+    -- Remove all managed tags first, per-file to avoid CLI quirks
     if #paths == 0 then return end
-    local remove_cmd = Command("tag")
-    remove_cmd = remove_managed_tags_from(remove_cmd)
-    for _, p in ipairs(paths) do remove_cmd = remove_cmd:arg(p) end
-    remove_cmd:status()
 
-    -- Add new tag if requested and not "none"
     local tag_name = tag_key and MANAGED_TAGS[tag_key] or nil
-    if tag_name then
-        local add_cmd = Command("tag"):arg("-a"):arg(tag_name)
-        for _, p in ipairs(paths) do add_cmd = add_cmd:arg(p) end
-        add_cmd:status()
+
+    for _, p in ipairs(paths) do
+        -- Remove every managed tag individually for this file
+        for _, tname in pairs(MANAGED_TAGS) do
+            Command("tag"):arg("-r"):arg(tname):arg(p):status()
+        end
+        -- Add new tag if requested and not "none"
+        if tag_name then
+            Command("tag"):arg("-a"):arg(tag_name):arg(p):status()
+        end
     end
 
     -- Update visual state immediately
