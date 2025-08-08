@@ -108,31 +108,31 @@ keymap = [
 
   # Linemode
   { on = [
-    "m",
+    "u",
     "s",
   ], run = "linemode size", desc = "Linemode: size" },
   { on = [
-    "m",
+    "u",
     "p",
   ], run = "linemode permissions", desc = "Linemode: permissions" },
   { on = [
-    "m",
+    "u",
     "b",
   ], run = "linemode btime", desc = "Linemode: btime" },
   { on = [
-    "m",
+    "u",
     "m",
   ], run = "linemode mtime", desc = "Linemode: mtime" },
   { on = [
-    "m",
+    "u",
     "o",
   ], run = "linemode owner", desc = "Linemode: owner" },
   { on = [
-    "m",
+    "u",
     "n",
   ], run = "linemode none", desc = "Linemode: none" },
   { on = [
-    "m",
+    "u",
     "l",
   ], run = "linemode lines", desc = "Linemode: line count" },
 
@@ -950,7 +950,7 @@ run = "plugin mactag-filter"
 desc = "Filter to show only tagged files"
 
 [[mgr.prepend_keymap]]
-on = "u"
+on = "m"
 run = "plugin mactag-rotate"
 desc = "Rotate tag between Red/Done/None"
 
