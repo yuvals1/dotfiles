@@ -337,16 +337,6 @@ name = "*"
 run = "hexyl"
 
 [[plugin.prepend_fetchers]]
-id = "mactag"
-name = "*"
-run = "mactag"
-
-[[plugin.prepend_fetchers]]
-id = "mactag"
-name = "*/"
-run = "mactag"
-
-[[plugin.prepend_fetchers]]
 id = "mactag-unified"
 name = "*"
 run = "mactag-unified"
