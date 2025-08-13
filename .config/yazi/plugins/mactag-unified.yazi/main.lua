@@ -109,6 +109,26 @@ local function remove_managed_tags_from(cmd)
     return cmd
 end
 
+local function get_current_tags(path)
+    -- Get current tags directly from macOS
+    local output = Command("tag"):arg("-l"):arg(path):stdout(Command.PIPED):output()
+    if not output then
+        return {}
+    end
+    
+    local tags = {}
+    local line = output.stdout:gsub("^%s+", ""):gsub("%s+$", "")
+    -- Parse the output: filename \t tag1,tag2,tag3
+    local joint = line:match("\t(.+)$") or ""
+    for s in joint:gmatch("[^,]+") do
+        local clean = s:gsub("^%s+", ""):gsub("%s+$", "")
+        if #clean > 0 then
+            tags[#tags + 1] = clean
+        end
+    end
+    return tags
+end
+
 local function apply_tag(paths, tag_key)
     -- Remove all managed tags first, per-file to avoid CLI quirks
     if #paths == 0 then return end
@@ -116,41 +136,55 @@ local function apply_tag(paths, tag_key)
     local tag_name = tag_key and MANAGED_TAGS[tag_key] or nil
 
     for _, p in ipairs(paths) do
-        -- Fast no-op: already exactly has desired managed tag and no others
-        local current = M.tags[p]
-        if tag_name and current then
-            local has_target = false
-            local has_other_managed = false
-            for _, t in ipairs(current) do
-                if t == tag_name then has_target = true end
-                if MANAGED_TAGS[string.lower(t)] or t == "Red" or t == "Done" or t == "X" or t == "Sleep" then
-                    if t ~= tag_name then has_other_managed = true end
-                end
+        -- Get current tags directly from the system
+        local current = get_current_tags(p)
+        local has_target = false
+        local tags_to_remove = {}
+        
+        -- Check which managed tags need to be removed
+        for _, t in ipairs(current) do
+            local t_lower = string.lower(t)
+            if t == tag_name then
+                has_target = true
+            elseif MANAGED_TAGS[t_lower] or t == "Red" or t == "Done" or t == "X" or t == "Sleep" then
+                -- This is a managed tag that needs to be removed
+                tags_to_remove[#tags_to_remove + 1] = t
             end
-            if has_target and not has_other_managed then
-                goto continue
-            end
+        end
+        
+        -- Skip if already has the exact tag and no other managed tags
+        if tag_name and has_target and #tags_to_remove == 0 then
+            goto continue
+        end
+        
+        -- Skip if clearing tags but no managed tags exist
+        if not tag_name and #tags_to_remove == 0 then
+            goto continue
         end
 
-        -- Remove all managed tags with reliable per-tag calls
-        for _, tname in pairs(MANAGED_TAGS) do
+        -- Only remove the managed tags that actually exist
+        for _, tname in ipairs(tags_to_remove) do
             Command("tag"):arg("-r"):arg(tname):arg(p):status()
         end
-        -- Add new tag if requested and not "none"
-        if tag_name then
+        
+        -- Add new tag if requested and not already present
+        if tag_name and not has_target then
             Command("tag"):arg("-a"):arg(tag_name):arg(p):status()
         end
         ::continue::
     end
 
-    -- Update visual state immediately
+    -- Update visual state by fetching actual tags after operation
     local tags_update = {}
     for _, p in ipairs(paths) do
-        if tag_name then
-            tags_update[p] = { tag_name }
-        else
-            tags_update[p] = {}
+        local new_tags = get_current_tags(p)
+        local managed_only = {}
+        for _, t in ipairs(new_tags) do
+            if MANAGED_TAGS[string.lower(t)] then
+                managed_only[#managed_only + 1] = t
+            end
         end
+        tags_update[p] = managed_only
     end
     update(tags_update)
 end
