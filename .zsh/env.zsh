@@ -60,6 +60,11 @@ else
   source "$HOME/.cargo/env"
 fi
 
+# Go
+if [ -d "$HOME/go/bin" ]; then
+  export PATH="$HOME/go/bin:$PATH"
+fi
+
 # Load secrets file if it exists
 if [ -f "$HOME/.zsh_secrets" ]; then
     source "$HOME/.zsh_secrets"
