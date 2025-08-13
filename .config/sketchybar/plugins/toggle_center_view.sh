@@ -41,6 +41,7 @@ sketchybar --set spotify.artwork drawing=off \
 for i in {0..9}; do
     sketchybar --set history_mode_$i drawing=off 2>/dev/null
 done
+sketchybar --set history_date drawing=off 2>/dev/null
 
 # Hide pomodoro break if it exists
 if sketchybar --query pomodoro_break &>/dev/null; then
@@ -58,6 +59,7 @@ case $NEXT_STATE in
         # Trigger update to create and show history items
         bash "$HOME/.config/sketchybar/plugins/stopwatch_history.sh"
         # Show the dynamically created items
+        sketchybar --set history_date drawing=on 2>/dev/null
         for i in {0..9}; do
             sketchybar --set history_mode_$i drawing=on 2>/dev/null
         done

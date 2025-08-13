@@ -1,12 +1,21 @@
 #!/bin/bash
 
-# Calculate and display today's time spent in each mode with colored backgrounds
+# Calculate and display time spent in each mode with colored backgrounds for a specific date
 
 TRACKING_DIR="$HOME/tracking"
-TODAY=$(date '+%Y-%m-%d')
-LOG_FILE="$TRACKING_DIR/${TODAY}.log"
+HISTORY_DATE_FILE="/tmp/sketchybar_history_date"
 CONFIG_DIR="$HOME/.config/sketchybar"
 CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
+
+# Get the date to display (default to today)
+if [ -f "$HISTORY_DATE_FILE" ]; then
+    DISPLAY_DATE=$(cat "$HISTORY_DATE_FILE")
+else
+    DISPLAY_DATE=$(date '+%Y-%m-%d')
+    echo "$DISPLAY_DATE" > "$HISTORY_DATE_FILE"
+fi
+
+LOG_FILE="$TRACKING_DIR/${DISPLAY_DATE}.log"
 
 # Source colors
 source "$CONFIG_DIR/colors.sh"
@@ -36,6 +45,31 @@ get_color_from_name() {
 for i in {0..9}; do
     sketchybar --remove history_mode_$i 2>/dev/null
 done
+sketchybar --remove history_date 2>/dev/null
+
+# Format date for display
+DISPLAY_DATE_FORMATTED=$(date -j -f "%Y-%m-%d" "$DISPLAY_DATE" "+%a %b %d, %Y" 2>/dev/null || date -d "$DISPLAY_DATE" "+%a %b %d, %Y")
+
+# Check if this is today
+TODAY=$(date '+%Y-%m-%d')
+if [ "$DISPLAY_DATE" = "$TODAY" ]; then
+    DATE_LABEL="Today - $DISPLAY_DATE_FORMATTED"
+else
+    DATE_LABEL="$DISPLAY_DATE_FORMATTED"
+fi
+
+# Create date display item
+sketchybar --add item history_date center \
+           --set history_date \
+                 label="$DATE_LABEL" \
+                 label.color="$WHITE" \
+                 icon="📅" \
+                 icon.color="$WHITE" \
+                 background.color="$ITEM_BG_COLOR" \
+                 background.drawing=on \
+                 background.corner_radius=5 \
+                 padding_left=10 \
+                 padding_right=10
 
 # Temporary file to store mode totals
 TEMP_FILE="/tmp/stopwatch_history_$$"
@@ -132,7 +166,7 @@ done < "$TEMP_FILE"
 if [ "$has_data" = false ]; then
     sketchybar --add item history_mode_0 center \
                --set history_mode_0 \
-                     label="No time tracked today" \
+                     label="No time tracked" \
                      label.color="$WHITE" \
                      icon="📊" \
                      icon.color="$WHITE" \

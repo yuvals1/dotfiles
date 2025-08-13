@@ -167,9 +167,18 @@ hs.hotkey.bind({ "alt" }, "N", function()
 	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/stopwatch.sh 2>/dev/null &")
 end)
 
--- Toggle stopwatch mode (Alt+M) - to be implemented
+-- Toggle stopwatch mode (Alt+M)
 hs.hotkey.bind({ "alt" }, "M", function()
 	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/stopwatch_toggle_mode.sh 2>/dev/null &")
+end)
+
+-- Navigate history dates (Alt+, for previous, Alt+. for next)
+hs.hotkey.bind({ "alt" }, ",", function()
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/history_navigate.sh prev 2>/dev/null &")
+end)
+
+hs.hotkey.bind({ "alt" }, ".", function()
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/history_navigate.sh next 2>/dev/null &")
 end)
 
 
