@@ -45,9 +45,17 @@ sleep 2
 
 # Step 6: Reset view state to Spotify
 echo "6️⃣ Resetting to Spotify view..."
-echo "0" > $HOME/.config/sketchybar/.center_state
-/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh >/dev/null 2>&1
-/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh >/dev/null 2>&1
+echo "1" > $HOME/.config/sketchybar/.center_state
+# Force refresh the view
+sketchybar --set spotify.artwork drawing=on \
+           --set spotify.anchor drawing=on \
+           --set spotify.menubar_controls drawing=on \
+           --set spotify.progress drawing=on \
+           --set spotify.context drawing=on \
+           --set task drawing=off \
+           --set pomodoro_timer drawing=off \
+           --set pomodoro_history drawing=off \
+           --set pomodoro_break_history drawing=off
 /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh >/dev/null 2>&1
 
 # Step 7: Test playback

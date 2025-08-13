@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Toggle between three states:
-# State 0: Spotify (hide YouTube Music and Pomodoro)
-# State 1: YouTube Music (hide Spotify and Pomodoro)
-# State 2: Pomodoro (hide Spotify and YouTube Music)
+# Toggle between two states:
+# State 0: Pomodoro (hide Spotify and YouTube Music)
+# State 1: Spotify (hide YouTube Music and Pomodoro)
 
 STATE_FILE="$HOME/.config/sketchybar/.center_state"
 
@@ -43,22 +42,7 @@ fi
 # Show items based on new state
 case $NEXT_STATE in
     0)
-        # State 0: Show Spotify
-        sketchybar --set spotify.artwork drawing=on \
-                   --set spotify.anchor drawing=on \
-                   --set spotify.menubar_controls drawing=on \
-                   --set spotify.progress drawing=on \
-                   --set spotify.context drawing=on
-        ;;
-    1)
-    #     # State 1: Show YouTube Music
-    #     sketchybar --set youtube_music.artwork drawing=on \
-    #                --set youtube_music.anchor drawing=on \
-    #                --set youtube_music.controls drawing=on \
-    #                --set youtube_music.progress drawing=on
-    #     ;;
-    # 2)
-        # State 2: Show Pomodoro
+        # State 0: Show Pomodoro
         sketchybar --set task drawing=on \
                    --set pomodoro_timer drawing=on \
                    --set pomodoro_history drawing=on \
@@ -66,5 +50,13 @@ case $NEXT_STATE in
         
         # Show break button if it exists
         # No separate break button anymore
+        ;;
+    1)
+        # State 1: Show Spotify
+        sketchybar --set spotify.artwork drawing=on \
+                   --set spotify.anchor drawing=on \
+                   --set spotify.menubar_controls drawing=on \
+                   --set spotify.progress drawing=on \
+                   --set spotify.context drawing=on
         ;;
 esac

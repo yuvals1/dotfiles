@@ -137,7 +137,7 @@ set_menubar_controls() {
 
 # Check if we're currently in Spotify view
 is_spotify_view() {
-  [ -f "$HOME/.config/sketchybar/.center_state" ] && [ "$(cat "$HOME/.config/sketchybar/.center_state")" -eq 0 ]
+  [ -f "$HOME/.config/sketchybar/.center_state" ] && [ "$(cat "$HOME/.config/sketchybar/.center_state")" -eq 1 ]
 }
 
 # Show UI when Spotify is not playing anything
@@ -369,7 +369,7 @@ store_current_state() {
 }
 
 update_state_and_ui() {
-  # Only update Spotify items if we're in Spotify view (state 0)
+  # Only update Spotify items if we're in Spotify view (state 1)
   is_spotify_view || return
   
   # Get current playback state
