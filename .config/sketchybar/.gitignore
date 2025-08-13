@@ -11,6 +11,7 @@ pomodoro/*.pid
 pomodoro/mode
 pomodoro/.paused
 pomodoro/current-task/*
+pomodoro/.timer_type
 .center_state
 .force_repeat
 .spotify_radio_state

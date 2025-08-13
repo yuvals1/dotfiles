@@ -162,14 +162,14 @@ hs.hotkey.bind({ "cmd", "shift" }, "b", function()
 end)
 
 -- POMODORO TIMER KEYBINDINGS
--- Toggle work session (Alt+N)
+-- Start/stop timer with current type (Alt+N)
 hs.hotkey.bind({ "alt" }, "N", function()
-	io.popen("NAME=work /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro.sh 2>/dev/null &")
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_start_stop.sh 2>/dev/null &")
 end)
 
--- Toggle break session (Alt+M)
+-- Toggle between work/break timer type (Alt+M)
 hs.hotkey.bind({ "alt" }, "M", function()
-	io.popen("NAME=break /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro.sh 2>/dev/null &")
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_toggle_type.sh 2>/dev/null &")
 end)
 
 -- Toggle pause/resume pomodoro timer (Alt+,)
