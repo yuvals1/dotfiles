@@ -161,22 +161,17 @@ hs.hotkey.bind({ "cmd", "shift" }, "b", function()
 	hs.alert.show("Sketchybar reloaded")
 end)
 
--- POMODORO TIMER KEYBINDINGS
--- Start/stop timer with current type (Alt+N)
+-- STOPWATCH KEYBINDINGS
+-- Start/stop stopwatch (Alt+N)
 hs.hotkey.bind({ "alt" }, "N", function()
-	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_start_stop.sh 2>/dev/null &")
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/stopwatch.sh 2>/dev/null &")
 end)
 
--- Toggle between work/break timer type (Alt+M)
+-- Toggle stopwatch mode (Alt+M) - to be implemented
 hs.hotkey.bind({ "alt" }, "M", function()
-	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_toggle_type.sh 2>/dev/null &")
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/stopwatch_toggle_mode.sh 2>/dev/null &")
 end)
 
--- Toggle pause/resume pomodoro timer (Alt+,)
-hs.hotkey.bind({ "alt" }, ",", function()
-	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/pomodoro_pause.sh 2>/dev/null &")
-	hs.alert.show("Toggled pause")
-end)
 
 -- MUSIC PLAYER KEYBINDINGS (works with both Spotify and YouTube Music)
 -- Toggle shuffle (Alt+Y)
