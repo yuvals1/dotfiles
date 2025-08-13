@@ -336,6 +336,15 @@ run = "git"
 name = "*"
 run = "hexyl"
 
+[[plugin.prepend_fetchers]]
+id = "mactag"
+name = "*"
+run = "mactag"
+
+[[plugin.prepend_fetchers]]
+id = "mactag"
+name = "*/"
+run = "mactag"
 
 [[plugin.prepend_fetchers]]
 id = "mactag-unified"

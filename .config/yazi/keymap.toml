@@ -977,7 +977,16 @@ on = ["M", "M"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"
 
-# Unified plugin test bindings removed
+# Regular mactag keybindings
+[[mgr.prepend_keymap]]
+on = ["b", "a"]
+run = "plugin mactag add"
+desc = "Add color tag to selected files"
+
+[[mgr.prepend_keymap]]
+on = ["b", "r"]
+run = "plugin mactag remove"
+desc = "Remove color tag from selected files"
 
 # Keep the old keybindings commented for reference
 # [[mgr.prepend_keymap]]
