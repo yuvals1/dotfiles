@@ -12,6 +12,40 @@ CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 # Source colors
 source "$CONFIG_DIR/colors.sh"
 
+# Tracking directory
+TRACKING_DIR="$HOME/tracking"
+
+# Function to log session to daily file
+log_session() {
+    local start_epoch="$1"
+    local end_epoch="$2"
+    local duration="$3"
+    
+    # Create tracking directory if it doesn't exist
+    mkdir -p "$TRACKING_DIR"
+    
+    # Get date for filename (based on start time)
+    local date_str=$(date -r "$start_epoch" '+%Y-%m-%d')
+    local log_file="$TRACKING_DIR/${date_str}.log"
+    
+    # Format timestamps
+    local start_time=$(date -r "$start_epoch" '+%H:%M:%S')
+    local end_time=$(date -r "$end_epoch" '+%H:%M:%S')
+    
+    # Format duration (seconds to HH:MM:SS)
+    local hours=$((duration / 3600))
+    local minutes=$(( (duration % 3600) / 60 ))
+    local seconds=$((duration % 60))
+    local duration_str=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
+    
+    # Get current mode and label
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "unknown")
+    local label=$(get_mode_label)
+    
+    # Log entry format: START_TIME | END_TIME | DURATION | MODE | LABEL
+    echo "${start_time} | ${end_time} | ${duration_str} | ${mode} | ${label}" >> "$log_file"
+}
+
 # Function to get icon for current mode
 get_mode_icon() {
     local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
@@ -79,8 +113,23 @@ get_mode_label() {
 stop_stopwatch() {
     if [ -f "$PID_FILE" ]; then
         kill $(cat "$PID_FILE") 2>/dev/null
-        rm -f "$PID_FILE" "$START_FILE"
+        rm -f "$PID_FILE"
     fi
+    
+    # Log the session if it was running
+    if [ -f "$START_FILE" ]; then
+        local start_time=$(cat "$START_FILE")
+        local end_time=$(date +%s)
+        local duration=$((end_time - start_time))
+        
+        # Only log if duration is at least 60 seconds
+        if [ $duration -ge 60 ]; then
+            log_session "$start_time" "$end_time" "$duration"
+        fi
+        
+        rm -f "$START_FILE"
+    fi
+    
     # Reset to mode label and default background/colors
     LABEL=$(get_mode_label)
     sketchybar --set stopwatch label="$LABEL" \
