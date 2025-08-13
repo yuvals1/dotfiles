@@ -53,6 +53,7 @@ source $ITEM_DIR/front_app.sh
 
 # -- Center Items --
 source $ITEM_DIR/stopwatch.sh
+source $ITEM_DIR/stopwatch_history.sh
 source $ITEM_DIR/spotify.sh
 source $ITEM_DIR/youtube_music.sh
 
