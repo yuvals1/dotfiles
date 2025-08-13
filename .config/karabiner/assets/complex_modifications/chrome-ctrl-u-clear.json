@@ -1,8 +1,8 @@
 {
-  "title": "Chrome Ctrl+U Clear Field",
+  "title": "Chrome Custom Keybindings",
   "rules": [
     {
-      "description": "Map Ctrl+U to Cmd+A then Delete in Chrome",
+      "description": "Chrome: Ctrl+U to clear field, Cmd+Q to close tab",
       "manipulators": [
         {
           "type": "basic",
@@ -19,6 +19,27 @@
             },
             {
               "key_code": "delete_or_backspace"
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "q",
+            "modifiers": {
+              "mandatory": ["command"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "w",
+              "modifiers": ["command"]
             }
           ],
           "conditions": [
