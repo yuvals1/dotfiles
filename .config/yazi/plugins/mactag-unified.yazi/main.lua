@@ -9,7 +9,13 @@ local M = {
 -- Our managed tag set (mutually exclusive)
 local MANAGED_TAGS = {
     ["red"] = "Red",
+    ["orange"] = "Orange",
+    ["yellow"] = "Yellow",
+    ["green"] = "Green",
+    ["blue"] = "Blue",
+    ["purple"] = "Purple",
     ["done"] = "Done",
+    ["important"] = "Important",
     ["x"] = "X",
     ["sleep"] = "Sleep",
 }
@@ -42,6 +48,18 @@ local function setup(st, _)
                     return ui.Line { ui.Span("✅ "), original }
                 elseif tag == "Red" then
                     return ui.Line { ui.Span("● "):fg("#ee7b70"), original }
+                elseif tag == "Orange" then
+                    return ui.Line { ui.Span("● "):fg("#f5bd5c"), original }
+                elseif tag == "Yellow" then
+                    return ui.Line { ui.Span("● "):fg("#fbe764"), original }
+                elseif tag == "Green" then
+                    return ui.Line { ui.Span("● "):fg("#91fc87"), original }
+                elseif tag == "Blue" then
+                    return ui.Line { ui.Span("● "):fg("#5fa3f8"), original }
+                elseif tag == "Purple" then
+                    return ui.Line { ui.Span("● "):fg("#cb88f8"), original }
+                elseif tag == "Important" then
+                    return ui.Line { ui.Span("❗ "), original }
                 elseif tag == "X" then
                     return ui.Line { ui.Span("❌ "), original }
                 elseif tag == "Sleep" then
@@ -146,7 +164,7 @@ local function apply_tag(paths, tag_key)
             local t_lower = string.lower(t)
             if t == tag_name then
                 has_target = true
-            elseif MANAGED_TAGS[t_lower] or t == "Red" or t == "Done" or t == "X" or t == "Sleep" then
+            elseif MANAGED_TAGS[t_lower] then
                 -- This is a managed tag that needs to be removed
                 tags_to_remove[#tags_to_remove + 1] = t
             end

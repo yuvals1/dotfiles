@@ -854,11 +854,11 @@ desc = "Move task to waiting"
 # run = "plugin mark-label"
 # desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
 
-# Unified tagging: Done on hovered/selected
+# Quick tagging: Done on hovered/selected (same as M+d)
 [[mgr.prepend_keymap]]
 on = "m"
 run = "plugin mactag-unified done"
-desc = "Tag as Done"
+desc = "Tag as Done (✅) - quick key"
 
 # [[mgr.prepend_keymap]]
 # on = ["e", "t"]
@@ -960,17 +960,52 @@ desc = "Filter to show only tagged files"
 [[mgr.prepend_keymap]]
 on = ["M", "r"]
 run = "plugin mactag-unified red"
-desc = "Tag as Red"
+desc = "Tag as Red 🔴"
+
+[[mgr.prepend_keymap]]
+on = ["M", "o"]
+run = "plugin mactag-unified orange"
+desc = "Tag as Orange 🟠"
+
+[[mgr.prepend_keymap]]
+on = ["M", "y"]
+run = "plugin mactag-unified yellow"
+desc = "Tag as Yellow 🟡"
+
+[[mgr.prepend_keymap]]
+on = ["M", "g"]
+run = "plugin mactag-unified green"
+desc = "Tag as Green 🟢"
+
+[[mgr.prepend_keymap]]
+on = ["M", "b"]
+run = "plugin mactag-unified blue"
+desc = "Tag as Blue 🔵"
+
+[[mgr.prepend_keymap]]
+on = ["M", "p"]
+run = "plugin mactag-unified purple"
+desc = "Tag as Purple 🟣"
+
+[[mgr.prepend_keymap]]
+on = ["M", "d"]
+run = "plugin mactag-unified done"
+desc = "Tag as Done (✅)"
+
+[[mgr.prepend_keymap]]
+on = ["M", "i"]
+run = "plugin mactag-unified important"
+desc = "Tag as Important (❗)"
 
 [[mgr.prepend_keymap]]
 on = ["M", "s"]
 run = "plugin mactag-unified sleep"
-desc = "Tag as Sleep"
+desc = "Tag as Sleep (⏸️)"
 
 [[mgr.prepend_keymap]]
 on = ["M", "x"]
 run = "plugin mactag-unified x"
-desc = "Tag as X"
+desc = "Tag as X (❌)"
 
 [[mgr.prepend_keymap]]
 on = ["M", "M"]
