@@ -182,10 +182,11 @@ sketchybar --set stopwatch icon="$ICON" \
         CURRENT_TIME=$(date +%s)
         ELAPSED=$((CURRENT_TIME - START_TIME))
         
-        # Format as MM:SS
-        MINUTES=$((ELAPSED / 60))
+        # Format as HH:MM:SS
+        HOURS=$((ELAPSED / 3600))
+        MINUTES=$(( (ELAPSED % 3600) / 60 ))
         SECONDS=$((ELAPSED % 60))
-        TIME_STR=$(printf "%02d:%02d" $MINUTES $SECONDS)
+        TIME_STR=$(printf "%02d:%02d:%02d" $HOURS $MINUTES $SECONDS)
         
         sketchybar --set stopwatch label="$TIME_STR"
         sleep 1
