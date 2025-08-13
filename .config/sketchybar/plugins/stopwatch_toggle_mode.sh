@@ -3,8 +3,15 @@
 # Toggle between stopwatch modes defined in config file
 
 MODE_FILE="/tmp/sketchybar_stopwatch_mode"
+PID_FILE="/tmp/sketchybar_stopwatch.pid"
 CONFIG_DIR="$HOME/.config/sketchybar"
 CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
+
+# Check if stopwatch is running - don't allow mode change
+if [ -f "$PID_FILE" ]; then
+    echo "Cannot change mode while stopwatch is running"
+    exit 0
+fi
 
 # Read all modes from config
 MODES=()
@@ -44,15 +51,9 @@ NEW_LABEL="${LABELS[$NEXT_INDEX]}"
 
 echo "$NEW_MODE" > "$MODE_FILE"
 
-# Update icon in sketchybar
-sketchybar --set stopwatch icon="$NEW_ICON"
-
-# Check if stopwatch is running
-PID_FILE="/tmp/sketchybar_stopwatch.pid"
-if [ ! -f "$PID_FILE" ]; then
-    # Not running - just show the new mode label (no need to revert)
-    sketchybar --set stopwatch label="$NEW_LABEL"
-fi
+# Update icon and label in sketchybar
+sketchybar --set stopwatch icon="$NEW_ICON" \
+                          label="$NEW_LABEL"
 
 # Show brief notification of mode change
 echo "Mode: $NEW_LABEL"
