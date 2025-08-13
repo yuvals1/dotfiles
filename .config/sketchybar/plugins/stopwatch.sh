@@ -9,11 +9,14 @@ MODE_FILE="/tmp/sketchybar_stopwatch_mode"
 CONFIG_DIR="$HOME/.config/sketchybar"
 CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 
+# Source colors
+source "$CONFIG_DIR/colors.sh"
+
 # Function to get icon for current mode
 get_mode_icon() {
     local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
     
-    while IFS='|' read -r m icon label; do
+    while IFS='|' read -r m icon label color; do
         [[ "$m" =~ ^#.*$ ]] && continue
         [[ -z "$m" ]] && continue
         
@@ -27,11 +30,38 @@ get_mode_icon() {
     echo "⏱️"
 }
 
+# Function to get color for current mode
+get_mode_color() {
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+    
+    while IFS='|' read -r m icon label color; do
+        [[ "$m" =~ ^#.*$ ]] && continue
+        [[ -z "$m" ]] && continue
+        
+        if [[ "$m" == "$mode" ]]; then
+            # Map color names to actual colors
+            case "$color" in
+                "blue") echo "0xff4a90e2" ;;  # Nice medium blue
+                "red") echo "0xffff6b6b" ;;
+                "yellow") echo "0xffffeb3b" ;;  # Bright yellow
+                "green") echo "$GREEN" ;;
+                "purple") echo "0xff9370db" ;;
+                "teal") echo "$ACCENT_COLOR" ;;
+                "orange") echo "$ORANGE" ;;
+                *) echo "$ITEM_BG_COLOR" ;;
+            esac
+            return
+        fi
+    done < "$CONFIG_FILE"
+    
+    echo "$ITEM_BG_COLOR"
+}
+
 # Function to get label for current mode
 get_mode_label() {
     local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
     
-    while IFS='|' read -r m icon label; do
+    while IFS='|' read -r m icon label color; do
         [[ "$m" =~ ^#.*$ ]] && continue
         [[ -z "$m" ]] && continue
         
@@ -51,9 +81,13 @@ stop_stopwatch() {
         kill $(cat "$PID_FILE") 2>/dev/null
         rm -f "$PID_FILE" "$START_FILE"
     fi
-    # Reset to mode label instead of 00:00
+    # Reset to mode label and default background/colors
     LABEL=$(get_mode_label)
-    sketchybar --set stopwatch label="$LABEL"
+    sketchybar --set stopwatch label="$LABEL" \
+                              background.color="$ITEM_BG_COLOR" \
+                              background.drawing=on \
+                              label.color="$WHITE" \
+                              icon.color="$WHITE"
 }
 
 # Check if already running
@@ -68,9 +102,28 @@ fi
 echo "Starting stopwatch"
 date +%s > "$START_FILE"
 
-# Set the mode icon
+# Set the mode icon and background color
 ICON=$(get_mode_icon)
-sketchybar --set stopwatch icon="$ICON"
+COLOR=$(get_mode_color)
+MODE=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+
+# Check if we need black text for light backgrounds
+LABEL_COLOR="$WHITE"
+while IFS='|' read -r m icon label color; do
+    [[ "$m" =~ ^#.*$ ]] && continue
+    [[ -z "$m" ]] && continue
+    
+    if [[ "$m" == "$MODE" ]] && [[ "$color" == "yellow" ]]; then
+        LABEL_COLOR="$BLACK"
+        break
+    fi
+done < "$CONFIG_FILE"
+
+sketchybar --set stopwatch icon="$ICON" \
+                          background.color="$COLOR" \
+                          background.drawing=on \
+                          label.color="$LABEL_COLOR" \
+                          icon.color="$LABEL_COLOR"
 
 # Run counter in background
 (

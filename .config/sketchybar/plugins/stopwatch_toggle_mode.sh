@@ -10,8 +10,9 @@ CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 MODES=()
 ICONS=()
 LABELS=()
+COLORS=()
 
-while IFS='|' read -r mode icon label; do
+while IFS='|' read -r mode icon label color; do
     # Skip comments and empty lines
     [[ "$mode" =~ ^#.*$ ]] && continue
     [[ -z "$mode" ]] && continue
@@ -19,6 +20,7 @@ while IFS='|' read -r mode icon label; do
     MODES+=("$mode")
     ICONS+=("$icon")
     LABELS+=("$label")
+    COLORS+=("$color")
 done < "$CONFIG_FILE"
 
 # Get current mode index
