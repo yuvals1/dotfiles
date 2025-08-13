@@ -5,6 +5,45 @@
 
 PID_FILE="/tmp/sketchybar_stopwatch.pid"
 START_FILE="/tmp/sketchybar_stopwatch_start"
+MODE_FILE="/tmp/sketchybar_stopwatch_mode"
+CONFIG_DIR="$HOME/.config/sketchybar"
+CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
+
+# Function to get icon for current mode
+get_mode_icon() {
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+    
+    while IFS='|' read -r m icon label; do
+        [[ "$m" =~ ^#.*$ ]] && continue
+        [[ -z "$m" ]] && continue
+        
+        if [[ "$m" == "$mode" ]]; then
+            echo "$icon"
+            return
+        fi
+    done < "$CONFIG_FILE"
+    
+    # Default icon if not found
+    echo "⏱️"
+}
+
+# Function to get label for current mode
+get_mode_label() {
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+    
+    while IFS='|' read -r m icon label; do
+        [[ "$m" =~ ^#.*$ ]] && continue
+        [[ -z "$m" ]] && continue
+        
+        if [[ "$m" == "$mode" ]]; then
+            echo "$label"
+            return
+        fi
+    done < "$CONFIG_FILE"
+    
+    # Default label if not found
+    echo "Ready"
+}
 
 # Function to stop the stopwatch
 stop_stopwatch() {
@@ -12,7 +51,9 @@ stop_stopwatch() {
         kill $(cat "$PID_FILE") 2>/dev/null
         rm -f "$PID_FILE" "$START_FILE"
     fi
-    sketchybar --set stopwatch label="00:00"
+    # Reset to mode label instead of 00:00
+    LABEL=$(get_mode_label)
+    sketchybar --set stopwatch label="$LABEL"
 }
 
 # Check if already running
@@ -26,6 +67,10 @@ fi
 # Start new stopwatch
 echo "Starting stopwatch"
 date +%s > "$START_FILE"
+
+# Set the mode icon
+ICON=$(get_mode_icon)
+sketchybar --set stopwatch icon="$ICON"
 
 # Run counter in background
 (
