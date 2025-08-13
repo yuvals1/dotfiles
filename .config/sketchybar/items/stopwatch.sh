@@ -15,7 +15,7 @@ CURRENT_MODE=$(cat "$MODE_FILE")
 ICON="⏱️"  # Default
 LABEL="Ready"  # Default
 
-while IFS='|' read -r mode icon label; do
+while IFS='|' read -r mode icon label color; do
     [[ "$mode" =~ ^#.*$ ]] && continue
     [[ -z "$mode" ]] && continue
     
