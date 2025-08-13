@@ -2,7 +2,7 @@
   "title": "Chrome Custom Keybindings",
   "rules": [
     {
-      "description": "Chrome: Ctrl+U to clear field, Cmd+Q to close tab",
+      "description": "Chrome: Ctrl+U to clear field, Cmd+Q and Ctrl+C to close tab",
       "manipulators": [
         {
           "type": "basic",
@@ -34,6 +34,27 @@
             "key_code": "q",
             "modifiers": {
               "mandatory": ["command"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "w",
+              "modifiers": ["command"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "c",
+            "modifiers": {
+              "mandatory": ["control"]
             }
           },
           "to": [
