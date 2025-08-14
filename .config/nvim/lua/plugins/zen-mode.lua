@@ -31,12 +31,17 @@ return {
       tmux = { enabled = false },
     },
     on_open = function(win)
+      -- Save original wrap settings
+      vim.g.zen_mode_original_wrap = vim.opt.wrap:get()
+      vim.g.zen_mode_original_linebreak = vim.opt.linebreak:get()
+      -- Enable wrap for zen mode
       vim.opt.wrap = true
       vim.opt.linebreak = true
     end,
     on_close = function()
-      vim.opt.wrap = false
-      vim.opt.linebreak = false
+      -- Restore original wrap settings
+      vim.opt.wrap = vim.g.zen_mode_original_wrap
+      vim.opt.linebreak = vim.g.zen_mode_original_linebreak
     end,
   },
 }
