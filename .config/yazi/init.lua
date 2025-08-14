@@ -49,7 +49,7 @@ function Linemode:justname()
   return self._file.name
 end
 
-function Linemode:lines()
+function Linemode:linecount()
   -- For directories, return empty
   if self._file.cha.is_dir then
     return ''

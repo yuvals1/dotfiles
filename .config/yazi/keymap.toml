@@ -135,7 +135,7 @@ keymap = [
   { on = [
     "u",
     "l",
-  ], run = "linemode lines", desc = "Linemode: line count" },
+  ], run = "linemode linecount", desc = "Linemode: line count" },
 
   # Copy
   { on = [
