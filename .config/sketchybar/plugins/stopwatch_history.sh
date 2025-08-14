@@ -87,6 +87,11 @@ if [ -f "$LOG_FILE" ]; then
             minutes="${BASH_REMATCH[2]}"  
             seconds="${BASH_REMATCH[3]}"
             
+            # Remove leading zeros to avoid octal interpretation
+            hours=$((10#$hours))
+            minutes=$((10#$minutes))
+            seconds=$((10#$seconds))
+            
             total_seconds=$((hours * 3600 + minutes * 60 + seconds))
             
             # Add to mode's total in temp file
