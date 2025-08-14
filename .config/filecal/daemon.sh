@@ -10,7 +10,7 @@ DAYS_DIR="$CALENDAR_DIR/days"
 TAG_CMD="/usr/local/bin/tag"
 
 # Tag names
-IMPORTANT_TAG="Important"  # For today (shows ❗)
+IMPORTANT_TAG="Point"      # For today (shows 👉)
 RED_TAG="Red"              # For days with important events
 GREEN_TAG="Green"          # For days with regular events
 
@@ -22,6 +22,7 @@ log() {
 clear_tags() {
     local path="$1"
     $TAG_CMD -r "$IMPORTANT_TAG" "$path" 2>/dev/null
+    $TAG_CMD -r "Important" "$path" 2>/dev/null  # Clean up old tag name
     $TAG_CMD -r "$RED_TAG" "$path" 2>/dev/null
     $TAG_CMD -r "$GREEN_TAG" "$path" 2>/dev/null
 }
@@ -63,18 +64,18 @@ tag_today() {
         return 0  # Already tagged correctly
     fi
     
-    # Remove Important tag from yesterday
+    # Remove Point tag from yesterday
     local YESTERDAY=$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d "-1 day" +%Y-%m-%d)
     local YESTERDAY_PATH="$DAYS_DIR/$YESTERDAY"
     if [[ -d "$YESTERDAY_PATH" ]]; then
         $TAG_CMD -r "$IMPORTANT_TAG" "$YESTERDAY_PATH" 2>/dev/null
-        log "Removed Important tag from $YESTERDAY"
+        log "Removed Point tag from $YESTERDAY"
     fi
     
-    # Clear any other tags from today and add Important
+    # Clear any other tags from today and add Point
     clear_tags "$TODAY_PATH"
     $TAG_CMD -a "$IMPORTANT_TAG" "$TODAY_PATH"
-    log "Tagged $TODAY with Important"
+    log "Tagged $TODAY with Point"
 }
 
 # Create future date folders (2 months ahead)
@@ -149,7 +150,16 @@ update_calendar() {
     tag_all_days
 }
 
-# Main loop
+# Check for command line argument
+if [[ "$1" == "update" ]]; then
+    # Run once and exit
+    log "Running manual update..."
+    update_calendar
+    log "Manual update completed"
+    exit 0
+fi
+
+# Main loop (daemon mode)
 log "Starting enhanced calendar daemon..."
 update_calendar
 

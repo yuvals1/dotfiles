@@ -297,6 +297,14 @@ hs.hotkey.bind({ "alt" }, "s", function()
 	checkTask:start()
 end)
 
+-- CALENDAR DAEMON UPDATE
+-- Manually trigger calendar daemon update (Alt+C)
+hs.hotkey.bind({ "alt" }, "c", function()
+	-- Run the daemon with 'update' argument for one-time execution
+	os.execute("/Users/yuvalspiegel/dotfiles/.config/filecal/daemon.sh update &")
+	hs.alert.show("Calendar tags updated")
+end)
+
 -- SLEEP KEYBIND
 -- Put Mac to sleep (Alt+Cmd+S)
 hs.hotkey.bind({ "alt", "cmd" }, "s", function()

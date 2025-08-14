@@ -13,7 +13,7 @@ A file-based calendar system where folders are dates and files are events, with 
 
 ```
 ~/personal/calendar/days/
-├── 2025-08-14/          # Tagged: Important (today)
+├── 2025-08-14/          # Tagged: Point (today)
 │   ├── 0900-meeting     # Event files
 │   └── 1400-lunch
 ├── 2025-08-15/          # Tagged: Red (has urgent events)
@@ -28,9 +28,9 @@ A file-based calendar system where folders are dates and files are events, with 
 Runs every 10 minutes, executing three tasks:
 
 ### 1. Tag Today (`tag_today`)
-- Remove "Important" tag from yesterday
-- Add "Important" tag to today's folder
-- Today always shows ❗ in Finder/yazi
+- Remove "Point" tag from yesterday
+- Add "Point" tag to today's folder
+- Today always shows 👉 in Finder/yazi
 
 ### 2. Create Future Folders (`create_future_folders`)
 - Maintains 60 days of empty folders ahead
@@ -61,7 +61,7 @@ description:Project deadline
 
 ## Tag Hierarchy
 
-1. **Important** - Today only (overrides all)
+1. **Point** - Today only (overrides all)
 2. **Red** - Urgent/important events
 3. **Green** - Regular events  
 4. **None** - Empty days
