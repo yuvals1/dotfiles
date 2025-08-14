@@ -45,3 +45,8 @@ vim.keymap.set('n', '<leader>wr', function()
   vim.wo.wrap = not vim.wo.wrap
   vim.notify('Wrap: ' .. (vim.wo.wrap and 'on' or 'off'))
 end, { desc = 'Toggle line wrapping' })
+
+-- Move by visual lines when wrap is on (instead of actual lines)
+-- This makes j/k behave more intuitively with wrapped lines
+vim.keymap.set({ 'n', 'v' }, 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = 'Move down by visual line' })
+vim.keymap.set({ 'n', 'v' }, 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, desc = 'Move up by visual line' })
