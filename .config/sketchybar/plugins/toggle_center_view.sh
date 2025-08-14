@@ -30,6 +30,7 @@ sketchybar --set spotify.artwork drawing=off \
            --set youtube_music.controls drawing=off \
            --set youtube_music.progress drawing=off \
            --set stopwatch drawing=off \
+           --set stopwatch_icon drawing=off \
            --set stopwatch_history drawing=off \
            --set task drawing=off \
            --set pomodoro_timer drawing=off \
@@ -55,7 +56,9 @@ fi
 # Show items based on new state
 case $NEXT_STATE in
     0)
-        # State 0: Stopwatch view
+        # State 0: Stopwatch view - always show timer icon
+        sketchybar --set stopwatch_icon drawing=on
+        
         PID_FILE="/tmp/sketchybar_stopwatch.pid"
         if [ -f "$PID_FILE" ]; then
             # If running, show the stopwatch timer item

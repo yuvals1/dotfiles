@@ -22,6 +22,9 @@ sketchybar --set youtube_music.artwork drawing=off \
            --set pomodoro_history drawing=off \
            --set pomodoro_break_history drawing=off
 
+# Show timer icon for stopwatch state
+sketchybar --set stopwatch_icon drawing=on
+
 # Show mode options (idle view) and hide stopwatch item
 sketchybar --set stopwatch drawing=off
 bash "$HOME/.config/sketchybar/plugins/render_stopwatch_modes.sh"

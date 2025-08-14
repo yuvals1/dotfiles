@@ -26,6 +26,16 @@ while IFS='|' read -r mode icon label color; do
     fi
 done < "$CONFIG_FILE"
 
+# Timer icon that shows when in stopwatch view (state 0)
+sketchybar --add item stopwatch_icon center \
+           --set stopwatch_icon icon="⏱️" \
+                               icon.color=$WHITE \
+                               icon.font="SF Pro:Regular:18.0" \
+                               label="" \
+                               padding_left=8 \
+                               padding_right=4 \
+                               drawing=on
+
 # Simple stopwatch item with click handler - show mode name when idle
 sketchybar --add item stopwatch center \
            --set stopwatch label="$LABEL" \
