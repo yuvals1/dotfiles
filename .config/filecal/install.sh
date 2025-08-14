@@ -14,11 +14,31 @@ echo "📅 Installing filecal daemon..."
 # Create LaunchAgents directory if it doesn't exist
 mkdir -p "$LAUNCH_AGENTS_DIR"
 
-# Stop and unload existing daemon if it's running
+# If daemon is already running, uninstall it first for clean restart
 if launchctl list | grep -q "$PLIST_NAME"; then
-    echo "Stopping existing daemon..."
-    launchctl unload "$LAUNCH_AGENTS_DIR/$PLIST_NAME.plist" 2>/dev/null || true
+    echo "Found existing daemon, restarting..."
+    "$SCRIPT_DIR/uninstall.sh"
+    echo ""
+    echo "📅 Installing filecal daemon..."
 fi
+
+# Clean up all old tags from calendar directories
+echo "Cleaning up existing tags..."
+CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
+DAYS_DIR="$CALENDAR_DIR/days"
+TAG_CMD="/usr/local/bin/tag"
+
+# Remove all managed tags from all day directories
+for day_dir in "$DAYS_DIR"/????-??-??; do
+    if [[ -d "$day_dir" ]]; then
+        # Remove all possible tags that the daemon manages
+        $TAG_CMD -r "Important" "$day_dir" 2>/dev/null
+        $TAG_CMD -r "Point" "$day_dir" 2>/dev/null
+        $TAG_CMD -r "Red" "$day_dir" 2>/dev/null
+        $TAG_CMD -r "Green" "$day_dir" 2>/dev/null
+    fi
+done
+echo "Tags cleaned"
 
 # Copy plist file
 echo "Installing launch agent..."
