@@ -175,6 +175,14 @@ keymap = [
   # Sorting
   { on = [
     "b",
+    "0",
+  ], run = [
+    "sort alphabetical --reverse=no",
+    "linemode none",
+    "plugin pref-by-location -- save",
+  ], desc = "Sort alphabetically (default)" },
+  { on = [
+    "b",
     "b",
   ], run = [
     "sort mtime --reverse",
