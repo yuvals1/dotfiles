@@ -114,26 +114,29 @@ tag_all_days() {
         check_day_content "$day_dir"
         local status=$?
         
+        # Get current tags
+        local current_tags=$($TAG_CMD -l "$day_dir" 2>/dev/null)
+        
         case $status in
-            0)  # Has regular events
-                # Only tag if not already tagged correctly
-                if ! $TAG_CMD -l "$day_dir" 2>/dev/null | grep -q "$GREEN_TAG"; then
+            0)  # Has regular events - should be Green
+                if ! echo "$current_tags" | grep -q "$GREEN_TAG"; then
                     clear_tags "$day_dir"
                     $TAG_CMD -a "$GREEN_TAG" "$day_dir"
                     log "Tagged $day_name with Green (has events)"
                 fi
                 ;;
-            3)  # Has important/red events
-                # Only tag if not already tagged correctly
-                if ! $TAG_CMD -l "$day_dir" 2>/dev/null | grep -q "$RED_TAG"; then
+            3)  # Has important/red events - should be Red
+                if ! echo "$current_tags" | grep -q "$RED_TAG"; then
                     clear_tags "$day_dir"
                     $TAG_CMD -a "$RED_TAG" "$day_dir"
                     log "Tagged $day_name with Red (has important events)"
                 fi
                 ;;
-            *)  # Empty or doesn't exist
-                # Remove any tags if empty
-                clear_tags "$day_dir"
+            *)  # Empty or doesn't exist - should have no tags
+                if echo "$current_tags" | grep -qE "$RED_TAG|$GREEN_TAG"; then
+                    clear_tags "$day_dir"
+                    log "Cleared tags from $day_name (now empty)"
+                fi
                 ;;
         esac
     done
