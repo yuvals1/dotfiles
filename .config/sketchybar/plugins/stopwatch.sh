@@ -142,10 +142,17 @@ stop_stopwatch() {
 
 # Check if already running
 if [ -f "$PID_FILE" ]; then
-    # Stopwatch is running - stop it
-    stop_stopwatch
-    echo "Stopwatch stopped"
-    exit 0
+    OLD_PID=$(cat "$PID_FILE" 2>/dev/null)
+    # Check if the process is actually running
+    if [ -n "$OLD_PID" ] && ps -p "$OLD_PID" > /dev/null 2>&1; then
+        # Stopwatch is running - stop it
+        stop_stopwatch
+        echo "Stopwatch stopped"
+        exit 0
+    else
+        # Stale PID file, remove it
+        rm -f "$PID_FILE"
+    fi
 fi
 
 # Start new stopwatch
