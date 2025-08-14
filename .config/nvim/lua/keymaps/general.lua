@@ -39,3 +39,9 @@ vim.keymap.set('i', '<F20>', '<C-o>D', { noremap = true, desc = 'Kill to end of 
 -- Map shift-H and shift-L to move to start/end of line in visual mode
 vim.keymap.set('v', 'H', '^', { noremap = true, desc = 'Move to start of line' })
 vim.keymap.set('v', 'L', '$', { noremap = true, desc = 'Move to end of line' })
+
+-- Toggle line wrapping
+vim.keymap.set('n', '<leader>wr', function()
+  vim.wo.wrap = not vim.wo.wrap
+  vim.notify('Wrap: ' .. (vim.wo.wrap and 'on' or 'off'))
+end, { desc = 'Toggle line wrapping' })
