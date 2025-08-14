@@ -1042,6 +1042,11 @@ run = "plugin mactag-unified x"
 desc = "Tag as X (❌)"
 
 [[mgr.prepend_keymap]]
+on = ["M", "P"]
+run = "plugin mactag-unified point"
+desc = "Tag as Point (👉)"
+
+[[mgr.prepend_keymap]]
 on = ["M", "M"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"

@@ -18,6 +18,7 @@ local MANAGED_TAGS = {
     ["important"] = "Important",
     ["x"] = "X",
     ["sleep"] = "Sleep",
+    ["point"] = "Point",
 }
 
 -- Update state and trigger render
@@ -64,6 +65,8 @@ local function setup(st, _)
                     return ui.Line { ui.Span("❌ "), original }
                 elseif tag == "Sleep" then
                     return ui.Line { ui.Span("⏸️ "), original }
+                elseif tag == "Point" then
+                    return ui.Line { ui.Span("👉 "), original }
                 end
             end
         end
