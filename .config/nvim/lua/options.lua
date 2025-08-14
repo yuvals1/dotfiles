@@ -71,5 +71,8 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Line wrapping settings
+vim.opt.linebreak = true   -- Wrap at word boundaries, not mid-word
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
