@@ -130,13 +130,14 @@ stop_stopwatch() {
         rm -f "$START_FILE"
     fi
     
-    # Reset to mode label and default background/colors
-    LABEL=$(get_mode_label)
-    sketchybar --set stopwatch label="$LABEL" \
+    # After stopping, hide the stopwatch and render idle mode options
+    sketchybar --set stopwatch drawing=off \
+                              label="$(get_mode_label)" \
                               background.color="$ITEM_BG_COLOR" \
                               background.drawing=on \
                               label.color="$WHITE" \
                               icon.color="$WHITE"
+    bash "$CONFIG_DIR/plugins/render_stopwatch_modes.sh"
 }
 
 # Check if already running
@@ -172,7 +173,11 @@ sketchybar --set stopwatch icon="$ICON" \
                           background.color="$COLOR" \
                           background.drawing=on \
                           label.color="$LABEL_COLOR" \
-                          icon.color="$LABEL_COLOR"
+                          icon.color="$LABEL_COLOR" \
+                          drawing=on
+
+# Clear idle mode options from center while running
+bash "$CONFIG_DIR/plugins/render_stopwatch_modes.sh" clear
 
 # Run counter in background
 (

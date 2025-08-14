@@ -7,7 +7,7 @@ PID_FILE="/tmp/sketchybar_stopwatch.pid"
 CONFIG_DIR="$HOME/.config/sketchybar"
 CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 
-# Check if stopwatch is running - don't allow mode change
+# If stopwatch is running - don't allow mode change, keep current behavior
 if [ -f "$PID_FILE" ]; then
     echo "Cannot change mode while stopwatch is running"
     exit 0
@@ -51,9 +51,15 @@ NEW_LABEL="${LABELS[$NEXT_INDEX]}"
 
 echo "$NEW_MODE" > "$MODE_FILE"
 
-# Update icon and label in sketchybar
-sketchybar --set stopwatch icon="$NEW_ICON" \
-                          label="$NEW_LABEL"
+# Update selection in idle view without full re-render
+if sketchybar --query mode_option_0 &>/dev/null; then
+    # Remove highlight from previous and add to new
+    sketchybar --set mode_option_${CURRENT_INDEX} background.border_width=0 2>/dev/null
+    sketchybar --set mode_option_${NEXT_INDEX} background.border_width=2 2>/dev/null
+else
+    # If the list isn't present, render it once
+    bash "$CONFIG_DIR/plugins/render_stopwatch_modes.sh"
+fi
 
 # Show brief notification of mode change
 echo "Mode: $NEW_LABEL"

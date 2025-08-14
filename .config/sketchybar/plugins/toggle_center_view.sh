@@ -42,6 +42,11 @@ for i in {0..9}; do
 done
 sketchybar --set history_date drawing=off 2>/dev/null
 
+# Also hide dynamic mode option items (idle stopwatch view)
+for i in {0..30}; do
+    sketchybar --set mode_option_$i drawing=off 2>/dev/null
+done
+
 # Hide pomodoro break if it exists
 if sketchybar --query pomodoro_break &>/dev/null; then
     sketchybar --set pomodoro_break drawing=off
@@ -50,8 +55,22 @@ fi
 # Show items based on new state
 case $NEXT_STATE in
     0)
-        # State 0: Show Stopwatch
-        sketchybar --set stopwatch drawing=on
+        # State 0: Stopwatch view
+        PID_FILE="/tmp/sketchybar_stopwatch.pid"
+        if [ -f "$PID_FILE" ]; then
+            # If running, show the stopwatch timer item
+            sketchybar --set stopwatch drawing=on
+        else
+            # If idle, show the selectable mode options without re-rendering if they exist
+            sketchybar --set stopwatch drawing=off
+            if sketchybar --query mode_option_0 &>/dev/null; then
+                for i in {0..30}; do
+                    sketchybar --set mode_option_$i drawing=on 2>/dev/null
+                done
+            else
+                bash "$HOME/.config/sketchybar/plugins/render_stopwatch_modes.sh"
+            fi
+        fi
         ;;
     1)
         # State 1: Show History
