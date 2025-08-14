@@ -602,6 +602,27 @@ on = ["f"]
 run = "plugin keyjump global"
 desc = "Keyjump (Global mode)"
 
+# Date filtering for calendar
+[[mgr.prepend_keymap]]
+on = ["b", "t"]
+run = "plugin date-filter today"
+desc = "Filter: Today"
+
+[[mgr.prepend_keymap]]
+on = ["b", "w"]
+run = "plugin date-filter week"
+desc = "Filter: This week"
+
+[[mgr.prepend_keymap]]
+on = ["b", "m"]
+run = "plugin date-filter month"
+desc = "Filter: This month"
+
+[[mgr.prepend_keymap]]
+on = ["b", "y"]
+run = "plugin date-filter year"
+desc = "Filter: This year"
+
 
 [[mgr.prepend_keymap]]
 on = ["`"]
