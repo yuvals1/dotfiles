@@ -14,7 +14,7 @@
     <key>EnvironmentVariables</key>
     <dict>
         <key>CALENDAR_DIR</key>
-        <string>/Users/yuvalspiegel/calendar</string>
+        <string>/Users/yuvalspiegel/personal/calendar</string>
     </dict>
     
     <key>WorkingDirectory</key>
