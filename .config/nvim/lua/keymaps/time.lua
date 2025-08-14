@@ -17,7 +17,7 @@ vim.keymap.set('n', '<leader>t1', insert_time '%H:%M', { desc = 'insert date' })
 -- vim.keymap.set('n', '<leader>t5', insert_time '%a %b %d %Y', { desc = 'Insert date (Day Mon DD YYYY)' })
 
 -- For normal mode
-vim.keymap.set('n', '<leader>td', function()
+vim.keymap.set('n', '<leader>t2', function()
   local time = os.date 'due: %Y-%m-%d 00:00'
   vim.api.nvim_put({ time }, 'c', true, true)
 end, { desc = 'Insert current time' })
