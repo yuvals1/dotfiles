@@ -136,6 +136,10 @@ keymap = [
     "u",
     "l",
   ], run = "linemode linecount", desc = "Linemode: line count" },
+  { on = [
+    "u",
+    "r",
+  ], run = "linemode recency", desc = "Linemode: recency (r if modified in 24h)" },
 
   # Copy
   { on = [
@@ -174,6 +178,7 @@ keymap = [
     "b",
   ], run = [
     "sort mtime --reverse",
+    "linemode recency",
     "plugin pref-by-location -- save",
   ], desc = "Sort by modified time (newest first)" },
   { on = [

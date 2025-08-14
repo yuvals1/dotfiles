@@ -82,6 +82,27 @@ function Linemode:linecount()
   end
 end
 
+function Linemode:recency()
+  -- Get current time
+  local current_time = os.time()
+  
+  -- Get file modification time
+  local mtime = self._file.cha.mtime
+  if not mtime then
+    return ''
+  end
+  
+  -- Calculate difference in seconds
+  local diff = current_time - mtime
+  
+  -- 24 hours = 86400 seconds
+  if diff < 86400 then
+    return 'r'
+  else
+    return ''
+  end
+end
+
 -- require('simple-tag'):setup {
 --   -- UI display mode (icon, text, hidden)
 --   ui_mode = 'icon', -- (Optional)
