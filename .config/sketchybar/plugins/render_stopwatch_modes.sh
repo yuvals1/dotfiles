@@ -28,6 +28,14 @@ get_color_from_name() {
   esac
 }
 
+# Helper: replace alpha of 0xAARRGGBB with provided AA
+set_alpha() {
+  local color="$1"
+  local alpha="$2" # two hex digits, e.g., 44, 66, 99, cc, ff
+  local tail="${color:4}" # RRGGBB
+  echo "0x${alpha}${tail}"
+}
+
 # Remove any existing mode option items
 remove_mode_items() {
   # Try removing a reasonable range
@@ -58,15 +66,18 @@ while IFS='|' read -r mode icon label color; do
 
   bg_color=$(get_color_from_name "$color")
 
-  # Selected highlighting
-  border_width=0
-  border_color="$WHITE"
-  text_color="$WHITE"
-  if [ "$color" = "yellow" ]; then
-    text_color="$BLACK"
-  fi
+  # Background and text color based on selection
   if [ "$mode" = "$CURRENT_MODE" ]; then
-    border_width=2
+    # Selected: use mode's color scheme
+    bg_display="$bg_color"
+    text_color="$WHITE"
+    if [ "$color" = "yellow" ]; then
+      text_color="$BLACK"  # Black text on yellow background
+    fi
+  else
+    # Unselected: use default colors
+    bg_display="${ITEM_BG_COLOR:-0x44000000}"
+    text_color="${LABEL_COLOR:-$WHITE}"
   fi
 
   sketchybar --add item mode_option_$index center \
@@ -75,12 +86,10 @@ while IFS='|' read -r mode icon label color; do
                    icon.color="$text_color" \
                    label="$label" \
                    label.color="$text_color" \
-                   background.color="$bg_color" \
+                   background.color="$bg_display" \
                    background.drawing=on \
                    background.corner_radius=5 \
                    background.height=24 \
-                   background.border_color="$border_color" \
-                   background.border_width=$border_width \
                    padding_left=5 \
                    padding_right=5
 

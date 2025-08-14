@@ -53,9 +53,62 @@ echo "$NEW_MODE" > "$MODE_FILE"
 
 # Update selection in idle view without full re-render
 if sketchybar --query mode_option_0 &>/dev/null; then
-    # Remove highlight from previous and add to new
-    sketchybar --set mode_option_${CURRENT_INDEX} background.border_width=0 2>/dev/null
-    sketchybar --set mode_option_${NEXT_INDEX} background.border_width=2 2>/dev/null
+    # Opacity focus: selected full opacity, others dimmed
+    # We need the color name for each mode to rebuild the correct alpha; re-read the config
+    # Build associative arrays (by index) for colors
+    COLORS_BY_INDEX=()
+    idx=0
+    while IFS='|' read -r m icon label color; do
+        [[ "$m" =~ ^#.*$ ]] && continue
+        [[ -z "$m" ]] && continue
+        COLORS_BY_INDEX[$idx]="$color"
+        idx=$((idx+1))
+    done < "$CONFIG_FILE"
+
+    # Helper to map color name
+    map_color() {
+        case "$1" in
+            blue) echo 0xff4a90e2 ;;
+            red) echo 0xffff6b6b ;;
+            yellow) echo 0xffffeb3b ;;
+            green) echo ${GREEN:-0xff00ff00} ;;
+            purple) echo 0xff9370db ;;
+            teal) echo ${ACCENT_COLOR:-0xff00ffff} ;;
+            orange) echo ${ORANGE:-0xffffa500} ;;
+            *) echo ${ITEM_BG_COLOR:-0x00000000} ;;
+        esac
+    }
+
+    set_alpha() {
+        local color="$1"
+        local alpha="$2"
+        local tail="${color:4}"
+        echo "0x${alpha}${tail}"
+    }
+
+    # Load colors from config
+    source "$CONFIG_DIR/colors.sh" 2>/dev/null || true
+    
+    next_color_name="${COLORS_BY_INDEX[$NEXT_INDEX]}"
+    next_color=$(map_color "$next_color_name")
+    default_bg="${ITEM_BG_COLOR:-0x44000000}"
+
+    # Previous selected becomes default (unselected)
+    default_text="${LABEL_COLOR:-$WHITE}"
+    sketchybar --set mode_option_${CURRENT_INDEX} \
+        background.color="$default_bg" \
+        icon.color="$default_text" \
+        label.color="$default_text" 2>/dev/null
+    
+    # Next becomes selected with its color and appropriate text
+    selected_text="$WHITE"
+    if [ "$next_color_name" = "yellow" ]; then
+        selected_text="$BLACK"
+    fi
+    sketchybar --set mode_option_${NEXT_INDEX} \
+        background.color="$next_color" \
+        icon.color="$selected_text" \
+        label.color="$selected_text" 2>/dev/null
 else
     # If the list isn't present, render it once
     bash "$CONFIG_DIR/plugins/render_stopwatch_modes.sh"
