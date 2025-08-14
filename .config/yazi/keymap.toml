@@ -170,14 +170,14 @@ keymap = [
 
   # Sorting
   { on = [
-    ",",
-    ",",
+    "b",
+    "b",
   ], run = [
     "sort mtime --reverse",
     "plugin pref-by-location -- save",
   ], desc = "Sort by modified time (newest first)" },
   { on = [
-    ",",
+    "b",
     "m",
   ], run = [
     "sort mtime --reverse=no",
@@ -185,7 +185,7 @@ keymap = [
     "plugin pref-by-location -- save",
   ], desc = "Sort by modified time" },
   { on = [
-    ",",
+    "b",
     "M",
   ], run = [
     "sort mtime --reverse",
@@ -193,71 +193,71 @@ keymap = [
     "plugin pref-by-location -- save",
   ], desc = "Sort by modified time (reverse)" },
   { on = [
-    ",",
     "b",
+    "c",
   ], run = [
     "sort btime --reverse=no",
     "linemode btime",
   ], desc = "Sort by birth time" },
   { on = [
-    ",",
-    "B",
+    "b",
+    "C",
   ], run = [
     "sort btime --reverse",
     "linemode btime",
   ], desc = "Sort by birth time (reverse)" },
   { on = [
-    ",",
+    "b",
     "e",
   ], run = "sort extension --reverse=no", desc = "Sort by extension" },
   { on = [
-    ",",
+    "b",
     "E",
   ], run = "sort extension --reverse", desc = "Sort by extension (reverse)" },
   { on = [
-    ",",
+    "b",
     "a",
   ], run = [
     "sort alphabetical --reverse=no",
     "plugin pref-by-location -- save",
   ], desc = "Sort alphabetically" },
   { on = [
-    ",",
+    "b",
     "A",
   ], run = [
     "sort alphabetical --reverse",
     "plugin pref-by-location -- save",
   ], desc = "Sort alphabetically (reverse)" },
   { on = [
-    ",",
+    "b",
     "n",
   ], run = [
     "sort natural --reverse=no",
     "plugin pref-by-location -- save",
   ], desc = "Sort naturally" },
   { on = [
-    ",",
+    "b",
     "N",
   ], run = [
     "sort natural --reverse",
     "plugin pref-by-location -- save",
   ], desc = "Sort naturally (reverse)" },
   { on = [
-    ",",
+    "b",
     "s",
   ], run = [
     "sort size --reverse=no",
     "linemode size",
   ], desc = "Sort by size" },
   { on = [
-    ",",
+    "b",
     "S",
   ], run = [
     "sort size --reverse",
     "linemode size",
   ], desc = "Sort by size (reverse)" },
   { on = [
-    ",",
+    "b",
     "r",
   ], run = "sort random --reverse=no", desc = "Sort randomly" },
 
@@ -604,22 +604,22 @@ desc = "Keyjump (Global mode)"
 
 # Date filtering for calendar
 [[mgr.prepend_keymap]]
-on = ["b", "t"]
+on = [",", "t"]
 run = "plugin date-filter today"
 desc = "Filter: Today"
 
 [[mgr.prepend_keymap]]
-on = ["b", "w"]
+on = [",", "w"]
 run = "plugin date-filter week"
 desc = "Filter: This week"
 
 [[mgr.prepend_keymap]]
-on = ["b", "m"]
+on = [",", "m"]
 run = "plugin date-filter month"
 desc = "Filter: This month"
 
 [[mgr.prepend_keymap]]
-on = ["b", "y"]
+on = [",", "y"]
 run = "plugin date-filter year"
 desc = "Filter: This year"
 
