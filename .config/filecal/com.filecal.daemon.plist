@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.filecal.daemon</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/yuvalspiegel/dotfiles/.config/filecal/daemon.sh</string>
+    </array>
+    
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>CALENDAR_DIR</key>
+        <string>/Users/yuvalspiegel/calendar</string>
+    </dict>
+    
+    <key>WorkingDirectory</key>
+    <string>/Users/yuvalspiegel</string>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <key>StandardOutPath</key>
+    <string>/tmp/filecal-daemon.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/tmp/filecal-daemon.err</string>
+    
+    <key>ProcessType</key>
+    <string>Background</string>
+</dict>
+</plist>
