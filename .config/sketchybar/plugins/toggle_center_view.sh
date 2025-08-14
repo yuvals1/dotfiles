@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# Toggle between three states:
+# Toggle between two states:
 # State 0: Stopwatch
 # State 1: History view
-# State 2: Spotify
 
 STATE_FILE="$HOME/.config/sketchybar/.center_state"
 
@@ -14,8 +13,8 @@ else
     CURRENT_STATE=0
 fi
 
-# Calculate next state (cycle through 0, 1, 2)
-NEXT_STATE=$(( (CURRENT_STATE + 1) % 3 ))
+# Calculate next state (cycle through 0, 1)
+NEXT_STATE=$(( (CURRENT_STATE + 1) % 2 ))
 
 # Save new state
 echo "$NEXT_STATE" > "$STATE_FILE"
@@ -63,13 +62,5 @@ case $NEXT_STATE in
         for i in {0..9}; do
             sketchybar --set history_mode_$i drawing=on 2>/dev/null
         done
-        ;;
-    2)
-        # State 2: Show Spotify
-        sketchybar --set spotify.artwork drawing=on \
-                   --set spotify.anchor drawing=on \
-                   --set spotify.menubar_controls drawing=on \
-                   --set spotify.progress drawing=on \
-                   --set spotify.context drawing=on
         ;;
 esac
