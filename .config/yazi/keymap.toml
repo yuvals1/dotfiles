@@ -173,9 +173,9 @@ keymap = [
     ",",
     ",",
   ], run = [
-    "sort alphabetical --reverse=no",
+    "sort mtime --reverse",
     "plugin pref-by-location -- save",
-  ], desc = "Sort alphabetically (reverse)" },
+  ], desc = "Sort by modified time (newest first)" },
   { on = [
     ",",
     "m",
