@@ -95,11 +95,18 @@ function Linemode:recency()
   -- Calculate difference in seconds
   local diff = current_time - mtime
   
-  -- 24 hours = 86400 seconds
-  if diff < 86400 then
-    return 'r'
+  -- Handle files with future timestamps (just created)
+  if diff < 0 then
+    return '•0d'
+  end
+  
+  -- Convert to days
+  local days = math.floor(diff / 86400)
+  
+  if days == 0 then
+    return '•0d'
   else
-    return ''
+    return days .. 'd'
   end
 end
 
