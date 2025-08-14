@@ -14,8 +14,12 @@ return {
       disable_inline_completion = false,
     }
 
-    -- Optional toggle, as in your example
-    vim.keymap.set('n', '<leader>cc', ':SupermavenToggle<CR>', { noremap = true, silent = true, desc = 'Toggle Supermaven' })
+    -- Custom toggle with notification
+    vim.keymap.set('n', '<leader>cc', function()
+      vim.cmd('SupermavenToggle')
+      local is_running = require('supermaven-nvim.api').is_running()
+      vim.notify('Supermaven: ' .. (is_running and 'Enabled' or 'Disabled'))
+    end, { noremap = true, desc = 'Toggle Supermaven' })
 
     ----------------------------------------------------------------
     -- 2. Add our custom “accept only the next character” mapping --
