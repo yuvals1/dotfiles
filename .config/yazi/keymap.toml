@@ -636,6 +636,12 @@ on = [",", "y"]
 run = "plugin date-filter year"
 desc = "Filter: This year"
 
+# Calendar tag update
+[[mgr.prepend_keymap]]
+on = [",", "u"]
+run = "plugin mactag-unified calendar"
+desc = "Update calendar tags"
+
 
 [[mgr.prepend_keymap]]
 on = ["`"]

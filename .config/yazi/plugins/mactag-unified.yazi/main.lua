@@ -212,6 +212,76 @@ end
 
 local function entry(_, job)
     local action = (job.args[1] or ""):lower()
+    
+    -- Handle special calendar update action
+    if action == "calendar" then
+        -- Run the detection script to get required changes
+        local output, err = Command("/Users/yuvalspiegel/dotfiles/.config/filecal/detect.sh")
+            :stdout(Command.PIPED)
+            :stderr(Command.PIPED)
+            :output()
+        
+        if not output then
+            ya.notify {
+                title = "Calendar Update",
+                content = "Failed to detect changes: " .. (err or "unknown error"),
+                level = "error", 
+                timeout = 3,
+            }
+            return
+        end
+        
+        -- Check if there are any changes needed
+        local changes_json = output.stdout
+        if changes_json:match("^%s*%[%s*%]%s*$") then
+            -- Empty array - no changes needed
+            ya.notify {
+                title = "Calendar Update",
+                content = "Tags already up to date",
+                timeout = 2,
+            }
+            return
+        end
+        
+        -- Parse and apply the changes inline
+        local changes = {}
+        local changes_count = 0
+        
+        -- Simple JSON parsing for our specific format
+        for line in changes_json:gmatch("[^\r\n]+") do
+            local path = line:match('"path": "([^"]+)"')
+            local tag = line:match('"tag": "([^"]*)"')
+            if path then
+                changes[#changes + 1] = {path = path, tag = tag}
+            end
+        end
+        
+        -- Apply each change
+        for _, change in ipairs(changes) do
+            local tag_key = nil
+            if change.tag == "Point" then
+                tag_key = "important"  -- Map to mactag key
+            elseif change.tag == "Red" then
+                tag_key = "red"
+            elseif change.tag == "Green" then
+                tag_key = "green"
+            else
+                tag_key = nil  -- Clear tags
+            end
+            
+            apply_tag({ change.path }, tag_key)
+            changes_count = changes_count + 1
+        end
+        
+        ya.notify {
+            title = "Calendar Update",
+            content = string.format("Updated %d calendar tags", changes_count),
+            timeout = 2,
+        }
+        return
+    end
+    
+    -- Regular tag actions
     local tag_key = nil
     if action == "none" or action == "clear" or action == "remove" then
         tag_key = nil
@@ -237,7 +307,58 @@ local function entry(_, job)
         ya.manager_emit("arrow", { 1 })
     end
 end
+
+-- Simple refresh function to clear cache for calendar days
+local function refresh_calendar()
+    -- Clear cached tags for calendar days
+    for path, _ in pairs(M.tags) do
+        if path:match("/days/") then
+            M.tags[path] = nil
+        end
+    end
+    -- Force fetcher to re-run by clearing yazi's internal state and re-rendering
+    ya.render()
+end
+
+-- Batch calendar update function
+local function update_calendar_tags(changes_json)
+    -- Parse the JSON changes from detect.sh
+    local changes = {}
+    
+    -- Simple JSON parsing for our specific format
+    for line in changes_json:gmatch("[^\r\n]+") do
+        local path = line:match('"path": "([^"]+)"')
+        local tag = line:match('"tag": "([^"]*)"')
+        if path then
+            changes[#changes + 1] = {path = path, tag = tag}
+        end
+    end
+    
+    -- Apply each change
+    for _, change in ipairs(changes) do
+        local tag_key = nil
+        if change.tag == "Point" then
+            tag_key = "important"  -- Map to mactag key
+        elseif change.tag == "Red" then
+            tag_key = "red"
+        elseif change.tag == "Green" then
+            tag_key = "green"
+        else
+            tag_key = nil  -- Clear tags
+        end
+        
+        apply_tag({ change.path }, tag_key)
+    end
+    
+    -- Refresh the display
+    refresh_calendar()
+    
+    return #changes
+end
+
 M.setup = setup
 M.fetch = fetch
 M.entry = entry
+M.refresh_calendar = refresh_calendar
+M.update_calendar_tags = update_calendar_tags
 return M

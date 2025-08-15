@@ -42,11 +42,15 @@ check_day_content() {
         return 1  # Empty directory
     fi
     
-    # Check if any file contains Red category
-    if grep -r "category:Red" "$day_path" >/dev/null 2>&1 || \
-       grep -r "category:Important" "$day_path" >/dev/null 2>&1; then
-        return 3  # Has important/red events
-    fi
+    # Check if any file has Red or Important macOS tags
+    for file in "$day_path"/*; do
+        if [[ -f "$file" ]]; then
+            local file_tags=$($TAG_CMD -l "$file" 2>/dev/null)
+            if echo "$file_tags" | grep -qE "Red|Important"; then
+                return 3  # Has important/red events
+            fi
+        fi
+    done
     
     return 0  # Has regular events
 }
