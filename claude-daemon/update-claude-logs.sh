@@ -62,8 +62,8 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     
     # Extract project name and parent path from the actual directory
     project_dir=$(basename "$actual_dir_path")
-    # Replace slashes with dashes in parent path for filename safety
-    parent_path=$(dirname "$actual_dir_path" | sed 's/^\///' | tr '/' '-')
+    # Replace slashes with dashes and dots with underscores in parent path for filename safety
+    parent_path=$(dirname "$actual_dir_path" | sed 's/^\///' | tr '/' '-' | tr '.' '_')
     
     # Get file modification time and calculate age in days and hours
     if [[ "$OSTYPE" == "darwin"* ]]; then
