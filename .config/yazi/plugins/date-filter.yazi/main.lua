@@ -46,6 +46,24 @@ local function get_current_week_pattern()
     return "^" .. month .. "-"
 end
 
+-- Get pattern for week ahead (next 7 days from today)
+local function get_week_ahead_pattern()
+    local today = os.time()
+    local dates = {}
+    
+    -- Collect the next 7 days including today
+    for i = 0, 6 do
+        local day = today + (i * 86400)
+        local date_str = os.date("%Y-%m-%d", day)
+        table.insert(dates, date_str)
+    end
+    
+    -- Build regex pattern that matches any of these dates
+    -- Format: (2025-08-15|2025-08-16|...|2025-08-21)\\[
+    local pattern = "^(" .. table.concat(dates, "|") .. ")\\["
+    return pattern
+end
+
 -- Get pattern for current month
 local function get_current_month_pattern()
     return "^" .. os.date("%Y-%m") .. "-"
@@ -80,6 +98,14 @@ return {
             ya.notify {
                 title = "Date Filter", 
                 content = "Filtering: This week",
+                timeout = 1,
+            }
+        elseif action == "week-ahead" then
+            local pattern = get_week_ahead_pattern()
+            apply_filter(pattern)
+            ya.notify {
+                title = "Date Filter",
+                content = "Filtering: Next 7 days",
                 timeout = 1,
             }
         elseif action == "month" then
