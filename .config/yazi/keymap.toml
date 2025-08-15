@@ -106,6 +106,10 @@ keymap = [
     "g",
     "t",
   ], run = "cd ~/personal/tasks/in-progress", desc = "Go to tasks in-progress directory" },
+  { on = [
+    "g",
+    "p",
+  ], run = "cd ~/personal", desc = "Go to personal directory" },
 
   # Linemode
   { on = [
