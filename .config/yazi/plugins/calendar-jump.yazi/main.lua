@@ -17,15 +17,22 @@ return {
         local action = job.args[1] or "today"
         
         if action == "today" then
-            local target_path = get_today_path()
+            -- Get today's folder name
+            local today = os.date("%Y-%m-%d")
+            local day_of_week = os.date("%a")
+            local today_folder = today .. "[" .. day_of_week .. "]"
             
-            -- Emit cd command to jump to today's folder
-            ya.manager_emit("cd", { target_path })
+            -- Get full path to today's folder
+            local calendar_days = os.getenv("HOME") .. "/personal/calendar/days"
+            local today_path = calendar_days .. "/" .. today_folder
+            
+            -- Use reveal to jump to parent and highlight the target
+            ya.manager_emit("reveal", { today_path })
             
             -- Optional: Show notification
             ya.notify {
                 title = "Calendar Jump",
-                content = "Jumped to " .. os.date("%B %d, %Y"),
+                content = "Focused on " .. os.date("%B %d, %Y"),
                 timeout = 1,
             }
         elseif action == "calendar" then
