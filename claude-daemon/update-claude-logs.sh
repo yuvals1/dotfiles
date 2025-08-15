@@ -68,11 +68,26 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     age_prefix="${days}d-${hours}h"
     
     # Extract project directory name and session ID
-    project_dir=$(basename "$(dirname "$jsonl_path")")
+    full_project_dir=$(basename "$(dirname "$jsonl_path")")
+    # Extract the actual project name from Claude's path format
+    # Pattern: -Users-{username}-{location}-{project-name}
+    # We want just the project name part
+    if [[ "$full_project_dir" =~ -dev-(.+)$ ]]; then
+        project_dir="${BASH_REMATCH[1]}"
+    elif [[ "$full_project_dir" =~ -Documents-(.+)$ ]]; then
+        project_dir="${BASH_REMATCH[1]}"
+    elif [[ "$full_project_dir" =~ -dotfiles-(.+)$ ]]; then
+        project_dir="${BASH_REMATCH[1]}"
+    elif [[ "$full_project_dir" =~ -Desktop-(.+)$ ]]; then
+        project_dir="${BASH_REMATCH[1]}"
+    else
+        # Fallback: take everything after the last occurrence of username
+        project_dir=$(echo "$full_project_dir" | sed 's/.*-yuvalspiegel-//')
+    fi
     session_id=$(basename "$jsonl_path" .jsonl)
     
-    # Create index filename with age prefix and count label
-    index_filename="${age_prefix}-count${num_messages}-${project_dir}-${session_id}"
+    # Create index filename with age prefix and num-msg label
+    index_filename="${age_prefix}-num-msg:${num_messages}-${project_dir}-${session_id}"
     
     # Create empty index file
     touch "$LOGS_DIR/$index_filename"
