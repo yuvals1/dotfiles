@@ -26,6 +26,13 @@ Indexes Claude Code conversations every 10 minutes for easy browsing and resumin
 
 Processes ~490 conversations in ~18 seconds. Skips summary-only files.
 
+## Future Considerations
+
+- **Filename length**: Currently ~200 chars (macOS limit: 255). Monitor as paths grow longer.
+- **Incremental updates**: Currently recreates all files. Could optimize to only update changed conversations.
+- **Special characters**: Handle edge cases in project names beyond dots and slashes.
+- **Very large files**: Current line-by-line reading works well, but watch for files with extremely long lines.
+
 ## Auto-start (Optional)
 
 ```bash
