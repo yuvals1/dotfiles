@@ -635,12 +635,12 @@ run = "plugin date-filter today"
 desc = "Filter: Today"
 
 [[mgr.prepend_keymap]]
-on = [",", "w"]
+on = [",", "W"]
 run = "plugin date-filter week"
 desc = "Filter: This week"
 
 [[mgr.prepend_keymap]]
-on = [",", "W"]
+on = [",", "w"]
 run = "plugin date-filter week-ahead"
 desc = "Filter: Next 7 days"
 
@@ -664,7 +664,6 @@ desc = "Filter: This year"
 on = [",", "u"]
 run = "plugin mactag-unified calendar"
 desc = "Update calendar tags"
-
 
 
 [[mgr.prepend_keymap]]
