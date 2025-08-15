@@ -58,8 +58,18 @@ check_day_content() {
 # Tag today with Important
 tag_today() {
     local TODAY=$(date +%Y-%m-%d)
-    local TODAY_DAY=$(date +%a)
-    local TODAY_PATH="$DAYS_DIR/${TODAY}[${TODAY_DAY}]"
+    local TODAY_WEEKDAY=$(date +%w)  # 0=Sunday, 1=Monday, etc.
+    
+    # Format the day suffix
+    if [[ "$TODAY_WEEKDAY" == "0" ]]; then
+        local TODAY_SUFFIX="Sunday"
+    else
+        # Convert to 1=Sunday, 2=Monday format
+        local DAY_NUM=$((TODAY_WEEKDAY + 1))
+        local TODAY_SUFFIX="$DAY_NUM"
+    fi
+    
+    local TODAY_PATH="$DAYS_DIR/${TODAY}  (${TODAY_SUFFIX})"
     
     # Create today's directory if needed
     mkdir -p "$TODAY_PATH"
@@ -90,14 +100,24 @@ create_future_folders() {
     
     # Create folders for next 60 days
     for i in {0..60}; do
-        # Get date and day of week
+        # Get date and weekday number
         local FUTURE_DATE=$(date -v+${i}d +%Y-%m-%d 2>/dev/null || date -d "+${i} days" +%Y-%m-%d)
-        local DAY_OF_WEEK=$(date -v+${i}d +%a 2>/dev/null || date -d "+${i} days" +%a)
-        local FUTURE_PATH="$DAYS_DIR/${FUTURE_DATE}[${DAY_OF_WEEK}]"
+        local WEEKDAY_NUM=$(date -v+${i}d +%w 2>/dev/null || date -d "+${i} days" +%w)  # 0=Sunday
+        
+        # Format the day suffix
+        if [[ "$WEEKDAY_NUM" == "0" ]]; then
+            local DAY_SUFFIX="Sunday"
+        else
+            # Convert to 1=Sunday, 2=Monday format
+            local DAY_NUM=$((WEEKDAY_NUM + 1))
+            local DAY_SUFFIX="$DAY_NUM"
+        fi
+        
+        local FUTURE_PATH="$DAYS_DIR/${FUTURE_DATE}  (${DAY_SUFFIX})"
         
         if [[ ! -d "$FUTURE_PATH" ]]; then
             mkdir -p "$FUTURE_PATH"
-            log "Created future folder: ${FUTURE_DATE}[${DAY_OF_WEEK}]"
+            log "Created future folder: ${FUTURE_DATE}  (${DAY_SUFFIX})"
         fi
     done
 }
@@ -113,8 +133,8 @@ tag_all_days() {
         fi
         
         local day_name=$(basename "$day_dir")
-        # Extract just the date part (before any bracket)
-        local day_date="${day_name%%\[*}"
+        # Extract just the date part (first 10 characters: YYYY-MM-DD)
+        local day_date="${day_name:0:10}"
         
         # Skip today (already has Important tag)
         if [[ "$day_date" == "$TODAY" ]]; then
