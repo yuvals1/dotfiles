@@ -1,31 +1,43 @@
 # Filecal Daemon
 
-A file-based calendar system where folders are dates and files are events, with automatic macOS tagging for visual indicators in file managers.
+A file-based calendar system where folders are dates and files are events, with automatic macOS tagging for visual indicators and multiple view modes via symlinks.
 
 ## Installation
 
 ```bash
-./install.sh    # Install and start daemon
-./uninstall.sh  # Stop and remove daemon
+./install.sh      # Install and start daemon
+./uninstall.sh    # Stop and remove daemon
+./daemon.sh update # Run manual update once (for testing)
 ```
 
 ## Directory Structure
 
 ```
-~/personal/calendar/days/
-├── 2025-08-14/          # Tagged: Point (today)
-│   ├── 0900-meeting     # Event files
-│   └── 1400-lunch
-├── 2025-08-15/          # Tagged: Red (has urgent events)
-│   └── 1800-deadline    # Contains "category:Red"
-├── 2025-08-16/          # Tagged: Green (has events)
-│   └── 1000-standup
-└── 2025-08-17/          # No tag (empty)
+~/personal/calendar/
+├── days/                    # Main calendar folders (one per day)
+│   ├── 2025-08-14  (4)/    # Tagged: Point (today)
+│   │   ├── 0900-meeting    # Event files
+│   │   └── 1400-lunch
+│   ├── 2025-08-15  (5)/    # Tagged: Red (has urgent events)
+│   │   └── 1800-deadline   # Contains "category:Red"
+│   ├── 2025-08-16  (6)/    # Tagged: Green (has events)
+│   │   └── 1000-standup
+│   └── 2025-08-17  (7)/    # No tag (empty)
+├── list-view/               # Flat view of ALL events (symlinks)
+│   ├── 2025-08-14-0900-meeting
+│   ├── 2025-08-14-1400-lunch
+│   ├── 2025-08-15-1800-deadline
+│   └── 2025-08-16-1000-standup
+└── month-view/              # Current month's events only (symlinks)
+    ├── 14-0900-meeting
+    ├── 14-1400-lunch
+    ├── 15-1800-deadline
+    └── 16-1000-standup
 ```
 
 ## Daemon Logic
 
-Runs every 10 minutes, executing three tasks:
+Runs every 10 minutes, executing five tasks:
 
 ### 1. Tag Today (`tag_today`)
 - Remove "Point" tag from yesterday
@@ -44,6 +56,17 @@ For each day folder (except today):
 | Has event with `category:Red` | Red | 🔴 |
 | Has any events | Green | 🟢 |
 | Empty folder | None | - |
+
+### 4. Sync List View (`sync_list_view`)
+- Rebuilds `list-view/` directory with symlinks to ALL events
+- Format: `YYYY-MM-DD-eventname` (e.g., `2025-08-15-0900-meeting`)
+- Provides flat, chronologically sortable view of entire calendar
+
+### 5. Sync Month View (`sync_month_view`)
+- Rebuilds `month-view/` directory with symlinks to current month only
+- Format: `DD-eventname` (e.g., `15-0900-meeting`)
+- Automatically switches to new month at month boundaries
+- Provides focused view of current month's events
 
 ### Tag Transitions
 - **Add event** → Empty becomes Green
