@@ -91,8 +91,7 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     session_id=$(basename "$jsonl_path" .jsonl)
     
     # Create index filename with age prefix, num-msg, dir-name, and parent-dir-path labels
-    # Use underscores instead of spaces to avoid shell issues
-    index_filename="${age_prefix}_num-msg:${num_messages}_dir-name:${project_dir}_parent-dir-path:${parent_path}_${session_id}"
+    index_filename="${age_prefix} num-msg:${num_messages} dir-name:${project_dir} parent-dir-path:${parent_path} ${session_id}"
     
     # Create index file with cd and claude resume command as content
     echo "cd $actual_dir_path ; claude -r $session_id" > "$LOGS_DIR/$index_filename"
