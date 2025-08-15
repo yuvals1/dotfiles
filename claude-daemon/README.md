@@ -1,13 +1,14 @@
 # Claude Logs Daemon
 
-A bash daemon that indexes Claude Code conversations for easy browsing and searching.
+A bash daemon that indexes Claude Code conversations for easy browsing and resuming.
 
 ## What it does
 
 - Scans `~/.claude/projects/*/*.jsonl` files every 10 minutes
 - Creates index files in `~/personal/claude-logs/`
-- Each index file is named: `{num-messages}-{project-dir}-{session-id}`
-- Index files are empty (just the filename contains the metadata)
+- Each index file contains a resume command: `cd {directory} ; claude -r {session-id}`
+- Filenames include conversation metadata: age, message count, project name, and parent directory
+- Skips summary-only files (conversations without a working directory)
 
 ## Files
 
@@ -15,6 +16,7 @@ A bash daemon that indexes Claude Code conversations for easy browsing and searc
 - `claude-logs-daemon.sh` - The daemon that runs the update script every 10 minutes
 - `start-daemon.sh` - Start the daemon in the background
 - `stop-daemon.sh` - Stop the running daemon
+- `status.sh` - Check daemon status and statistics
 - `daemon.log` - Created in `~/personal/claude-logs/` with daemon activity
 
 ## Usage
@@ -36,30 +38,32 @@ A bash daemon that indexes Claude Code conversations for easy browsing and searc
 
 ### Check daemon status
 ```bash
-# Check if running
-if [ -f /tmp/claude-logs-daemon.pid ] && kill -0 $(cat /tmp/claude-logs-daemon.pid) 2>/dev/null; then
-    echo "Daemon is running (PID: $(cat /tmp/claude-logs-daemon.pid))"
-else
-    echo "Daemon is not running"
-fi
+./status.sh
+```
 
-# View logs
+### View logs
+```bash
 tail -f ~/personal/claude-logs/daemon.log
 ```
 
 ## Index File Format
 
-Example: `8--Users-yuvalspiegel-dev-claude-conncurent-test-0bad5d5f-3fb0-4397-8091-c7bd602b0812`
+Example: `0d-2h num-msg:8 dir-name:claude-conncurent-test parent-dir-path:Users-yuvalspiegel-dev 0bad5d5f-3fb0-4397-8091-c7bd602b0812`
 
 This represents:
-- 8 messages in the conversation
-- Project: `/Users/yuvalspiegel/dev/claude-conncurent-test`
-- Session ID: `0bad5d5f-3fb0-4397-8091-c7bd602b0812`
+- `0d-2h` - 0 days, 2 hours since last modified
+- `num-msg:8` - 8 messages in the conversation
+- `dir-name:claude-conncurent-test` - Project directory name
+- `parent-dir-path:Users-yuvalspiegel-dev` - Parent directory path (dots replaced with underscores)
+- `0bad5d5f-3fb0-4397-8091-c7bd602b0812` - Session ID
+
+**File contents:** `cd /Users/yuvalspiegel/dev/claude-conncurent-test ; claude -r 0bad5d5f-3fb0-4397-8091-c7bd602b0812`
 
 ## Performance
 
-- Processes ~500 conversations in ~3-5 seconds
-- Uses `wc -l` for efficient line counting without loading files into memory
+- Processes ~493 conversations in ~17-18 seconds
+- Uses line-by-line reading to find `cwd` field efficiently (stops at first match)
+- Skips files without `cwd` field (summary-only files)
 - Removes and recreates all index files on each run for simplicity
 
 ## Auto-start on Login (Optional)
