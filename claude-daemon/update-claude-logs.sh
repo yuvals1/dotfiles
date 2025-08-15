@@ -69,28 +69,65 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     
     # Extract project directory name and session ID
     full_project_dir=$(basename "$(dirname "$jsonl_path")")
+    
+    # Convert Claude's format back to actual directory path
+    # The trick is that Claude replaces '/' with '-', so we need to be smart about it
+    # Pattern: -Users-{username}-{location}-{project-name}
+    # We reconstruct the path based on the pattern
+    if [[ "$full_project_dir" =~ ^-Users-([^-]+)-dev-(.+)$ ]]; then
+        username="${BASH_REMATCH[1]}"
+        project_name="${BASH_REMATCH[2]}"
+        actual_dir_path="/Users/$username/dev/$project_name"
+    elif [[ "$full_project_dir" =~ ^-Users-([^-]+)-Documents-(.+)$ ]]; then
+        username="${BASH_REMATCH[1]}"
+        project_name="${BASH_REMATCH[2]}"
+        actual_dir_path="/Users/$username/Documents/$project_name"
+    elif [[ "$full_project_dir" =~ ^-Users-([^-]+)-dotfiles-(.+)$ ]]; then
+        username="${BASH_REMATCH[1]}"
+        project_name="${BASH_REMATCH[2]}"
+        actual_dir_path="/Users/$username/dotfiles/$project_name"
+    elif [[ "$full_project_dir" =~ ^-Users-([^-]+)-Desktop-(.+)$ ]]; then
+        username="${BASH_REMATCH[1]}"
+        project_name="${BASH_REMATCH[2]}"
+        actual_dir_path="/Users/$username/Desktop/$project_name"
+    elif [[ "$full_project_dir" =~ ^-Users-([^-]+)-(.+)$ ]]; then
+        # Fallback for projects directly in home directory subdirs
+        username="${BASH_REMATCH[1]}"
+        project_name="${BASH_REMATCH[2]}"
+        actual_dir_path="/Users/$username/$project_name"
+    else
+        # Last resort fallback
+        actual_dir_path=$(echo "$full_project_dir" | sed 's/^-/\//' | tr '-' '/')
+    fi
+    
     # Extract the actual project name from Claude's path format
     # Pattern: -Users-{username}-{location}-{project-name}
-    # We want just the project name part
+    # We want just the project name part and the parent path
     if [[ "$full_project_dir" =~ -dev-(.+)$ ]]; then
         project_dir="${BASH_REMATCH[1]}"
+        parent_path=$(echo "$full_project_dir" | sed 's/\(-dev-\).*/\1/' | sed 's/^-//' | sed 's/-$//')
     elif [[ "$full_project_dir" =~ -Documents-(.+)$ ]]; then
         project_dir="${BASH_REMATCH[1]}"
+        parent_path=$(echo "$full_project_dir" | sed 's/\(-Documents-\).*/\1/' | sed 's/^-//' | sed 's/-$//')
     elif [[ "$full_project_dir" =~ -dotfiles-(.+)$ ]]; then
         project_dir="${BASH_REMATCH[1]}"
+        parent_path=$(echo "$full_project_dir" | sed 's/\(-dotfiles-\).*/\1/' | sed 's/^-//' | sed 's/-$//')
     elif [[ "$full_project_dir" =~ -Desktop-(.+)$ ]]; then
         project_dir="${BASH_REMATCH[1]}"
+        parent_path=$(echo "$full_project_dir" | sed 's/\(-Desktop-\).*/\1/' | sed 's/^-//' | sed 's/-$//')
     else
         # Fallback: take everything after the last occurrence of username
         project_dir=$(echo "$full_project_dir" | sed 's/.*-yuvalspiegel-//')
+        parent_path=$(echo "$full_project_dir" | sed 's/-[^-]*$//' | sed 's/^-//')
     fi
+    
     session_id=$(basename "$jsonl_path" .jsonl)
     
-    # Create index filename with age prefix and num-msg label
-    index_filename="${age_prefix}-num-msg:${num_messages}-${project_dir}-${session_id}"
+    # Create index filename with age prefix, num-msg, dir-name, and parent-dir-path labels
+    index_filename="${age_prefix} num-msg:${num_messages} dir-name:${project_dir} parent-dir-path:${parent_path} ${session_id}"
     
-    # Create empty index file
-    touch "$LOGS_DIR/$index_filename"
+    # Create index file with cd and claude resume command as content
+    echo "cd $actual_dir_path ; claude -r $session_id" > "$LOGS_DIR/$index_filename"
     
     total_files=$((total_files + 1))
 done
