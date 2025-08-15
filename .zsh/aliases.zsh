@@ -6,6 +6,7 @@ alias icat='kitty +kitten icat'
 # alias y='yazi'
 alias yt='yazi ~/personal/tasks/"$TASK_PROGRESS"'
 alias yp='yazi ~/personal'
+alias yc='yazi ~/personal/calendar/days'
 alias sp='yazi ~/spotify'
 alias n='nvim'
 alias scivim="NVIM_APPNAME=scivim nvim"
