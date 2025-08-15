@@ -20,6 +20,7 @@ Indexes Claude Code conversations every 10 minutes for easy browsing and resumin
 **Example**: `0d-2h num-msg:8 dir-name:claude-test parent-dir-path:Users-dev 0bad5d5f-3fb0`
 
 **File contents**: `cd /Users/dev/claude-test ; claude -r 0bad5d5f-3fb0`
+*(Resume command to continue the conversation from its original directory)*
 
 ## Performance
 
