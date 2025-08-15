@@ -13,7 +13,7 @@ CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 source "$CONFIG_DIR/colors.sh"
 
 # Tracking directory
-TRACKING_DIR="$HOME/tracking"
+TRACKING_DIR="$HOME/personal/tracking"
 
 # Function to log session to daily file
 log_session() {

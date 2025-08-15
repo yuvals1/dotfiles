@@ -2,7 +2,7 @@
 
 # Calculate and display time spent in each mode with colored backgrounds for a specific date
 
-TRACKING_DIR="$HOME/tracking"
+TRACKING_DIR="$HOME/personal/tracking"
 HISTORY_DATE_FILE="/tmp/sketchybar_history_date"
 CONFIG_DIR="$HOME/.config/sketchybar"
 CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
