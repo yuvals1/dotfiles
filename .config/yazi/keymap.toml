@@ -855,12 +855,12 @@ desc = "Search file by content (rg)"
 # desc = "Search files containing 'hello'"
 #
 [[mgr.prepend_keymap]]
-on = "p"
+on = "P"
 run = "plugin smart-paste"
 desc = "Paste into the hovered directory or CWD"
 
 [[mgr.prepend_keymap]]
-on = "P"
+on = "p"
 run = "paste"
 desc = "regular paste"
 
