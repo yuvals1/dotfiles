@@ -670,6 +670,11 @@ run = "plugin date-filter twoweeks"
 desc = "Filter: Next 2 weeks"
 
 [[mgr.prepend_keymap]]
+on = [",", "e"]
+run = "plugin date-filter twoweeks-ahead"
+desc = "Filter: Next 14 days"
+
+[[mgr.prepend_keymap]]
 on = [",", "m"]
 run = "plugin date-filter month"
 desc = "Filter: This month"

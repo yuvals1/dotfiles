@@ -64,6 +64,23 @@ local function get_week_ahead_pattern()
     return pattern
 end
 
+-- Get pattern for two weeks ahead (next 14 days from today)
+local function get_two_weeks_ahead_pattern()
+    local today = os.time()
+    local dates = {}
+    
+    -- Collect the next 14 days including today
+    for i = 0, 13 do
+        local day = today + (i * 86400)
+        local date_str = os.date("%Y-%m-%d", day)
+        table.insert(dates, date_str)
+    end
+    
+    -- Build regex pattern that matches any of these dates
+    local pattern = "^(" .. table.concat(dates, "|") .. ")"
+    return pattern
+end
+
 -- Get pattern for current month
 local function get_current_month_pattern()
     return "^" .. os.date("%Y-%m") .. "-"
@@ -106,6 +123,14 @@ return {
             ya.notify {
                 title = "Date Filter",
                 content = "Filtering: Next 7 days",
+                timeout = 1,
+            }
+        elseif action == "twoweeks-ahead" then
+            local pattern = get_two_weeks_ahead_pattern()
+            apply_filter(pattern)
+            ya.notify {
+                title = "Date Filter",
+                content = "Filtering: Next 14 days",
                 timeout = 1,
             }
         elseif action == "month" then
