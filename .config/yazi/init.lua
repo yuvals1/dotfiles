@@ -106,6 +106,48 @@ function Linemode:recency()
   end
 end
 
+function Linemode:age()
+  -- Get file birth/creation time
+  local btime = self._file.cha.btime
+  if not btime then
+    return ''
+  end
+  
+  -- Get current time
+  local current_time = os.time()
+  
+  -- Calculate difference in seconds
+  local diff = current_time - btime
+  
+  -- Handle files with future timestamps
+  if diff < 0 then
+    return '0d'
+  end
+  
+  -- Convert to days
+  local days = math.floor(diff / 86400)
+  
+  if days == 0 then
+    local hours = math.floor(diff / 3600)
+    if hours == 0 then
+      local mins = math.floor(diff / 60)
+      return mins .. 'm'
+    end
+    return hours .. 'h'
+  elseif days < 7 then
+    return days .. 'd'
+  elseif days < 30 then
+    local weeks = math.floor(days / 7)
+    return weeks .. 'w'
+  elseif days < 365 then
+    local months = math.floor(days / 30)
+    return months .. 'mo'
+  else
+    local years = math.floor(days / 365)
+    return years .. 'y'
+  end
+end
+
 function Linemode:daysfrom()
   -- Extract date from filename (handles both YYYY-MM-DD and YYYY-MM-DD[Day] formats)
   local filename = self._file.name

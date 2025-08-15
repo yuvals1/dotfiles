@@ -229,6 +229,22 @@ keymap = [
   ], desc = "Sort by birth time (reverse)" },
   { on = [
     "b",
+    "g",
+  ], run = [
+    "sort btime --reverse=no",
+    "linemode age",
+    "plugin pref-by-location -- save",
+  ], desc = "Sort by age (oldest first) with age display" },
+  { on = [
+    "b",
+    "G",
+  ], run = [
+    "sort btime --reverse",
+    "linemode age",
+    "plugin pref-by-location -- save",
+  ], desc = "Sort by age (newest first) with age display" },
+  { on = [
+    "b",
     "e",
   ], run = "sort extension --reverse=no", desc = "Sort by extension" },
   { on = [
