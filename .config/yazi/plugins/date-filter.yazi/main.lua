@@ -34,11 +34,11 @@ local function get_current_week_pattern()
         
         if math.floor(end_day / 10) == tens then
             -- Same tens digit (e.g., 11-17 or 21-27)
-            return string.format("^%s-(%d[%d-%d])$", month, tens, start_ones, end_ones)
+            return string.format("^%s-(%d[%d-%d])\\[", month, tens, start_ones, end_ones)
         else
             -- Spans tens (e.g., 07-13 or 28-31)
             -- For simplicity, match broader range
-            return string.format("^%s-(0[%d-9]|1[0-%d])$", month, start_ones, end_ones)
+            return string.format("^%s-(0[%d-9]|1[0-%d])\\[", month, start_ones, end_ones)
         end
     end
     
@@ -67,7 +67,7 @@ return {
         local action = job.args[1]
         
         if action == "today" then
-            local pattern = "^" .. get_today() .. "$"
+            local pattern = "^" .. get_today() .. "\\["
             apply_filter(pattern)
             ya.notify {
                 title = "Date Filter",

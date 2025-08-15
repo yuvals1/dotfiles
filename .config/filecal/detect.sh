@@ -18,18 +18,20 @@ echo "["
 first=true
 TODAY=$(date +%Y-%m-%d)
 
-# Check each day directory
-for day_dir in "$DAYS_DIR"/????-??-??; do
+# Check each day directory (with or without day suffix)
+for day_dir in "$DAYS_DIR"/????-??-??*; do
     if [[ ! -d "$day_dir" ]]; then
         continue
     fi
     
     day_name=$(basename "$day_dir")
+    # Extract just the date part (before any bracket)
+    day_date="${day_name%%[*}"
     
     # Determine what tag this day should have
     desired_tag=""
     
-    if [[ "$day_name" == "$TODAY" ]]; then
+    if [[ "$day_date" == "$TODAY" ]]; then
         # Today should have Point tag
         desired_tag="$POINT_TAG"
     else

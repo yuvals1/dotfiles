@@ -58,7 +58,8 @@ check_day_content() {
 # Tag today with Important
 tag_today() {
     local TODAY=$(date +%Y-%m-%d)
-    local TODAY_PATH="$DAYS_DIR/$TODAY"
+    local TODAY_DAY=$(date +%a)
+    local TODAY_PATH="$DAYS_DIR/${TODAY}[${TODAY_DAY}]"
     
     # Create today's directory if needed
     mkdir -p "$TODAY_PATH"
@@ -68,13 +69,14 @@ tag_today() {
         return 0  # Already tagged correctly
     fi
     
-    # Remove Point tag from yesterday
+    # Remove Point tag from yesterday (check both with and without suffix)
     local YESTERDAY=$(date -v-1d +%Y-%m-%d 2>/dev/null || date -d "-1 day" +%Y-%m-%d)
-    local YESTERDAY_PATH="$DAYS_DIR/$YESTERDAY"
-    if [[ -d "$YESTERDAY_PATH" ]]; then
-        $TAG_CMD -r "$IMPORTANT_TAG" "$YESTERDAY_PATH" 2>/dev/null
-        log "Removed Point tag from $YESTERDAY"
-    fi
+    for yesterday_dir in "$DAYS_DIR"/${YESTERDAY}*; do
+        if [[ -d "$yesterday_dir" ]]; then
+            $TAG_CMD -r "$IMPORTANT_TAG" "$yesterday_dir" 2>/dev/null
+            log "Removed Point tag from $(basename "$yesterday_dir")"
+        fi
+    done
     
     # Clear any other tags from today and add Point
     clear_tags "$TODAY_PATH"
@@ -88,12 +90,14 @@ create_future_folders() {
     
     # Create folders for next 60 days
     for i in {0..60}; do
+        # Get date and day of week
         local FUTURE_DATE=$(date -v+${i}d +%Y-%m-%d 2>/dev/null || date -d "+${i} days" +%Y-%m-%d)
-        local FUTURE_PATH="$DAYS_DIR/$FUTURE_DATE"
+        local DAY_OF_WEEK=$(date -v+${i}d +%a 2>/dev/null || date -d "+${i} days" +%a)
+        local FUTURE_PATH="$DAYS_DIR/${FUTURE_DATE}[${DAY_OF_WEEK}]"
         
         if [[ ! -d "$FUTURE_PATH" ]]; then
             mkdir -p "$FUTURE_PATH"
-            log "Created future folder: $FUTURE_DATE"
+            log "Created future folder: ${FUTURE_DATE}[${DAY_OF_WEEK}]"
         fi
     done
 }
@@ -102,16 +106,18 @@ create_future_folders() {
 tag_all_days() {
     local TODAY=$(date +%Y-%m-%d)
     
-    # Process all date folders
-    for day_dir in "$DAYS_DIR"/????-??-??; do
+    # Process all date folders (with or without day suffix)
+    for day_dir in "$DAYS_DIR"/????-??-??*; do
         if [[ ! -d "$day_dir" ]]; then
             continue
         fi
         
         local day_name=$(basename "$day_dir")
+        # Extract just the date part (before any bracket)
+        local day_date="${day_name%%\[*}"
         
         # Skip today (already has Important tag)
-        if [[ "$day_name" == "$TODAY" ]]; then
+        if [[ "$day_date" == "$TODAY" ]]; then
             continue
         fi
         
