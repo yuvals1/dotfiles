@@ -121,6 +121,19 @@ function Linemode:daysfrom()
     return ''
   end
   
+  -- Check if this directory has a Red tag
+  -- Access the mactag-unified module's tags if available
+  local mactag = package.loaded["mactag-unified"]
+  if mactag and mactag.tags then
+    local path = tostring(self._file.url)
+    local tags = mactag.tags[path]
+    
+    -- Only show day count for Red-tagged directories
+    if not tags or not tags[1] or tags[1] ~= "Red" then
+      return ''
+    end
+  end
+  
   -- Get today's date at midnight
   local today = os.date("*t")
   today.hour = 0
