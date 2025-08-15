@@ -617,6 +617,11 @@ desc = "Keyjump (Global mode)"
 
 # Date filtering for calendar
 [[mgr.prepend_keymap]]
+on = [",", ","]
+run = "plugin calendar-jump today"
+desc = "Jump to today's calendar"
+
+[[mgr.prepend_keymap]]
 on = [",", "t"]
 run = "plugin date-filter today"
 desc = "Filter: Today"
