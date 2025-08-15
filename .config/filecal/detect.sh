@@ -25,8 +25,8 @@ for day_dir in "$DAYS_DIR"/????-??-??*; do
     fi
     
     day_name=$(basename "$day_dir")
-    # Extract just the date part (before any bracket)
-    day_date="${day_name%%[*}"
+    # Extract just the date part (first 10 characters: YYYY-MM-DD)
+    day_date="${day_name:0:10}"
     
     # Determine what tag this day should have
     desired_tag=""
