@@ -1,36 +1,28 @@
 -- Calendar jump plugin - jump directly to today's calendar folder
 
--- Sync function to find today's folder index
-local find_today_index = ya.sync(function()
-    local today = os.date("%Y-%m-%d")
-    local cur = cx.active.current
-    local files = cur.files
-    
-    -- Find the folder that starts with today's date
-    for i = 1, #files do
-        local name = files[i].name
-        if name and tostring(name):sub(1, 10) == today then
-            return i - cur.cursor - 1  -- Return delta from current position (0-based)
-        end
-    end
-    
-    return nil
-end)
-
 return {
     entry = function(_, job)
         local action = job.args[1] or "today"
         
         if action == "today" then
-            -- First navigate to the calendar days directory
-            local calendar_days = os.getenv("HOME") .. "/personal/calendar/days"
-            ya.manager_emit("cd", { calendar_days })
+            -- Get today's date
+            local today = os.date("%Y-%m-%d")
+            local weekday_num = tonumber(os.date("%w"))  -- 0=Sunday
             
-            -- Then find and hover on today's folder
-            local delta = find_today_index()
-            if delta then
-                ya.manager_emit("arrow", { delta })
+            -- Build the exact folder name with new format
+            local suffix
+            if weekday_num == 0 then
+                suffix = "  (Sunday)"
+            else
+                suffix = "  (" .. (weekday_num + 1) .. ")"
             end
+            
+            -- Construct full path
+            local calendar_days = os.getenv("HOME") .. "/personal/calendar/days"
+            local today_path = calendar_days .. "/" .. today .. suffix
+            
+            -- Use reveal with exact path - this works reliably
+            ya.manager_emit("reveal", { today_path })
             
             -- Optional: Show notification
             ya.notify {
