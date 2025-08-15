@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Enhanced calendar daemon
-# - Tags today with Important
+# - Tags today with Point
 # - Creates 2 months of future folders
 # - Tags days with events (Green or Red based on priority)
 
@@ -22,7 +22,6 @@ log() {
 clear_tags() {
     local path="$1"
     $TAG_CMD -r "$IMPORTANT_TAG" "$path" 2>/dev/null
-    $TAG_CMD -r "Important" "$path" 2>/dev/null  # Clean up old tag name
     $TAG_CMD -r "$RED_TAG" "$path" 2>/dev/null
     $TAG_CMD -r "$GREEN_TAG" "$path" 2>/dev/null
 }
@@ -42,11 +41,11 @@ check_day_content() {
         return 1  # Empty directory
     fi
     
-    # Check if any file has Red or Important macOS tags
+    # Check if any file has Red macOS tags
     for file in "$day_path"/*; do
         if [[ -f "$file" ]]; then
             local file_tags=$($TAG_CMD -l "$file" 2>/dev/null)
-            if echo "$file_tags" | grep -qE "Red|Important"; then
+            if echo "$file_tags" | grep -q "Red"; then
                 return 3  # Has important/red events
             fi
         fi
@@ -55,7 +54,7 @@ check_day_content() {
     return 0  # Has regular events
 }
 
-# Tag today with Important
+# Tag today with Point
 tag_today() {
     local TODAY=$(date +%Y-%m-%d)
     local TODAY_WEEKDAY=$(date +%w)  # 0=Sunday, 1=Monday, etc.
@@ -136,7 +135,7 @@ tag_all_days() {
         # Extract just the date part (first 10 characters: YYYY-MM-DD)
         local day_date="${day_name:0:10}"
         
-        # Skip today (already has Important tag)
+        # Skip today (already has Point tag)
         if [[ "$day_date" == "$TODAY" ]]; then
             continue
         fi

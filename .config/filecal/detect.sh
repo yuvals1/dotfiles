@@ -39,12 +39,12 @@ for day_dir in "$DAYS_DIR"/????-??-??*; do
         file_count=$(find "$day_dir" -maxdepth 1 -type f | wc -l | tr -d ' ')
         
         if [[ $file_count -gt 0 ]]; then
-            # Has files - check if any files have Red or Important tags
+            # Has files - check if any files have Red tags
             has_red_file=false
             for file in "$day_dir"/*; do
                 if [[ -f "$file" ]]; then
                     file_tags=$($TAG_CMD -l "$file" 2>/dev/null)
-                    if echo "$file_tags" | grep -qE "Red|Important"; then
+                    if echo "$file_tags" | grep -q "Red"; then
                         has_red_file=true
                         break
                     fi
