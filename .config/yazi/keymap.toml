@@ -864,6 +864,11 @@ on = "P"
 run = "paste"
 desc = "regular paste"
 
+[[mgr.prepend_keymap]]
+on = "A"
+run = "plugin smart-add"
+desc = "Create file/folder in hovered directory or CWD"
+
 # [[mgr.prepend_keymap]]
 # on = "S"
 # run = '''
