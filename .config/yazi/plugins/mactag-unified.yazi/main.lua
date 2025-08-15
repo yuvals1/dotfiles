@@ -15,7 +15,6 @@ local MANAGED_TAGS = {
     ["blue"] = "Blue",
     ["purple"] = "Purple",
     ["done"] = "Done",
-    ["important"] = "Important",
     ["x"] = "X",
     ["sleep"] = "Sleep",
     ["point"] = "Point",
@@ -59,8 +58,6 @@ local function setup(st, _)
                     return ui.Line { ui.Span("● "):fg("#5fa3f8"), original }
                 elseif tag == "Purple" then
                     return ui.Line { ui.Span("● "):fg("#cb88f8"), original }
-                elseif tag == "Important" then
-                    return ui.Line { ui.Span("❗ "), original }
                 elseif tag == "X" then
                     return ui.Line { ui.Span("❌ "), original }
                 elseif tag == "Sleep" then
@@ -260,7 +257,7 @@ local function entry(_, job)
         for _, change in ipairs(changes) do
             local tag_key = nil
             if change.tag == "Point" then
-                tag_key = "important"  -- Map to mactag key
+                tag_key = "point"
             elseif change.tag == "Red" then
                 tag_key = "red"
             elseif change.tag == "Green" then
@@ -338,7 +335,7 @@ local function update_calendar_tags(changes_json)
     for _, change in ipairs(changes) do
         local tag_key = nil
         if change.tag == "Point" then
-            tag_key = "important"  -- Map to mactag key
+            tag_key = "point"
         elseif change.tag == "Red" then
             tag_key = "red"
         elseif change.tag == "Green" then
