@@ -18,8 +18,14 @@ require('full-border'):setup()
 local pref_by_location = require("pref-by-location")
 pref_by_location:setup({
   prefs = {
-    -- Always sort ~/tasks alphabetically
+    -- Always sort tasks directories alphabetically
+    -- Matches any path ending with /tasks (configurable via TASK_BASE_DIR)
     { location = ".*/tasks$", 
+      sort = { "alphabetical", reverse = false, dir_first = true },
+      linemode = "none"
+    },
+    -- Also sort task subdirectories
+    { location = ".*/tasks/[^/]+$", 
       sort = { "alphabetical", reverse = false, dir_first = true },
       linemode = "none"
     },

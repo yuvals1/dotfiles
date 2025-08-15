@@ -105,7 +105,7 @@ keymap = [
   { on = [
     "g",
     "t",
-  ], run = "cd '~/tasks/1-⭐ in-progress/'", desc = "Go to tasks directory" },
+  ], run = "cd ~/personal/tasks/in-progress", desc = "Go to tasks in-progress directory" },
 
   # Linemode
   { on = [
@@ -884,22 +884,22 @@ desc = "Clear current task"
 
 [[mgr.prepend_keymap]]
 on = ["t", "d"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_done \"$@\""'
+run = 'shell --confirm "export TASK_BASE_DIR=~/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_done \"$@\""'
 desc = "Mark task as done (move to done folder and clear if current)"
 
 [[mgr.prepend_keymap]]
 on = ["t", "b"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_backlog \"$@\""'
+run = 'shell --confirm "export TASK_BASE_DIR=~/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_backlog \"$@\""'
 desc = "Move task to backlog"
 
 [[mgr.prepend_keymap]]
 on = ["t", "p"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
+run = 'shell --confirm "export TASK_BASE_DIR=~/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
 desc = "Move task to progress"
 
 [[mgr.prepend_keymap]]
 on = ["t", "w"]
-run = 'shell --confirm "source ~/.zsh/task-folders.zsh; task_move_waiting \"$@\""'
+run = 'shell --confirm "export TASK_BASE_DIR=~/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_waiting \"$@\""'
 desc = "Move task to waiting"
 
 # [[mgr.prepend_keymap]]
