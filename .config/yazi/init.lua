@@ -110,6 +110,52 @@ function Linemode:recency()
   end
 end
 
+function Linemode:daysfrom()
+  -- Extract date from filename (handles both YYYY-MM-DD and YYYY-MM-DD[Day] formats)
+  local filename = self._file.name
+  local date_pattern = "^(%d%d%d%d)%-(%d%d)%-(%d%d)"
+  local year, month, day = filename:match(date_pattern)
+  
+  -- If not a date folder, return empty
+  if not year or not month or not day then
+    return ''
+  end
+  
+  -- Get today's date at midnight
+  local today = os.date("*t")
+  today.hour = 0
+  today.min = 0
+  today.sec = 0
+  local today_time = os.time(today)
+  
+  -- Create time for the folder date at midnight
+  local folder_time = os.time({
+    year = tonumber(year),
+    month = tonumber(month),
+    day = tonumber(day),
+    hour = 0,
+    min = 0,
+    sec = 0
+  })
+  
+  -- Calculate difference in days
+  local diff_seconds = folder_time - today_time
+  local diff_days = math.floor(diff_seconds / 86400)
+  
+  -- Format the output
+  if diff_days == 0 then
+    return 'Today'
+  elseif diff_days == 1 then
+    return 'Tomorrow'
+  elseif diff_days == -1 then
+    return 'Yesterday'
+  elseif diff_days > 0 then
+    return '+' .. diff_days .. 'd'
+  else
+    return diff_days .. 'd'
+  end
+end
+
 -- require('simple-tag'):setup {
 --   -- UI display mode (icon, text, hidden)
 --   ui_mode = 'icon', -- (Optional)

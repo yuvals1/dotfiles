@@ -207,6 +207,14 @@ keymap = [
   ], desc = "Sort by modified time (reverse)" },
   { on = [
     "b",
+    ",",
+  ], run = [
+    "sort alphabetical --reverse=no",
+    "linemode daysfrom",
+    "plugin pref-by-location -- save",
+  ], desc = "Calendar mode (days from today)" },
+  { on = [
+    "b",
     "c",
   ], run = [
     "sort btime --reverse=no",
@@ -656,6 +664,7 @@ desc = "Filter: This year"
 on = [",", "u"]
 run = "plugin mactag-unified calendar"
 desc = "Update calendar tags"
+
 
 
 [[mgr.prepend_keymap]]
