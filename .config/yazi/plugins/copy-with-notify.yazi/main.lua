@@ -39,44 +39,74 @@ local get_hovered = ya.sync(function()
   return nil
 end)
 
+local get_selected_files = ya.sync(function()
+  local selected = {}
+  for _, u in pairs(cx.active.selected) do
+    table.insert(selected, {
+      url = tostring(u),
+      name = u.name
+    })
+  end
+  return selected
+end)
+
 return {
   entry = function(self, job)
-    local hovered = get_hovered()
-    if not hovered then
-      return info('Copy', 'No item hovered')
-    end
-
     -- Get the mode from job.args
     local mode = job.args and job.args[1] or "path"
     
-    -- Debug notification
-    -- info("Debug", string.format("Mode: %s, Args: %s", mode, job.args and table.concat(job.args, ", ") or "nil"))
+    -- Get selected files first, fallback to hovered
+    local selected_files = get_selected_files()
+    local files_to_process = {}
     
-    local content, title
-    
-    if mode == "path" then
-      content = hovered.url
-      title = "Full Path"
-    elseif mode == "relative" then
-      content = get_relative_path(hovered.url)
-      title = "Relative Path"
-    elseif mode == "filename" then
-      content = hovered.name
-      title = "Filename"
-    elseif mode == "name_without_ext" then
-      content = remove_extension(hovered.name)
-      title = "Filename without extension"
-    elseif mode == "dirname" then
-      content = hovered.url:match("(.*/)")
-      if not content then
-        content = "/"
-      end
-      title = "Directory Path"
+    if #selected_files > 0 then
+      files_to_process = selected_files
     else
-      return info('Copy', 'Unknown mode: ' .. mode)
+      local hovered = get_hovered()
+      if not hovered then
+        return info('Copy', 'No item hovered or selected')
+      end
+      files_to_process = {hovered}
     end
-
+    
+    local content_parts = {}
+    local title
+    
+    for _, file in ipairs(files_to_process) do
+      local file_content
+      
+      if mode == "path" then
+        file_content = file.url
+        title = "Full Path"
+      elseif mode == "relative" then
+        file_content = get_relative_path(file.url)
+        title = "Relative Path"
+      elseif mode == "filename" then
+        file_content = file.name
+        title = "Filename"
+      elseif mode == "name_without_ext" then
+        file_content = remove_extension(file.name)
+        title = "Filename without extension"
+      elseif mode == "dirname" then
+        file_content = file.url:match("(.*/)")
+        if not file_content then
+          file_content = "/"
+        end
+        title = "Directory Path"
+      else
+        return info('Copy', 'Unknown mode: ' .. mode)
+      end
+      
+      table.insert(content_parts, file_content)
+    end
+    
+    local content = table.concat(content_parts, "\n")
     ya.clipboard(content)
-    info(title, string.format('Copied: %s', content))
+    
+    if #files_to_process == 1 then
+      info(title, string.format('Copied: %s', content))
+    else
+      info(title, string.format('Copied %d %s', #files_to_process, title:lower() .. "s"))
+    end
   end,
 }
