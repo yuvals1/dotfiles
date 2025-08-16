@@ -200,7 +200,10 @@ bash "$CONFIG_DIR/plugins/render_stopwatch_modes.sh" clear
         SECONDS=$((ELAPSED % 60))
         TIME_STR=$(printf "%02d:%02d:%02d" $HOURS $MINUTES $SECONDS)
         
-        sketchybar --set stopwatch label="$TIME_STR"
+        # Get the mode label to show with time
+        MODE_LABEL=$(get_mode_label)
+        
+        sketchybar --set stopwatch label="$MODE_LABEL: $TIME_STR"
         sleep 1
     done
 ) &
