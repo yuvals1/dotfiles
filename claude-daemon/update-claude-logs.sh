@@ -85,8 +85,8 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     remaining_seconds=$((age_seconds % 86400))
     hours=$((remaining_seconds / 3600))
     
-    # Format as Xd-Yh
-    age_prefix="${days}d-${hours}h"
+    # Format as XXd-YYh with zero padding
+    age_prefix=$(printf "%02dd-%02dh" "$days" "$hours")
     
     session_id=$(basename "$jsonl_path" .jsonl)
     
