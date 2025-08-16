@@ -17,14 +17,14 @@ Indexes Claude Code conversations every 10 minutes for easy browsing and resumin
 
 **Filename format**: `{age} num-msg:{count} dir-name:{project} parent-dir-path:{path} {session-id}`
 
-**Example**: `0d-2h num-msg:8 dir-name:claude-test parent-dir-path:Users-dev 0bad5d5f-3fb0`
+**Example**: `00d-02h num-msg:8 dir-name:claude-test parent-dir-path:Users-dev 0bad5d5f-3fb0`
 
 **File contents**: `cd /Users/dev/claude-test ; claude -r 0bad5d5f-3fb0`
 *(Resume command to continue the conversation from its original directory)*
 
 ## Performance
 
-Processes ~490 conversations in ~18 seconds. Skips summary-only files.
+Processes ~490 conversations in ~18 seconds. Skips summary-only files and conversations older than 99 days.
 
 ## Future Considerations
 
