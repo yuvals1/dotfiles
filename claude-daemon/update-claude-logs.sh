@@ -50,26 +50,49 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
         continue
     fi
     
-    # Extract the actual directory path from the cwd field in the JSONL file
-    # Read line by line and stop as soon as we find a cwd field
-    actual_dir_path=""
-    while IFS= read -r line; do
-        if [[ "$line" == *'"cwd":"'* ]]; then
-            actual_dir_path=$(echo "$line" | sed 's/.*"cwd":"\([^"]*\)".*/\1/')
-            break
+    # Derive the original directory from the Claude project path
+    # Claude stores projects based on where 'claude' was originally run
+    project_name=$(basename "$(dirname "$jsonl_path")")
+    
+    # Remove leading dash and split by dashes
+    path_without_dash="${project_name#-}"
+    
+    # Split the path into segments
+    IFS='-' read -ra segments <<< "$path_without_dash"
+    
+    # Iteratively build the path by testing directory existence
+    reconstructed_path=""
+    current_segment=""
+    
+    for i in "${!segments[@]}"; do
+        if [ -z "$current_segment" ]; then
+            current_segment="${segments[$i]}"
+        else
+            current_segment="$current_segment-${segments[$i]}"
         fi
-    done < "$jsonl_path"
+        
+        # Test if this should be a directory boundary
+        test_path="$reconstructed_path/$current_segment"
+        
+        if [ -d "$test_path" ]; then
+            # This segment is a complete directory, add it to path
+            reconstructed_path="$test_path"
+            current_segment=""
+        elif [ "$i" -eq "$((${#segments[@]} - 1))" ]; then
+            # Last segment, must be part of the final directory
+            reconstructed_path="$reconstructed_path/$current_segment"
+        fi
+    done
     
-    # Skip files without cwd (likely summary-only files or incomplete sessions)
-    if [ -z "$actual_dir_path" ]; then
-        continue
-    fi
+    # Always use the reconstructed path from the project name
+    # This is where claude was originally started from
+    original_dir_path="$reconstructed_path"
     
-    # Extract project name and parent path from the actual directory
+    # Extract project name and parent path from the reconstructed path for display
     # Replace dots with underscores in project directory name for filename safety
-    project_dir=$(basename "$actual_dir_path" | tr '.' '_')
+    project_dir=$(basename "$reconstructed_path" | tr '.' '_')
     # Replace slashes with dashes and dots with underscores in parent path for filename safety
-    parent_path=$(dirname "$actual_dir_path" | sed 's/^\///' | tr '/' '-' | tr '.' '_')
+    parent_path=$(dirname "$reconstructed_path" | sed 's/^\///' | tr '/' '-' | tr '.' '_')
     
     # Get file modification time and calculate age in days and hours
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -105,7 +128,7 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     index_filename="${age_prefix} msg:${num_messages} dir:---${project_dir}--- parent-dir-path:${parent_path} ${session_id}"
     
     # Create index file with cd and claude resume command as content
-    echo "cd $actual_dir_path ; claude -r $session_id" > "$LOGS_DIR/$index_filename"
+    echo "cd $original_dir_path ; claude -r $session_id" > "$LOGS_DIR/$index_filename"
     
     total_files=$((total_files + 1))
     
