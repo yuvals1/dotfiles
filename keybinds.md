@@ -13,17 +13,17 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+p`                 | Kitty        | Tmux menu                         | Opens tmux menu                          |
 | `cmd+y`                 | Kitty        | Split tmux vertically right       | Vertical split to the right              |
 | `cmd+u`                 | Kitty        | Split tmux horizontally           | Horizontal split                         |
-| `cmd+x`                 | Kitty        | Kill tmux pane                    | Closes current pane                      |
+| `cmd+x`                 | Kitty        | Equally divide panes              | Equally divide vertical space            |
 | `cmd+x`                 | Chrome       | Close tab + reopen last           | Special Chrome behavior                  |
 | `cmd+z`                 | Kitty        | Toggle tmux zoom                  | Zoom/unzoom current pane                 |
 | `cmd+h`                 | Kitty        | Navigate tmux pane left           | Move to left pane                        |
 | `cmd+j`                 | Kitty        | Navigate tmux pane down           | Move to down pane                        |
 | `cmd+k`                 | Kitty        | Navigate tmux pane up             | Move to up pane                          |
 | `cmd+l`                 | Kitty        | Navigate tmux pane right          | Move to right pane                       |
-| `cmd+q`                 | Kitty        | Quit vim                          | vim: :q                                  |
+| `cmd+q`                 | Kitty        | (Disabled)                        | Does nothing - disabled to prevent accidents |
 | `cmd+d`                 | Kitty        | Force quit vim                    | vim: :q!                                 |
 | `cmd+d`                 | Chrome       | Cut                               | Remapped to cmd+x                        |
-| `cmd+w`                 | Kitty        | Write vim buffer                  | vim: :w                                  |
+| `cmd+w`                 | Kitty        | Kill tmux pane                    | Closes current pane                      |
 | `cmd+,`                 | Kitty        | Live grep                         | Telescope live_grep                      |
 | `cmd+m`                 | Kitty        | Smart open                        | Telescope smart_open                     |
 | `cmd+o`                 | Kitty        | Tmux jump                         | Tmux jumpkey/hop                         |
@@ -56,12 +56,15 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+f`                 | System/Kitty | Find / **Available**              | Standard macOS find (non-Chrome/Kitty)   |
 | `cmd+g`                 | Chrome       | Click at (1442, 605)              | Right-center position (Chrome only)      |
 | `cmd+n`                 | System       | New                               | Standard macOS new window/document       |
+| `cmd+s`                 | Kitty        | Write vim buffer                  | vim: :w                                  |
 | `cmd+s`                 | Chrome       | Click at (2470, 644)              | Chrome-specific click position           |
-| `cmd+s`                 | System       | Save                              | Standard macOS save (non-Chrome)         |
+| `cmd+s`                 | System       | Save                              | Standard macOS save (non-Chrome/Kitty)   |
 | `cmd+v`                 | System       | Paste                             | Standard macOS paste                     |
 | `cmd+space`             | System       | Spotlight                         | Standard macOS Spotlight search          |
 | `cmd+tab`               | System       | App Switcher                      | Standard macOS app switcher              |
-| `cmd+shift+z`           | System       | Redo                              | Standard macOS redo                      |
+| `cmd+shift+w`           | Kitty        | Rename tmux window                | Opens rename prompt (prefix + ,)         |
+| `cmd+shift+z`           | Kitty        | Toggle tmux pane size             | Toggle between 75% and 50% height        |
+| `cmd+shift+z`           | System       | Redo                              | Standard macOS redo (non-Kitty)          |
 | `cmd+/`                 | Global       | Click at (1074, 605)              | Left-center position                     |
 | `cmd+shift+/`           | Global       | Click at (1442, 605)              | Right-center position                    |
 | `cmd+shift+a`           | Global       | Speak clipboard (175 wpm)         | Text-to-speech normal speed              |
