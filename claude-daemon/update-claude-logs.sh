@@ -85,6 +85,11 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     remaining_seconds=$((age_seconds % 86400))
     hours=$((remaining_seconds / 3600))
     
+    # Skip files older than 99 days
+    if [ $days -gt 99 ]; then
+        continue
+    fi
+    
     # Format as XXd-YYh with zero padding
     age_prefix=$(printf "%02dd-%02dh" "$days" "$hours")
     
