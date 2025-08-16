@@ -2,7 +2,7 @@
 # Task folder configuration for yazi task management
 
 # Base directory for all tasks (can be overridden in .zshrc or .zshenv)
-export TASK_BASE_DIR="${TASK_BASE_DIR:-$HOME/tasks}"
+export TASK_BASE_DIR="${TASK_BASE_DIR:-$HOME/personal/tasks}"
 
 # Task folder names
 export TASK_PROGRESS="in-progress"

@@ -3,9 +3,9 @@
 # Source task folder environment variables
 source "$HOME/.zsh/task-folders.zsh"
 
-PROGRESS_DIR="$HOME/tasks/$TASK_PROGRESS"
-WAITING_DIR="$HOME/tasks/$TASK_WAITING"
-BACKLOG_DIR="$HOME/tasks/$TASK_BACKLOG"
+PROGRESS_DIR="$TASK_PROGRESS_PATH"
+WAITING_DIR="$TASK_WAITING_PATH"
+BACKLOG_DIR="$TASK_BACKLOG_PATH"
 OVERDUE_EMOJI="⏰"
 
 # Ensure progress directory exists
