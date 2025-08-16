@@ -109,63 +109,58 @@ if [ -f "$LOG_FILE" ]; then
     done < "$LOG_FILE"
 fi
 
-# Create items for each mode with time
+# Create items for each mode with time - in config file order
 item_index=0
 has_data=false
 
-while IFS='|' read -r mode seconds; do
-    if [ $seconds -gt 0 ]; then
-        has_data=true
-        hours=$(seconds_to_hours $seconds)
+# Read config file to get mode order
+while IFS='|' read -r config_mode config_icon config_label config_color; do
+    # Skip comments and empty lines
+    [[ "$config_mode" =~ ^#.*$ ]] && continue
+    [[ -z "$config_mode" ]] && continue
+    
+    # Check if this mode has any time tracked
+    mode_line=$(grep "^$config_mode|" "$TEMP_FILE" 2>/dev/null)
+    if [ -n "$mode_line" ]; then
+        seconds=$(echo "$mode_line" | cut -d'|' -f2)
         
-        # Get icon, label and color for this mode from config
-        icon=""
-        label=""
-        color_name=""
-        while IFS='|' read -r config_mode config_icon config_label config_color; do
-            [[ "$config_mode" =~ ^#.*$ ]] && continue
-            [[ -z "$config_mode" ]] && continue
+        if [ $seconds -gt 0 ]; then
+            has_data=true
+            hours=$(seconds_to_hours $seconds)
             
-            if [ "$config_mode" = "$mode" ]; then
-                icon="$config_icon"
-                label="$config_label"
-                color_name="$config_color"
-                break
+            # Use config values directly (we already have them)
+            icon="$config_icon"
+            label="$config_label"
+            color_name="$config_color"
+            
+            # Get actual color value
+            bg_color=$(get_color_from_name "$color_name")
+            
+            # Determine text color (black for yellow, white for others)
+            if [ "$color_name" = "yellow" ]; then
+                text_color="$BLACK"
+            else
+                text_color="$WHITE"
             fi
-        done < "$CONFIG_FILE"
-        
-        # Use mode name as fallback if label not found
-        if [ -z "$label" ]; then
-            label="$mode"
+            
+            # Create item with colored background
+            sketchybar --add item history_mode_$item_index center \
+                       --set history_mode_$item_index \
+                             icon="$icon" \
+                             icon.color="$text_color" \
+                             label="${label}: ${hours}h" \
+                             label.color="$text_color" \
+                             background.color="$bg_color" \
+                             background.drawing=on \
+                             background.corner_radius=5 \
+                             background.height=24 \
+                             padding_left=5 \
+                             padding_right=5
+            
+            item_index=$((item_index + 1))
         fi
-        
-        # Get actual color value
-        bg_color=$(get_color_from_name "$color_name")
-        
-        # Determine text color (black for yellow, white for others)
-        if [ "$color_name" = "yellow" ]; then
-            text_color="$BLACK"
-        else
-            text_color="$WHITE"
-        fi
-        
-        # Create item with colored background
-        sketchybar --add item history_mode_$item_index center \
-                   --set history_mode_$item_index \
-                         icon="$icon" \
-                         icon.color="$text_color" \
-                         label="${label}: ${hours}h" \
-                         label.color="$text_color" \
-                         background.color="$bg_color" \
-                         background.drawing=on \
-                         background.corner_radius=5 \
-                         background.height=24 \
-                         padding_left=5 \
-                         padding_right=5
-        
-        item_index=$((item_index + 1))
     fi
-done < "$TEMP_FILE"
+done < "$CONFIG_FILE"
 
 # If no data, show a message
 if [ "$has_data" = false ]; then
