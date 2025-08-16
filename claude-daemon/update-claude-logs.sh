@@ -45,6 +45,11 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     # Count messages (lines in JSONL) - strip leading spaces
     num_messages=$(wc -l < "$jsonl_path" | tr -d ' ')
     
+    # Skip conversations with less than 10 messages
+    if [ $num_messages -lt 10 ]; then
+        continue
+    fi
+    
     # Extract the actual directory path from the cwd field in the JSONL file
     # Read line by line and stop as soon as we find a cwd field
     actual_dir_path=""
