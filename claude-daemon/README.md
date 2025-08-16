@@ -24,10 +24,11 @@ Indexes Claude Code conversations every 10 minutes for easy browsing and resumin
 
 ## Performance
 
-Processes ~420 conversations in ~16 seconds. Filters out:
-- Summary-only files (no working directory)
+Processes ~426 conversations in ~17 seconds. Filters out:
 - Conversations older than 99 days
 - Conversations with less than 10 messages
+
+No file reading required - uses only file paths and line counts for speed.
 
 ## Future Considerations
 
