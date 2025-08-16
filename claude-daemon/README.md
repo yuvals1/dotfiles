@@ -13,7 +13,7 @@ Indexes Claude Code conversations every 10 minutes for easy browsing and resumin
 
 ## What it creates
 
-**Location**: `~/personal/claude-logs/`
+**Location**: `~/personal/claude-logs/raw-logs/`
 
 **Filename format**: `{age} msg:{count} dir:---{project}--- parent-dir-path:{path} {session-id}`
 
