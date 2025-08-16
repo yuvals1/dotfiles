@@ -8,7 +8,7 @@ set -euo pipefail
 
 # Configuration
 CLAUDE_PROJECTS_DIR="$HOME/.claude/projects"
-LOGS_DIR="$HOME/personal/claude-logs/raw-logs"
+LOGS_DIR="$HOME/personal/claude-logs/session-index"
 LOCK_FILE="/tmp/claude-logs-updater.lock"
 
 # Function to cleanup on exit
