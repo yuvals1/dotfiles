@@ -212,6 +212,42 @@ function Linemode:daysfrom()
   end
 end
 
+function Linemode:goaldays()
+  -- Extract date from filename (YYYY-MM-DD format at the beginning)
+  local filename = self._file.name
+  local date_pattern = "^(%d%d%d%d)%-(%d%d)%-(%d%d)"
+  local year, month, day = filename:match(date_pattern)
+  
+  -- If not a goal file with date, return empty
+  if not year or not month or not day then
+    return ''
+  end
+  
+  -- Get today's date at midnight
+  local today = os.date("*t")
+  today.hour = 0
+  today.min = 0
+  today.sec = 0
+  local today_time = os.time(today)
+  
+  -- Create time for the goal date at midnight
+  local goal_time = os.time({
+    year = tonumber(year),
+    month = tonumber(month),
+    day = tonumber(day),
+    hour = 0,
+    min = 0,
+    sec = 0
+  })
+  
+  -- Calculate difference in days (how many days ago was this goal)
+  local diff_seconds = today_time - goal_time
+  local diff_days = math.floor(diff_seconds / 86400)
+  
+  -- Format the output
+  return diff_days .. 'd'
+end
+
 -- require('simple-tag'):setup {
 --   -- UI display mode (icon, text, hidden)
 --   ui_mode = 'icon', -- (Optional)

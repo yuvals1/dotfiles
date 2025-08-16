@@ -235,18 +235,18 @@ keymap = [
     "b",
     "g",
   ], run = [
-    "sort btime --reverse=no",
-    "linemode age",
+    "sort alphabetical --reverse=no",
+    "linemode goaldays",
     "plugin pref-by-location -- save",
-  ], desc = "Sort by age (oldest first) with age display" },
+  ], desc = "Sort for goal tracking (alphabetical)" },
   { on = [
     "b",
     "G",
   ], run = [
-    "sort btime --reverse",
-    "linemode age",
+    "sort alphabetical --reverse",
+    "linemode goaldays", 
     "plugin pref-by-location -- save",
-  ], desc = "Sort by age (newest first) with age display" },
+  ], desc = "Sort for goal tracking (alphabetical, reverse)" },
   { on = [
     "b",
     "e",
