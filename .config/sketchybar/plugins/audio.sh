@@ -1,5 +1,5 @@
 #!/bin/bash
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 # Check if SwitchAudioSource is available
 if ! command -v SwitchAudioSource &> /dev/null; then

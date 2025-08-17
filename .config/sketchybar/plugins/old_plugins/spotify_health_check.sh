@@ -6,7 +6,7 @@
 #            --set spotify.health update_freq=60 \
 #                                 script="$PLUGIN_DIR/spotify_health_check.sh"
 
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 RESTART_SCRIPT="$PLUGIN_DIR/spotify_daemon_restart.sh"
 

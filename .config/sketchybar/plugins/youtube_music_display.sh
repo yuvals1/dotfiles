@@ -2,7 +2,7 @@
 
 # Source colors
 CONFIG_DIR="$HOME/.config/sketchybar"
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 # YouTube Music API endpoint
 API_URL="http://0.0.0.0:26538/api/v1"

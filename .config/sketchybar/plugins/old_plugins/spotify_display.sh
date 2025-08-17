@@ -5,7 +5,7 @@ PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR="$(dirname "$PLUGIN_DIR")"
 
 # Source colors
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 # Source radio state functions
 source "$CONFIG_DIR/plugins/spotify_radio_state.sh"

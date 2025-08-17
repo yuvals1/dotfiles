@@ -3,7 +3,7 @@
 # This plugin updates workspace visibility based on whether they have windows
 # It runs on aerospace_workspace_change events
 
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 # Update all workspaces
 for sid in $(aerospace list-workspaces --all); do

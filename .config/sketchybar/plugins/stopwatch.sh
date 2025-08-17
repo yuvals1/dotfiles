@@ -10,7 +10,7 @@ CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 CONFIG_DIR="$HOME/.config/sketchybar"
 
 # Source colors
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 # Handle different actions
 ACTION="${1:-click}"
@@ -74,7 +74,7 @@ get_mode_icon() {
     done < "$CONFIG_FILE"
     
     # Default icon if not found
-    echo "⏱️"
+    echo "$STOPWATCH_ICON"
 }
 
 # Function to map color names to hex values

@@ -53,3 +53,9 @@ export ORANGE=0xfff97716
 export GREEN=0xff2ecc71  # Nice modern green
 export WORKSPACE_ACTIVE=0xff2ecc71  # Green for active workspace
 export ORANGE=0xfff97716  # Orange for special states
+
+# -- Icons --
+export STOPWATCH_ICON="⏳"  # Hourglass icon for stopwatch/timer
+export OVERDUE_ICON="⏰"  # Alarm clock icon for overdue tasks
+export CALENDAR_ICON="📅"  # Calendar icon for date display
+export CHART_ICON="📊"  # Chart icon for no data message

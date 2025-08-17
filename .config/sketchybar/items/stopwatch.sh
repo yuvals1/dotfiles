@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Source colors and icons
+source "$HOME/.config/sketchybar/theme.sh"
+
 # Get initial icon based on current mode
 MODE_FILE="/tmp/sketchybar_stopwatch_mode"
 CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
@@ -33,7 +36,7 @@ done < "$CONFIG_FILE"
 
 # Timer icon that shows when in stopwatch view (state 0)
 sketchybar --add item stopwatch_icon center \
-           --set stopwatch_icon icon="⏱️" \
+           --set stopwatch_icon icon="$STOPWATCH_ICON" \
                                icon.color=$WHITE \
                                icon.font="SF Pro:Regular:18.0" \
                                label="" \

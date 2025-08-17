@@ -32,7 +32,7 @@ CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 CONFIG_DIR="$HOME/.config/sketchybar"
 
 # Source colors
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 if [ -f "$START_FILE" ]; then
     # Stopwatch is running - restore appearance and ensure updates are on

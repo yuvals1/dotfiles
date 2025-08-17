@@ -31,7 +31,7 @@ fi
 LOG_FILE="$TRACKING_DIR/${DISPLAY_DATE}.log"
 
 # Source colors
-source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/theme.sh"
 
 # Function to convert seconds to hours with 1 decimal
 seconds_to_hours() {
@@ -99,7 +99,7 @@ sketchybar --add item history_date center \
            --set history_date \
                  label="$DATE_LABEL" \
                  label.color="$WHITE" \
-                 icon="📅" \
+                 icon="$CALENDAR_ICON" \
                  icon.color="$WHITE" \
                  background.color="$ITEM_BG_COLOR" \
                  background.drawing=on \
@@ -225,7 +225,7 @@ if [ "$has_data" = false ]; then
                --set history_mode_0 \
                      label="No time tracked" \
                      label.color="$WHITE" \
-                     icon="📊" \
+                     icon="$CHART_ICON" \
                      icon.color="$WHITE" \
                      background.color="$ITEM_BG_COLOR" \
                      background.drawing=on

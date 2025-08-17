@@ -3,7 +3,7 @@
 # This plugin handles aerospace workspace events
 # It's called with the workspace ID as $1
 
-source "$CONFIG_DIR/colors.sh" # Load colors
+source "$CONFIG_DIR/theme.sh" # Load colors
 
 # Get the currently focused workspace directly from aerospace
 CURRENT_FOCUSED=$(aerospace list-workspaces --focused)
