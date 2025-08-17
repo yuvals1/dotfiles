@@ -6,8 +6,8 @@
 
 START_FILE="/tmp/sketchybar_stopwatch_start"
 MODE_FILE="/tmp/sketchybar_stopwatch_mode"
+CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 CONFIG_DIR="$HOME/.config/sketchybar"
-CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 
 # Source colors
 source "$CONFIG_DIR/colors.sh"
@@ -41,19 +41,18 @@ log_session() {
     local seconds=$((duration % 60))
     local duration_str=$(printf "%02d:%02d:%02d" $hours $minutes $seconds)
     
-    # Get current mode and label
+    # Get current mode
     local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "unknown")
-    local label=$(get_mode_label)
     
-    # Log entry format: START_TIME | END_TIME | DURATION | MODE | LABEL
-    echo "${start_time} | ${end_time} | ${duration_str} | ${mode} | ${label}" >> "$log_file"
+    # Log entry format: START_TIME | END_TIME | MODE
+    echo "${start_time} | ${end_time} | ${mode}" >> "$log_file"
 }
 
 # Function to get icon for current mode
 get_mode_icon() {
-    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "Work")
     
-    while IFS='|' read -r m icon label color; do
+    while IFS='|' read -r m icon color; do
         [[ "$m" =~ ^#.*$ ]] && continue
         [[ -z "$m" ]] && continue
         
@@ -69,9 +68,9 @@ get_mode_icon() {
 
 # Function to get color for current mode
 get_mode_color() {
-    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "Work")
     
-    while IFS='|' read -r m icon label color; do
+    while IFS='|' read -r m icon color; do
         [[ "$m" =~ ^#.*$ ]] && continue
         [[ -z "$m" ]] && continue
         
@@ -96,20 +95,9 @@ get_mode_color() {
 
 # Function to get label for current mode
 get_mode_label() {
-    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
-    
-    while IFS='|' read -r m icon label color; do
-        [[ "$m" =~ ^#.*$ ]] && continue
-        [[ -z "$m" ]] && continue
-        
-        if [[ "$m" == "$mode" ]]; then
-            echo "$label"
-            return
-        fi
-    done < "$CONFIG_FILE"
-    
-    # Default label if not found
-    echo "Ready"
+    # Mode is now the label itself
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "Work")
+    echo "$mode"
 }
 
 # Function to check if stopwatch is running (simplified)
@@ -128,7 +116,7 @@ update_mode_highlighting() {
     local new_index=-1
     local new_color=""
     
-    while IFS='|' read -r mode icon label color; do
+    while IFS='|' read -r mode icon color; do
         # Skip comments/empty
         [[ "$mode" =~ ^#.*$ ]] && continue
         [[ -z "$mode" ]] && continue
@@ -200,7 +188,7 @@ render_mode_options() {
     
     # Create mode option items
     local index=0
-    while IFS='|' read -r mode icon label color; do
+    while IFS='|' read -r mode icon color; do
         # Skip comments/empty
         [[ "$mode" =~ ^#.*$ ]] && continue
         [[ -z "$mode" ]] && continue
@@ -237,7 +225,7 @@ render_mode_options() {
                    --set mode_option_$index \
                          icon="$icon" \
                          icon.color="$text_color" \
-                         label="$label" \
+                         label="$mode" \
                          label.color="$text_color" \
                          background.color="$bg_display" \
                          background.drawing=on \

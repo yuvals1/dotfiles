@@ -4,8 +4,8 @@
 
 TRACKING_DIR="$HOME/personal/tracking/logs"
 HISTORY_DATE_FILE="/tmp/sketchybar_history_date"
+CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 CONFIG_DIR="$HOME/.config/sketchybar"
-CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 
 # Get the date to display (default to today)
 if [ -f "$HISTORY_DATE_FILE" ]; then
@@ -39,6 +39,29 @@ get_color_from_name() {
         "orange") echo "$ORANGE" ;;
         *) echo "$ITEM_BG_COLOR" ;;
     esac
+}
+
+# Function to create a history mode item
+create_history_item() {
+    local index=$1
+    local icon="$2"
+    local label="$3"
+    local hours=$4
+    local bg_color=$5
+    local text_color=$6
+    
+    sketchybar --add item history_mode_$index center \
+               --set history_mode_$index \
+                     icon="$icon" \
+                     icon.color="$text_color" \
+                     label="${label}: ${hours}h" \
+                     label.color="$text_color" \
+                     background.color="$bg_color" \
+                     background.drawing=on \
+                     background.corner_radius=5 \
+                     background.height=24 \
+                     padding_left=5 \
+                     padding_right=5
 }
 
 # Remove old history items (increased range for orphaned modes)
@@ -77,31 +100,43 @@ TEMP_FILE="/tmp/stopwatch_history_$$"
 
 # Process today's log file if it exists
 if [ -f "$LOG_FILE" ]; then
-    while IFS='|' read -r start_time end_time duration mode label; do
+    while IFS='|' read -r start_time end_time mode; do
         # Trim whitespace
         mode=$(echo "$mode" | xargs)
+        start_time=$(echo "$start_time" | xargs)
+        end_time=$(echo "$end_time" | xargs)
         
-        # Parse duration (HH:MM:SS to seconds)
-        if [[ "$duration" =~ ([0-9]+):([0-9]+):([0-9]+) ]]; then
-            hours="${BASH_REMATCH[1]}"
-            minutes="${BASH_REMATCH[2]}"  
-            seconds="${BASH_REMATCH[3]}"
+        # Calculate duration from start and end times
+        # Convert times to seconds since midnight
+        if [[ "$start_time" =~ ([0-9]+):([0-9]+):([0-9]+) ]]; then
+            start_seconds=$(( 10#${BASH_REMATCH[1]} * 3600 + 10#${BASH_REMATCH[2]} * 60 + 10#${BASH_REMATCH[3]} ))
+        else
+            continue
+        fi
+        
+        if [[ "$end_time" =~ ([0-9]+):([0-9]+):([0-9]+) ]]; then
+            end_seconds=$(( 10#${BASH_REMATCH[1]} * 3600 + 10#${BASH_REMATCH[2]} * 60 + 10#${BASH_REMATCH[3]} ))
+        else
+            continue
+        fi
+        
+        # Calculate duration (handle day wrap if needed)
+        if [ $end_seconds -lt $start_seconds ]; then
+            # Wrapped past midnight
+            total_seconds=$(( (86400 - start_seconds) + end_seconds ))
+        else
+            total_seconds=$(( end_seconds - start_seconds ))
+        fi
+        
+        if [ $total_seconds -gt 0 ]; then
             
-            # Remove leading zeros to avoid octal interpretation
-            hours=$((10#$hours))
-            minutes=$((10#$minutes))
-            seconds=$((10#$seconds))
-            
-            total_seconds=$((hours * 3600 + minutes * 60 + seconds))
-            
-            # Add to mode's total in temp file
-            existing=$(grep "^$mode|" "$TEMP_FILE" | cut -d'|' -f2)
-            if [ -n "$existing" ]; then
-                new_total=$((existing + total_seconds))
-                # Update the line
-                grep -v "^$mode|" "$TEMP_FILE" > "$TEMP_FILE.tmp"
-                echo "$mode|$new_total" >> "$TEMP_FILE.tmp"
-                mv "$TEMP_FILE.tmp" "$TEMP_FILE"
+            # Add to mode's total - more efficient temp file update
+            if grep -q "^$mode|" "$TEMP_FILE"; then
+                # Mode exists, update it
+                awk -F'|' -v mode="$mode" -v add="$total_seconds" '
+                    $1 == mode { print $1 "|" ($2 + add); next }
+                    { print }
+                ' "$TEMP_FILE" > "$TEMP_FILE.tmp" && mv "$TEMP_FILE.tmp" "$TEMP_FILE"
             else
                 echo "$mode|$total_seconds" >> "$TEMP_FILE"
             fi
@@ -112,12 +147,16 @@ fi
 # Create items for each mode with time - in config file order
 item_index=0
 has_data=false
+DISPLAYED_MODES=""
 
-# Read config file to get mode order
-while IFS='|' read -r config_mode config_icon config_label config_color; do
+# Single pass through config file
+while IFS='|' read -r config_mode config_icon config_color; do
     # Skip comments and empty lines
     [[ "$config_mode" =~ ^#.*$ ]] && continue
     [[ -z "$config_mode" ]] && continue
+    
+    # Track this mode as displayed
+    DISPLAYED_MODES="$DISPLAYED_MODES|$config_mode|"
     
     # Check if this mode has any time tracked
     mode_line=$(grep "^$config_mode|" "$TEMP_FILE" 2>/dev/null)
@@ -130,7 +169,7 @@ while IFS='|' read -r config_mode config_icon config_label config_color; do
             
             # Use config values directly (we already have them)
             icon="$config_icon"
-            label="$config_label"
+            label="$config_mode"  # Mode is now the label
             color_name="$config_color"
             
             # Get actual color value
@@ -144,63 +183,28 @@ while IFS='|' read -r config_mode config_icon config_label config_color; do
             fi
             
             # Create item with colored background
-            sketchybar --add item history_mode_$item_index center \
-                       --set history_mode_$item_index \
-                             icon="$icon" \
-                             icon.color="$text_color" \
-                             label="${label}: ${hours}h" \
-                             label.color="$text_color" \
-                             background.color="$bg_color" \
-                             background.drawing=on \
-                             background.corner_radius=5 \
-                             background.height=24 \
-                             padding_left=5 \
-                             padding_right=5
+            create_history_item $item_index "$icon" "$label" "$hours" "$bg_color" "$text_color"
             
             item_index=$((item_index + 1))
         fi
     fi
-done < "$CONFIG_FILE"
-
-# Now check for any orphaned modes (in temp file but not in config)
-# Create a temp file to track which modes we've already displayed
-DISPLAYED_MODES="/tmp/stopwatch_displayed_modes_$$"
-> "$DISPLAYED_MODES"
-
-# Record all modes from config that we checked
-while IFS='|' read -r config_mode config_icon config_label config_color; do
-    [[ "$config_mode" =~ ^#.*$ ]] && continue
-    [[ -z "$config_mode" ]] && continue
-    echo "$config_mode" >> "$DISPLAYED_MODES"
 done < "$CONFIG_FILE"
 
 # Find and display orphaned modes
 while IFS='|' read -r mode seconds; do
     # Check if this mode was already displayed
-    if ! grep -q "^$mode$" "$DISPLAYED_MODES" 2>/dev/null; then
+    if [[ "$DISPLAYED_MODES" != *"|$mode|"* ]]; then
         if [ $seconds -gt 0 ]; then
             has_data=true
             hours=$(seconds_to_hours $seconds)
             
             # Display with no icon, default background, mode name as label
-            sketchybar --add item history_mode_$item_index center \
-                       --set history_mode_$item_index \
-                             label="${mode}: ${hours}h" \
-                             label.color="$WHITE" \
-                             background.color="$ITEM_BG_COLOR" \
-                             background.drawing=on \
-                             background.corner_radius=5 \
-                             background.height=24 \
-                             padding_left=5 \
-                             padding_right=5
+            create_history_item $item_index "" "$mode" "$hours" "$ITEM_BG_COLOR" "$WHITE"
             
             item_index=$((item_index + 1))
         fi
     fi
 done < "$TEMP_FILE"
-
-# Clean up displayed modes tracker
-rm -f "$DISPLAYED_MODES"
 
 # If no data, show a message
 if [ "$has_data" = false ]; then

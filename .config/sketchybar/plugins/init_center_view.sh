@@ -28,18 +28,18 @@ sketchybar --set stopwatch_icon drawing=on
 # Check if stopwatch is running (using start file instead of PID)
 START_FILE="/tmp/sketchybar_stopwatch_start"
 MODE_FILE="/tmp/sketchybar_stopwatch_mode"
+CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 CONFIG_DIR="$HOME/.config/sketchybar"
-CONFIG_FILE="$CONFIG_DIR/stopwatch_modes.conf"
 
 # Source colors
 source "$CONFIG_DIR/colors.sh"
 
 if [ -f "$START_FILE" ]; then
     # Stopwatch is running - restore appearance and ensure updates are on
-    MODE=$(cat "$MODE_FILE" 2>/dev/null || echo "ose")
+    MODE=$(cat "$MODE_FILE" 2>/dev/null || echo "OSE")
     
     # Get mode appearance from config
-    while IFS='|' read -r m icon label color; do
+    while IFS='|' read -r m icon color; do
         [[ "$m" =~ ^#.*$ ]] && continue
         [[ -z "$m" ]] && continue
         

@@ -1,5 +1,4 @@
 # Pomodoro runtime files
-stopwatch_modes.conf
 pomodoro/.pomodoro_history
 pomodoro/.pomodoro_history_test
 pomodoro/.reset_time
