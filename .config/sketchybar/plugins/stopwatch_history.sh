@@ -41,8 +41,8 @@ get_color_from_name() {
     esac
 }
 
-# Remove old history items
-for i in {0..9}; do
+# Remove old history items (increased range for orphaned modes)
+for i in {0..19}; do
     sketchybar --remove history_mode_$i 2>/dev/null
 done
 sketchybar --remove history_date 2>/dev/null
@@ -161,6 +161,46 @@ while IFS='|' read -r config_mode config_icon config_label config_color; do
         fi
     fi
 done < "$CONFIG_FILE"
+
+# Now check for any orphaned modes (in temp file but not in config)
+# Create a temp file to track which modes we've already displayed
+DISPLAYED_MODES="/tmp/stopwatch_displayed_modes_$$"
+> "$DISPLAYED_MODES"
+
+# Record all modes from config that we checked
+while IFS='|' read -r config_mode config_icon config_label config_color; do
+    [[ "$config_mode" =~ ^#.*$ ]] && continue
+    [[ -z "$config_mode" ]] && continue
+    echo "$config_mode" >> "$DISPLAYED_MODES"
+done < "$CONFIG_FILE"
+
+# Find and display orphaned modes
+while IFS='|' read -r mode seconds; do
+    # Check if this mode was already displayed
+    if ! grep -q "^$mode$" "$DISPLAYED_MODES" 2>/dev/null; then
+        if [ $seconds -gt 0 ]; then
+            has_data=true
+            hours=$(seconds_to_hours $seconds)
+            
+            # Display with no icon, default background, mode name as label
+            sketchybar --add item history_mode_$item_index center \
+                       --set history_mode_$item_index \
+                             label="${mode}: ${hours}h" \
+                             label.color="$WHITE" \
+                             background.color="$ITEM_BG_COLOR" \
+                             background.drawing=on \
+                             background.corner_radius=5 \
+                             background.height=24 \
+                             padding_left=5 \
+                             padding_right=5
+            
+            item_index=$((item_index + 1))
+        fi
+    fi
+done < "$TEMP_FILE"
+
+# Clean up displayed modes tracker
+rm -f "$DISPLAYED_MODES"
 
 # If no data, show a message
 if [ "$has_data" = false ]; then
