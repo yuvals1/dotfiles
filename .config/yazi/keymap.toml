@@ -1126,6 +1126,16 @@ run = "plugin mactag-unified note"
 desc = "Tag as Note (📝)"
 
 [[mgr.prepend_keymap]]
+on = ["M", "5"]
+run = "plugin mactag-unified stopwatch"
+desc = "Tag as Stopwatch (⏱️)"
+
+[[mgr.prepend_keymap]]
+on = ["M", "6"]
+run = "plugin mactag-unified tracking"
+desc = "Tag as Tracking (🏃‍➡️)"
+
+[[mgr.prepend_keymap]]
 on = ["M", "M"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"

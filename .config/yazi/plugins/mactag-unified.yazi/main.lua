@@ -23,6 +23,8 @@ local MANAGED_TAGS = {
     ["golf"] = "Golf",
     ["calendar-emoji"] = "Calendar-emoji",
     ["note"] = "Note",
+    ["stopwatch"] = "Stopwatch",
+    ["tracking"] = "Tracking",
 }
 
 -- Update state and trigger render
@@ -78,7 +80,11 @@ local function setup(st, _)
                 elseif tag == "Calendar-emoji" then
                     return ui.Line { ui.Span("📅 "), original }
                 elseif tag == "Note" then
-                    return ui.Line { ui.Span("📝 "), original }
+                    return ui.Line { ui.Span("✏️ "), original }
+                elseif tag == "Stopwatch" then
+                    return ui.Line { ui.Span("⏱️ "), original }
+                elseif tag == "Tracking" then
+                    return ui.Line { ui.Span("🏃‍➡️ "), original }
                 end
             end
         end
