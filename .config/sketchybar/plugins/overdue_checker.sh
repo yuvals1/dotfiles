@@ -6,7 +6,7 @@ source "$HOME/.zsh/task-folders.zsh"
 PROGRESS_DIR="$TASK_PROGRESS_PATH"
 WAITING_DIR="$TASK_WAITING_PATH"
 BACKLOG_DIR="$TASK_BACKLOG_PATH"
-OVERDUE_EMOJI="⏰"
+OVERDUE_TAG="Overdue"
 
 # Ensure progress directory exists
 mkdir -p "$PROGRESS_DIR"
@@ -43,24 +43,39 @@ is_overdue() {
     return 1 # false - not overdue
 }
 
+# Function to check if file has overdue tag
+has_overdue_tag() {
+    local file="$1"
+    tag -l "$file" 2>/dev/null | grep -q "$OVERDUE_TAG"
+    return $?
+}
+
+# Function to add overdue tag
+add_overdue_tag() {
+    local file="$1"
+    if ! has_overdue_tag "$file"; then
+        tag -a "$OVERDUE_TAG" "$file"
+    fi
+}
+
+# Function to remove overdue tag
+remove_overdue_tag() {
+    local file="$1"
+    if has_overdue_tag "$file"; then
+        tag -r "$OVERDUE_TAG" "$file"
+    fi
+}
+
 # Function to move overdue tasks from a folder to in-progress
 move_overdue_to_progress() {
     local source_dir="$1"
     
     find "$source_dir" -type f | while read -r file; do
-        
-        # Get the filename without path
-        filename=$(basename "$file")
-        
         if is_overdue "$file"; then
-            # Add overdue emoji if not already present
-            if [[ "$filename" != *"$OVERDUE_EMOJI"* ]]; then
-                new_filename="${OVERDUE_EMOJI} ${filename}"
-            else
-                new_filename="$filename"
-            fi
+            # Add overdue tag
+            add_overdue_tag "$file"
             # Move to in-progress folder
-            mv "$file" "$PROGRESS_DIR/$new_filename"
+            mv "$file" "$PROGRESS_DIR/"
         fi
     done
 }
@@ -69,34 +84,21 @@ move_overdue_to_progress() {
 move_overdue_to_progress "$WAITING_DIR"
 move_overdue_to_progress "$BACKLOG_DIR"
 
-# Process in-progress folder - add/remove overdue emoji as needed
+# Process in-progress folder - add/remove overdue tag as needed
 find "$PROGRESS_DIR" -type f | while read -r file; do
-    
-    # Get the filename without path
-    filename=$(basename "$file")
-    
-    # Check if file has overdue emoji
-    has_emoji=false
-    [[ "$filename" == *"$OVERDUE_EMOJI"* ]] && has_emoji=true
-    
-    # Check if file is currently overdue
     if is_overdue "$file"; then
-        # Should have emoji - add if missing
-        if [ "$has_emoji" = false ]; then
-            new_filename="${OVERDUE_EMOJI} ${filename}"
-            mv "$file" "$PROGRESS_DIR/$new_filename"
-        fi
+        # Should have overdue tag
+        add_overdue_tag "$file"
     else
-        # Should not have emoji - remove if present
-        if [ "$has_emoji" = true ]; then
-            new_filename=$(echo "$filename" | sed "s/$OVERDUE_EMOJI //g")
-            mv "$file" "$PROGRESS_DIR/$new_filename"
-        fi
+        # Should not have overdue tag
+        remove_overdue_tag "$file"
     fi
 done
 
 # Update sketchybar - show count of overdue tasks
-overdue_count=$(find "$PROGRESS_DIR" -name "*$OVERDUE_EMOJI*" -type f | wc -l | tr -d ' ')
+# Use command substitution to avoid subshell issue with while loop
+overdue_count=$(find "$PROGRESS_DIR" -type f -exec sh -c 'tag -l "$1" 2>/dev/null | grep -q "Overdue" && echo 1' _ {} \; | wc -l | tr -d ' ')
+
 if [ "$overdue_count" -gt 0 ]; then
     sketchybar --set $NAME label="$overdue_count" drawing=on
 else

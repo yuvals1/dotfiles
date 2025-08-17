@@ -25,6 +25,7 @@ local MANAGED_TAGS = {
     ["note"] = "Note",
     ["stopwatch"] = "Stopwatch",
     ["tracking"] = "Tracking",
+    ["overdue"] = "Overdue",
 }
 
 -- Update state and trigger render
@@ -85,6 +86,8 @@ local function setup(st, _)
                     return ui.Line { ui.Span("⏱️ "), original }
                 elseif tag == "Tracking" then
                     return ui.Line { ui.Span("🏃‍➡️ "), original }
+                elseif tag == "Overdue" then
+                    return ui.Line { ui.Span("⏰ "), original }
                 end
             end
         end
