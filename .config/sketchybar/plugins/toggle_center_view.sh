@@ -59,8 +59,8 @@ case $NEXT_STATE in
         # State 0: Stopwatch view - always show timer icon
         sketchybar --set stopwatch_icon drawing=on
         
-        PID_FILE="/tmp/sketchybar_stopwatch.pid"
-        if [ -f "$PID_FILE" ]; then
+        START_FILE="/tmp/sketchybar_stopwatch_start"
+        if [ -f "$START_FILE" ]; then
             # If running, show the stopwatch timer item
             sketchybar --set stopwatch drawing=on
         else
@@ -71,7 +71,7 @@ case $NEXT_STATE in
                     sketchybar --set mode_option_$i drawing=on 2>/dev/null
                 done
             else
-                bash "$HOME/.config/sketchybar/plugins/stopwatch.sh render_modes"
+                bash "$HOME/.config/sketchybar/plugins/stopwatch.sh" render_modes
             fi
         fi
         ;;
