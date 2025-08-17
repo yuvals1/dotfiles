@@ -26,6 +26,7 @@ local MANAGED_TAGS = {
     ["stopwatch"] = "Stopwatch",
     ["tracking"] = "Tracking",
     ["overdue"] = "Overdue",
+    ["hourglass"] = "Hourglass",
 }
 
 -- Update state and trigger render
@@ -88,6 +89,8 @@ local function setup(st, _)
                     return ui.Line { ui.Span("🏃‍➡️ "), original }
                 elseif tag == "Overdue" then
                     return ui.Line { ui.Span("⏰ "), original }
+                elseif tag == "Hourglass" then
+                    return ui.Line { ui.Span("⏳ "), original }
                 end
             end
         end

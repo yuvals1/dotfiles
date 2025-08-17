@@ -1136,6 +1136,11 @@ run = "plugin mactag-unified tracking"
 desc = "Tag as Tracking (🏃‍➡️)"
 
 [[mgr.prepend_keymap]]
+on = ["M", "7"]
+run = "plugin mactag-unified hourglass"
+desc = "Tag as Hourglass (⏳)"
+
+[[mgr.prepend_keymap]]
 on = ["M", "M"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"
