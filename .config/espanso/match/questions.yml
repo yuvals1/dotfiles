@@ -16,3 +16,7 @@ matches:
   - trigger: ":vb"
     replace: "verify the behavior is as desired"
     label: "verify the behavior is as desired"
+
+  - trigger: ":dr"
+    replace: "do you remember the instructions?"
+    label: "do you remember the instructions?"
