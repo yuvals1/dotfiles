@@ -11,6 +11,7 @@ FONT="SF Pro"
 # ────────────────────────────────────
 
 spotify_anchor=(
+  drawing=off  # Start hidden, init_center_view will control visibility
   icon.drawing=on
   icon.font="sketchybar-app-font:Regular:16.0"
   icon=":spotify:"
@@ -135,7 +136,7 @@ sketchybar --add item spotify.menubar_controls center                  \
            --set spotify.artwork "${spotify_artwork[@]}" drawing=off \
            --subscribe spotify.artwork spotify_update
 
-# If daemon not running, show "Spotify Stopped" on anchor
+# If daemon not running, set label but keep hidden (init_center_view will control visibility)
 if [ -z "$DAEMON_RUNNING" ]; then
-  sketchybar --set spotify.anchor drawing=on label="Spotify Stopped"
+  sketchybar --set spotify.anchor drawing=off label="Spotify Stopped"
 fi
