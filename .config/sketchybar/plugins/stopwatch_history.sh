@@ -7,6 +7,19 @@ HISTORY_DATE_FILE="/tmp/sketchybar_history_date"
 CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 CONFIG_DIR="$HOME/.config/sketchybar"
 
+# Minimum hours threshold for displaying in history (default 0.5 hours)
+# Can be overridden by environment variable or config file
+MIN_HOURS_THRESHOLD="${STOPWATCH_MIN_HOURS:-0.5}"
+
+# Check for threshold in config file
+THRESHOLD_FILE="$HOME/personal/tracking/history_threshold"
+if [ -f "$THRESHOLD_FILE" ]; then
+    MIN_HOURS_THRESHOLD=$(cat "$THRESHOLD_FILE")
+fi
+
+# Convert threshold to seconds once for all comparisons
+THRESHOLD_SECONDS=$(echo "$MIN_HOURS_THRESHOLD * 3600" | bc | cut -d. -f1)
+
 # Get the date to display (default to today)
 if [ -f "$HISTORY_DATE_FILE" ]; then
     DISPLAY_DATE=$(cat "$HISTORY_DATE_FILE")
@@ -76,9 +89,9 @@ DISPLAY_DATE_FORMATTED=$(date -j -f "%Y-%m-%d" "$DISPLAY_DATE" "+%a %b %d, %Y" 2
 # Check if this is today
 TODAY=$(date '+%Y-%m-%d')
 if [ "$DISPLAY_DATE" = "$TODAY" ]; then
-    DATE_LABEL="Today - $DISPLAY_DATE_FORMATTED"
+    DATE_LABEL="Today - $DISPLAY_DATE_FORMATTED (≥${MIN_HOURS_THRESHOLD}h)"
 else
-    DATE_LABEL="$DISPLAY_DATE_FORMATTED"
+    DATE_LABEL="$DISPLAY_DATE_FORMATTED (≥${MIN_HOURS_THRESHOLD}h)"
 fi
 
 # Create date display item
@@ -163,7 +176,7 @@ while IFS='|' read -r config_mode config_icon config_color; do
     if [ -n "$mode_line" ]; then
         seconds=$(echo "$mode_line" | cut -d'|' -f2)
         
-        if [ $seconds -gt 0 ]; then
+        if [ $seconds -ge $THRESHOLD_SECONDS ]; then
             has_data=true
             hours=$(seconds_to_hours $seconds)
             
@@ -194,7 +207,7 @@ done < "$CONFIG_FILE"
 while IFS='|' read -r mode seconds; do
     # Check if this mode was already displayed
     if [[ "$DISPLAYED_MODES" != *"|$mode|"* ]]; then
-        if [ $seconds -gt 0 ]; then
+        if [ $seconds -ge $THRESHOLD_SECONDS ]; then
             has_data=true
             hours=$(seconds_to_hours $seconds)
             
