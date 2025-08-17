@@ -4,11 +4,18 @@ matches:
   - trigger: ":br"
     replace: "brainstorm some ideas first"
     label: "brainstorm some ideas first"
-  
+
   - trigger: ":cw"
     replace: "try to think about creative workarounds"
     label: "creative workarounds"
-  
+
   - trigger: ":strat"
     replace: "first think deeply about the request feature and then suggest a few strategies to implement. explain those strategies thoroughly and ill choose one of them"
     label: "implementation strategies"
+
+  - trigger: ":eliminate"
+    replace: "would eliminate the biggest amount of code?"
+
+  - trigger: ":simplest"
+    replace: "is our code the simplest it can be?"
+
