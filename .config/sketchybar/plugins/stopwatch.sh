@@ -77,6 +77,33 @@ get_mode_icon() {
     echo "⏱️"
 }
 
+# Function to map color names to hex values
+map_color_to_hex() {
+    local color_name="$1"
+    case "$color_name" in
+        "blue") echo "0xff4a90e2" ;;  # Nice medium blue
+        "red") echo "0xffff6b6b" ;;
+        "yellow") echo "0xffffeb3b" ;;  # Bright yellow
+        "green") echo "$GREEN" ;;
+        "purple") echo "0xff9370db" ;;
+        "teal") echo "$ACCENT_COLOR" ;;
+        "orange") echo "$ORANGE" ;;
+        *) echo "$ITEM_BG_COLOR" ;;
+    esac
+}
+
+# Function to get appropriate text color for background
+get_text_color_for_background() {
+    local color_name="$1"
+    # Light backgrounds that need black text
+    case "$color_name" in
+        "yellow"|"white"|"light-blue"|"light-green") 
+            echo "$BLACK" ;;
+        *)
+            echo "$WHITE" ;;
+    esac
+}
+
 # Function to get color for current mode
 get_mode_color() {
     local mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
@@ -86,17 +113,7 @@ get_mode_color() {
         [[ -z "$m" ]] && continue
         
         if [[ "$m" == "$mode" ]]; then
-            # Map color names to actual colors
-            case "$color" in
-                "blue") echo "0xff4a90e2" ;;  # Nice medium blue
-                "red") echo "0xffff6b6b" ;;
-                "yellow") echo "0xffffeb3b" ;;  # Bright yellow
-                "green") echo "$GREEN" ;;
-                "purple") echo "0xff9370db" ;;
-                "teal") echo "$ACCENT_COLOR" ;;
-                "orange") echo "$ORANGE" ;;
-                *) echo "$ITEM_BG_COLOR" ;;
-            esac
+            map_color_to_hex "$color"
             return
         fi
     done < "$CONFIG_FILE"
@@ -109,6 +126,21 @@ get_mode_label() {
     # Mode is now the label itself
     local mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
     echo "$mode"
+}
+
+# Function to get color name for a mode
+get_mode_color_name() {
+    local mode="$1"
+    while IFS='|' read -r m icon color; do
+        [[ "$m" =~ ^#.*$ ]] && continue
+        [[ -z "$m" ]] && continue
+        
+        if [[ "$m" == "$mode" ]]; then
+            echo "$color"
+            return
+        fi
+    done < "$CONFIG_FILE"
+    echo ""  # Default if not found
 }
 
 # Function to check if stopwatch is running (simplified)
@@ -154,24 +186,9 @@ update_mode_highlighting() {
     
     # Update new mode to selected appearance
     if [ $new_index -ge 0 ]; then
-        # Get the actual color value
-        local bg_color
-        case "$new_color" in
-            "blue") bg_color="0xff4a90e2" ;;
-            "red") bg_color="0xffff6b6b" ;;
-            "yellow") bg_color="0xffffeb3b" ;;
-            "green") bg_color="$GREEN" ;;
-            "purple") bg_color="0xff9370db" ;;
-            "teal") bg_color="$ACCENT_COLOR" ;;
-            "orange") bg_color="$ORANGE" ;;
-            *) bg_color="$ITEM_BG_COLOR" ;;
-        esac
-        
-        # Set text color based on background
-        local text_color="$WHITE"
-        if [ "$new_color" = "yellow" ]; then
-            text_color="$BLACK"
-        fi
+        # Get colors using mapping functions
+        local bg_color=$(map_color_to_hex "$new_color")
+        local text_color=$(get_text_color_for_background "$new_color")
         
         sketchybar --set mode_option_$new_index \
                    background.color="$bg_color" \
@@ -204,28 +221,15 @@ render_mode_options() {
         [[ "$mode" =~ ^#.*$ ]] && continue
         [[ -z "$mode" ]] && continue
         
-        # Get background color
-        local bg_color
-        case "$color" in
-            "blue") bg_color="0xff4a90e2" ;;
-            "red") bg_color="0xffff6b6b" ;;
-            "yellow") bg_color="0xffffeb3b" ;;
-            "green") bg_color="$GREEN" ;;
-            "purple") bg_color="0xff9370db" ;;
-            "teal") bg_color="$ACCENT_COLOR" ;;
-            "orange") bg_color="$ORANGE" ;;
-            *) bg_color="$ITEM_BG_COLOR" ;;
-        esac
+        # Get background color using mapping function
+        local bg_color=$(map_color_to_hex "$color")
         
         # Set colors based on selection
         local bg_display text_color
         if [ "$mode" = "$current_mode" ]; then
             # Selected: use mode's color scheme
             bg_display="$bg_color"
-            text_color="$WHITE"
-            if [ "$color" = "yellow" ]; then
-                text_color="$BLACK"
-            fi
+            text_color=$(get_text_color_for_background "$color")
         else
             # Unselected: use default colors
             bg_display="${ITEM_BG_COLOR:-0x44000000}"
@@ -312,17 +316,9 @@ case "$ACTION" in
             COLOR=$(get_mode_color)
             MODE=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
 
-            # Check if we need black text for light backgrounds
-            LABEL_COLOR="$WHITE"
-            while IFS='|' read -r m icon color; do
-                [[ "$m" =~ ^#.*$ ]] && continue
-                [[ -z "$m" ]] && continue
-                
-                if [[ "$m" == "$MODE" ]] && [[ "$color" == "yellow" ]]; then
-                    LABEL_COLOR="$BLACK"
-                    break
-                fi
-            done < "$CONFIG_FILE"
+            # Get appropriate text color for the background
+            MODE_COLOR_NAME=$(get_mode_color_name "$MODE")
+            LABEL_COLOR=$(get_text_color_for_background "$MODE_COLOR_NAME")
 
             # Configure stopwatch appearance and start updates
             sketchybar --set stopwatch icon="$ICON" \
