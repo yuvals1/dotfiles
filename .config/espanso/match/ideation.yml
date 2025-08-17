@@ -14,8 +14,7 @@ matches:
     label: "implementation strategies"
 
   - trigger: ":eliminate"
-    replace: "would eliminate the biggest amount of code?"
+    replace: "what strategy would eliminate the biggest amount of code?"
 
   - trigger: ":simplest"
     replace: "is our code the simplest it can be?"
-

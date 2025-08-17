@@ -20,3 +20,7 @@ matches:
   - trigger: ":dr"
     replace: "do you remember the instructions?"
     label: "do you remember the instructions?"
+
+  - trigger: ":lmu"
+    replace: "let me tell you what I understand so far"
+    label: "let me tell you what I understand so far"
