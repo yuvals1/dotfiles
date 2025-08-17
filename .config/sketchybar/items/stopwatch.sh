@@ -42,4 +42,7 @@ sketchybar --add item stopwatch center \
                           label.color=$WHITE \
                           icon="$ICON" \
                           icon.color=$WHITE \
-                          click_script="$PLUGIN_DIR/stopwatch.sh"
+                          click_script="$PLUGIN_DIR/stopwatch.sh" \
+                          update_freq=0 \
+                          updates=on \
+                          script="$PLUGIN_DIR/stopwatch.sh tick"

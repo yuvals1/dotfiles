@@ -71,7 +71,7 @@ case $NEXT_STATE in
                     sketchybar --set mode_option_$i drawing=on 2>/dev/null
                 done
             else
-                bash "$HOME/.config/sketchybar/plugins/render_stopwatch_modes.sh"
+                bash "$HOME/.config/sketchybar/plugins/stopwatch.sh render_modes"
             fi
         fi
         ;;
