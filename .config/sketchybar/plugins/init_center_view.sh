@@ -36,7 +36,17 @@ source "$CONFIG_DIR/colors.sh"
 
 if [ -f "$START_FILE" ]; then
     # Stopwatch is running - restore appearance and ensure updates are on
-    MODE=$(cat "$MODE_FILE" 2>/dev/null || echo "OSE")
+    # Get default mode from config if MODE_FILE doesn't exist
+    if [ ! -f "$MODE_FILE" ]; then
+        while IFS='|' read -r mode rest; do
+            [[ "$mode" =~ ^#.*$ ]] && continue
+            [[ -z "$mode" ]] && continue
+            MODE="$mode"
+            break
+        done < "$CONFIG_FILE"
+    else
+        MODE=$(cat "$MODE_FILE")
+    fi
     
     # Get mode appearance from config
     while IFS='|' read -r m icon color; do

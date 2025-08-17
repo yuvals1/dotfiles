@@ -48,9 +48,20 @@ log_session() {
     echo "${start_time} | ${end_time} | ${mode}" >> "$log_file"
 }
 
+# Function to get default mode from config
+get_default_mode() {
+    while IFS='|' read -r mode rest; do
+        [[ "$mode" =~ ^#.*$ ]] && continue
+        [[ -z "$mode" ]] && continue
+        echo "$mode"
+        return
+    done < "$CONFIG_FILE"
+    echo "Work"  # Fallback if config is empty
+}
+
 # Function to get icon for current mode
 get_mode_icon() {
-    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "Work")
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
     
     while IFS='|' read -r m icon color; do
         [[ "$m" =~ ^#.*$ ]] && continue
@@ -68,7 +79,7 @@ get_mode_icon() {
 
 # Function to get color for current mode
 get_mode_color() {
-    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "Work")
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
     
     while IFS='|' read -r m icon color; do
         [[ "$m" =~ ^#.*$ ]] && continue
@@ -96,7 +107,7 @@ get_mode_color() {
 # Function to get label for current mode
 get_mode_label() {
     # Mode is now the label itself
-    local mode=$(cat "$MODE_FILE" 2>/dev/null || echo "Work")
+    local mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
     echo "$mode"
 }
 
@@ -184,7 +195,7 @@ render_mode_options() {
     fi
     
     # Determine current mode
-    local current_mode=$(cat "$MODE_FILE" 2>/dev/null || echo "ose")
+    local current_mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
     
     # Create mode option items
     local index=0
@@ -299,11 +310,11 @@ case "$ACTION" in
             # Set the mode icon and background color
             ICON=$(get_mode_icon)
             COLOR=$(get_mode_color)
-            MODE=$(cat "$MODE_FILE" 2>/dev/null || echo "work")
+            MODE=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
 
             # Check if we need black text for light backgrounds
             LABEL_COLOR="$WHITE"
-            while IFS='|' read -r m icon label color; do
+            while IFS='|' read -r m icon color; do
                 [[ "$m" =~ ^#.*$ ]] && continue
                 [[ -z "$m" ]] && continue
                 
@@ -346,7 +357,7 @@ case "$ACTION" in
         
     "next_mode")
         # Cycle to next mode (for keybindings)
-        current_mode=$(cat "$MODE_FILE" 2>/dev/null || echo "ose")
+        current_mode=$(cat "$MODE_FILE" 2>/dev/null || get_default_mode)
         
         # Get all modes in order
         modes=()

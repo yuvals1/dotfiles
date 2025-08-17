@@ -4,9 +4,15 @@
 MODE_FILE="/tmp/sketchybar_stopwatch_mode"
 CONFIG_FILE="$HOME/personal/tracking/stopwatch_modes.conf"
 
-# Initialize with OSE mode if no mode set
+# Initialize with first mode from config if no mode set
 if [ ! -f "$MODE_FILE" ]; then
-    echo "OSE" > "$MODE_FILE"
+    # Get first non-comment mode from config
+    while IFS='|' read -r mode rest; do
+        [[ "$mode" =~ ^#.*$ ]] && continue
+        [[ -z "$mode" ]] && continue
+        echo "$mode" > "$MODE_FILE"
+        break
+    done < "$CONFIG_FILE"
 fi
 
 # Get icon and label for current mode
