@@ -1,4 +1,4 @@
---- Jump between files tagged with macOS Red tag
+--- Jump between files tagged with any macOS tag
 --- Depends on mactag-unified plugin for tag state
 
 -- Get info about current folder and tagged files from unified state
@@ -16,14 +16,9 @@ local get_jump_info = ya.sync(function()
 	for i, file in ipairs(folder.window) do
 		local url = tostring(file.url)
         -- Check against unified stored tags
-		if toggle_state.tags[url] then
-			for _, tag in ipairs(toggle_state.tags[url]) do
-				if tag == "Red" then
-					-- Store the position in the window (1-based)
-					table.insert(tagged_positions, i)
-					break
-				end
-			end
+		if toggle_state.tags[url] and #toggle_state.tags[url] > 0 then
+			-- File has at least one tag
+			table.insert(tagged_positions, i)
 		end
 	end
 	
