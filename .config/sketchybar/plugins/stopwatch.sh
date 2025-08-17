@@ -155,6 +155,14 @@ if [ -f "$PID_FILE" ]; then
     fi
 fi
 
+# Also check for any orphaned stopwatch processes and kill them
+for pid in $(ps aux | grep -E "bash.*stopwatch\.sh" | grep -v grep | grep -v "$$" | awk '{print $2}'); do
+    if [ "$pid" != "$$" ]; then
+        echo "Killing orphaned stopwatch process: $pid"
+        kill "$pid" 2>/dev/null
+    fi
+done
+
 # Start new stopwatch
 echo "Starting stopwatch"
 date +%s > "$START_FILE"

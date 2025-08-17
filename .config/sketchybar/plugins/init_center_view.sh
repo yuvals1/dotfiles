@@ -25,6 +25,13 @@ sketchybar --set youtube_music.artwork drawing=off \
 # Show timer icon for stopwatch state
 sketchybar --set stopwatch_icon drawing=on
 
-# Show mode options (idle view) and hide stopwatch item
-sketchybar --set stopwatch drawing=off
-bash "$HOME/.config/sketchybar/plugins/render_stopwatch_modes.sh"
+# Check if stopwatch is running
+PID_FILE="/tmp/sketchybar_stopwatch.pid"
+if [ -f "$PID_FILE" ] && ps -p $(cat "$PID_FILE") > /dev/null 2>&1; then
+    # Stopwatch is running - show it
+    sketchybar --set stopwatch drawing=on
+else
+    # Stopwatch is idle - show mode options
+    sketchybar --set stopwatch drawing=off
+    bash "$HOME/.config/sketchybar/plugins/render_stopwatch_modes.sh"
+fi
