@@ -1,8 +1,8 @@
 {
-  "title": "Navigation Keys",
+  "title": "Ctrl Navigation",
   "rules": [
     {
-      "description": "Navigation key mappings with modifier overrides",
+      "description": "Ctrl Navigation",
       "manipulators": [
         {
           "type": "basic",

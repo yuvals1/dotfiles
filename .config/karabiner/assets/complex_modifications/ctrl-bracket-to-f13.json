@@ -1,21 +1,21 @@
 {
-  "title": "Left Command+I to F12 (Inspect)",
+  "title": "Ctrl+[ to F13",
   "rules": [
     {
-      "description": "Left Command+I to F12 (Inspect)",
+      "description": "Ctrl+[ to F13",
       "manipulators": [
         {
           "type": "basic",
           "from": {
-            "key_code": "i",
+            "key_code": "open_bracket",
             "modifiers": {
-              "mandatory": ["left_command"],
+              "mandatory": ["control"],
               "optional": ["any"]
             }
           },
           "to": [
             {
-              "key_code": "f12"
+              "key_code": "f13"
             }
           ]
         }

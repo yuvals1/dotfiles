@@ -4,7 +4,95 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Map Control Keys to Function Keys",
+                        "description": "Chrome Mappings",
+                        "manipulators": [
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.google\\.Chrome$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "d",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "f",
+                                        "modifiers": ["control"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.google\\.Chrome$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "close_bracket",
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "close_bracket",
+                                        "modifiers": ["command", "shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.google\\.Chrome$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "open_bracket",
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "open_bracket",
+                                        "modifiers": ["command", "shift"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "i",
+                                    "modifiers": {
+                                        "mandatory": ["left_command"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "f12" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Ctrl+[ to F13",
                         "manipulators": [
                             {
                                 "from": {
@@ -20,107 +108,7 @@
                         ]
                     },
                     {
-                        "description": "Ctrl Key Modifications",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "semicolon",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "key_code": "escape" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "comma",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "key_code": "return_or_enter" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "period",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "key_code": "delete_or_backspace" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "slash",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "key_code": "delete_forward" }],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "w",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "delete_or_backspace",
-                                        "modifiers": ["option"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "m",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "key_code": "tab" }],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com\\.google\\.Chrome$"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "return_or_enter",
-                                        "modifiers": ["shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Navigation key mappings with modifier overrides",
+                        "description": "Ctrl Navigation",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -353,8 +341,79 @@
                         ]
                     },
                     {
-                        "description": "Map Ctrl+D to Ctrl+F in Chrome for better alignment with nvim autocomplete keybinds",
+                        "description": "Ctrl Enter Escape Delete Tab",
                         "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "semicolon",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "escape" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "comma",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "return_or_enter" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "period",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "delete_or_backspace" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "slash",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "delete_forward" }],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "w",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "delete_or_backspace",
+                                        "modifiers": ["option"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "from": {
+                                    "key_code": "m",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [{ "key_code": "tab" }],
+                                "type": "basic"
+                            },
                             {
                                 "conditions": [
                                     {
@@ -365,7 +424,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "d",
+                                    "key_code": "j",
                                     "modifiers": {
                                         "mandatory": ["control"],
                                         "optional": ["any"]
@@ -373,8 +432,8 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "f",
-                                        "modifiers": ["control"]
+                                        "key_code": "return_or_enter",
+                                        "modifiers": ["shift"]
                                     }
                                 ],
                                 "type": "basic"
@@ -390,75 +449,6 @@
                                     "modifiers": { "optional": ["any"] }
                                 },
                                 "to": [{ "key_code": "left_control" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Cmd+] to Cmd+Shift+] and Cmd+[ to Cmd+Shift+[ in Chrome",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com\\.google\\.Chrome$"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "close_bracket",
-                                    "modifiers": {
-                                        "mandatory": ["command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "close_bracket",
-                                        "modifiers": ["command", "shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com\\.google\\.Chrome$"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "open_bracket",
-                                    "modifiers": {
-                                        "mandatory": ["command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "open_bracket",
-                                        "modifiers": ["command", "shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Left Command+I to F12 (Inspect)",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "i",
-                                    "modifiers": {
-                                        "mandatory": ["left_command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [{ "key_code": "f12" }],
                                 "type": "basic"
                             }
                         ]

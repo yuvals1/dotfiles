@@ -1,8 +1,8 @@
 {
-  "title": "Ctrl Modifications",
+  "title": "Ctrl Enter Escape Delete Tab",
   "rules": [
     {
-      "description": "Ctrl Key Modifications",
+      "description": "Ctrl Enter Escape Delete Tab",
       "manipulators": [
         {
           "type": "basic",

@@ -1,9 +1,31 @@
 {
-  "title": "Chrome Tab Navigation",
+  "title": "Chrome and Browser Mappings",
   "rules": [
     {
-      "description": "Cmd+] to Cmd+Shift+] and Cmd+[ to Cmd+Shift+[ in Chrome",
+      "description": "Chrome Mappings",
       "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "d",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f",
+              "modifiers": ["control"]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        },
         {
           "type": "basic",
           "from": {
@@ -45,6 +67,21 @@
             {
               "type": "frontmost_application_if",
               "bundle_identifiers": ["^com\\.google\\.Chrome$"]
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": ["left_command"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "f12"
             }
           ]
         }
