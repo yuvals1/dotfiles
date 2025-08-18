@@ -310,6 +310,15 @@ case "$ACTION" in
             # Start new stopwatch
             echo "Starting stopwatch"
             date +%s > "$START_FILE"
+            
+            # Check current center view state
+            CENTER_STATE_FILE="$CONFIG_DIR/.center_state"
+            CURRENT_STATE=$(cat "$CENTER_STATE_FILE" 2>/dev/null || echo "0")
+            
+            # If not in stopwatch view (state 0), switch to it
+            if [ "$CURRENT_STATE" != "0" ]; then
+                bash "$CONFIG_DIR/plugins/toggle_center_view.sh"
+            fi
 
             # Set the mode icon and background color
             ICON=$(get_mode_icon)
