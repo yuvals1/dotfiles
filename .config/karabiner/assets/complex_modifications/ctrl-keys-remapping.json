@@ -1,8 +1,8 @@
 {
-  "title": "Control Key Remapping",
+  "title": "Ctrl Key Remapping",
   "rules": [
     {
-      "description": "Map Control Keys to Function Keys",
+      "description": "Map Ctrl Keys to Function Keys",
       "manipulators": [
         {
           "type": "basic",
