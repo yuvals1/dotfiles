@@ -33,8 +33,6 @@ vim.keymap.set('n', 'J', '/<C-r><C-w><CR>', { noremap = true })
 vim.keymap.set('n', '<C-d>', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic' })
 vim.keymap.set('n', '<C-u>', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic' })
 
--- Map F14 (remapped from Ctrl-i) to kill to end of line in insert mode
-vim.keymap.set('i', '<F20>', '<C-o>D', { noremap = true, desc = 'Kill to end of line' })
 
 -- Map shift-H and shift-L to move to start/end of line in visual mode
 vim.keymap.set('v', 'H', '^', { noremap = true, desc = 'Move to start of line' })
