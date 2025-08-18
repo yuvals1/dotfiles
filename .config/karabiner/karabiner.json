@@ -120,40 +120,6 @@
                         ]
                     },
                     {
-                        "description": "Chrome Key Remapping (Tab Close and Cut)",
-                        "manipulators": [
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com\\.google\\.Chrome$"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "x",
-                                    "modifiers": {
-                                        "mandatory": ["command"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "parameters": { "basic.to_after_key_up_delay_milliseconds": 0 },
-                                "to_after_key_up": [
-                                    {
-                                        "key_code": "w",
-                                        "modifiers": ["command"]
-                                    },
-                                    {
-                                        "key_code": "open_bracket",
-                                        "modifiers": ["command", "shift"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Navigation key mappings with modifier overrides",
                         "manipulators": [
                             {
