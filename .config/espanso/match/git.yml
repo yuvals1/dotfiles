@@ -6,9 +6,13 @@ matches:
     replace: "conventional commits"
     label: "conventional commits"
 
-  - trigger: ":cc"
+  - trigger: ":cm"
     replace: "suggest git commit message according to conventional commits"
     label: "conventional commits full"
+
+  - trigger: ":cc"
+    replace: "let's commit"
+    label: "let's commit"
 
   - trigger: ":coc"
     replace: "let's commit our changes"
