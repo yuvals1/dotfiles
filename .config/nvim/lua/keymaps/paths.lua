@@ -1,22 +1,3 @@
--- Custom commands for copying paths
-vim.api.nvim_create_user_command('CopyRelPath', function()
-  local path = vim.fn.fnamemodify(vim.fn.expand '%', ':.')
-  vim.fn.setreg('+', path)
-  print('Relative path copied to clipboard: ' .. path)
-end, {})
-
-vim.api.nvim_create_user_command('CopyFullPath', function()
-  local path = vim.fn.expand '%:p'
-  vim.fn.setreg('+', path)
-  print('Full path copied to clipboard: ' .. path)
-end, {})
-
-vim.api.nvim_create_user_command('CopyParentPath', function()
-  local path = vim.fn.fnamemodify(vim.fn.expand '%:p', ':h')
-  vim.fn.setreg('+', path)
-  print('Parent folder path copied to clipboard: ' .. path)
-end, {})
-
 -- Custom command for GoToFile
 vim.api.nvim_create_user_command('GoToFile', function()
   local line = vim.api.nvim_get_current_line()
@@ -45,9 +26,5 @@ vim.api.nvim_create_user_command('GoToFile', function()
   end
 end, {})
 
--- Copy path keymaps
-vim.api.nvim_set_keymap('n', '<leader>cr', ':CopyRelPath<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>cf', ':CopyFullPath<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>cp', ':CopyParentPath<CR>', { noremap = true, silent = true })
 -- Go to file
 vim.api.nvim_set_keymap('n', 'gf', ':GoToFile<CR>', { noremap = true, silent = true })

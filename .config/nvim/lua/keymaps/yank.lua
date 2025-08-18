@@ -16,9 +16,7 @@ end, { noremap = true, desc = 'Yank file name' })
 
 -- Yank path relative to home directory
 vim.keymap.set('n', 'yr', function()
-  local abs_path = vim.fn.expand '%:p'
-  local home = vim.fn.expand '$HOME'
-  local rel_path = abs_path:gsub(home .. '/', '')
-  vim.fn.setreg('+', rel_path)
-  vim.notify('Yanked home-relative path: ' .. rel_path, vim.log.levels.INFO)
+  local path = vim.fn.fnamemodify(vim.fn.expand '%:p', ':~')
+  vim.fn.setreg('+', path)
+  vim.notify('Yanked home-relative path: ' .. path, vim.log.levels.INFO)
 end, { noremap = true, desc = 'Yank path relative to home' })
