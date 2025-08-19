@@ -15,15 +15,21 @@ matches:
     replace: "do you understand"
     label: "do you undetstand"
 
-  - trigger: ":un"
+  - trigger: ":idu"
     replace: "i don't understand"
-    label: "i dont understand copy"
+    label: "i dont understand"
 
-  - trigger: ":nw"
+  - trigger: ":idm"
+    replace: "i don't understand. start from the motivation"
+    label: "i dont understand motivation"
+
+  - trigger: ":idw"
     replace: "i don't want"
+    label: "i dont want"
 
-  - trigger: ":uf"
+  - trigger: ":idfu"
     replace: "i don't fucking understand"
+    label: "i dont fucking understand"
 
   - trigger: ":first"
     replace: "explain from first principles"
