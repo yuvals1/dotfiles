@@ -33,13 +33,14 @@ hs.hotkey.bind({ "ctrl", "shift" }, "v", function()
 end)
 
 -- Move to specific coordinate and click - Position 1
-hs.hotkey.bind({ "cmd", "shift" }, "q", function()
-	hs.mouse.absolutePosition({ x = 1377, y = 149 })
-	-- Add a delay before clicking
-	hs.timer.doAfter(0.2, function()
-		forceClick()
-	end)
-end)
+-- Commented out to free up cmd+shift+q
+-- hs.hotkey.bind({ "cmd", "shift" }, "q", function()
+-- 	hs.mouse.absolutePosition({ x = 1377, y = 149 })
+-- 	-- Add a delay before clicking
+-- 	hs.timer.doAfter(0.2, function()
+-- 		forceClick()
+-- 	end)
+-- end)
 
 
 -- Same as Position 3 but works everywhere except Kitty (Cmd+J)
