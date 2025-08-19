@@ -71,10 +71,11 @@ hs.hotkey.bind({ "cmd", "shift" }, "P", function()
 end)
 
 -- For testing: Simple click at current position
-hs.hotkey.bind({ "cmd", "shift" }, "C", function()
-	forceClick()
-	hs.alert.show("Clicked at current position")
-end)
+-- Commented out to allow cmd+shift+c for tmux pane movement
+-- hs.hotkey.bind({ "cmd", "shift" }, "C", function()
+-- 	forceClick()
+-- 	hs.alert.show("Clicked at current position")
+-- end)
 -- Chrome-specific keybinds using event tap with auto-restart
 local chromeEventtap = nil
 local restartAttempts = 0
