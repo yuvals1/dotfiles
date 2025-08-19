@@ -109,18 +109,20 @@ for jsonl_path in "$CLAUDE_PROJECTS_DIR"/*/*.jsonl; do
     # Calculate age in seconds
     age_seconds=$((current_seconds - mod_seconds))
     
-    # Convert to days and hours
+    # Convert to days, hours, and minutes
     days=$((age_seconds / 86400))
     remaining_seconds=$((age_seconds % 86400))
     hours=$((remaining_seconds / 3600))
+    remaining_seconds=$((remaining_seconds % 3600))
+    minutes=$((remaining_seconds / 60))
     
     # Skip files older than 99 days
     if [ $days -gt 99 ]; then
         continue
     fi
     
-    # Format as XXd-YYh with zero padding
-    age_prefix=$(printf "%02dd-%02dh" "$days" "$hours")
+    # Format as XXd-YYh-ZZm with zero padding
+    age_prefix=$(printf "%02dd-%02dh-%02dm" "$days" "$hours" "$minutes")
     
     session_id=$(basename "$jsonl_path" .jsonl)
     
