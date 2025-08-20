@@ -31,6 +31,10 @@ matches:
     replace: "how can we implement it?"
     label: "how can we implement"
 
+  - trigger: ":wmt"
+    replace: "walk me through your thought process"
+    label: "walk me through thought process"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
