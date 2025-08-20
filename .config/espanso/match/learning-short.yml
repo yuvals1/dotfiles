@@ -27,6 +27,10 @@ matches:
     replace: "explain the technical flow"
     label: "explain technical flow"
 
+  - trigger: ":hci"
+    replace: "how can we implement it?"
+    label: "how can we implement"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
