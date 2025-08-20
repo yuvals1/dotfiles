@@ -7,13 +7,13 @@ This document tracks all custom keyboard shortcuts configured across different a
 | Key Combination         | Context      | Action                            | Description                              |
 | ----------------------- | ------------ | --------------------------------- | ---------------------------------------- |
 | `cmd+a`                 | Kitty        | Select all                        | vim: ggVG                                |
-| `cmd+c`                 | Kitty        | Copy staged diff                  | gitsigns: hs                             |
+| `cmd+c`                 | Kitty        | Break pane to new window          | Move pane to its own window              |
 | `cmd+e`                 | Kitty        | Reload file                       | vim: :e!                                 |
 | `cmd+t`                 | Kitty        | New tmux window                   | Creates new tmux window                  |
 | `cmd+p`                 | Kitty        | Tmux menu                         | Opens tmux menu                          |
 | `cmd+y`                 | Kitty        | Split tmux vertically right       | Vertical split to the right              |
 | `cmd+u`                 | Kitty        | Split tmux horizontally           | Horizontal split                         |
-| `cmd+x`                 | Kitty        | Equally divide panes              | Equally divide vertical space            |
+| `cmd+x`                 | Kitty        | Toggle pane height                | Toggle between 75% and 50% height        |
 | `cmd+x`                 | Chrome       | Close tab + reopen last           | Special Chrome behavior                  |
 | `cmd+z`                 | Kitty        | Toggle tmux zoom                  | Zoom/unzoom current pane                 |
 | `cmd+h`                 | Kitty        | Navigate tmux pane left           | Move to left pane                        |
@@ -45,11 +45,11 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+9`                 | Kitty        | Select tmux window 9              | Switch to window 9                       |
 | `cmd+;`                 | Kitty        | View tmux sessions                | List all tmux sessions                   |
 | `cmd+i`                 | Global       | Inspect element                   | Triggers F12                             |
-| `cmd+shift+;`           | Kitty        | Split tmux horizontally           | Horizontal split (alternative)           |
-| `cmd+shift+y`           | Kitty        | Split tmux vertically left        | Vertical split to the left               |
+| `cmd+shift+;`           | Kitty        | New tmux session                  | Create new tmux session                  |
+| `cmd+shift+y`           | Kitty        | Split tmux vertically             | Vertical split (not full height)         |
 | `cmd+shift+.`           | Kitty        | Trouble diagnostics (all)         | All buffers diagnostics                  |
 | `cmd+shift+d`           | Global       | Insert date                       | DD/MM/YYYY format                        |
-| `cmd+shift+s`           | Global       | Insert datetime                   | DD/MM/YYYY HH:MM format                  |
+| `cmd+shift+s`           | Kitty        | Cycle layouts                     | Grid → Horizontal → Vertical (all panes) |
 | `cmd+shift+u`           | Global       | Generate UUID                     | Inserts random UUID                      |
 | `cmd+b`                 | -            | **Available**                     | Reserved by Karabiner for navigation     |
 | `cmd+f`                 | Chrome       | Click at (2494, 645)              | Chrome-specific click position           |
@@ -63,17 +63,16 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+space`             | System       | Spotlight                         | Standard macOS Spotlight search          |
 | `cmd+tab`               | System       | App Switcher                      | Standard macOS app switcher              |
 | `cmd+shift+w`           | Kitty        | Rename tmux window                | Opens rename prompt (prefix + ,)         |
-| `cmd+shift+z`           | Kitty        | Toggle tmux pane size             | Toggle between 75% and 50% height        |
-| `cmd+shift+z`           | System       | Redo                              | Standard macOS redo (non-Kitty)          |
+| `cmd+shift+x`           | Kitty        | Equalize column                   | Equalize vertical panes in current column |
 | `cmd+/`                 | Global       | Click at (1074, 605)              | Left-center position                     |
 | `cmd+shift+/`           | Global       | Click at (1442, 605)              | Right-center position                    |
 | `cmd+shift+a`           | Global       | Speak clipboard (175 wpm)         | Text-to-speech normal speed              |
 | `cmd+shift+f`           | Global       | Speak clipboard (250 wpm)         | Text-to-speech fastest speed             |
-| `cmd+shift+x`           | Global       | Stop speaking                     | Stops text-to-speech                     |
 | `cmd+shift+q`           | Global       | Click at (1377, 149)              | Position 1                               |
-| `cmd+shift+r`           | Global       | Reload Hammerspoon                | Reloads Hammerspoon config               |
+| `cmd+shift+r`           | Kitty        | Swap columns                      | Swap left and right pane columns         |
 | `cmd+shift+b`           | Global       | Reload Sketchybar                 | Reloads Sketchybar configuration         |
 | `cmd+shift+P`           | Global       | Show mouse position               | Displays current mouse coordinates       |
+| `cmd+shift+c`           | Kitty        | Move pane to next window          | Join pane to next tmux window            |
 | `cmd+shift+C`           | Global       | Click at current position         | Test click function                      |
 | `alt+N`                 | Global       | Toggle work pomodoro              | Start/stop work timer                    |
 | `alt+M`                 | Global       | Toggle break pomodoro             | Start/stop break timer                   |
@@ -89,7 +88,7 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `alt+T`                 | Global       | Save current track                | Save Spotify track to file               |
 | `alt+E`                 | Global       | Toggle center view                | Switch between music/pomodoro in menu bar |
 | `alt+S`                 | Global       | Sleep Mac                         | Put Mac to sleep                         |
-| `cmd+shift+[others]`    | -            | **Available**                     | Except a,b,d,f,q,r,s,u,x,y,;,.,z,P,C,/  |
+| `cmd+shift+[others]`    | -            | **Available**                     | Except a,b,c,d,f,q,r,s,u,w,x,y,;,.,P,C,/ |
 | `cmd+option+[any key]`  | -            | **Available**                     | -                                        |
 | `cmd+control+[any key]` | -            | **Available**                     | -                                        |
 
