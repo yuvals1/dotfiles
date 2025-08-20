@@ -32,51 +32,12 @@ hs.hotkey.bind({ "ctrl", "shift" }, "v", function()
 	end)
 end)
 
--- Move to specific coordinate and click - Position 1
--- Commented out to free up cmd+shift+q
--- hs.hotkey.bind({ "cmd", "shift" }, "q", function()
--- 	hs.mouse.absolutePosition({ x = 1377, y = 149 })
--- 	-- Add a delay before clicking
--- 	hs.timer.doAfter(0.2, function()
--- 		forceClick()
--- 	end)
--- end)
-
-
--- Same as Position 3 but works everywhere except Kitty (Cmd+J)
--- local cmdJEventtap = hs.eventtap.new({ hs.eventtap.event.types.keyDown }, function(event)
--- 	local flags = event:getFlags()
--- 	local keyCode = event:getKeyCode()
---
--- 	-- Check if it's Cmd+J (keyCode 38 is 'j')
--- 	if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 38 then
--- 		local app = hs.application.frontmostApplication()
--- 		if app:name() ~= "kitty" then
--- 			-- Consume the event and perform our action
--- 			hs.mouse.absolutePosition({ x = 1074, y = 605 })
--- 			hs.timer.doAfter(0.2, function()
--- 				forceClick()
--- 			end)
--- 			return true -- Consume the event
--- 		end
--- 	end
--- 	return false -- Let the event pass through
--- end)
---
--- cmdJEventtap:start()
-
 -- Get current mouse position (for debugging)
 hs.hotkey.bind({ "cmd", "shift" }, "P", function()
 	local pos = hs.mouse.absolutePosition()
 	hs.alert.show("Mouse at: " .. math.floor(pos.x) .. "," .. math.floor(pos.y))
 end)
 
--- For testing: Simple click at current position
--- Commented out to allow cmd+shift+c for tmux pane movement
--- hs.hotkey.bind({ "cmd", "shift" }, "C", function()
--- 	forceClick()
--- 	hs.alert.show("Clicked at current position")
--- end)
 -- Chrome-specific keybinds using event tap with auto-restart
 local chromeEventtap = nil
 local restartAttempts = 0
@@ -149,7 +110,10 @@ restartChromeEventtap()
 
 -- Reload Hammerspoon configuration
 hs.hotkey.bind({ "cmd" }, "/", function()
-	hs.reload()
+	hs.alert.show("Reloading Hammerspoon...")
+	hs.timer.doAfter(0.5, function()
+		hs.reload()
+	end)
 end)
 
 -- Auto-reload Hammerspoon every 60 seconds
@@ -183,67 +147,10 @@ hs.hotkey.bind({ "alt" }, ".", function()
 	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/history_navigate.sh next 2>/dev/null &")
 end)
 
-
--- MUSIC PLAYER KEYBINDINGS (works with both Spotify and YouTube Music)
--- Toggle shuffle (Alt+Y)
-hs.hotkey.bind({ "alt" }, "Y", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh shuffle &")
-end)
-
--- Previous track (Alt+U)
-hs.hotkey.bind({ "alt" }, "U", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh previous &")
-end)
-
--- Play/Pause (Alt+I)
-hs.hotkey.bind({ "alt" }, "I", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh play-pause &")
-end)
-
--- Next track (Alt+O)
-hs.hotkey.bind({ "alt" }, "O", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh next &")
-end)
-
--- Seek backward 10 seconds (Alt+Cmd+U)
-hs.hotkey.bind({ "alt", "cmd" }, "U", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh seek-backward &")
-end)
-
--- Seek forward 10 seconds (Alt+Cmd+O)
-hs.hotkey.bind({ "alt", "cmd" }, "O", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh seek-forward &")
-end)
-
--- Note: Seek commands only work when spotify-player is the active device
--- These won't control iPhone/other device playback
-
--- Toggle repeat (Alt+P)
-hs.hotkey.bind({ "alt" }, "P", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh repeat &")
-end)
-
--- Add current track to playlist (Alt+T)
-hs.hotkey.bind({ "alt" }, "T", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh add-to-playlist &")
-end)
-
 -- Toggle between music and pomodoro view (Alt+E)
 hs.hotkey.bind({ "alt" }, "E", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh &")
-	-- hs.alert.show("Toggled center view")
 end)
-
--- Cycle through Spotify radio modes (Alt+R)
-hs.hotkey.bind({ "alt" }, "R", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh radio_toggle &")
-end)
-
--- Go to top tracks playlist (Alt+G)
-hs.hotkey.bind({ "alt" }, "G", function()
-	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify_command.sh go-to-top-tracks &")
-end)
-
 
 -- Chrome detection timer to reload when switching to Chrome
 local chromeWasActive = false
@@ -260,43 +167,6 @@ hs.timer.doEvery(checkInterval, function()
 	
 	-- Update our tracking variable
 	chromeWasActive = isChromeActive
-end)
-
-
--- Alert to show Hammerspoon config loaded successfully
--- hs.alert.show("Hammerspoon config loaded with click functionality")
-
--- SPOTIFY DAEMON CONTROL
--- Toggle both spotify.sh and spotify_player daemons (Alt+S)
-hs.hotkey.bind({ "alt" }, "s", function()
-	-- Check if either daemon is running
-	local checkTask = hs.task.new("/bin/bash", function(exitCode, stdOut, stdErr)
-		if stdOut and stdOut:match("spotify") then
-			-- Daemons are running, kill both
-			os.execute("pkill -f spotify.sh")
-			os.execute("pkill -f spotify_player")
-			-- Show "Spotify Stopped" state (justified as shutdown notification)
-			os.execute([[
-				sketchybar --set spotify.anchor drawing=on icon=":spotify:" label="Spotify Stopped" \
-					--set spotify.context drawing=off \
-					--set spotify.menubar_controls drawing=off \
-					--set spotify.progress drawing=off \
-					--set spotify.artwork drawing=off
-			]])
-			hs.alert.show("Spotify daemons stopped")
-		else
-			-- Daemons are not running, start both
-			-- Start spotify_player daemon first
-			os.execute("/Users/yuvalspiegel/dev/spotify-player/target/release/spotify_player -d &")
-			-- Small delay to let spotify_player initialize
-			hs.timer.doAfter(0.5, function()
-				-- Then start the UI daemon
-				os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify.sh &")
-			end)
-			hs.alert.show("Spotify daemons started")
-		end
-	end, {"-c", "ps aux | grep -E 'spotify\\.sh|spotify_player' | grep -v grep"})
-	checkTask:start()
 end)
 
 -- SLEEP KEYBIND
