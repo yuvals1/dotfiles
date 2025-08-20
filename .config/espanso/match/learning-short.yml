@@ -23,6 +23,10 @@ matches:
     replace: "i don't understand. start from the motivation"
     label: "i dont understand motivation"
 
+  - trigger: ":etf"
+    replace: "explain the technical flow"
+    label: "explain technical flow"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
