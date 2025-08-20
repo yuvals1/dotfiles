@@ -1,18 +1,5 @@
 -- Hammerspoon configuration for moving mouse cursor to specific coordinates and clicking
 
--- BASIC MOUSE MOVEMENT AND CLICK FUNCTION
-function moveAndClick(x, y)
-	-- First move the mouse
-	hs.mouse.absolutePosition({ x = x, y = y })
-
-	-- Give time for the move to complete
-	hs.timer.usleep(100000) -- 100ms pause
-
-	-- Click directly at current position (most reliable method)
-	local currentPosition = hs.mouse.absolutePosition()
-	hs.eventtap.leftClick(currentPosition)
-end
-
 -- Alternate fallback click method if needed
 function forceClick()
 	-- This is a very direct method that should always work
