@@ -46,7 +46,7 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+;`                 | Kitty        | View tmux sessions                | List all tmux sessions                   |
 | `cmd+i`                 | Global       | Inspect element                   | Triggers F12                             |
 | `cmd+shift+;`           | Kitty        | New tmux session                  | Create new tmux session                  |
-| `cmd+shift+y`           | Kitty        | Split tmux vertically             | Vertical split (not full height)         |
+| `cmd+shift+y`           | Kitty        | Split tmux vertically left        | Vertical split to the left (full height) |
 | `cmd+shift+.`           | Kitty        | Trouble diagnostics (all)         | All buffers diagnostics                  |
 | `cmd+shift+d`           | Global       | Insert date                       | DD/MM/YYYY format                        |
 | `cmd+shift+s`           | Kitty        | Cycle layouts                     | Grid → Horizontal → Vertical (all panes) |
@@ -63,7 +63,7 @@ This document tracks all custom keyboard shortcuts configured across different a
 | `cmd+space`             | System       | Spotlight                         | Standard macOS Spotlight search          |
 | `cmd+tab`               | System       | App Switcher                      | Standard macOS app switcher              |
 | `cmd+shift+w`           | Kitty        | Rename tmux window                | Opens rename prompt (prefix + ,)         |
-| `cmd+shift+x`           | Kitty        | Equalize column                   | Equalize vertical panes in current column |
+| `cmd+shift+x`           | Kitty        | Equalize column                   | Equalize vertical panes in current column only |
 | `cmd+/`                 | Global       | Click at (1074, 605)              | Left-center position                     |
 | `cmd+shift+/`           | Global       | Click at (1442, 605)              | Right-center position                    |
 | `cmd+shift+a`           | Global       | Speak clipboard (175 wpm)         | Text-to-speech normal speed              |
