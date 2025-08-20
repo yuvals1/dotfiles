@@ -35,6 +35,10 @@ matches:
     replace: "walk me through your thought process"
     label: "walk me through thought process"
 
+  - trigger: ":ybs"
+    replace: "you're being sloppy"
+    label: "youre being sloppy"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
