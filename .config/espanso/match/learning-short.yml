@@ -39,6 +39,10 @@ matches:
     replace: "you're being sloppy"
     label: "youre being sloppy"
 
+  - trigger: ":mcu"
+    replace: "let me tell you my current understanding"
+    label: "my current understanding"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
@@ -73,3 +77,6 @@ matches:
   - trigger: ":conf"
     replace: "i'm still confused about the exact technicalities"
     label: "confused about technicalities"
+
+  - trigger: ":ic"
+    replace: "i'm confused"
