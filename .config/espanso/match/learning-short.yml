@@ -47,6 +47,10 @@ matches:
     replace: "that was too fast"
     label: "that was too fast"
 
+  - trigger: ":ttb"
+    replace: "that was too fast and too big"
+    label: "too fast and too big"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
