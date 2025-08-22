@@ -43,6 +43,10 @@ matches:
     replace: "let me tell you my current understanding"
     label: "my current understanding"
 
+  - trigger: ":ttf"
+    replace: "that was too fast"
+    label: "that was too fast"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
