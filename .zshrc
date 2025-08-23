@@ -43,10 +43,6 @@ export EDITOR=nvim
 
 compdef _git_diff forgit::diff
 
-alias gg='open https://calendar.google.com/calendar/u/0/r'
-alias gt='open https://calendar.google.com/calendar/u/0/r/tasks'
-alias spotify-restart='pkill -f "spotify.sh" 2>/dev/null; sleep 1; nohup /Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/spotify.sh > /tmp/spotify.log 2>&1 &'
-
 
 export PATH=/usr/local/smlnj/bin:$PATH
 
