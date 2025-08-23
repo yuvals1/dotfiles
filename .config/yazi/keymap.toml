@@ -376,6 +376,10 @@ keymap = [
     "c",
     "t",
   ], run = "plugin tree-to-clipboard", desc = "Copy the tree of the selected directory to the clipboard" },
+  { on = [
+    "c",
+    "T",
+  ], run = '''shell --confirm 'for img in "$@"; do convert "$img" -trim -bordercolor white -border 40x40 "${img%.*}_trimmed.${img##*.}"; done' ''', desc = "Trim borders and add 40px white border to images" },
 
   # Content yanking - legacy Y keybinds (kept for compatibility)
   { on = [
