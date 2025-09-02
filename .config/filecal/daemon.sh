@@ -8,6 +8,16 @@ CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
 TAG_CMD="/usr/local/bin/tag"
 
+# Todo directories
+TODO_DIRS=(
+    "overdue"
+    "in-progress-red"
+    "in-progress-blue"
+    "done"
+    "backlog"
+    "events"
+)
+
 # Tag names
 IMPORTANT_TAG="Point"      # For today (shows 👉)
 
@@ -89,13 +99,77 @@ create_future_folders() {
     done
 }
 
+# Create todo directories
+create_todo_directories() {
+    for dir in "${TODO_DIRS[@]}"; do
+        local todo_dir="$CALENDAR_DIR/$dir"
+        if [[ ! -d "$todo_dir" ]]; then
+            mkdir -p "$todo_dir"
+            log "Created todo directory: $dir"
+        fi
+    done
+}
 
-
+# Sync tagged files to todo directories
+sync_todo_directories() {
+    # Clear existing symlinks in all todo directories
+    for dir in "${TODO_DIRS[@]}"; do
+        local todo_dir="$CALENDAR_DIR/$dir"
+        find "$todo_dir" -type l -delete 2>/dev/null
+    done
+    
+    # Scan all files in days/ directories
+    for day_dir in "$DAYS_DIR"/????-??-??*; do
+        if [[ ! -d "$day_dir" ]]; then
+            continue
+        fi
+        
+        local day_name=$(basename "$day_dir")
+        # Extract just the date part (first 10 characters: YYYY-MM-DD)
+        local day_date="${day_name:0:10}"
+        
+        # Process each file in the day directory
+        for file_path in "$day_dir"/*; do
+            if [[ ! -f "$file_path" ]]; then
+                continue
+            fi
+            
+            local file_name=$(basename "$file_path")
+            local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+            
+            # Create symlinks based on tags
+            if echo "$file_tags" | grep -q "Red"; then
+                local symlink_path="$CALENDAR_DIR/in-progress-red/$file_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            elif echo "$file_tags" | grep -q "Blue"; then
+                local symlink_path="$CALENDAR_DIR/in-progress-blue/$file_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            elif echo "$file_tags" | grep -q "Done"; then
+                local symlink_path="$CALENDAR_DIR/done/$file_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            elif echo "$file_tags" | grep -q "Calendar-emoji"; then
+                local symlink_name="${day_date}-${file_name}"
+                local symlink_path="$CALENDAR_DIR/events/$symlink_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            elif echo "$file_tags" | grep -q "Sleep"; then
+                local symlink_path="$CALENDAR_DIR/backlog/$file_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            elif echo "$file_tags" | grep -q "Overdue"; then
+                local symlink_path="$CALENDAR_DIR/overdue/$file_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            fi
+        done
+    done
+    
+    log "Synced todo directories"
+}
 
 # Main update function
 update_calendar() {
     tag_today
     create_future_folders
+    create_todo_directories
+    sync_todo_directories
 }
 
 # Check for command line argument
