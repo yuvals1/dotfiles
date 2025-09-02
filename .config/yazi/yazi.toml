@@ -334,7 +334,7 @@ run = "git"
 
 [[plugin.append_previewers]]
 name = "*"
-run = "hexyl"
+run = 'piper -- hexyl --border=none --terminal-width=$w "$1"'
 
 [[plugin.prepend_fetchers]]
 id = "mactag-unified"
