@@ -1121,12 +1121,12 @@ run = "plugin mactag-unified none"
 desc = "Clear tag"
 
 [[mgr.prepend_keymap]]
-on = ["<", "p"]
+on = ["M", "p"]
 run = "plugin tag-dirs Purple"
 desc = "Jump to Purple-tagged directories"
 
 [[mgr.prepend_keymap]]
-on = ["<", "g"]
+on = ["M", "g"]
 run = "plugin tag-dirs Green"
 desc = "Jump to Green-tagged directories"
 
