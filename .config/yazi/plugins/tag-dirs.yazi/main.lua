@@ -4,7 +4,7 @@ local state = ya.sync(function(st)
 	}
 end)
 
-local function fail(s, ...) ya.notify { title = "Purple Dirs", content = s:format(...), timeout = 5, level = "error" } end
+local function fail(tag, s, ...) ya.notify { title = tag .. " Dirs", content = s:format(...), timeout = 5, level = "error" } end
 
 local function options()
 	local default = {
@@ -44,12 +44,13 @@ local function options()
 		.. (os.getenv("YAZI_PURPLE_DIRS_OPTS") or "")
 end
 
-local function get_purple_dirs(cwd)
-	-- Use mdfind to search for Purple-tagged directories
+local function get_tagged_dirs(cwd, tag)
+	-- Use mdfind to search for tagged directories
+	local query = "kMDItemUserTags == '" .. tag .. "' && kMDItemContentType == 'public.folder'"
 	local child = Command("mdfind")
 		:arg("-onlyin")
 		:arg(os.getenv("HOME"))
-		:arg("kMDItemUserTags == 'Purple' && kMDItemContentType == 'public.folder'")
+		:arg(query)
 		:stdout(Command.PIPED)
 		:spawn()
 
@@ -78,12 +79,13 @@ local function setup(state)
 	-- No setup needed for purple dirs - we search on demand
 end
 
-local function entry()
+local function entry(_, job)
+	local tag = job.args[1] or "Purple"
 	local st = state()
-	local dirs = get_purple_dirs(st.cwd)
+	local dirs = get_tagged_dirs(st.cwd, tag)
 	
 	if #dirs == 0 then
-		return fail("No Purple-tagged directories found")
+		return fail(tag, "No %s-tagged directories found", tag)
 	end
 
 	local _permit = ui.hide()
