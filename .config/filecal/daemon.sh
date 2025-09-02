@@ -3,7 +3,6 @@
 # Enhanced calendar daemon
 # - Tags today with Point
 # - Creates 2 months of future folders
-# - Tags days with events (Green or Red based on priority)
 
 CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
@@ -11,8 +10,6 @@ TAG_CMD="/usr/local/bin/tag"
 
 # Tag names
 IMPORTANT_TAG="Point"      # For today (shows 👉)
-RED_TAG="Red"              # For days with important events
-GREEN_TAG="Green"          # For days with regular events
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
@@ -22,37 +19,8 @@ log() {
 clear_tags() {
     local path="$1"
     $TAG_CMD -r "$IMPORTANT_TAG" "$path" 2>/dev/null
-    $TAG_CMD -r "$RED_TAG" "$path" 2>/dev/null
-    $TAG_CMD -r "$GREEN_TAG" "$path" 2>/dev/null
 }
 
-# Check if a day has events and what priority
-check_day_content() {
-    local day_path="$1"
-    
-    # Check if directory exists and has files
-    if [[ ! -d "$day_path" ]]; then
-        return 2  # Directory doesn't exist
-    fi
-    
-    local file_count=$(find "$day_path" -maxdepth 1 -type f | wc -l | tr -d ' ')
-    
-    if [[ $file_count -eq 0 ]]; then
-        return 1  # Empty directory
-    fi
-    
-    # Check if any file has Red macOS tags
-    for file in "$day_path"/*; do
-        if [[ -f "$file" ]]; then
-            local file_tags=$($TAG_CMD -l "$file" 2>/dev/null)
-            if echo "$file_tags" | grep -q "Red"; then
-                return 3  # Has important/red events
-            fi
-        fi
-    done
-    
-    return 0  # Has regular events
-}
 
 # Tag today with Point
 tag_today() {
@@ -121,56 +89,6 @@ create_future_folders() {
     done
 }
 
-# Tag all days based on their content
-tag_all_days() {
-    local TODAY=$(date +%Y-%m-%d)
-    
-    # Process all date folders (with or without day suffix)
-    for day_dir in "$DAYS_DIR"/????-??-??*; do
-        if [[ ! -d "$day_dir" ]]; then
-            continue
-        fi
-        
-        local day_name=$(basename "$day_dir")
-        # Extract just the date part (first 10 characters: YYYY-MM-DD)
-        local day_date="${day_name:0:10}"
-        
-        # Skip today (already has Point tag)
-        if [[ "$day_date" == "$TODAY" ]]; then
-            continue
-        fi
-        
-        # Check day content and apply appropriate tag
-        check_day_content "$day_dir"
-        local status=$?
-        
-        # Get current tags
-        local current_tags=$($TAG_CMD -l "$day_dir" 2>/dev/null)
-        
-        case $status in
-            0)  # Has regular events - should be Green
-                if ! echo "$current_tags" | grep -q "$GREEN_TAG"; then
-                    clear_tags "$day_dir"
-                    $TAG_CMD -a "$GREEN_TAG" "$day_dir"
-                    log "Tagged $day_name with Green (has events)"
-                fi
-                ;;
-            3)  # Has important/red events - should be Red
-                if ! echo "$current_tags" | grep -q "$RED_TAG"; then
-                    clear_tags "$day_dir"
-                    $TAG_CMD -a "$RED_TAG" "$day_dir"
-                    log "Tagged $day_name with Red (has important events)"
-                fi
-                ;;
-            *)  # Empty or doesn't exist - should have no tags
-                if echo "$current_tags" | grep -qE "$RED_TAG|$GREEN_TAG"; then
-                    clear_tags "$day_dir"
-                    log "Cleared tags from $day_name (now empty)"
-                fi
-                ;;
-        esac
-    done
-}
 
 
 
@@ -178,7 +96,6 @@ tag_all_days() {
 update_calendar() {
     tag_today
     create_future_folders
-    tag_all_days
 }
 
 # Check for command line argument
