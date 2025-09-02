@@ -172,90 +172,13 @@ tag_all_days() {
     done
 }
 
-# Sync events to list-view directory with symlinks
-sync_list_view() {
-    local LIST_VIEW_DIR="$CALENDAR_DIR/list-view"
-    
-    # Create list-view directory if it doesn't exist
-    mkdir -p "$LIST_VIEW_DIR"
-    
-    # Remove all existing symlinks in list-view
-    find "$LIST_VIEW_DIR" -type l -delete
-    
-    # Recreate symlinks for all events
-    for day_dir in "$DAYS_DIR"/????-??-??*; do
-        if [[ ! -d "$day_dir" ]]; then
-            continue
-        fi
-        
-        local day_name=$(basename "$day_dir")
-        # Extract just the date part (first 10 characters: YYYY-MM-DD)
-        local day_date="${day_name:0:10}"
-        
-        # Process each event file in the day directory
-        for event_file in "$day_dir"/*; do
-            if [[ -f "$event_file" ]]; then
-                local event_name=$(basename "$event_file")
-                local symlink_name="${day_date}-${event_name}"
-                local symlink_path="$LIST_VIEW_DIR/$symlink_name"
-                
-                # Create relative symlink
-                # From list-view/ to days/YYYY-MM-DD  (N)/event
-                ln -s "../days/$day_name/$event_name" "$symlink_path"
-            fi
-        done
-    done
-    
-    log "Synced list-view directory"
-}
 
-# Sync current month's events to month-view directory with symlinks
-sync_month_view() {
-    local MONTH_VIEW_DIR="$CALENDAR_DIR/month-view"
-    local CURRENT_MONTH=$(date +%Y-%m)
-    
-    # Create month-view directory if it doesn't exist
-    mkdir -p "$MONTH_VIEW_DIR"
-    
-    # Remove all existing symlinks in month-view
-    find "$MONTH_VIEW_DIR" -type l -delete
-    
-    # Recreate symlinks for current month's events only
-    for day_dir in "$DAYS_DIR"/${CURRENT_MONTH}-??*; do
-        if [[ ! -d "$day_dir" ]]; then
-            continue
-        fi
-        
-        local day_name=$(basename "$day_dir")
-        # Extract just the date part (first 10 characters: YYYY-MM-DD)
-        local day_date="${day_name:0:10}"
-        # Extract just the day number (last 2 characters of date)
-        local day_num="${day_date:8:2}"
-        
-        # Process each event file in the day directory
-        for event_file in "$day_dir"/*; do
-            if [[ -f "$event_file" ]]; then
-                local event_name=$(basename "$event_file")
-                local symlink_name="${day_num}-${event_name}"
-                local symlink_path="$MONTH_VIEW_DIR/$symlink_name"
-                
-                # Create relative symlink
-                # From month-view/ to days/YYYY-MM-DD  (N)/event
-                ln -s "../days/$day_name/$event_name" "$symlink_path"
-            fi
-        done
-    done
-    
-    log "Synced month-view directory for $CURRENT_MONTH"
-}
 
 # Main update function
 update_calendar() {
     tag_today
     create_future_folders
     tag_all_days
-    sync_list_view
-    sync_month_view
 }
 
 # Check for command line argument
