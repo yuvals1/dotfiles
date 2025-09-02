@@ -29,6 +29,8 @@ local STATE_KEY = {
 	save_path = "save_path",
 	last_hovered_folder = "last_hovered_folder",
 	prefs = "prefs",
+	default_pref = "default_pref",
+	disable_fallback_preference = "disable_fallback_preference",
 	tasks_write_prefs_running = "tasks_write_prefs_running",
 	tasks_write_prefs = "tasks_write_prefs",
 }
@@ -160,6 +162,7 @@ local current_dir = ya.sync(function()
 	return tostring(cx.active.current.cwd)
 end)
 
+-- NOTE: can't use rt.mgr here because the value is not always the latest, unless set entry function as sync
 local current_pref = ya.sync(function()
 	return {
 		sort = {
@@ -262,42 +265,51 @@ local function save_prefs()
 	save_prefs()
 end
 
+local update_ui_pref = ya.sync(function(_, pref)
+	-- sort
+	local sort_pref = pref.sort
+	if sort_pref then
+		ya.dict_merge(sort_pref, {
+			tab = (type(cx.active.id) == "number" or type(cx.active.id) == "string") and cx.active.id
+				or cx.active.id.value,
+		})
+		ya.emit("sort", sort_pref)
+	end
+
+	-- linemode
+	local linemode_pref = pref.linemode
+	if linemode_pref then
+		ya.emit("linemode", {
+			linemode_pref,
+			tab = (type(cx.active.id) == "number" or type(cx.active.id) == "string") and cx.active.id
+				or cx.active.id.value,
+		})
+	end
+
+	--show_hidden
+	local show_hidden_pref = pref.show_hidden
+	if show_hidden_pref ~= nil then
+		ya.emit("hidden", {
+			show_hidden_pref and "show" or "hide",
+			tab = (type(cx.active.id) == "number" or type(cx.active.id) == "string") and cx.active.id
+				or cx.active.id.value,
+		})
+	end
+end)
+
 -- This function trigger everytime user change cwd
 local change_pref = ya.sync(function()
 	local prefs = get_state(STATE_KEY.prefs)
+
 	local cwd = tostring(cx.active.current.cwd)
 	-- change pref based on location
 	for _, pref in ipairs(prefs) do
 		if string.match(cwd, pref.location .. "$") then
-			-- sort
-			local sort_pref = pref.sort
-			if sort_pref then
-				ya.dict_merge(sort_pref, {
-					tab = (type(cx.active.id) == "number" or type(cx.active.id) == "string") and cx.active.id
-						or cx.active.id.value,
-				})
-				ya.emit("sort", sort_pref)
-			end
-
-			-- linemode
-			local linemode_pref = pref.linemode
-			if linemode_pref then
-				ya.emit("linemode", {
-					linemode_pref,
-					tab = (type(cx.active.id) == "number" or type(cx.active.id) == "string") and cx.active.id
-						or cx.active.id.value,
-				})
-			end
+			update_ui_pref(pref)
 
 			--show_hidden
 			local show_hidden_pref = pref.show_hidden
 			if show_hidden_pref ~= nil then
-				ya.emit("hidden", {
-					show_hidden_pref and "show" or "hide",
-					tab = (type(cx.active.id) == "number" or type(cx.active.id) == "string") and cx.active.id
-						or cx.active.id.value,
-				})
-
 				-- Restore hovered hidden folder
 				local last_hovered_folder = get_state(
 					STATE_KEY.last_hovered_folder
@@ -370,7 +382,13 @@ local reset_pref_cwd = function()
 		end
 	end
 	set_state(STATE_KEY.prefs, prefs)
-	change_pref()
+	if get_state(STATE_KEY.disable_fallback_preference) then
+		-- Restore default preference, because list pref not contain fallback pref (.*)
+		update_ui_pref(get_state(STATE_KEY.default_pref))
+	else
+		-- Restore default preference, because list pref contain fallback pref (.*), which is added in setup function
+		change_pref()
+	end
 	enqueue_task(STATE_KEY.tasks_write_prefs, { exclude_cwd = true })
 	save_prefs()
 end
@@ -411,7 +429,7 @@ function M:setup(opts)
 	end
 
 	set_state(STATE_KEY.save_path, save_path)
-	-- flag to prevent these predefined prefs is saved to file
+	-- flag to prevent predefined prefs is saved to file
 	for _, pref in ipairs(prefs) do
 		pref.is_predefined = true
 	end
@@ -420,26 +438,37 @@ function M:setup(opts)
 	for idx = #saved_prefs, 1, -1 do
 		table.insert(prefs, 1, saved_prefs[idx])
 	end
+
+	local default_pref = {
+		location = ".*",
+		sort = {
+			rt.mgr.sort_by,
+			reverse = rt.mgr.sort_reverse,
+			dir_first = rt.mgr.sort_dir_first,
+			translit = rt.mgr.sort_translit,
+			sensitive = rt.mgr.sort_sensitive,
+		},
+		linemode = rt.mgr.linemode,
+		show_hidden = rt.mgr.show_hidden,
+		is_predefined = true,
+	}
+
+	if opts and opts.disable_fallback_preference == true then
+		set_state(STATE_KEY.default_pref, default_pref)
+		set_state(STATE_KEY.disable_fallback_preference, true)
+	else
+		-- Add fallback location from yazi.toml
+		table.insert(prefs, deepClone(default_pref))
+	end
+	set_state(STATE_KEY.prefs, prefs)
+	set_state(STATE_KEY.loaded, true)
+
 	-- dds subscribe on changed directory
 	ps.sub("cd", function(_)
-		if not get_state(STATE_KEY.loaded) then
-			-- Add fallback location from yazi.toml
-			local current_location_pref = current_pref()
-			table.insert(prefs, {
-				location = ".*",
-				sort = current_location_pref.sort,
-				linemode = current_location_pref.linemode,
-				show_hidden = current_location_pref.show_hidden,
-				is_predefined = true,
-			})
-			set_state(STATE_KEY.prefs, prefs)
-			set_state(STATE_KEY.loaded, true)
-		end
 		if get_state(STATE_KEY.disabled) then
 			return
 		end
 		-- NOTE: Trigger if folder is already loaded
-
 		if cx.active.current.stage then
 			change_pref()
 		end
