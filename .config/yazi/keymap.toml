@@ -673,11 +673,6 @@ on = [",", "e"]
 run = "plugin date-filter twoweeks-ahead"
 desc = "Filter: Next 14 days"
 
-[[mgr.prepend_keymap]]
-on = [",", "f"]
-run = ["cd ~/personal/calendar/days", "plugin date-filter twoweeks-ahead"]
-desc = "Jump to calendar and filter next 14 days"
-
 
 [[mgr.prepend_keymap]]
 on = [",", "m"]
