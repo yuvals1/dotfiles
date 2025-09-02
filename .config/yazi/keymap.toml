@@ -952,11 +952,6 @@ desc = "Move task to waiting"
 # run = "plugin mark-label"
 # desc = "Rotate mark label (✅ → ❗ → 💤 → ❌ → none)"
 
-# Quick tagging: Done on hovered/selected (same as M+d)
-[[mgr.prepend_keymap]]
-on = "m"
-run = "plugin mactag-unified done"
-desc = "Tag as Done (✅) - quick key"
 
 # [[mgr.prepend_keymap]]
 # on = ["e", "t"]
@@ -1050,99 +1045,104 @@ on = "U"
 run = "plugin mactag-filter"
 desc = "Filter to show only tagged files"
 
-# Unified tagging combos under M
+# Unified tagging combos under m
 [[mgr.prepend_keymap]]
-on = ["M", "r"]
+on = ["m", "r"]
 run = "plugin mactag-unified red"
 desc = "Tag as Red 🔴"
 
 [[mgr.prepend_keymap]]
-on = ["M", "o"]
+on = ["m", "o"]
 run = "plugin mactag-unified orange"
 desc = "Tag as Orange 🟠"
 
 [[mgr.prepend_keymap]]
-on = ["M", "y"]
+on = ["m", "y"]
 run = "plugin mactag-unified yellow"
 desc = "Tag as Yellow 🟡"
 
 [[mgr.prepend_keymap]]
-on = ["M", "g"]
+on = ["m", "g"]
 run = "plugin mactag-unified green"
 desc = "Tag as Green 🟢"
 
 [[mgr.prepend_keymap]]
-on = ["M", "b"]
+on = ["m", "b"]
 run = "plugin mactag-unified blue"
 desc = "Tag as Blue 🔵"
 
 [[mgr.prepend_keymap]]
-on = ["M", "p"]
+on = ["m", "p"]
 run = "plugin mactag-unified purple"
 desc = "Tag as Purple 🟣"
 
 [[mgr.prepend_keymap]]
-on = ["M", "d"]
+on = ["m", "d"]
 run = "plugin mactag-unified done"
 desc = "Tag as Done (✅)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "s"]
+on = ["m", "s"]
 run = "plugin mactag-unified sleep"
 desc = "Tag as Sleep (⏸️)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "x"]
+on = ["m", "x"]
 run = "plugin mactag-unified x"
 desc = "Tag as X (❌)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "P"]
+on = ["m", "P"]
 run = "plugin mactag-unified point"
 desc = "Tag as Point (👉)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "f"]
+on = ["m", "f"]
 run = "plugin mactag-unified flag"
 desc = "Tag as Flag (🚩)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "1"]
+on = ["m", "1"]
 run = "plugin mactag-unified gear"
 desc = "Tag as Gear (⚙️)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "2"]
+on = ["m", "2"]
 run = "plugin mactag-unified golf"
 desc = "Tag as Golf (⛳)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "3"]
+on = ["m", "3"]
 run = "plugin mactag-unified calendar-emoji"
 desc = "Tag as Calendar (📅)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "4"]
+on = ["m", "4"]
 run = "plugin mactag-unified note"
 desc = "Tag as Note (📝)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "5"]
+on = ["m", "5"]
 run = "plugin mactag-unified stopwatch"
 desc = "Tag as Stopwatch (⏱️)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "6"]
+on = ["m", "6"]
 run = "plugin mactag-unified tracking"
 desc = "Tag as Tracking (🏃‍➡️)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "7"]
+on = ["m", "7"]
 run = "plugin mactag-unified hourglass"
 desc = "Tag as Hourglass (⏳)"
 
 [[mgr.prepend_keymap]]
-on = ["M", "M"]
+on = ["m", "8"]
+run = "plugin mactag-unified overdue"
+desc = "Tag as Overdue (⏰)"
+
+[[mgr.prepend_keymap]]
+on = ["m", "m"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"
 
