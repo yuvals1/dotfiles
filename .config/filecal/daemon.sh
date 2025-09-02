@@ -11,8 +11,9 @@ TAG_CMD="/usr/local/bin/tag"
 # Todo directories
 TODO_DIRS=(
     "overdue"
-    "in-progress-red"
-    "in-progress-blue"
+    "+general-tasks-red"
+    "+scheduled-tasks-blue"
+    "+current-project-tasks-purple"
     "done"
     "backlog"
     "events"
@@ -141,10 +142,11 @@ sync_todo_directories() {
                 local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
                 
                 # Update overdue tags
-                if echo "$file_tags" | grep -qE "(Red|Blue|Waiting)"; then
+                if echo "$file_tags" | grep -qE "(Red|Blue|Purple|Waiting)"; then
                     # Remove old tags and add Overdue
                     $TAG_CMD -r "Red" "$file_path" 2>/dev/null
                     $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
                     $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
                     $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
                 fi
@@ -173,10 +175,13 @@ sync_todo_directories() {
             
             # Create symlinks based on tags
             if echo "$file_tags" | grep -q "Red"; then
-                local symlink_path="$CALENDAR_DIR/in-progress-red/$file_name"
+                local symlink_path="$CALENDAR_DIR/+general-tasks-red/$file_name"
                 ln -sf "../days/$day_name/$file_name" "$symlink_path"
             elif echo "$file_tags" | grep -q "Blue"; then
-                local symlink_path="$CALENDAR_DIR/in-progress-blue/$file_name"
+                local symlink_path="$CALENDAR_DIR/+scheduled-tasks-blue/$file_name"
+                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+            elif echo "$file_tags" | grep -q "Purple"; then
+                local symlink_path="$CALENDAR_DIR/+current-project-tasks-purple/$file_name"
                 ln -sf "../days/$day_name/$file_name" "$symlink_path"
             elif echo "$file_tags" | grep -q "Done"; then
                 local symlink_path="$CALENDAR_DIR/done/$file_name"
