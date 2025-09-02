@@ -14,6 +14,7 @@ TODO_DIRS=(
     "+general-tasks-red"
     "+scheduled-tasks-blue"
     "+current-project-tasks-purple"
+    "+current-working-files-green"
     "done"
     "backlog"
     "events"
@@ -231,6 +232,37 @@ sync_purple_global() {
     log "Synced global Purple-tagged files"
 }
 
+# Sync Green-tagged files from entire HOME directory
+sync_green_global() {
+    local green_dir="$CALENDAR_DIR/+current-working-files-green"
+    
+    # Clear existing symlinks in green directory
+    find "$green_dir" -type l -delete 2>/dev/null
+    
+    # Use mdfind to search entire HOME for Green-tagged items
+    mdfind -onlyin "$HOME" "kMDItemUserTags == 'Green'" 2>/dev/null | while IFS= read -r item_path; do
+        if [[ (-f "$item_path" || -d "$item_path") && ! "$item_path" =~ ^"$CALENDAR_DIR" ]]; then
+            local file_name=$(basename "$item_path")
+            local relative_path
+            
+            # Create relative path from calendar dir to the item
+            if [[ "$item_path" == "$HOME"/* ]]; then
+                # Item is under HOME - create relative path
+                local rel_from_home="${item_path#$HOME/}"
+                relative_path="../../../$rel_from_home"
+            else
+                # Item outside HOME - use absolute path
+                relative_path="$item_path"
+            fi
+            
+            local symlink_path="$green_dir/$file_name"
+            ln -sf "$relative_path" "$symlink_path"
+        fi
+    done
+    
+    log "Synced global Green-tagged files"
+}
+
 # Main update function
 update_calendar() {
     tag_today
@@ -238,6 +270,7 @@ update_calendar() {
     create_todo_directories
     sync_todo_directories
     sync_purple_global
+    sync_green_global
 }
 
 # Check for command line argument
