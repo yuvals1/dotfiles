@@ -1132,6 +1132,6 @@ desc = "Jump to Green 🟢"
 
 # Jump to symlink target
 [[mgr.prepend_keymap]]
-on = ["g", "l"]
+on = "<C-l>"
 run = "plugin symlink-jump"
 desc = "Jump to symlink target"
