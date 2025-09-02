@@ -306,23 +306,6 @@ end
 --   },
 -- }
 
-require('bunny'):setup {
-  hops = {
-    { key = 'h', path = '~', desc = 'Home' },
-    { key = 'd', path = '~/Downloads', desc = 'Downloads' },
-    { key = 'a', path = '~/dotfiles', desc = 'Config files' },
-    { key = 'c', path = '~/Documents/diary/', desc = 'Commitments' },
-    { key = 't', path = '~/Documents/technion', desc = 'Technion' },
-    { key = 'y', path = '~/dotfiles/.config/yazi', desc = 'Yazi config' },
-    { key = 'v', path = '~/vaults-icloud-obsidian/personal-vault', desc = 'Personal vault' },
-    { key = 'p', path = '~/Documents/prompts', desc = 'Prompts' },
-    -- Add other frequent directories you use
-  },
-  desc_strategy = 'path',
-  notify = false,
-  fuzzy_cmd = "fzf --preview='echo {} | cut -f2 | xargs -I@ eza --tree --level=2 --color=always --icons --git @'",
-}
-
 require('jump-back'):setup()
 -- Track recent directories per tab (last 5)
 require('recent-dirs'):setup()
