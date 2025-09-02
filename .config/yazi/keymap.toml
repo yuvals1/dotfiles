@@ -903,39 +903,6 @@ on = "Q"
 run = "plugin quit-cd"
 desc = "Quit and change directory"
 
-# Task management
-
-[[mgr.prepend_keymap]]
-on = ["t", "t"]
-run = '''
-	shell --confirm 'file="$@"; ~/.config/sketchybar/task-link set "$file"'
-'''
-desc = "Set current file/folder as active task"
-
-[[mgr.prepend_keymap]]
-on = ["t", "c"]
-run = 'shell "~/.config/sketchybar/task-link clear" --block'
-desc = "Clear current task"
-
-[[mgr.prepend_keymap]]
-on = ["t", "d"]
-run = 'shell --confirm "export TASK_BASE_DIR=$HOME/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_done \"$@\""'
-desc = "Mark task as done (move to done folder and clear if current)"
-
-[[mgr.prepend_keymap]]
-on = ["t", "b"]
-run = 'shell --confirm "export TASK_BASE_DIR=$HOME/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_backlog \"$@\""'
-desc = "Move task to backlog"
-
-[[mgr.prepend_keymap]]
-on = ["t", "p"]
-run = 'shell --confirm "export TASK_BASE_DIR=$HOME/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_progress \"$@\""'
-desc = "Move task to progress"
-
-[[mgr.prepend_keymap]]
-on = ["t", "w"]
-run = 'shell --confirm "export TASK_BASE_DIR=$HOME/personal/tasks; source ~/.zsh/task-folders.zsh; task_move_waiting \"$@\""'
-desc = "Move task to waiting"
 
 # [[mgr.prepend_keymap]]
 # on = ["e", "a"]
