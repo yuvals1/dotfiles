@@ -1123,12 +1123,12 @@ desc = "Clear tag"
 [[mgr.prepend_keymap]]
 on = ["M", "p"]
 run = "plugin tag-dirs Purple"
-desc = "Jump to Purple-tagged directories"
+desc = "Jump to Purple 🟣"
 
 [[mgr.prepend_keymap]]
 on = ["M", "g"]
 run = "plugin tag-dirs Green"
-desc = "Jump to Green-tagged directories"
+desc = "Jump to Green 🟢"
 
 # Jump to symlink target
 [[mgr.prepend_keymap]]
