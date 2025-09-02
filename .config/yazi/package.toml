@@ -1,26 +1,26 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "de53d90"
+rev = "d7588f6"
 hash = "47865a70cade14a0b9b6bc6a54f16bdb"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:jump-to-char"
-rev = "de53d90"
+rev = "d7588f6"
 hash = "d2f04875bbd4ed3dd5696e8c4b094fde"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "de53d90"
+rev = "d7588f6"
 hash = "1adc12c2b2b025411ab61eb8f0879574"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "de53d90"
+rev = "d7588f6"
 hash = "3996fc74044bc44144b323686f887e1"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-filter"
-rev = "de53d90"
+rev = "d7588f6"
 hash = "e56b7abf3c06e8ce496eadcca168c093"
 
 [[plugin.deps]]
@@ -29,28 +29,18 @@ rev = "55631aa"
 hash = "fb38b3c546e6594961b335cee4eaa340"
 
 [[plugin.deps]]
-use = "ahkohd/eza-preview"
-rev = "4727dae"
-hash = "a83ced838b2a9e665f0eef3827827626"
-
-[[plugin.deps]]
-use = "lpnh/fg"
-rev = "3d32e55"
-hash = "f7ab219b58675582ef855a9414dbc659"
-
-[[plugin.deps]]
 use = "lpanebr/yazi-plugins:first-non-directory"
 rev = "ca18a2c"
 hash = "5c20ffa5171dab34042e03d273dddc5b"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "de53d90"
-hash = "f10a14e823382d90fab5b3ee54cb38fe"
+rev = "d7588f6"
+hash = "e1de3054c0d1a2d8dc6f007eadc0fa31"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:toggle-pane"
-rev = "de53d90"
+rev = "d7588f6"
 hash = "d6f60c24d8c0cf57a855bf46115b2502"
 
 [[plugin.deps]]
@@ -60,8 +50,8 @@ hash = "7cc42012a7c2099f80064d228feb8d44"
 
 [[plugin.deps]]
 use = "boydaihungst/simple-tag"
-rev = "79411b0"
-hash = "fb61033b7e6cbd8d37d1191456b44c91"
+rev = "ebcbc9e"
+hash = "fc8d977f168df8ac6db8b5c1167ec777"
 
 [[plugin.deps]]
 use = "stelcodes/bunny"
