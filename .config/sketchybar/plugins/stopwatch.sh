@@ -86,6 +86,7 @@ map_color_to_hex() {
         "yellow") echo "0xffffeb3b" ;;  # Bright yellow
         "green") echo "$GREEN" ;;
         "purple") echo "0xff9370db" ;;
+        "pink") echo "0xffe91e63" ;;
         "teal") echo "$ACCENT_COLOR" ;;
         "orange") echo "$ORANGE" ;;
         *) echo "$ITEM_BG_COLOR" ;;
