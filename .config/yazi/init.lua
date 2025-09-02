@@ -14,6 +14,16 @@ require('git'):setup {}
 require('full-border'):setup()
 -- require('star_linemode'):setup()
 
+-- Override Entity symlink method to show [SYMLINK]
+function Entity:symlink()
+	if not rt.mgr.show_symlink then
+		return ""
+	end
+
+	local to = self._file.link_to
+	return to and ui.Span(" [SYMLINK]"):style(th.mgr.symlink_target) or ""
+end
+
 -- Setup pref-by-location for remembering sort order
 local pref_by_location = require("pref-by-location")
 pref_by_location:setup({
