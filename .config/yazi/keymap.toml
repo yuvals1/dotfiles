@@ -1245,3 +1245,9 @@ desc = "Fzf overdue-tagged files"
 on = ["<", "8"]
 run = "plugin tag-fzf hourglass"
 desc = "Fzf hourglass-tagged files"
+
+# Jump to symlink target
+[[mgr.prepend_keymap]]
+on = ["g", "l"]
+run = "plugin symlink-jump"
+desc = "Jump to symlink target"
