@@ -314,6 +314,8 @@ require('bunny'):setup {
 }
 
 require('jump-back'):setup()
+-- Track recent directories per tab (last 5)
+require('recent-dirs'):setup()
 
 require('eza-preview'):setup {
   -- Set initial state to hide hidden files
@@ -340,4 +342,3 @@ require("mactag-filter"):setup()
 
 -- Test icon plugin (kept for reference/debugging)
 -- require("test-icon"):setup()
-
