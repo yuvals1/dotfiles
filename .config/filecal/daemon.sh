@@ -203,11 +203,11 @@ sync_todo_directories() {
 sync_purple_global() {
     local purple_dir="$CALENDAR_DIR/+current-project-tasks-purple"
     
-    # Clear existing symlinks in purple directory
+    # Clear existing symlinks in purple directory  
     find "$purple_dir" -type l -delete 2>/dev/null
     
     # Use mdfind to search entire HOME for Purple-tagged items
-    mdfind -onlyin "$HOME" "kMDItemUserTags == 'Purple'" 2>/dev/null | while IFS= read -r item_path; do
+    while IFS= read -r item_path; do
         if [[ (-f "$item_path" || -d "$item_path") && ! "$item_path" =~ ^"$CALENDAR_DIR" ]]; then
             local file_name=$(basename "$item_path")
             local relative_path
@@ -225,9 +225,11 @@ sync_purple_global() {
             local symlink_path="$purple_dir/$file_name"
             ln -sf "$relative_path" "$symlink_path"
         fi
-    done
+    done < <(mdfind -onlyin "$HOME" "kMDItemUserTags == 'Purple'" 2>/dev/null)
     
-    log "Synced global Purple-tagged files"
+    # Check final count
+    local final_count=$(ls -1 "$purple_dir" 2>/dev/null | wc -l | tr -d ' ')
+    log "Synced global Purple-tagged files (created $final_count symlinks)"
 }
 
 # Sync Green-tagged files from entire HOME directory
@@ -238,7 +240,7 @@ sync_green_global() {
     find "$green_dir" -type l -delete 2>/dev/null
     
     # Use mdfind to search entire HOME for Green-tagged items
-    mdfind -onlyin "$HOME" "kMDItemUserTags == 'Green'" 2>/dev/null | while IFS= read -r item_path; do
+    while IFS= read -r item_path; do
         if [[ (-f "$item_path" || -d "$item_path") && ! "$item_path" =~ ^"$CALENDAR_DIR" ]]; then
             local file_name=$(basename "$item_path")
             local relative_path
@@ -256,9 +258,11 @@ sync_green_global() {
             local symlink_path="$green_dir/$file_name"
             ln -sf "$relative_path" "$symlink_path"
         fi
-    done
+    done < <(mdfind -onlyin "$HOME" "kMDItemUserTags == 'Green'" 2>/dev/null)
     
-    log "Synced global Green-tagged files"
+    # Check final count
+    local final_count=$(ls -1 "$green_dir" 2>/dev/null | wc -l | tr -d ' ')
+    log "Synced global Green-tagged files (created $final_count symlinks)"
 }
 
 # Main update function
