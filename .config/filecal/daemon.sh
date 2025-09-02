@@ -11,7 +11,7 @@ TAG_CMD="/usr/local/bin/tag"
 # Todo directories
 TODO_DIRS=(
     "overdue"
-    "+general-tasks-red"
+    "+general-tasks-yellow"
     "+scheduled-tasks-blue"
     "done"
     "backlog"
@@ -141,9 +141,9 @@ sync_todo_directories() {
                 local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
                 
                 # Update overdue tags
-                if echo "$file_tags" | grep -qE "(Red|Blue|Purple|Waiting)"; then
+                if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
                     # Remove old tags and add Overdue
-                    $TAG_CMD -r "Red" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
                     $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
                     $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
                     $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
@@ -173,8 +173,8 @@ sync_todo_directories() {
             local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
             
             # Create symlinks based on tags
-            if echo "$file_tags" | grep -q "Red"; then
-                local symlink_path="$CALENDAR_DIR/+general-tasks-red/$file_name"
+            if echo "$file_tags" | grep -q "Yellow"; then
+                local symlink_path="$CALENDAR_DIR/+general-tasks-yellow/$file_name"
                 ln -sf "../days/$day_name/$file_name" "$symlink_path"
             elif echo "$file_tags" | grep -q "Blue"; then
                 local symlink_path="$CALENDAR_DIR/+scheduled-tasks-blue/$file_name"
