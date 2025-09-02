@@ -112,13 +112,47 @@ create_todo_directories() {
 
 # Sync tagged files to todo directories
 sync_todo_directories() {
+    local TODAY=$(date +%Y-%m-%d)
+    
     # Clear existing symlinks in all todo directories
     for dir in "${TODO_DIRS[@]}"; do
         local todo_dir="$CALENDAR_DIR/$dir"
         find "$todo_dir" -type l -delete 2>/dev/null
     done
     
-    # Scan all files in days/ directories
+    # First pass: Update overdue tags
+    for day_dir in "$DAYS_DIR"/????-??-??*; do
+        if [[ ! -d "$day_dir" ]]; then
+            continue
+        fi
+        
+        local day_name=$(basename "$day_dir")
+        # Extract just the date part (first 10 characters: YYYY-MM-DD)
+        local day_date="${day_name:0:10}"
+        
+        # Check if this date is in the past
+        if [[ "$day_date" < "$TODAY" ]]; then
+            # Process each file in the day directory
+            for file_path in "$day_dir"/*; do
+                if [[ ! -f "$file_path" ]]; then
+                    continue
+                fi
+                
+                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                
+                # Update overdue tags
+                if echo "$file_tags" | grep -qE "(Red|Blue|Waiting)"; then
+                    # Remove old tags and add Overdue
+                    $TAG_CMD -r "Red" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
+                    $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
+                fi
+            done
+        fi
+    done
+    
+    # Second pass: Scan all files in days/ directories for symlink creation
     for day_dir in "$DAYS_DIR"/????-??-??*; do
         if [[ ! -d "$day_dir" ]]; then
             continue
