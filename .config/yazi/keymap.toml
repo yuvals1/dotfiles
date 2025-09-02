@@ -649,9 +649,9 @@ desc = "Keyjump (Global mode)"
 
 # Date filtering for calendar
 [[mgr.prepend_keymap]]
-on = [",", ","]
-run = "plugin calendar-jump today"
-desc = "Jump to today's calendar"
+on = ["g", ","]
+run = ["plugin calendar-jump today", "plugin date-filter twoweeks-ahead"]
+desc = "Jump to today and filter next 14 days"
 
 [[mgr.prepend_keymap]]
 on = [",", "t"]
@@ -677,6 +677,7 @@ desc = "Filter: Next 14 days"
 on = [",", "f"]
 run = ["cd ~/personal/calendar/days", "plugin date-filter twoweeks-ahead"]
 desc = "Jump to calendar and filter next 14 days"
+
 
 [[mgr.prepend_keymap]]
 on = [",", "m"]
@@ -894,9 +895,14 @@ desc = "Diff the selected with the hovered file"
 
 # keymap.toml
 [[mgr.prepend_keymap]]
-on = ["g", "c"]
+on = ["g", "C"]
 run = "plugin vcs-files-all"
 desc = "Show Git file changes (including untracked)"
+
+[[mgr.prepend_keymap]]
+on = ["g", "c"]
+run = "cd ~/personal/calendar"
+desc = "Go to calendar directory"
 
 [[mgr.prepend_keymap]]
 on = "Q"
