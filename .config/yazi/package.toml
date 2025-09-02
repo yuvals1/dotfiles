@@ -55,13 +55,13 @@ hash = "fc8d977f168df8ac6db8b5c1167ec777"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:piper"
-rev = "aeca767"
-hash = "2bdc137505b8d9a0cc867a57d0e99b01"
+rev = "d7588f6"
+hash = "2143a53182dbbe935a1abd1623424aa5"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-paste"
-rev = "aeca767"
-hash = "6fe47945aff6571d76f3beb65099ad7a"
+rev = "d7588f6"
+hash = "a8050052e59f3952abe0b3e27a5843de"
 
 [[plugin.deps]]
 use = "Reledia/hexyl"
