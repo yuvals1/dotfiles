@@ -690,8 +690,8 @@ desc = "Filter: This year"
 # Calendar daemon restart
 [[mgr.prepend_keymap]]
 on = [",", "u"]
-run = '''shell --confirm 'launchctl unload ~/Library/LaunchAgents/com.filecal.daemon.plist && launchctl load ~/Library/LaunchAgents/com.filecal.daemon.plist' '''
-desc = "Restart filecal daemon"
+run = '''shell --confirm '~/.config/filecal/daemon.sh update' '''
+desc = "Update calendar tags and todo directories"
 
 [[mgr.prepend_keymap]]
 on = ["`"]
@@ -1122,12 +1122,12 @@ desc = "Clear tag"
 
 [[mgr.prepend_keymap]]
 on = ["M", "p"]
-run = "plugin tag-dirs Purple"
+run = "cd ~/personal/calendar/+current-project-tasks-purple"
 desc = "Jump to Purple 🟣"
 
 [[mgr.prepend_keymap]]
 on = ["M", "g"]
-run = "plugin tag-dirs Green"
+run = "cd ~/personal/calendar/+current-working-files-green"
 desc = "Jump to Green 🟢"
 
 # Jump to symlink target
