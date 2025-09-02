@@ -688,12 +688,13 @@ on = [",", "y"]
 run = "plugin date-filter year"
 desc = "Filter: This year"
 
-# Calendar tag update
+
+
+# Calendar daemon restart
 [[mgr.prepend_keymap]]
 on = [",", "u"]
-run = "plugin mactag-unified calendar"
-desc = "Update calendar tags"
-
+run = '''shell --confirm 'launchctl unload ~/Library/LaunchAgents/com.filecal.daemon.plist && launchctl load ~/Library/LaunchAgents/com.filecal.daemon.plist' '''
+desc = "Restart filecal daemon"
 
 [[mgr.prepend_keymap]]
 on = ["`"]
