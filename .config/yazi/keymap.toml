@@ -91,9 +91,9 @@ keymap = [
   # { on = "S", run = "search --via=rg", desc = "Search files by content via ripgrep" },
   { on = "<C-s>", run = "escape --search", desc = "Cancel the ongoing search" },
   { on = ";", run = "plugin zoxide", desc = "Jump to a directory via zoxide" },
+  { on = "<C-o>", run = "plugin jump-back", desc = "Jump to previous directory" },
   { on = "z", run = "plugin fzf", desc = "Jump to a file/directory via fzf" },
   { on = "W", run = "plugin skim", desc = "Jump to a file/directory via skim" },
-  { on = ":", run = "plugin jump-back", desc = "Jump to previous directory" },
   { on = [
     "g",
     "h",
