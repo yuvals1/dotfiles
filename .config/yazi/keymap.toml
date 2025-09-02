@@ -871,6 +871,11 @@ on = "A"
 run = "plugin smart-add"
 desc = "Create file/folder in hovered directory or CWD"
 
+[[mgr.prepend_keymap]]
+on = ["5", "a"]
+run = '''shell --confirm 'for i in {1..5}; do touch "file$i.txt"; done' '''
+desc = "Create 5 files (file1.txt to file5.txt)"
+
 # [[mgr.prepend_keymap]]
 # on = "S"
 # run = '''
