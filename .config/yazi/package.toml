@@ -54,11 +54,6 @@ rev = "ebcbc9e"
 hash = "fc8d977f168df8ac6db8b5c1167ec777"
 
 [[plugin.deps]]
-use = "stelcodes/bunny"
-rev = "a0b4e18"
-hash = "7acba2bb504c67dd7f2da135b88aae1b"
-
-[[plugin.deps]]
 use = "yazi-rs/plugins:piper"
 rev = "aeca767"
 hash = "2bdc137505b8d9a0cc867a57d0e99b01"
@@ -98,10 +93,10 @@ use = "yazi-rs/plugins:git"
 rev = "de53d90"
 hash = "63b6c222bf2103b3023389dde5e2ecfe"
 
-[[plugin.deps]]
-use = "lpnh/fr"
-rev = "3d32e55"
-hash = "f7ab219b58675582ef855a9414dbc659"
+# [[plugin.deps]]
+# use = "lpnh/fr"
+# rev = "3d32e55"
+# hash = "f7ab219b58675582ef855a9414dbc659"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mactag"
