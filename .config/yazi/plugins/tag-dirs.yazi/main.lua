@@ -31,9 +31,9 @@ local function options()
 	if ya.target_family() == "unix" then
 		default[#default + 1] = "--preview-window=down,30%,sharp"
 		if ya.target_os() == "linux" then
-			default[#default + 1] = [[--preview='test -d {} && \command -p ls -Cp --color=always --group-directories-first {}']]
+			default[#default + 1] = [[--preview='if [ -d {} ]; then \command -p ls -Cp --color=always --group-directories-first {}; else bat --style=numbers --color=always {} 2>/dev/null || cat {} 2>/dev/null || echo "Binary file"; fi']]
 		else
-			default[#default + 1] = [[--preview='test -d {} && \command -p ls -Cp {}']]
+			default[#default + 1] = [[--preview='if [ -d {} ]; then \command -p ls -Cp {}; else bat --style=numbers --color=always {} 2>/dev/null || cat {} 2>/dev/null || echo "Binary file"; fi']]
 		end
 	end
 
@@ -46,7 +46,7 @@ end
 
 local function get_tagged_dirs(cwd, tag)
 	-- Use mdfind to search for tagged directories
-	local query = "kMDItemUserTags == '" .. tag .. "' && kMDItemContentType == 'public.folder'"
+	local query = "kMDItemUserTags == '" .. tag .. "'"
 	local child = Command("mdfind")
 		:arg("-onlyin")
 		:arg(os.getenv("HOME"))
