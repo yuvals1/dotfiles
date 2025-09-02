@@ -13,8 +13,6 @@ TODO_DIRS=(
     "overdue"
     "+general-tasks-red"
     "+scheduled-tasks-blue"
-    "+current-project-tasks-purple"
-    "+current-working-files-green"
     "done"
     "backlog"
     "events"
