@@ -3,6 +3,10 @@ promptToReturnFromSubprocess: false
 #   copyToClipboardCmd: "echo {{text}} | nc -N localhost 8377"
 gui:
   showNumstatInFilesView: true
+  nerdFontsVersion: "3"
+  showFileIcons: true
+  wrapLinesInStagingView: true
+  showListFooter: true
 keybinding:
   commits:
     openLogMenu: "<C-r>"
