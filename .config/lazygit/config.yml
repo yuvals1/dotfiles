@@ -1,6 +1,8 @@
 promptToReturnFromSubprocess: false
 # os:
 #   copyToClipboardCmd: "echo {{text}} | nc -N localhost 8377"
+gui:
+  showNumstatInFilesView: true
 keybinding:
   commits:
     openLogMenu: "<C-r>"
