@@ -7,7 +7,11 @@ gui:
   showFileIcons: true
   wrapLinesInStagingView: true
   showListFooter: true
+  sidePanelWidth: 0.3333
 keybinding:
+  universal:
+    nextScreenMode: "z" # z to cycle zoom modes
+    undo: "Z" # shift-z for undo
   commits:
     openLogMenu: "<C-r>"
 
