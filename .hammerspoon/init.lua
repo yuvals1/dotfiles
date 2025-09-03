@@ -134,9 +134,20 @@ hs.hotkey.bind({ "alt" }, ".", function()
 	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/history_navigate.sh next 2>/dev/null &")
 end)
 
--- Toggle between music and pomodoro view (Alt+E)
+-- Toggle between stopwatch, history, and counting states view (Alt+E)
 hs.hotkey.bind({ "alt" }, "E", function()
 	os.execute("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/toggle_center_view.sh &")
+end)
+
+-- COUNTING STATES KEYBINDINGS
+-- Cycle to next counting state (Alt+O)
+hs.hotkey.bind({ "alt" }, "O", function()
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/counting_states.sh next_state 2>/dev/null &")
+end)
+
+-- Select/log current counting state (Alt+U)
+hs.hotkey.bind({ "alt" }, "U", function()
+	io.popen("/Users/yuvalspiegel/dotfiles/.config/sketchybar/plugins/counting_states.sh select 2>/dev/null &")
 end)
 
 -- Chrome detection timer to reload when switching to Chrome

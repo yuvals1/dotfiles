@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Toggle between two states:
+# Toggle between three states:
 # State 0: Stopwatch
 # State 1: History view
+# State 2: Counting states
 
 STATE_FILE="$HOME/.config/sketchybar/.center_state"
 
@@ -13,8 +14,8 @@ else
     CURRENT_STATE=0
 fi
 
-# Calculate next state (cycle through 0, 1)
-NEXT_STATE=$(( (CURRENT_STATE + 1) % 2 ))
+# Calculate next state (cycle through 0, 1, 2)
+NEXT_STATE=$(( (CURRENT_STATE + 1) % 3 ))
 
 # Save new state
 echo "$NEXT_STATE" > "$STATE_FILE"
@@ -32,6 +33,8 @@ sketchybar --set spotify.artwork drawing=off \
            --set stopwatch drawing=off \
            --set stopwatch_icon drawing=off \
            --set stopwatch_history drawing=off \
+           --set counting_states drawing=off \
+           --set counting_states_icon drawing=off \
            --set task drawing=off \
            --set pomodoro_timer drawing=off \
            --set pomodoro_history drawing=off \
@@ -46,6 +49,11 @@ sketchybar --set history_date drawing=off 2>/dev/null
 # Also hide dynamic mode option items (idle stopwatch view)
 for i in {0..30}; do
     sketchybar --set mode_option_$i drawing=off 2>/dev/null
+done
+
+# Also hide dynamic state option items (counting states view)
+for i in {0..30}; do
+    sketchybar --set state_option_$i drawing=off 2>/dev/null
 done
 
 # Hide pomodoro break if it exists
@@ -84,5 +92,19 @@ case $NEXT_STATE in
         for i in {0..9}; do
             sketchybar --set history_mode_$i drawing=on 2>/dev/null
         done
+        ;;
+    2)
+        # State 2: Counting States view - show icon and state options only
+        sketchybar --set counting_states_icon drawing=on
+        # Note: counting_states item stays hidden - it's just a placeholder
+        
+        # Show the selectable state options
+        if sketchybar --query state_option_0 &>/dev/null; then
+            for i in {0..30}; do
+                sketchybar --set state_option_$i drawing=on 2>/dev/null
+            done
+        else
+            bash "$HOME/.config/sketchybar/plugins/counting_states.sh" render_states
+        fi
         ;;
 esac
