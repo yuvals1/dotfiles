@@ -690,7 +690,7 @@ desc = "Filter: This year"
 # Calendar daemon restart
 [[mgr.prepend_keymap]]
 on = [",", "u"]
-run = '''shell --confirm '~/.config/filecal/daemon.sh update' '''
+run = '''shell --confirm '~/.config/filecal/daemon.sh' '''
 desc = "Update calendar tags and todo directories"
 
 [[mgr.prepend_keymap]]

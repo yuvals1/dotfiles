@@ -2,12 +2,11 @@
 
 A file-based calendar system where folders are dates and files are events, with automatic macOS tagging for visual indicators and multiple view modes via symlinks.
 
-## Installation
+## Usage
 
 ```bash
-./install.sh      # Install and start daemon
-./uninstall.sh    # Stop and remove daemon
-./daemon.sh update # Run manual update once (for testing)
+./daemon.sh  # Run manual update
+# Or use ,u in yazi to update calendar
 ```
 
 ## Directory Structure
@@ -35,9 +34,9 @@ A file-based calendar system where folders are dates and files are events, with 
     └── 16-1000-standup
 ```
 
-## Daemon Logic
+## Update Logic
 
-Runs every 10 minutes, executing five tasks:
+When run manually, executes these tasks:
 
 ### 1. Tag Today (`tag_today`)
 - Remove "Point" tag from yesterday
@@ -96,6 +95,4 @@ description:Project deadline
 
 ## Configuration
 
-Edit `com.filecal.daemon.plist` to change:
 - `CALENDAR_DIR` - Calendar location (default: `~/personal/calendar`)
-- Update interval - Currently 600 seconds (10 minutes)

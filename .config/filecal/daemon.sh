@@ -275,20 +275,7 @@ update_calendar() {
     sync_green_global
 }
 
-# Check for command line argument
-if [[ "$1" == "update" ]]; then
-    # Run once and exit
-    log "Running manual update..."
-    update_calendar
-    log "Manual update completed"
-    exit 0
-fi
-
-# Main loop (daemon mode)
-log "Starting enhanced calendar daemon..."
+# Run update
+log "Running calendar update..."
 update_calendar
-
-while true; do
-    sleep 600  # 10 minutes
-    update_calendar
-done
+log "Update completed"
