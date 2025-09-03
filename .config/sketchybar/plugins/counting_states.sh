@@ -71,6 +71,20 @@ get_all_states() {
     printf '%s\n' "${states[@]}"
 }
 
+# Function to count state occurrences for today
+count_state_today() {
+    local state_name="$1"
+    local date_str=$(date '+%Y-%m-%d')
+    local log_file="$TRACKING_DIR/${date_str}.log"
+    
+    if [ -f "$log_file" ]; then
+        # Count lines that end with the state name
+        grep " | ${state_name}$" "$log_file" 2>/dev/null | wc -l | tr -d ' '
+    else
+        echo "0"
+    fi
+}
+
 # Function to render state options (no selection highlighting)
 render_state_options() {
     local action="${1:-show}"
@@ -94,6 +108,9 @@ render_state_options() {
         [[ "$state" =~ ^#.*$ ]] && continue
         [[ -z "$state" ]] && continue
         
+        # Get count for this state
+        local count=$(count_state_today "$state")
+        
         # Get background color
         local bg_color=$(map_color_to_hex "$color")
         local text_color=$(get_text_color_for_background "$color")
@@ -109,11 +126,14 @@ render_state_options() {
             text_color="${LABEL_COLOR:-$WHITE}"
         fi
         
+        # Add count to label
+        local label_text="$state ($count)"
+        
         sketchybar --add item state_option_$index center \
                    --set state_option_$index \
                          icon="$icon" \
                          icon.color="$text_color" \
-                         label="$state" \
+                         label="$label_text" \
                          label.color="$text_color" \
                          background.color="$bg_display" \
                          background.drawing=on \
@@ -184,8 +204,8 @@ case "$ACTION" in
                 if sketchybar --query state_option_$index &>/dev/null; then
                     sketchybar --set state_option_$index background.color="0xffffffff"
                     sleep 0.1
-                    bg_color=$(map_color_to_hex "$color")
-                    sketchybar --set state_option_$index background.color="$bg_color"
+                    # Re-render to update counts
+                    render_state_options show
                 fi
                 break
             fi
