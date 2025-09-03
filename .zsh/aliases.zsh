@@ -12,6 +12,7 @@ alias kickstart='NVIM_APPNAME=kickstart nvim'
 alias gpr='f() { git checkout $(git rev-list -n 1 --grep="#$1" HEAD) }; f'
 
 alias lazygit='/Users/yuvalspiegel/dev/lazygit/lazygit'
+alias yazi='/Users/yuvalspiegel/dev/yazi/target/release/yazi'
 alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 alias lsq="lazysql"
 alias lzd="lazydocker"
