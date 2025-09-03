@@ -2,7 +2,6 @@ alias vim='nvim'
 alias c='clear'
 alias cat='bat --style=plain --paging=never'
 alias icat='kitty +kitten icat'
-# alias y='yazi'
 alias yt='yazi ~/personal/tasks/"$TASK_PROGRESS"'
 alias yp='yazi ~/personal'
 alias yc='yazi ~/personal/calendar/days'
@@ -11,8 +10,6 @@ alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
 alias gpr='f() { git checkout $(git rev-list -n 1 --grep="#$1" HEAD) }; f'
 
-alias lazygit='/Users/yuvalspiegel/dev/lazygit/lazygit'
-alias yazi='/Users/yuvalspiegel/dev/yazi/target/release/yazi'
 alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 alias lsq="lazysql"
 alias lzd="lazydocker"
