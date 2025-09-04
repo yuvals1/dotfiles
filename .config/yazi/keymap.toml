@@ -686,7 +686,6 @@ run = "plugin date-filter year"
 desc = "Filter: This year"
 
 
-
 # Calendar daemon restart
 [[mgr.prepend_keymap]]
 on = [",", "u"]
@@ -904,6 +903,11 @@ desc = "Show Git file changes (including untracked)"
 on = ["g", "c"]
 run = "cd ~/personal/calendar"
 desc = "Go to calendar directory"
+
+[[mgr.prepend_keymap]]
+on = ["g", "b"]
+run = "cd ~/personal/calendar/+scheduled-tasks-blue"
+desc = "Go to blue 🔵 tasks"
 
 [[mgr.prepend_keymap]]
 on = "Q"
