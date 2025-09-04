@@ -114,10 +114,12 @@ create_todo_directories() {
 sync_todo_directories() {
     local TODAY=$(date +%Y-%m-%d)
     
-    # Clear existing symlinks in all todo directories
+    # Clear existing symlinks and empty directories in all todo directories
     for dir in "${TODO_DIRS[@]}"; do
         local todo_dir="$CALENDAR_DIR/$dir"
         find "$todo_dir" -type l -delete 2>/dev/null
+        # Remove empty directories (bottom-up)
+        find "$todo_dir" -mindepth 1 -type d -empty -delete 2>/dev/null
     done
     
     # First pass: Update overdue tags
@@ -132,12 +134,8 @@ sync_todo_directories() {
         
         # Check if this date is in the past
         if [[ "$day_date" < "$TODAY" ]]; then
-            # Process each file in the day directory
-            for file_path in "$day_dir"/*; do
-                if [[ ! -f "$file_path" ]]; then
-                    continue
-                fi
-                
+            # Process all files recursively in the day directory
+            find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
                 local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
                 
                 # Update overdue tags
@@ -153,7 +151,7 @@ sync_todo_directories() {
         fi
     done
     
-    # Second pass: Scan all files in days/ directories for symlink creation
+    # Second pass: Scan all files in days/ directories for symlink creation (including nested)
     for day_dir in "$DAYS_DIR"/????-??-??*; do
         if [[ ! -d "$day_dir" ]]; then
             continue
@@ -163,35 +161,80 @@ sync_todo_directories() {
         # Extract just the date part (first 10 characters: YYYY-MM-DD)
         local day_date="${day_name:0:10}"
         
-        # Process each file in the day directory
-        for file_path in "$day_dir"/*; do
-            if [[ ! -f "$file_path" ]]; then
-                continue
-            fi
-            
-            local file_name=$(basename "$file_path")
+        # Process all files recursively in the day directory
+        find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
             local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+            
+            # Get relative path from day directory
+            local rel_path="${file_path#$day_dir/}"
+            # Get directory part and filename separately
+            local rel_dir=$(dirname "$rel_path")
+            local file_name=$(basename "$rel_path")
+            
+            # Function to calculate relative path
+            calculate_relative_path() {
+                local target_subdir="$1"
+                local link_prefix="../"
+                if [[ "$target_subdir" != "." ]]; then
+                    # Add more ../ for each directory level
+                    local depth=$(echo "$target_subdir" | tr -cd '/' | wc -c)
+                    for ((i=0; i<=depth; i++)); do
+                        link_prefix="../$link_prefix"
+                    done
+                fi
+                echo "$link_prefix"
+            }
             
             # Create symlinks based on tags
             if echo "$file_tags" | grep -q "Yellow"; then
-                local symlink_path="$CALENDAR_DIR/+general-tasks-yellow/$file_name"
-                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+                local target_dir="$CALENDAR_DIR/+general-tasks-yellow"
+                if [[ "$rel_dir" != "." ]]; then
+                    target_dir="$target_dir/$rel_dir"
+                    mkdir -p "$target_dir"
+                fi
+                local link_prefix=$(calculate_relative_path "$rel_dir")
+                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
             elif echo "$file_tags" | grep -q "Blue"; then
-                local symlink_path="$CALENDAR_DIR/+scheduled-tasks-blue/$file_name"
-                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+                local target_dir="$CALENDAR_DIR/+scheduled-tasks-blue"
+                if [[ "$rel_dir" != "." ]]; then
+                    target_dir="$target_dir/$rel_dir"
+                    mkdir -p "$target_dir"
+                fi
+                local link_prefix=$(calculate_relative_path "$rel_dir")
+                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
             elif echo "$file_tags" | grep -q "Done"; then
-                local symlink_path="$CALENDAR_DIR/done/$file_name"
-                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+                local target_dir="$CALENDAR_DIR/done"
+                if [[ "$rel_dir" != "." ]]; then
+                    target_dir="$target_dir/$rel_dir"
+                    mkdir -p "$target_dir"
+                fi
+                local link_prefix=$(calculate_relative_path "$rel_dir")
+                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
             elif echo "$file_tags" | grep -q "Calendar-emoji"; then
-                local symlink_name="${day_date}-${file_name}"
-                local symlink_path="$CALENDAR_DIR/events/$symlink_name"
-                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+                local target_dir="$CALENDAR_DIR/events"
+                if [[ "$rel_dir" != "." ]]; then
+                    target_dir="$target_dir/$rel_dir"
+                    mkdir -p "$target_dir"
+                fi
+                local event_file_name="${day_date}-${file_name}"
+                local link_prefix=$(calculate_relative_path "$rel_dir")
+                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$event_file_name"
             elif echo "$file_tags" | grep -q "Sleep"; then
-                local symlink_path="$CALENDAR_DIR/backlog/$file_name"
-                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+                local target_dir="$CALENDAR_DIR/backlog"
+                if [[ "$rel_dir" != "." ]]; then
+                    target_dir="$target_dir/$rel_dir"
+                    mkdir -p "$target_dir"
+                fi
+                local link_prefix=$(calculate_relative_path "$rel_dir")
+                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
             elif echo "$file_tags" | grep -q "Overdue"; then
-                local symlink_path="$CALENDAR_DIR/overdue/$file_name"
-                ln -sf "../days/$day_name/$file_name" "$symlink_path"
+                local target_dir="$CALENDAR_DIR/overdue"
+                if [[ "$rel_dir" != "." ]]; then
+                    target_dir="$target_dir/$rel_dir"
+                    mkdir -p "$target_dir"
+                fi
+                local link_prefix=$(calculate_relative_path "$rel_dir")
+                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
             fi
         done
     done
