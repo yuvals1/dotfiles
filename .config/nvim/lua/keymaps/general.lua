@@ -22,16 +22,16 @@ vim.keymap.set('n', '<M-BS>', 'db', { noremap = true, silent = true })
 vim.keymap.set('i', '<M-BS>', '<C-o>db', { noremap = true, silent = true })
 
 -- Normal moded: move 10 lines up or down
-vim.keymap.set({ 'n', 'v' }, '<F13>', '10gk', { desc = 'Move 10 lines up' })
-vim.keymap.set({ 'n', 'v' }, '<C-]>', '10gj', { desc = 'Move 10 lines down' })
+vim.keymap.set({ 'n', 'v' }, '<C-l>', '10gk', { desc = 'Move 10 lines up' })
+vim.keymap.set({ 'n', 'v' }, '<C-d>', '10gj', { desc = 'Move 10 lines down' })
 
 vim.keymap.set('i', '<C-a>', '<ESC><C-a>a', { desc = 'Increment number while in insert mode' })
 vim.keymap.set('i', '<C-x>', '<ESC><C-x>a', { desc = 'Decrement number while in insert mode' })
 
 vim.keymap.set('n', 'J', '/<C-r><C-w><CR>', { noremap = true })
 
-vim.keymap.set('n', '<C-d>', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic' })
-vim.keymap.set('n', '<C-u>', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic' })
+vim.keymap.set('n', '<C-]>', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic' })
+vim.keymap.set('n', '<F13>', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic' })
 
 
 -- Map shift-H and shift-L to move to start/end of line in visual mode
