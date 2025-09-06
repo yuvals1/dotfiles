@@ -423,7 +423,10 @@ keymap = [
   # ], run = "plugin eza-preview toggle-hidden", desc = "Toggle hidden files" },
 
   # Deep .txt filter (M then t)
-  { on = [ "M", "t" ], run = "plugin deep-txt", desc = "Deep-filter .txt (L=3)" },
+  { on = [
+    "M",
+    "t",
+  ], run = "plugin deep-txt", desc = "Deep-filter .txt (L=3)" },
 ]
 
 [tasks]
@@ -1024,7 +1027,7 @@ desc = "Jump to previous tagged file"
 
 [[mgr.prepend_keymap]]
 on = ["M", "b"]
-run = "plugin deep-tag blue"
+run = "plugin deep-tag \"blue 3\""
 desc = "Deep filter Blue-tagged items"
 
 [[mgr.prepend_keymap]]

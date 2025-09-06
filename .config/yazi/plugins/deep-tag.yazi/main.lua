@@ -40,7 +40,8 @@ local function entry(_, job)
   end
   if #tags == 0 then return end
 
-  ya.emit('filter_do', { tags = table.concat(tags, ','), deep = true, levels = levels, done = true })
+  -- Pass levels as a number; keymap now quotes args so job.args[2] is parsed correctly
+  ya.emit('filter_do', { tags = table.concat(tags, ','), deep = true, levels = math.floor(levels), done = true })
 
   -- Auto-enter unique directory chains (like deep-txt)
   ya.sleep(0.03)
