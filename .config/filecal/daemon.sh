@@ -5,6 +5,7 @@
 # - Creates 2 weeks of future folders
 # - Updates overdue tags for past-dated tasks
 # - Archives past-dated directories to past-days
+# - Tracks overdue count in days/overdue-count file
 
 CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
@@ -104,6 +105,37 @@ update_overdue_tags() {
     log "Completed overdue tag updates"
 }
 
+# Update overdue count file
+update_overdue_count() {
+    local OVERDUE_COUNT_FILE="$DAYS_DIR/overdue-count"
+    local overdue_count=0
+    
+    # Count all files with Overdue tag in days and past-days directories
+    for search_dir in "$DAYS_DIR" "$PAST_DAYS_DIR"; do
+        if [[ -d "$search_dir" ]]; then
+            while IFS= read -r file_path; do
+                if [[ -f "$file_path" ]] && [[ "$file_path" != "$OVERDUE_COUNT_FILE" ]]; then
+                    local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                    if echo "$file_tags" | grep -q "Overdue"; then
+                        ((overdue_count++))
+                    fi
+                fi
+            done < <(find "$search_dir" -type f 2>/dev/null)
+        fi
+    done
+    
+    # Update or remove the count file based on count
+    if [[ $overdue_count -gt 0 ]]; then
+        echo "$overdue_count" > "$OVERDUE_COUNT_FILE"
+        log "Updated overdue count: $overdue_count"
+    else
+        if [[ -f "$OVERDUE_COUNT_FILE" ]]; then
+            rm "$OVERDUE_COUNT_FILE"
+            log "Removed overdue count file (no overdue items)"
+        fi
+    fi
+}
+
 # Archive past-dated directories to past-days
 archive_past_days() {
     local TODAY=$(date +%Y-%m-%d)
@@ -169,6 +201,7 @@ update_calendar() {
     tag_today
     archive_past_days
     update_overdue_tags
+    update_overdue_count
     create_future_folders
 }
 
