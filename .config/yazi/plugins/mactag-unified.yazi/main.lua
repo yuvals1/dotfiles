@@ -2,9 +2,7 @@
 
 -- Module table so other plugins can read current tags via
 -- `package.loaded["mactag-unified"].tags`
-local M = {
-    tags = {},
-}
+local M = {}
 
 -- Our managed tag set (mutually exclusive)
 local MANAGED_TAGS = {
@@ -29,104 +27,63 @@ local MANAGED_TAGS = {
     ["hourglass"] = "Hourglass",
 }
 
--- Update state and trigger render
-local update = ya.sync(function(st, tags)
-    for path, tag in pairs(tags) do
-        st.tags[path] = #tag > 0 and tag or nil
-        M.tags[path] = st.tags[path]
-    end
-    if ui.render then ui.render() else ya.render() end
-end)
+-- No fetch/state; icons read tags from core on demand
 
 -- Setup function to initialize visual display
 local function setup(st, _)
-    st.tags = {}
-    M.tags = st.tags
-
     -- Save the original icon function
     st.original_icon = Entity.icon
 
     -- Override the icon function to show visual indicators
     Entity.icon = function(self)
         local original = st.original_icon(self)
-        local url = tostring(self._file.url)
-        local file_tags = st.tags[url]
-        if file_tags then
-            for _, tag in ipairs(file_tags) do
-                if tag == "Done" then
-                    return ui.Line { ui.Span("✅ "), original }
-                elseif tag == "Red" then
-                    return ui.Line { ui.Span("● "):fg("#ee7b70"), original }
-                elseif tag == "Orange" then
-                    return ui.Line { ui.Span("● "):fg("#f5bd5c"), original }
-                elseif tag == "Yellow" then
-                    return ui.Line { ui.Span("● "):fg("#fbe764"), original }
-                elseif tag == "Green" then
-                    return ui.Line { ui.Span("● "):fg("#91fc87"), original }
-                elseif tag == "Blue" then
-                    return ui.Line { ui.Span("● "):fg("#5fa3f8"), original }
-                elseif tag == "Purple" then
-                    return ui.Line { ui.Span("● "):fg("#cb88f8"), original }
-                elseif tag == "X" then
-                    return ui.Line { ui.Span("❌ "), original }
-                elseif tag == "Sleep" then
-                    return ui.Line { ui.Span("⏸️ "), original }
-                elseif tag == "Point" then
-                    return ui.Line { ui.Span("👉 "), original }
-                elseif tag == "Flag" then
-                    return ui.Line { ui.Span("🚩 "), original }
-                elseif tag == "Gear" then
-                    return ui.Line { ui.Span("⚙️ "), original }
-                elseif tag == "Golf" then
-                    return ui.Line { ui.Span("⛳ "), original }
-                elseif tag == "Calendar-emoji" then
-                    return ui.Line { ui.Span("📅 "), original }
-                elseif tag == "Note" then
-                    return ui.Line { ui.Span("✏️ "), original }
-                elseif tag == "Stopwatch" then
-                    return ui.Line { ui.Span("⏱️ "), original }
-                elseif tag == "Tracking" then
-                    return ui.Line { ui.Span("🏃‍➡️ "), original }
-                elseif tag == "Overdue" then
-                    return ui.Line { ui.Span("⏰ "), original }
-                elseif tag == "Hourglass" then
-                    return ui.Line { ui.Span("⏳ "), original }
-                end
-            end
+    local tags = self._file:tags()
+    if tags and #tags > 0 then
+      for _, tag in ipairs(tags) do
+        local t = string.lower(tag)
+        if t == "done" then
+          return ui.Line { ui.Span("✅ "), original }
+        elseif t == "red" then
+          return ui.Line { ui.Span("● "):fg("#ee7b70"), original }
+        elseif t == "orange" then
+          return ui.Line { ui.Span("● "):fg("#f5bd5c"), original }
+        elseif t == "yellow" then
+          return ui.Line { ui.Span("● "):fg("#fbe764"), original }
+        elseif t == "green" then
+          return ui.Line { ui.Span("● "):fg("#91fc87"), original }
+        elseif t == "blue" then
+          return ui.Line { ui.Span("● "):fg("#5fa3f8"), original }
+        elseif t == "purple" then
+          return ui.Line { ui.Span("● "):fg("#cb88f8"), original }
+        elseif t == "x" then
+          return ui.Line { ui.Span("❌ "), original }
+        elseif t == "sleep" then
+          return ui.Line { ui.Span("⏸️ "), original }
+        elseif t == "point" then
+          return ui.Line { ui.Span("👉 "), original }
+        elseif t == "flag" then
+          return ui.Line { ui.Span("🚩 "), original }
+        elseif t == "gear" then
+          return ui.Line { ui.Span("⚙️ "), original }
+        elseif t == "golf" then
+          return ui.Line { ui.Span("⛳ "), original }
+        elseif t == "calendar-emoji" then
+          return ui.Line { ui.Span("📅 "), original }
+        elseif t == "note" then
+          return ui.Line { ui.Span("✏️ "), original }
+        elseif t == "stopwatch" then
+          return ui.Line { ui.Span("⏱️ "), original }
+        elseif t == "tracking" then
+          return ui.Line { ui.Span("🏃‍➡️ "), original }
+        elseif t == "overdue" then
+          return ui.Line { ui.Span("⏰ "), original }
+        elseif t == "hourglass" then
+          return ui.Line { ui.Span("⏳ "), original }
         end
+      end
+    end
         return original
     end
-end
-
--- Fetch tags from macOS tag command
-local function fetch(_, job)
-    local paths = {}
-    for _, file in ipairs(job.files) do
-        paths[#paths + 1] = tostring(file.url)
-    end
-
-    local output, err = Command("tag"):arg(paths):stdout(Command.PIPED):output()
-    if not output then
-        return true, Err("Cannot spawn `tag` command, error: %s", err)
-    end
-
-    local i, tags = 1, {}
-    for line in output.stdout:gmatch("[^\r\n]+") do
-        if i > #paths then break end
-        tags[paths[i]] = tags[paths[i]] or {}
-        local joint = line:match("\t(.+)$") or ""
-        for s in joint:gmatch("[^,]+") do
-            -- trim spaces around tag names and keep only managed tags
-            local clean = s:gsub("^%s+", ""):gsub("%s+$", "")
-            if #clean > 0 and MANAGED_TAGS[string.lower(clean)] then
-                table.insert(tags[paths[i]], clean)
-            end
-        end
-        i = i + 1
-    end
-
-    update(tags)
-    return true
 end
 
 -- Helpers
@@ -146,13 +103,6 @@ local get_selected_paths = ya.sync(function()
     end
     return selected_paths
 end)
-
-local function remove_managed_tags_from(cmd)
-    for _, tag_name in pairs(MANAGED_TAGS) do
-        cmd = cmd:arg("-r"):arg(tag_name)
-    end
-    return cmd
-end
 
 local function get_current_tags(path)
     -- Get current tags directly from macOS
@@ -218,20 +168,8 @@ local function apply_tag(paths, tag_key)
         end
         ::continue::
     end
-
-    -- Update visual state by fetching actual tags after operation
-    local tags_update = {}
-    for _, p in ipairs(paths) do
-        local new_tags = get_current_tags(p)
-        local managed_only = {}
-        for _, t in ipairs(new_tags) do
-            if MANAGED_TAGS[string.lower(t)] then
-                managed_only[#managed_only + 1] = t
-            end
-        end
-        tags_update[p] = managed_only
-    end
-    update(tags_update)
+    -- Trigger re-render; icons will read tags from core
+    if ui.render then ui.render() else ya.render() end
 end
 
 local function entry(_, job)
@@ -265,57 +203,8 @@ local function entry(_, job)
     end
 end
 
--- Simple refresh function to clear cache for calendar days
-local function refresh_calendar()
-    -- Clear cached tags for calendar days
-    for path, _ in pairs(M.tags) do
-        if path:match("/days/") then
-            M.tags[path] = nil
-        end
-    end
-    -- Force fetcher to re-run by clearing yazi's internal state and re-rendering
-    ya.render()
-end
 
--- Batch calendar update function
-local function update_calendar_tags(changes_json)
-    -- Parse the JSON changes from detect.sh
-    local changes = {}
-    
-    -- Simple JSON parsing for our specific format
-    for line in changes_json:gmatch("[^\r\n]+") do
-        local path = line:match('"path": "([^"]+)"')
-        local tag = line:match('"tag": "([^"]*)"')
-        if path then
-            changes[#changes + 1] = {path = path, tag = tag}
-        end
-    end
-    
-    -- Apply each change
-    for _, change in ipairs(changes) do
-        local tag_key = nil
-        if change.tag == "Point" then
-            tag_key = "point"
-        elseif change.tag == "Red" then
-            tag_key = "red"
-        elseif change.tag == "Green" then
-            tag_key = "green"
-        else
-            tag_key = nil  -- Clear tags
-        end
-        
-        apply_tag({ change.path }, tag_key)
-    end
-    
-    -- Refresh the display
-    refresh_calendar()
-    
-    return #changes
-end
 
 M.setup = setup
-M.fetch = fetch
 M.entry = entry
-M.refresh_calendar = refresh_calendar
-M.update_calendar_tags = update_calendar_tags
 return M

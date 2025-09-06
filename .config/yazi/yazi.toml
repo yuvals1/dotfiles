@@ -336,15 +336,15 @@ run = "git"
 url = "*"
 run = 'piper -- hexyl --border=none --terminal-width=$w "$1"'
 
-[[plugin.prepend_fetchers]]
-id = "mactag-unified"
-url = "*"
-run = "mactag-unified"
-
-[[plugin.prepend_fetchers]]
-id = "mactag-unified"
-url = "*/"
-run = "mactag-unified"
+# [[plugin.prepend_fetchers]]
+# id = "mactag-unified"
+# url = "*"
+# run = "mactag-unified"
+#
+# [[plugin.prepend_fetchers]]
+# id = "mactag-unified"
+# url = "*/"
+# run = "mactag-unified"
 
 [[plugin.prepend_previewers]]
 url = "*.md"
