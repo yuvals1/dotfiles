@@ -2,4 +2,7 @@
 # These aliases point to locally built versions of tools
 
 alias lazygit='/Users/yuvalspiegel/dev/lazygit/lazygit'
-alias yazi='/Users/yuvalspiegel/dev/yazi/target/release/yazi'
+
+# Define yazi binary path as a variable
+YAZI_BIN='/Users/yuvalspiegel/dev/yazi-nested/target/release/yazi'
+alias yazi="$YAZI_BIN"

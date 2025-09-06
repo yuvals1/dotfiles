@@ -49,7 +49,7 @@ function y() {
     local cdfile="$(mktemp -t "yazi-cd.XXXXXX")"
     
     # Run Yazi with the CD file environment variable
-    YAZI_CD_FILE="$cdfile" yazi "$@" --cwd-file="$tmp"
+    YAZI_CD_FILE="$cdfile" "$YAZI_BIN" "$@" --cwd-file="$tmp"
     
     # Check if the CD file exists and has content
     if [ -f "$cdfile" ] && [ -s "$cdfile" ]; then
