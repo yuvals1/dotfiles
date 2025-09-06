@@ -22,8 +22,8 @@ keymap = [
   { on = "<Down>", run = "arrow 1", desc = "Move cursor down" },
 
   # { on = "<C-u>", run = "arrow -5", desc = "Move cursor up 5 files" },
-  { on = "<C-l>", run = "arrow -5", desc = "Move cursor up 5 files" },
-  { on = "<C-d>", run = "arrow 5", desc = "Move cursor down 5 files" },
+  { on = "<C-k>", run = "arrow -5", desc = "Move cursor up 5 files" },
+  { on = "<C-j>", run = "arrow 5", desc = "Move cursor down 5 files" },
   { on = "<C-b>", run = "arrow -100%", desc = "Move cursor up one page" },
   { on = "<C-f>", run = "arrow 100%", desc = "Move cursor down one page" },
 
@@ -1138,6 +1138,6 @@ desc = "Jump to Green 🟢"
 
 # Jump to symlink target
 [[mgr.prepend_keymap]]
-on = "<C-k>"
+on = "<C-l>"
 run = "plugin symlink-jump"
 desc = "Jump to symlink target"
