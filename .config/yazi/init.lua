@@ -321,8 +321,7 @@ require('session'):setup {
 
 
 
--- Unified macOS tag plugin
-require("mactag-unified"):setup()
+-- Tag icons now come from theme; plugin setup not needed
 
 -- Tag filter plugin (works with unified state)
 require("mactag-filter"):setup()

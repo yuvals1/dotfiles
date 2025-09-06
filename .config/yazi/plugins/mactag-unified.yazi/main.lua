@@ -29,14 +29,7 @@ local MANAGED_TAGS = {
 
 -- No fetch/state; icons read tags from core on demand
 
--- Setup function to initialize visual display
-local function setup(st, _)
-    -- Save the original icon function
-    st.original_icon = Entity.icon
-
-    -- Icons are now provided by theme tag conditions; do not override here
-    Entity.icon = st.original_icon
-end
+-- No setup needed; theme handles icons
 
 -- Helpers
 local get_hovered = ya.sync(function()
@@ -157,6 +150,5 @@ end
 
 
 
-M.setup = setup
 M.entry = entry
 return M
