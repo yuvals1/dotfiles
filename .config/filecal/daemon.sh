@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Enhanced calendar daemon
+# Calendar daemon
 # - Tags today with Point
 # - Creates 2 months of future folders
 
@@ -8,15 +8,6 @@ CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
 TAG_CMD="/usr/local/bin/tag"
 
-# Todo directories
-TODO_DIRS=(
-    "overdue"
-    "+general-tasks-yellow"
-    "+scheduled-tasks-blue"
-    "done"
-    "backlog"
-    "upcoming-events"
-)
 
 # Tag names
 IMPORTANT_TAG="Point"      # For today (shows 👉)
@@ -99,226 +90,14 @@ create_future_folders() {
     done
 }
 
-# Create todo directories
-create_todo_directories() {
-    for dir in "${TODO_DIRS[@]}"; do
-        local todo_dir="$CALENDAR_DIR/$dir"
-        if [[ ! -d "$todo_dir" ]]; then
-            mkdir -p "$todo_dir"
-            log "Created todo directory: $dir"
-        fi
-    done
-}
 
-# Sync tagged files to todo directories
-sync_todo_directories() {
-    local TODAY=$(date +%Y-%m-%d)
-    
-    # Clear existing symlinks and empty directories in all todo directories
-    for dir in "${TODO_DIRS[@]}"; do
-        local todo_dir="$CALENDAR_DIR/$dir"
-        find "$todo_dir" -type l -delete 2>/dev/null
-        # Remove empty directories (bottom-up)
-        find "$todo_dir" -mindepth 1 -type d -empty -delete 2>/dev/null
-    done
-    
-    # First pass: Update overdue tags
-    for day_dir in "$DAYS_DIR"/????-??-??*; do
-        if [[ ! -d "$day_dir" ]]; then
-            continue
-        fi
-        
-        local day_name=$(basename "$day_dir")
-        # Extract just the date part (first 10 characters: YYYY-MM-DD)
-        local day_date="${day_name:0:10}"
-        
-        # Check if this date is in the past
-        if [[ "$day_date" < "$TODAY" ]]; then
-            # Process all files recursively in the day directory
-            find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
-                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
-                
-                # Update overdue tags
-                if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
-                    # Remove old tags and add Overdue
-                    $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
-                    $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
-                    $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
-                    $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
-                    $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
-                fi
-            done
-        fi
-    done
-    
-    # Second pass: Scan all files in days/ directories for symlink creation (including nested)
-    for day_dir in "$DAYS_DIR"/????-??-??*; do
-        if [[ ! -d "$day_dir" ]]; then
-            continue
-        fi
-        
-        local day_name=$(basename "$day_dir")
-        # Extract just the date part (first 10 characters: YYYY-MM-DD)
-        local day_date="${day_name:0:10}"
-        
-        # Process all files recursively in the day directory
-        find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
-            local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
-            
-            # Get relative path from day directory
-            local rel_path="${file_path#$day_dir/}"
-            # Get directory part and filename separately
-            local rel_dir=$(dirname "$rel_path")
-            local file_name=$(basename "$rel_path")
-            
-            # Function to calculate relative path
-            calculate_relative_path() {
-                local target_subdir="$1"
-                local link_prefix="../"
-                if [[ "$target_subdir" != "." ]]; then
-                    # Add more ../ for each directory level
-                    local depth=$(echo "$target_subdir" | tr -cd '/' | wc -c)
-                    for ((i=0; i<=depth; i++)); do
-                        link_prefix="../$link_prefix"
-                    done
-                fi
-                echo "$link_prefix"
-            }
-            
-            # Create symlinks based on tags
-            if echo "$file_tags" | grep -q "Yellow"; then
-                local target_dir="$CALENDAR_DIR/+general-tasks-yellow"
-                if [[ "$rel_dir" != "." ]]; then
-                    target_dir="$target_dir/$rel_dir"
-                    mkdir -p "$target_dir"
-                fi
-                local link_prefix=$(calculate_relative_path "$rel_dir")
-                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
-            elif echo "$file_tags" | grep -q "Blue"; then
-                local target_dir="$CALENDAR_DIR/+scheduled-tasks-blue"
-                if [[ "$rel_dir" != "." ]]; then
-                    target_dir="$target_dir/$rel_dir"
-                    mkdir -p "$target_dir"
-                fi
-                local link_prefix=$(calculate_relative_path "$rel_dir")
-                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
-            elif echo "$file_tags" | grep -q "Done"; then
-                local target_dir="$CALENDAR_DIR/done"
-                if [[ "$rel_dir" != "." ]]; then
-                    target_dir="$target_dir/$rel_dir"
-                    mkdir -p "$target_dir"
-                fi
-                local link_prefix=$(calculate_relative_path "$rel_dir")
-                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
-            elif echo "$file_tags" | grep -q "Calendar-emoji"; then
-                # Only include events from today onwards
-                if [[ ! "$day_date" < "$TODAY" ]]; then
-                    local target_dir="$CALENDAR_DIR/upcoming-events"
-                    if [[ "$rel_dir" != "." ]]; then
-                        target_dir="$target_dir/$rel_dir"
-                        mkdir -p "$target_dir"
-                    fi
-                    local event_file_name="${day_date}-${file_name}"
-                    local link_prefix=$(calculate_relative_path "$rel_dir")
-                    ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$event_file_name"
-                fi
-            elif echo "$file_tags" | grep -q "Sleep"; then
-                local target_dir="$CALENDAR_DIR/backlog"
-                if [[ "$rel_dir" != "." ]]; then
-                    target_dir="$target_dir/$rel_dir"
-                    mkdir -p "$target_dir"
-                fi
-                local link_prefix=$(calculate_relative_path "$rel_dir")
-                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
-            elif echo "$file_tags" | grep -q "Overdue"; then
-                local target_dir="$CALENDAR_DIR/overdue"
-                if [[ "$rel_dir" != "." ]]; then
-                    target_dir="$target_dir/$rel_dir"
-                    mkdir -p "$target_dir"
-                fi
-                local link_prefix=$(calculate_relative_path "$rel_dir")
-                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
-            fi
-        done
-    done
-    
-    log "Synced todo directories"
-}
 
-# Sync Purple-tagged files from entire HOME directory
-sync_purple_global() {
-    local purple_dir="$CALENDAR_DIR/+current-project-tasks-purple"
-    
-    # Clear existing symlinks in purple directory  
-    find "$purple_dir" -type l -delete 2>/dev/null
-    
-    # Use mdfind to search entire HOME for Purple-tagged items
-    while IFS= read -r item_path; do
-        if [[ (-f "$item_path" || -d "$item_path") && ! "$item_path" =~ ^"$CALENDAR_DIR" ]]; then
-            local file_name=$(basename "$item_path")
-            local relative_path
-            
-            # Create relative path from calendar dir to the item
-            if [[ "$item_path" == "$HOME"/* ]]; then
-                # Item is under HOME - create relative path
-                local rel_from_home="${item_path#$HOME/}"
-                relative_path="../../../$rel_from_home"
-            else
-                # Item outside HOME - use absolute path
-                relative_path="$item_path"
-            fi
-            
-            local symlink_path="$purple_dir/$file_name"
-            ln -sf "$relative_path" "$symlink_path"
-        fi
-    done < <(mdfind -onlyin "$HOME" "kMDItemUserTags == 'Purple'" 2>/dev/null)
-    
-    # Check final count
-    local final_count=$(ls -1 "$purple_dir" 2>/dev/null | wc -l | tr -d ' ')
-    log "Synced global Purple-tagged files (created $final_count symlinks)"
-}
 
-# Sync Green-tagged files from entire HOME directory
-sync_green_global() {
-    local green_dir="$CALENDAR_DIR/+current-working-files-green"
-    
-    # Clear existing symlinks in green directory
-    find "$green_dir" -type l -delete 2>/dev/null
-    
-    # Use mdfind to search entire HOME for Green-tagged items
-    while IFS= read -r item_path; do
-        if [[ (-f "$item_path" || -d "$item_path") && ! "$item_path" =~ ^"$CALENDAR_DIR" ]]; then
-            local file_name=$(basename "$item_path")
-            local relative_path
-            
-            # Create relative path from calendar dir to the item
-            if [[ "$item_path" == "$HOME"/* ]]; then
-                # Item is under HOME - create relative path
-                local rel_from_home="${item_path#$HOME/}"
-                relative_path="../../../$rel_from_home"
-            else
-                # Item outside HOME - use absolute path
-                relative_path="$item_path"
-            fi
-            
-            local symlink_path="$green_dir/$file_name"
-            ln -sf "$relative_path" "$symlink_path"
-        fi
-    done < <(mdfind -onlyin "$HOME" "kMDItemUserTags == 'Green'" 2>/dev/null)
-    
-    # Check final count
-    local final_count=$(ls -1 "$green_dir" 2>/dev/null | wc -l | tr -d ' ')
-    log "Synced global Green-tagged files (created $final_count symlinks)"
-}
 
 # Main update function
 update_calendar() {
     tag_today
     create_future_folders
-    create_todo_directories
-    sync_todo_directories
-    sync_purple_global
-    sync_green_global
 }
 
 # Run update
