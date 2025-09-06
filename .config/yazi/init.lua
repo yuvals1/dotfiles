@@ -195,17 +195,11 @@ function Linemode:daysfrom()
     return 'Today'
   end
   
-  -- Check if this directory has a Red tag for other dates
-  -- Access the mactag-unified module's tags if available
-  local mactag = package.loaded["mactag-unified"]
-  if mactag and mactag.tags then
-    local path = tostring(self._file.url)
-    local tags = mactag.tags[path]
-    
-    -- Only show day count for Red-tagged directories (but not today)
-    if not tags or not tags[1] or tags[1] ~= "Red" then
-      return ''
-    end
+  -- Only show day count for tagged directories (but not today)
+  -- Use core tags directly (no plugin state)
+  local tags = self._file:tags()
+  if not tags or #tags == 0 then
+    return ''
   end
   
   -- Format the output for Red-tagged directories
