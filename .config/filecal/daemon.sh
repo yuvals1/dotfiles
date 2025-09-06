@@ -110,19 +110,29 @@ update_overdue_count() {
     local OVERDUE_COUNT_FILE="$DAYS_DIR/overdue-count"
     local overdue_count=0
     
-    # Count all files with Overdue tag in days and past-days directories
-    for search_dir in "$DAYS_DIR" "$PAST_DAYS_DIR"; do
-        if [[ -d "$search_dir" ]]; then
-            while IFS= read -r file_path; do
-                if [[ -f "$file_path" ]] && [[ "$file_path" != "$OVERDUE_COUNT_FILE" ]]; then
-                    local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
-                    if echo "$file_tags" | grep -q "Overdue"; then
-                        ((overdue_count++))
-                    fi
+    # Count files with Overdue tag in days (excluding past-days) 
+    if [[ -d "$DAYS_DIR" ]]; then
+        while IFS= read -r file_path; do
+            if [[ -f "$file_path" ]] && [[ "$file_path" != "$OVERDUE_COUNT_FILE" ]]; then
+                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                if echo "$file_tags" | grep -q "Overdue"; then
+                    ((overdue_count++))
                 fi
-            done < <(find "$search_dir" -type f 2>/dev/null)
-        fi
-    done
+            fi
+        done < <(find "$DAYS_DIR" -maxdepth 2 -type f -not -path "*/past-days/*" 2>/dev/null)
+    fi
+    
+    # Count files with Overdue tag in past-days
+    if [[ -d "$PAST_DAYS_DIR" ]]; then
+        while IFS= read -r file_path; do
+            if [[ -f "$file_path" ]]; then
+                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                if echo "$file_tags" | grep -q "Overdue"; then
+                    ((overdue_count++))
+                fi
+            fi
+        done < <(find "$PAST_DAYS_DIR" -type f 2>/dev/null)
+    fi
     
     # Update or remove the count file based on count
     if [[ $overdue_count -gt 0 ]]; then
