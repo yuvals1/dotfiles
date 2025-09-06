@@ -31,9 +31,9 @@
         {
           "type": "basic",
           "from": {
-            "key_code": "close_bracket",
+            "key_code": "l",
             "modifiers": {
-              "mandatory": ["command"],
+              "mandatory": ["command", "shift"],
               "optional": ["any"]
             }
           },
@@ -53,9 +53,9 @@
         {
           "type": "basic",
           "from": {
-            "key_code": "open_bracket",
+            "key_code": "h",
             "modifiers": {
-              "mandatory": ["command"],
+              "mandatory": ["command", "shift"],
               "optional": ["any"]
             }
           },
