@@ -422,6 +422,8 @@ keymap = [
   #   "*",
   # ], run = "plugin eza-preview toggle-hidden", desc = "Toggle hidden files" },
 
+  # Deep .txt filter (M then t)
+  { on = [ "M", "t" ], run = "plugin deep-txt", desc = "Deep-filter .txt (L=3)" },
 ]
 
 [tasks]
