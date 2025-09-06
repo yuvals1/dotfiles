@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
-OVERDUE_COUNT_FILE="$CALENDAR_DIR/days/overdue-count"
+OVERDUE_COUNT_FILE="$CALENDAR_DIR/overdue-count"
 
 # Read overdue count from file
 if [ -f "$OVERDUE_COUNT_FILE" ]; then

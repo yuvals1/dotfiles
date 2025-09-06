@@ -107,7 +107,7 @@ update_overdue_tags() {
 
 # Update overdue count file
 update_overdue_count() {
-    local OVERDUE_COUNT_FILE="$DAYS_DIR/overdue-count"
+    local OVERDUE_COUNT_FILE="$CALENDAR_DIR/overdue-count"
     local overdue_count=0
     
     # Count files with Overdue tag in days (excluding past-days) 
