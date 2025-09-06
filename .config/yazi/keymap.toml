@@ -171,7 +171,7 @@ keymap = [
 
   # Filter
   { on = "i", run = "filter --smart", desc = "Filter files" },
-
+  { on = "I", run = "filter --smart --deep --levels=2", desc = "Filter files (deep)" },
   # Find
   { on = "/", run = "find --smart", desc = "Find next file" },
   { on = "?", run = "find --previous --smart", desc = "Find previous file" },
@@ -1126,15 +1126,6 @@ on = ["m", "m"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"
 
-[[mgr.prepend_keymap]]
-on = ["M", "p"]
-run = "cd ~/personal/calendar/+current-project-tasks-purple"
-desc = "Jump to Purple 🟣"
-
-[[mgr.prepend_keymap]]
-on = ["M", "g"]
-run = "cd ~/personal/calendar/+current-working-files-green"
-desc = "Jump to Green 🟢"
 
 # Jump to symlink target
 [[mgr.prepend_keymap]]
