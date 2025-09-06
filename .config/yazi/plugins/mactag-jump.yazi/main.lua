@@ -1,74 +1,56 @@
---- Jump between files tagged with any macOS tag
---- Uses core tags via file:tags(); no plugin state required
+-- Jump between files tagged with any macOS tag
+-- Uses core tags via file:tags(); scans only the visible window
 
--- Get info about current folder and tagged files from unified state
+-- Snapshot needed info from the current view
 local get_jump_info = ya.sync(function()
-    local folder = cx.active.current
-    local tagged_positions = {}
+  local folder = cx.active.current
+  local tagged_positions = {}
 
-    -- Check each file in the visible window using core tags
-    for i, file in ipairs(folder.window) do
-        local tags = file:tags()
-        if tags and #tags > 0 then
-            table.insert(tagged_positions, i)
-        end
+  for i, file in ipairs(folder.window) do
+    local tags = file:tags()
+    if tags and #tags > 0 then
+      tagged_positions[#tagged_positions + 1] = i
     end
+  end
 
-    return {
-        positions = tagged_positions,
-        cursor = folder.cursor,
-        offset = folder.offset,
-        window_size = #folder.window
-    }
+  return {
+    positions = tagged_positions,
+    cursor = folder.cursor,
+    offset = folder.offset,
+  }
 end)
 
 local function entry(_, job)
-	assert(job.args[1] == "next" or job.args[1] == "prev", "Invalid action: use 'next' or 'prev'")
-	
-	-- Get folder info and tagged positions
-	local info = get_jump_info()
-	
-	if #info.positions == 0 then
-		ya.notify {
-			title = "Tag Jump",
-			content = "No tagged files found",
-			timeout = 1,
-		}
-		return
-	end
-	
-	-- Calculate current position in window
-	local current_window_pos = info.cursor - info.offset + 1
-	local target_pos = nil
-	
-	if job.args[1] == "next" then
-		-- Find next tagged position after current
-		for _, pos in ipairs(info.positions) do
-			if pos > current_window_pos then
-				target_pos = pos
-				break
-			end
-		end
-		-- Wrap to first if none found
-		target_pos = target_pos or info.positions[1]
-	else
-		-- Find previous tagged position before current
-		for i = #info.positions, 1, -1 do
-			if info.positions[i] < current_window_pos then
-				target_pos = info.positions[i]
-				break
-			end
-		end
-		-- Wrap to last if none found
-		target_pos = target_pos or info.positions[#info.positions]
-	end
-	
-	-- Calculate jump distance using keyjump's formula
-	-- target_pos is 1-based position in window
-	-- Formula: (target_pos - 1) + offset - cursor
-	local jump_distance = (target_pos - 1) + info.offset - info.cursor
-	
-	ya.manager_emit("arrow", { jump_distance })
+  local action = job.args[1]
+  assert(action == "next" or action == "prev", "Invalid action: use 'next' or 'prev'")
+
+  local info = get_jump_info()
+  if #info.positions == 0 then
+    ya.notify { title = "Tag Jump", content = "No tagged files found", timeout = 1 }
+    return
+  end
+
+  local current = info.cursor - info.offset + 1 -- 1-based within window
+  local target
+
+  if action == "next" then
+    for _, pos in ipairs(info.positions) do
+      if pos > current then target = pos; break end
+    end
+    target = target or info.positions[1]
+  else -- prev
+    for i = #info.positions, 1, -1 do
+      local pos = info.positions[i]
+      if pos < current then target = pos; break end
+    end
+    target = target or info.positions[#info.positions]
+  end
+
+  -- Simple relative jump within the window
+  local jump = target - current
+  if jump ~= 0 then
+    ya.manager_emit("arrow", { jump })
+  end
 end
 
 return { entry = entry }
