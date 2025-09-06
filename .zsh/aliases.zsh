@@ -2,9 +2,6 @@ alias vim='nvim'
 alias c='clear'
 alias cat='bat --style=plain --paging=never'
 alias icat='kitty +kitten icat'
-alias yt='yazi ~/personal/tasks/"$TASK_PROGRESS"'
-alias yp='yazi ~/personal'
-alias yc='yazi ~/personal/calendar/days'
 alias n='nvim'
 alias scivim="NVIM_APPNAME=scivim nvim"
 alias kickstart='NVIM_APPNAME=kickstart nvim'
@@ -62,3 +59,8 @@ function y() {
     # Clean up
     rm -f -- "$tmp" "$cdfile"
 }
+
+alias yt='y ~/personal/tasks/"$TASK_PROGRESS"'
+alias yp='y ~/personal'
+alias yc='y ~/personal/calendar/days'
+
