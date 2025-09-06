@@ -2,7 +2,7 @@
 
 # Calendar daemon
 # - Tags today with Point
-# - Creates 2 months of future folders
+# - Creates 2 weeks of future folders
 # - Updates overdue tags for past-dated tasks
 # - Archives past-dated directories to past-days
 
@@ -132,12 +132,12 @@ archive_past_days() {
     log "Completed archiving past days"
 }
 
-# Create future date folders (2 months ahead)
+# Create future date folders (2 weeks ahead)
 create_future_folders() {
     local TODAY=$(date +%Y-%m-%d)
     
-    # Create folders for next 60 days
-    for i in {0..60}; do
+    # Create folders for next 14 days
+    for i in {0..14}; do
         # Get date and weekday number
         local FUTURE_DATE=$(date -v+${i}d +%Y-%m-%d 2>/dev/null || date -d "+${i} days" +%Y-%m-%d)
         local WEEKDAY_NUM=$(date -v+${i}d +%w 2>/dev/null || date -d "+${i} days" +%w)  # 0=Sunday
