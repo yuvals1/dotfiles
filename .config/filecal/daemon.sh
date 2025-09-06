@@ -4,9 +4,11 @@
 # - Tags today with Point
 # - Creates 2 months of future folders
 # - Updates overdue tags for past-dated tasks
+# - Archives past-dated directories to past-days
 
 CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
+PAST_DAYS_DIR="$DAYS_DIR/past-days"
 TAG_CMD="/usr/local/bin/tag"
 
 
@@ -67,9 +69,51 @@ tag_today() {
 update_overdue_tags() {
     local TODAY=$(date +%Y-%m-%d)
     
-    # Check all day directories for past-dated tasks
+    # Check all day directories for past-dated tasks (including those in past-days)
+    for search_dir in "$DAYS_DIR" "$PAST_DAYS_DIR"; do
+        for day_dir in "$search_dir"/????-??-??*; do
+            if [[ ! -d "$day_dir" ]] || [[ "$day_dir" == *"past-days"* && "$search_dir" == "$DAYS_DIR" ]]; then
+                continue
+            fi
+            
+            local day_name=$(basename "$day_dir")
+            # Extract just the date part (first 10 characters: YYYY-MM-DD)
+            local day_date="${day_name:0:10}"
+            
+            # Check if this date is in the past
+            if [[ "$day_date" < "$TODAY" ]]; then
+                # Process all files recursively in the day directory
+                find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
+                    local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                    
+                    # Update overdue tags
+                    if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
+                        # Remove old tags and add Overdue
+                        $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
+                        $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
+                        $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
+                        $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
+                        $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
+                        log "Updated overdue tag for: $(basename "$file_path")"
+                    fi
+                done
+            fi
+        done
+    done
+    
+    log "Completed overdue tag updates"
+}
+
+# Archive past-dated directories to past-days
+archive_past_days() {
+    local TODAY=$(date +%Y-%m-%d)
+    
+    # Create past-days directory if it doesn't exist
+    mkdir -p "$PAST_DAYS_DIR"
+    
+    # Move past-dated directories to past-days
     for day_dir in "$DAYS_DIR"/????-??-??*; do
-        if [[ ! -d "$day_dir" ]]; then
+        if [[ ! -d "$day_dir" ]] || [[ "$day_dir" == *"past-days"* ]]; then
             continue
         fi
         
@@ -77,27 +121,15 @@ update_overdue_tags() {
         # Extract just the date part (first 10 characters: YYYY-MM-DD)
         local day_date="${day_name:0:10}"
         
-        # Check if this date is in the past
+        # Check if this date is in the past (excluding today)
         if [[ "$day_date" < "$TODAY" ]]; then
-            # Process all files recursively in the day directory
-            find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
-                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
-                
-                # Update overdue tags
-                if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
-                    # Remove old tags and add Overdue
-                    $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
-                    $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
-                    $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
-                    $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
-                    $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
-                    log "Updated overdue tag for: $(basename "$file_path")"
-                fi
-            done
+            # Move the directory to past-days
+            mv "$day_dir" "$PAST_DAYS_DIR/"
+            log "Archived past day: $day_name"
         fi
     done
     
-    log "Completed overdue tag updates"
+    log "Completed archiving past days"
 }
 
 # Create future date folders (2 months ahead)
@@ -135,6 +167,7 @@ create_future_folders() {
 # Main update function
 update_calendar() {
     tag_today
+    archive_past_days
     update_overdue_tags
     create_future_folders
 }
