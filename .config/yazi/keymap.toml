@@ -1023,17 +1023,17 @@ run = "plugin mactag-jump prev"
 desc = "Jump to previous tagged file"
 
 [[mgr.prepend_keymap]]
-on = "<A-b>"
+on = ["M", "b"]
 run = "plugin deep-tag blue"
 desc = "Deep filter Blue-tagged items"
 
 [[mgr.prepend_keymap]]
-on = "<A-r>"
+on = ["M", "r"]
 run = "plugin deep-tag red"
 desc = "Deep filter Red-tagged items"
 
 [[mgr.prepend_keymap]]
-on = "<A-m>"
+on = ["M", "m"]
 run = "plugin deep-tag clear"
 desc = "Clear deep tag filter"
 
