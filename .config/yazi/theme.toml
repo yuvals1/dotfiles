@@ -867,6 +867,27 @@ conds = [
   { if = "sticky", text = "" },
   { if = "dummy", text = "" },
 
+  # macOS tags (core-tag powered)
+  { if = "tag:done", text = "✅" },
+  { if = "tag:red", text = "●", fg = "#ee7b70" },
+  { if = "tag:orange", text = "●", fg = "#f5bd5c" },
+  { if = "tag:yellow", text = "●", fg = "#fbe764" },
+  { if = "tag:green", text = "●", fg = "#91fc87" },
+  { if = "tag:blue", text = "●", fg = "#5fa3f8" },
+  { if = "tag:purple", text = "●", fg = "#cb88f8" },
+  { if = "tag:x", text = "❌" },
+  { if = "tag:sleep", text = "⏸️" },
+  { if = "tag:point", text = "👉" },
+  { if = "tag:flag", text = "🚩" },
+  { if = "tag:gear", text = "⚙️" },
+  { if = "tag:golf", text = "⛳" },
+  { if = "tag:calendar-emoji", text = "📅" },
+  { if = "tag:note", text = "✏️" },
+  { if = "tag:stopwatch", text = "⏱️" },
+  { if = "tag:tracking", text = "🏃‍➡️" },
+  { if = "tag:overdue", text = "⏰" },
+  { if = "tag:hourglass", text = "⏳" },
+
   # Fallback
   { if = "dir", text = "󰉋" },
   { if = "exec", text = "" },

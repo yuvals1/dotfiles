@@ -34,56 +34,8 @@ local function setup(st, _)
     -- Save the original icon function
     st.original_icon = Entity.icon
 
-    -- Override the icon function to show visual indicators
-    Entity.icon = function(self)
-        local original = st.original_icon(self)
-    local tags = self._file:tags()
-    if tags and #tags > 0 then
-      for _, tag in ipairs(tags) do
-        local t = string.lower(tag)
-        if t == "done" then
-          return ui.Line { ui.Span("✅ "), original }
-        elseif t == "red" then
-          return ui.Line { ui.Span("● "):fg("#ee7b70"), original }
-        elseif t == "orange" then
-          return ui.Line { ui.Span("● "):fg("#f5bd5c"), original }
-        elseif t == "yellow" then
-          return ui.Line { ui.Span("● "):fg("#fbe764"), original }
-        elseif t == "green" then
-          return ui.Line { ui.Span("● "):fg("#91fc87"), original }
-        elseif t == "blue" then
-          return ui.Line { ui.Span("● "):fg("#5fa3f8"), original }
-        elseif t == "purple" then
-          return ui.Line { ui.Span("● "):fg("#cb88f8"), original }
-        elseif t == "x" then
-          return ui.Line { ui.Span("❌ "), original }
-        elseif t == "sleep" then
-          return ui.Line { ui.Span("⏸️ "), original }
-        elseif t == "point" then
-          return ui.Line { ui.Span("👉 "), original }
-        elseif t == "flag" then
-          return ui.Line { ui.Span("🚩 "), original }
-        elseif t == "gear" then
-          return ui.Line { ui.Span("⚙️ "), original }
-        elseif t == "golf" then
-          return ui.Line { ui.Span("⛳ "), original }
-        elseif t == "calendar-emoji" then
-          return ui.Line { ui.Span("📅 "), original }
-        elseif t == "note" then
-          return ui.Line { ui.Span("✏️ "), original }
-        elseif t == "stopwatch" then
-          return ui.Line { ui.Span("⏱️ "), original }
-        elseif t == "tracking" then
-          return ui.Line { ui.Span("🏃‍➡️ "), original }
-        elseif t == "overdue" then
-          return ui.Line { ui.Span("⏰ "), original }
-        elseif t == "hourglass" then
-          return ui.Line { ui.Span("⏳ "), original }
-        end
-      end
-    end
-        return original
-    end
+    -- Icons are now provided by theme tag conditions; do not override here
+    Entity.icon = st.original_icon
 end
 
 -- Helpers
