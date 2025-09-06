@@ -27,3 +27,9 @@ This setup makes macOS tags a first‑class experience in Yazi using core suppor
   - Preview and manager show tags on first render (no need to enter directories).
   - If you only want visuals (no keybinding/behavior), the theme change alone is enough.
   - Non‑macOS: tag conditions won’t match; `--tags` filter yields no matches.
+
+- Icon priority
+  - You can control whether tag icons override filetype icons.
+  - Set in `theme.toml` under `[icon]`:
+    - `tag_override = true`  # tags override everything (default)
+    - `tag_override = false` # original order: filetype icons can show instead of tag icons

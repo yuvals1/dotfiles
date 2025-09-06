@@ -235,6 +235,8 @@ rules = [
 
 [icon]
 
+tag_override = true
+
 globs = []
 dirs = [
   { name = ".config", text = "" },
