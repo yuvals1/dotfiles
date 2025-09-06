@@ -62,5 +62,6 @@ function y() {
 
 alias yt='y ~/personal/tasks/"$TASK_PROGRESS"'
 alias yp='y ~/personal'
-alias yc='y ~/personal/calendar/days'
+alias yc='y ~/personal/calendar/days/'
+alias yd='y ~/dotfiles'
 

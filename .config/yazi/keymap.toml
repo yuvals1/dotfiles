@@ -104,10 +104,10 @@ keymap = [
     "g",
     "r",
   ], run = "cd /", desc = "Go to root directory" },
-  { on = [
-    "g",
-    "t",
-  ], run = "cd ~/personal/tasks/in-progress", desc = "Go to tasks in-progress directory" },
+  # { on = [
+  #   "g",
+  #   "t",
+  # ], run = "cd ~/personal/tasks/in-progress", desc = "Go to tasks in-progress directory" },
   { on = [
     "g",
     "p",
@@ -657,8 +657,9 @@ desc = "Keyjump (Global mode)"
 
 # Date filtering for calendar
 [[mgr.prepend_keymap]]
-on = ["g", ","]
-run = ["plugin calendar-jump today", "plugin date-filter twoweeks-ahead"]
+on = ["g", "t"]
+# run = ["plugin calendar-jump today", "plugin date-filter twoweeks-ahead"]
+run = ["plugin calendar-jump today"]
 desc = "Jump to today and filter next 14 days"
 
 [[mgr.prepend_keymap]]
@@ -917,6 +918,11 @@ run = "cd ~/personal/calendar/+scheduled-tasks-blue"
 desc = "Go to blue 🔵 tasks"
 
 [[mgr.prepend_keymap]]
+on = ["g", "d"]
+run = "cd ~/dotfiles"
+desc = "Go to dotfiles directory"
+
+[[mgr.prepend_keymap]]
 on = "Q"
 run = "plugin quit-cd"
 desc = "Quit and change directory"
@@ -1034,6 +1040,16 @@ desc = "Deep filter Blue-tagged items"
 on = ["M", "r"]
 run = "plugin deep-tag red"
 desc = "Deep filter Red-tagged items"
+
+[[mgr.prepend_keymap]]
+on = ["M", "8"]
+run = "plugin deep-tag \"overdue 3\""
+desc = "Deep filter Overdue-tagged items"
+
+[[mgr.prepend_keymap]]
+on = ["M", "s"]
+run = "plugin deep-tag \"sleep 3\""
+desc = "Deep filter Sleep-tagged items"
 
 [[mgr.prepend_keymap]]
 on = ["M", "m"]
