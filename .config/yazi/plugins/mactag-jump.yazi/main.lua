@@ -26,7 +26,7 @@ local function entry(_, job)
 
   local info = get_jump_info()
   if #info.positions == 0 then
-    ya.notify { title = "Tag Jump", content = "No tagged files found", timeout = 1 }
+    ya.notify { title = "Tag Jump", content = "No tagged files found in visible window" }
     return
   end
 
