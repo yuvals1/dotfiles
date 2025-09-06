@@ -15,7 +15,7 @@ TODO_DIRS=(
     "+scheduled-tasks-blue"
     "done"
     "backlog"
-    "events"
+    "upcoming-events"
 )
 
 # Tag names
@@ -211,14 +211,17 @@ sync_todo_directories() {
                 local link_prefix=$(calculate_relative_path "$rel_dir")
                 ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$file_name"
             elif echo "$file_tags" | grep -q "Calendar-emoji"; then
-                local target_dir="$CALENDAR_DIR/events"
-                if [[ "$rel_dir" != "." ]]; then
-                    target_dir="$target_dir/$rel_dir"
-                    mkdir -p "$target_dir"
+                # Only include events from today onwards
+                if [[ ! "$day_date" < "$TODAY" ]]; then
+                    local target_dir="$CALENDAR_DIR/upcoming-events"
+                    if [[ "$rel_dir" != "." ]]; then
+                        target_dir="$target_dir/$rel_dir"
+                        mkdir -p "$target_dir"
+                    fi
+                    local event_file_name="${day_date}-${file_name}"
+                    local link_prefix=$(calculate_relative_path "$rel_dir")
+                    ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$event_file_name"
                 fi
-                local event_file_name="${day_date}-${file_name}"
-                local link_prefix=$(calculate_relative_path "$rel_dir")
-                ln -sf "${link_prefix}days/$day_name/$rel_path" "$target_dir/$event_file_name"
             elif echo "$file_tags" | grep -q "Sleep"; then
                 local target_dir="$CALENDAR_DIR/backlog"
                 if [[ "$rel_dir" != "." ]]; then
