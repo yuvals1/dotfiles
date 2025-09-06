@@ -6,6 +6,19 @@
 ---   plugin deep-tag red 3       -- deep filter Red-tagged items, levels=3
 ---   plugin deep-tag clear       -- clear filter
 
+-- Helper to read hovered info and uniqueness
+local hovered = ya.sync(function()
+  local h = cx.active.current.hovered
+  if not h then
+    return { is_dir = false, unique = false }
+  end
+  return {
+    url = h.url,
+    is_dir = h.cha.is_dir,
+    unique = #cx.active.current.files == 1,
+  }
+end)
+
 local function titlecase(s)
   if not s or s == '' then return s end
   return s:sub(1,1):upper() .. s:sub(2):lower()
@@ -28,6 +41,18 @@ local function entry(_, job)
   if #tags == 0 then return end
 
   ya.emit('filter_do', { tags = table.concat(tags, ','), deep = true, levels = levels, done = true })
+
+  -- Auto-enter unique directory chains (like deep-txt)
+  ya.sleep(0.03)
+  for _ = 1, 10 do
+    local h = hovered()
+    if h.unique and h.is_dir then
+      ya.emit('enter', {})
+      ya.sleep(0.03)
+    else
+      break
+    end
+  end
 end
 
 return { entry = entry }
