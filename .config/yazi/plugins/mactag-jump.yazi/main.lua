@@ -1,33 +1,25 @@
 --- Jump between files tagged with any macOS tag
---- Depends on mactag-unified plugin for tag state
+--- Uses core tags via file:tags(); no plugin state required
 
 -- Get info about current folder and tagged files from unified state
 local get_jump_info = ya.sync(function()
-    -- Access unified tag state
-    local toggle_state = package.loaded["mactag-unified"]
-	if not toggle_state or not toggle_state.tags then
-		return { positions = {}, cursor = 0, offset = 0 }
-	end
-	
-	local folder = cx.active.current
-	local tagged_positions = {}
-	
-	-- Check each file in the visible window
-	for i, file in ipairs(folder.window) do
-		local url = tostring(file.url)
-        -- Check against unified stored tags
-		if toggle_state.tags[url] and #toggle_state.tags[url] > 0 then
-			-- File has at least one tag
-			table.insert(tagged_positions, i)
-		end
-	end
-	
-	return {
-		positions = tagged_positions,
-		cursor = folder.cursor,
-		offset = folder.offset,
-		window_size = #folder.window
-	}
+    local folder = cx.active.current
+    local tagged_positions = {}
+
+    -- Check each file in the visible window using core tags
+    for i, file in ipairs(folder.window) do
+        local tags = file:tags()
+        if tags and #tags > 0 then
+            table.insert(tagged_positions, i)
+        end
+    end
+
+    return {
+        positions = tagged_positions,
+        cursor = folder.cursor,
+        offset = folder.offset,
+        window_size = #folder.window
+    }
 end)
 
 local function entry(_, job)
