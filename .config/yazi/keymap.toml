@@ -1042,7 +1042,7 @@ run = "plugin deep-tag red"
 desc = "Deep filter Red-tagged items"
 
 [[mgr.prepend_keymap]]
-on = ["M", "8"]
+on = ["M", "o"]
 run = "plugin deep-tag \"overdue 3\""
 desc = "Deep filter Overdue-tagged items"
 
@@ -1068,7 +1068,7 @@ run = "plugin mactag-unified red"
 desc = "Tag as Red 🔴"
 
 [[mgr.prepend_keymap]]
-on = ["m", "o"]
+on = ["m", "O"]
 run = "plugin mactag-unified orange"
 desc = "Tag as Orange 🟠"
 
@@ -1153,7 +1153,7 @@ run = "plugin mactag-unified hourglass"
 desc = "Tag as Hourglass (⏳)"
 
 [[mgr.prepend_keymap]]
-on = ["m", "8"]
+on = ["m", "o"]
 run = "plugin mactag-unified overdue"
 desc = "Tag as Overdue (⏰)"
 
