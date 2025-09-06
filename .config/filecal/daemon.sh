@@ -3,6 +3,7 @@
 # Calendar daemon
 # - Tags today with Point
 # - Creates 2 months of future folders
+# - Updates overdue tags for past-dated tasks
 
 CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
@@ -62,6 +63,43 @@ tag_today() {
     log "Tagged $TODAY with Point"
 }
 
+# Update overdue tags for past-dated tasks
+update_overdue_tags() {
+    local TODAY=$(date +%Y-%m-%d)
+    
+    # Check all day directories for past-dated tasks
+    for day_dir in "$DAYS_DIR"/????-??-??*; do
+        if [[ ! -d "$day_dir" ]]; then
+            continue
+        fi
+        
+        local day_name=$(basename "$day_dir")
+        # Extract just the date part (first 10 characters: YYYY-MM-DD)
+        local day_date="${day_name:0:10}"
+        
+        # Check if this date is in the past
+        if [[ "$day_date" < "$TODAY" ]]; then
+            # Process all files recursively in the day directory
+            find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
+                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                
+                # Update overdue tags
+                if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
+                    # Remove old tags and add Overdue
+                    $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
+                    $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
+                    log "Updated overdue tag for: $(basename "$file_path")"
+                fi
+            done
+        fi
+    done
+    
+    log "Completed overdue tag updates"
+}
+
 # Create future date folders (2 months ahead)
 create_future_folders() {
     local TODAY=$(date +%Y-%m-%d)
@@ -97,6 +135,7 @@ create_future_folders() {
 # Main update function
 update_calendar() {
     tag_today
+    update_overdue_tags
     create_future_folders
 }
 
