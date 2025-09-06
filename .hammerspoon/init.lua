@@ -96,7 +96,7 @@ restartChromeEventtap()
 
 
 -- Reload Hammerspoon configuration
-hs.hotkey.bind({ "cmd" }, "/", function()
+hs.hotkey.bind({ "cmd", "shift" }, "/", function()
 	hs.alert.show("Reloading Hammerspoon...")
 	hs.timer.doAfter(0.5, function()
 		hs.reload()
