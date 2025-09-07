@@ -97,7 +97,7 @@ main() {
     command -v git >/dev/null && echo "✓ git" || echo "✗ git"
     command -v node >/dev/null && echo "✓ node" || echo "✗ node"
     command -v npm >/dev/null && echo "✓ npm" || echo "✗ npm"
-    command -v rustc >/dev/null && echo "✓ rust" || echo "✗ rust"
+    (source "$HOME/.cargo/env" 2>/dev/null && command -v rustc >/dev/null) && echo "✓ rust" || echo "✗ rust"
     [ -d ~/.forgit ] && echo "✓ forgit" || echo "✗ forgit"
     [ -d ~/.nvm ] && echo "✓ nvm" || echo "✗ nvm"
     [ -d ~/.local/share/zinit/zinit.git ] && echo "✓ zinit" || echo "✗ zinit"
