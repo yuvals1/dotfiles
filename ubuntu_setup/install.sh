@@ -16,6 +16,7 @@ source "$SCRIPT_DIR/scripts/common/utils.sh"
 # -----------------------------------------------------------------------------
 source "$SCRIPT_DIR/scripts/setup_directories.sh"
 source "$SCRIPT_DIR/scripts/install_base_packages.sh"
+source "$SCRIPT_DIR/scripts/install_zinit.sh"
 source "$SCRIPT_DIR/scripts/install_yazi_deps.sh"
 source "$SCRIPT_DIR/scripts/setup_rust_tools.sh"
 source "$SCRIPT_DIR/scripts/install_neovim.sh"
@@ -43,6 +44,7 @@ main() {
     local steps=(
         "run_setup_directories"
         "run_install_base_packages"
+        "run_install_zinit"
         "run_install_yazi_deps"
         "run_setup_rust_tools"
         "run_install_neovim"
@@ -98,6 +100,7 @@ main() {
     command -v rustc >/dev/null && echo "✓ rust" || echo "✗ rust"
     [ -d ~/.forgit ] && echo "✓ forgit" || echo "✗ forgit"
     [ -d ~/.nvm ] && echo "✓ nvm" || echo "✗ nvm"
+    [ -d ~/.local/share/zinit/zinit.git ] && echo "✓ zinit" || echo "✗ zinit"
     echo "==========================="
     
     log "To finish setup, please run:"
