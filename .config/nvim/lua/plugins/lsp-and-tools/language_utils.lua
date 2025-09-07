@@ -68,11 +68,7 @@ function M.collect_configurations(languages)
   -- Remove duplicates from tools (order-preserving)
   configs.tools = dedup_preserve_order(configs.tools)
 
-  -- Apply platform-specific overrides (e.g., skip unsupported servers/tools)
-  local ok, platform = pcall(require, 'plugins.lsp-and-tools.platform')
-  if ok and platform and type(platform.apply_overrides) == 'function' then
-    configs = platform.apply_overrides(configs)
-  end
+  -- Profiles select appropriate tools/servers; no dynamic overrides here.
 
   return configs
 end

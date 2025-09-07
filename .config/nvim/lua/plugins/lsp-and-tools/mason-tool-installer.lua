@@ -12,25 +12,13 @@ function M.setup(languages)
     opts = {
       ensure_installed = configs.tools,
       auto_update = false,
-      run_on_start = false, -- We'll handle this manually
+      run_on_start = false, -- do not auto-install on startup
     },
     config = function(_, opts)
       require('mason-tool-installer').setup(opts)
-
-      -- Create a custom event for cleaning
-      vim.api.nvim_create_autocmd('User', {
-        pattern = 'MasonToolsCleanupEvent',
-        callback = function()
-          vim.cmd 'MasonToolsUpdate'
-          vim.cmd 'MasonToolsClean'
-          -- print 'MasonToolsClean has been run automatically'
-        end,
-      })
-
-      -- Trigger the cleanup event after a delay
-      vim.defer_fn(function()
-        vim.cmd 'doautocmd User MasonToolsCleanupEvent'
-      end, 5000) -- 5 second delay
+      -- No automatic update/clean on startup to avoid noisy failures on
+      -- unsupported platforms or missing toolchains. Use the commands
+      -- :MasonToolsInstall, :MasonToolsUpdate, :MasonToolsClean manually.
     end,
   }
 end
