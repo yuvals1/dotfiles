@@ -69,6 +69,8 @@ alias yd='y ~/dotfiles'
 alias codex-history-list='node "$HOME/dev/codex-history-list/dist/cli.js"'
 # BEGIN codex-history-pick
 codex-history-pick() {
+  # In zsh, unmatched globs error; make them expand to nothing locally.
+  setopt localoptions null_glob
   # Dependencies
   for cmd in codex-history-list jq fzf; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
