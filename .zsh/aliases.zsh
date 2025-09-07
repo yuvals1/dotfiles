@@ -65,3 +65,58 @@ alias yp='y ~/personal'
 alias yc='y ~/personal/calendar/days/'
 alias yd='y ~/dotfiles'
 
+
+alias codex-history-list='node "$HOME/dev/codex-history-list/dist/cli.js"'
+# BEGIN codex-history-pick
+codex-history-pick() {
+  # Dependencies
+  for cmd in codex-history-list jq fzf; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+      echo "Missing dependency: $cmd" >&2
+      return 1
+    fi
+  done
+
+  # Build the list and let fzf return the full selected TSV row
+  local sel
+  sel=$(codex-history-list --json "$@" \
+    | jq -r '.[] | [(((.mtime/1000|floor)|strflocaltime("%Y-%m-%d %H:%M"))), (.cwd // "-"), (.ask // "-"), .path] | @tsv' \
+    | fzf --delimiter $'\t' \
+          --with-nth=1,2,3 \
+          --preview 'echo {4}' \
+          --preview-window=down,3,wrap \
+          --prompt='codex> ')
+
+  # If nothing selected, bail out quietly
+  [ -n "$sel" ] || return 1
+
+  # Extract path (last TSV field) without awk
+  local path
+  path="${sel##*$'\t'}"
+  if [ -z "$path" ] || [ "$path" = "$sel" ]; then
+    echo "No path selected" >&2
+    return 1
+  fi
+
+  # Resolve codex binary robustly (env override, PATH, or fallback)
+  local codexBin
+  if [ -n "$CODEX_BIN" ] && [ -x "$CODEX_BIN" ]; then
+    codexBin="$CODEX_BIN"
+  else
+    codexBin="$(command -v codex 2>/dev/null || true)"
+    [ -z "$codexBin" ] && [ -x "/usr/local/bin/codex" ] && codexBin="/usr/local/bin/codex"
+  fi
+
+  if [ -x "$codexBin" ]; then
+    echo "Launching Codex for: $path"
+    # Sanitize PATH so Codex's /usr/bin/env node resolves to a real binary
+    # Include common Homebrew locations and system bins first
+    local CLEAN_PATH
+    CLEAN_PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+    PATH="$CLEAN_PATH" "$codexBin" -c experimental_resume="$path"
+  else
+    echo "codex CLI not found (looked for \"$CODEX_BIN\", PATH, and /usr/local/bin/codex)" >&2
+    return 1
+  fi
+}
+# END codex-history-pick
