@@ -13,3 +13,4 @@ __pycache__/
 
 .claude.json
 .config/btop/btop.conf
+.config/gh/hosts.yml
