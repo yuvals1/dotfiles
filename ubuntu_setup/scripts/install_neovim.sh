@@ -1,47 +1,63 @@
 #!/usr/bin/env bash
 #
-# Builds Neovim from source (stable branch).
-
+# Installs Neovim from prebuilt binaries.
+#
 run_install_neovim() {
     if command_exists nvim; then
         local current_version
         current_version=$(nvim --version | head -n1)
         exists "Neovim already installed: $current_version"
-        read -p "Do you want to reinstall? (y/N) " -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            return
-        fi
+        return 0
     fi
 
-    log "Installing Neovim dependencies..."
-    sudo apt install -y \
-        ninja-build \
-        gettext \
-        cmake \
-        unzip \
-        curl \
-        libsqlite3-dev \
-        sqlite3 || error "Failed to install Neovim dependencies"
-
-    log "Building Neovim from source..."
-    local BUILD_DIR
-    BUILD_DIR="$(mktemp -d)"
-    cd "$BUILD_DIR" || exit 1
-
-    git clone https://github.com/neovim/neovim
-    cd neovim || exit 1
-    git checkout stable
-    make CMAKE_BUILD_TYPE=RelWithDebInfo
-    sudo make install
-
-    cd || exit 1
-    rm -rf "$BUILD_DIR"
+    log "Installing Neovim from prebuilt binaries..."
+    
+    # Detect architecture
+    local arch
+    arch=$(uname -m)
+    local nvim_arch
+    
+    case "$arch" in
+        x86_64)
+            nvim_arch="linux-x86_64"
+            ;;
+        aarch64|arm64)
+            nvim_arch="linux-arm64"
+            ;;
+        *)
+            error "Unsupported architecture: $arch"
+            return 1
+            ;;
+    esac
+    
+    # Download the appropriate tarball
+    local temp_dir
+    temp_dir=$(mktemp -d)
+    cd "$temp_dir" || error "Failed to create temp directory"
+    
+    log "Downloading Neovim for $nvim_arch..."
+    wget -q "https://github.com/neovim/neovim/releases/download/nightly/nvim-${nvim_arch}.tar.gz" || error "Failed to download Neovim"
+    
+    # Extract and install
+    log "Extracting Neovim..."
+    tar xzf "nvim-${nvim_arch}.tar.gz" || error "Failed to extract Neovim"
+    
+    # Move to /usr/local
+    sudo rm -rf /usr/local/nvim
+    sudo mv "nvim-${nvim_arch}" /usr/local/nvim || error "Failed to install Neovim"
+    
+    # Create symlink
+    sudo ln -sf /usr/local/nvim/bin/nvim /usr/local/bin/nvim || error "Failed to create nvim symlink"
+    
+    # Cleanup
+    cd - > /dev/null
+    rm -rf "$temp_dir"
 
     if command_exists nvim; then
-        success "Neovim installed!"
+        local version
+        version=$(nvim --version | head -n1)
+        success "Neovim installed: $version"
     else
         error "Neovim installation failed"
     fi
 }
-
