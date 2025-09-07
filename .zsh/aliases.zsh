@@ -86,11 +86,9 @@ codex-history-pick() {
           --preview 'echo {4}' \
           --preview-window=down,3,wrap \
           --prompt='codex> ')
-
-  # If nothing selected, bail out quietly
   [ -n "$sel" ] || return 1
 
-  # Extract path (last TSV field) without awk
+  # Extract path (last TSV field)
   local path
   path="${sel##*$'\t'}"
   if [ -z "$path" ] || [ "$path" = "$sel" ]; then
@@ -98,25 +96,41 @@ codex-history-pick() {
     return 1
   fi
 
-  # Resolve codex binary robustly (env override, PATH, or fallback)
-  local codexBin
+  # Resolve codex binary robustly without relying on sed/coreutils
+  local codexBin=""
   if [ -n "$CODEX_BIN" ] && [ -x "$CODEX_BIN" ]; then
     codexBin="$CODEX_BIN"
-  else
+  fi
+  if [ -z "$codexBin" ]; then
     codexBin="$(command -v codex 2>/dev/null || true)"
-    [ -z "$codexBin" ] && [ -x "/usr/local/bin/codex" ] && codexBin="/usr/local/bin/codex"
+  fi
+  if [ -z "$codexBin" ] && [ -n "$NVM_BIN" ] && [ -x "$NVM_BIN/codex" ]; then
+    codexBin="$NVM_BIN/codex"
+  fi
+  # Try common locations including NVM installs (glob, no sed)
+  if [ -z "$codexBin" ]; then
+    for candidate in \
+      "$HOME/.nvm/versions/node/current/bin/codex" \
+      "$HOME/.nvm/versions/node"/*/bin/codex \
+      "$HOME/.local/bin/codex" \
+      "/usr/local/bin/codex" \
+      "/opt/homebrew/bin/codex" \
+      "/usr/bin/codex"; do
+      if [ -x "$candidate" ]; then
+        codexBin="$candidate"
+        break
+      fi
+    done
   fi
 
-  if [ -x "$codexBin" ]; then
-    echo "Launching Codex for: $path"
-    # Sanitize PATH so Codex's /usr/bin/env node resolves to a real binary
-    # Include common Homebrew locations and system bins first
-    local CLEAN_PATH
-    CLEAN_PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-    PATH="$CLEAN_PATH" "$codexBin" -c experimental_resume="$path"
-  else
-    echo "codex CLI not found (looked for \"$CODEX_BIN\", PATH, and /usr/local/bin/codex)" >&2
+  if [ -z "$codexBin" ] || [ ! -x "$codexBin" ]; then
+    echo "codex CLI not found. Set CODEX_BIN or ensure 'codex' is on PATH." >&2
     return 1
   fi
+
+  echo "Launching Codex for: $path"
+  # Keep a clean PATH for /usr/bin/env node but retain existing PATH at the end
+  local CLEAN_PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+  PATH="$CLEAN_PATH" "$codexBin" -c "experimental_resume=$path"
 }
 # END codex-history-pick
