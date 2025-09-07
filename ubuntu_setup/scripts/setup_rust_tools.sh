@@ -36,11 +36,31 @@ run_setup_rust_tools() {
         cargo install eza || error "Failed to install eza"
     fi
 
-    # Install yazi and ya CLI
+    # Build and install yazi from local source
     if ! command_exists ya || ! command_exists yazi; then
-        log "Installing yazi and ya CLI..."
-        cargo install --locked yazi-fm || error "Failed to install yazi-fm"
-        cargo install --locked yazi-cli || error "Failed to install yazi-cli"
+        log "Building yazi from local source..."
+        
+        # Clone or update the yazi repository
+        if [ ! -d "$HOME/dev/yazi" ]; then
+            log "Cloning yazi repository..."
+            mkdir -p "$HOME/dev"
+            git clone https://github.com/yuvals1/yazi.git "$HOME/dev/yazi" || error "Failed to clone yazi repository"
+        fi
+        
+        # Checkout the yuval branch and build
+        cd "$HOME/dev/yazi" || error "Failed to navigate to yazi directory"
+        git fetch origin || error "Failed to fetch from origin"
+        git checkout yuval || error "Failed to checkout yuval branch"
+        git pull origin yuval || true  # Pull latest changes if possible
+        
+        log "Building yazi-fm and yazi-cli..."
+        cargo build --release || error "Failed to build yazi"
+        
+        # Install the built binaries
+        cargo install --path yazi-fm || error "Failed to install yazi-fm"
+        cargo install --path yazi-cli || error "Failed to install yazi-cli"
+        
+        cd - > /dev/null  # Return to previous directory
 
         # Create yazi config directory
         mkdir -p "$HOME/.config/yazi"
