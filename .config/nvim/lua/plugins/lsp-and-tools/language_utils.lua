@@ -1,6 +1,17 @@
 -- language_utils.lua
 local M = {}
 
+local function dedup_preserve_order(list)
+  local out, seen = {}, {}
+  for _, item in ipairs(list or {}) do
+    if not seen[item] then
+      table.insert(out, item)
+      seen[item] = true
+    end
+  end
+  return out
+end
+
 function M.collect_configurations(languages)
   local configs = {
     lsp_servers = {},
@@ -54,8 +65,14 @@ function M.collect_configurations(languages)
     end
   end
 
-  -- Remove duplicates from tools
-  configs.tools = vim.fn.uniq(configs.tools)
+  -- Remove duplicates from tools (order-preserving)
+  configs.tools = dedup_preserve_order(configs.tools)
+
+  -- Apply platform-specific overrides (e.g., skip unsupported servers/tools)
+  local ok, platform = pcall(require, 'plugins.lsp-and-tools.platform')
+  if ok and platform and type(platform.apply_overrides) == 'function' then
+    configs = platform.apply_overrides(configs)
+  end
 
   return configs
 end
