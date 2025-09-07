@@ -8,6 +8,8 @@ ca-certificates
 gnupg
 lsb-release
 stow
+libsqlite3-dev
+sqlite3
 
 # Add other packages as needed...
 

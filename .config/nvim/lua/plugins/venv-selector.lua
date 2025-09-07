@@ -5,7 +5,6 @@ return {
     'nvim-telescope/telescope.nvim',
     'mfussenegger/nvim-dap-python',
   },
-  branch = 'regexp', -- Using the new version as recommended
   opts = {
     -- Your options go here
     auto_refresh = false,
