@@ -96,25 +96,42 @@ codex-history-pick() {
     return 1
   fi
 
-  # Resolve codex binary robustly without relying on sed/coreutils
+  # Resolve codex binary robustly (env override, PATH, which, npm, toolchains)
   local codexBin=""
+  # 1) Honor explicit override
   if [ -n "$CODEX_BIN" ] && [ -x "$CODEX_BIN" ]; then
     codexBin="$CODEX_BIN"
   fi
+  # 2) PATH discovery
   if [ -z "$codexBin" ]; then
     codexBin="$(command -v codex 2>/dev/null || true)"
   fi
+  # 3) whence as extra safety on zsh (avoid external coreutils like head)
+  if [ -z "$codexBin" ]; then
+    codexBin="$(whence -p codex 2>/dev/null || true)"
+  fi
+  # 4) NVM-provided bin
   if [ -z "$codexBin" ] && [ -n "$NVM_BIN" ] && [ -x "$NVM_BIN/codex" ]; then
     codexBin="$NVM_BIN/codex"
   fi
-  # Try common locations including NVM installs (glob, no sed)
+  # 5) npm global bin directory
+  if [ -z "$codexBin" ]; then
+    local npmBin
+    npmBin="$(npm bin -g 2>/dev/null || true)"
+    if [ -n "$npmBin" ] && [ -x "$npmBin/codex" ]; then
+      codexBin="$npmBin/codex"
+    fi
+  fi
+  # 6) Common install locations (NVM, Volta, asdf, system)
   if [ -z "$codexBin" ]; then
     for candidate in \
       "$HOME/.nvm/versions/node/current/bin/codex" \
       "$HOME/.nvm/versions/node"/*/bin/codex \
+      "$HOME/.volta/bin/codex" \
+      "$HOME/.asdf/shims/codex" \
       "$HOME/.local/bin/codex" \
-      "/usr/local/bin/codex" \
       "/opt/homebrew/bin/codex" \
+      "/usr/local/bin/codex" \
       "/usr/bin/codex"; do
       if [ -x "$candidate" ]; then
         codexBin="$candidate"
@@ -124,13 +141,18 @@ codex-history-pick() {
   fi
 
   if [ -z "$codexBin" ] || [ ! -x "$codexBin" ]; then
-    echo "codex CLI not found. Set CODEX_BIN or ensure 'codex' is on PATH." >&2
+    echo "codex CLI not found." >&2
+    echo "Tried: CODEX_BIN, PATH, which, npm -g bin, NVM/Volta/asdf, common system paths." >&2
+    echo "Hint: export CODEX_BIN=\"$HOME/.nvm/versions/node/v20.19.5/bin/codex\"" >&2
     return 1
   fi
 
   echo "Launching Codex for: $path"
-  # Keep a clean PATH for /usr/bin/env node but retain existing PATH at the end
-  local CLEAN_PATH="/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-  PATH="$CLEAN_PATH" "$codexBin" -c "experimental_resume=$path"
+  # Ensure Node is discoverable by codex's shebang. Prefer NVM/bin and the codex bin dir.
+  local launchPath="$PATH"
+  [ -n "$NVM_BIN" ] && launchPath="$NVM_BIN:$launchPath"
+  local codexDir="${codexBin%/*}"
+  [ -x "$codexDir/node" ] && launchPath="$codexDir:$launchPath"
+  PATH="$launchPath" "$codexBin" -c "experimental_resume=$path"
 }
 # END codex-history-pick
