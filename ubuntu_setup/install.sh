@@ -24,6 +24,7 @@ source "$SCRIPT_DIR/scripts/install_skopeo.sh"
 source "$SCRIPT_DIR/scripts/install_node.sh"
 source "$SCRIPT_DIR/scripts/install_npm_packages.sh"
 source "$SCRIPT_DIR/scripts/install_git.sh"
+source "$SCRIPT_DIR/scripts/install_github_cli.sh"
 source "$SCRIPT_DIR/scripts/install_zoxide.sh"
 source "$SCRIPT_DIR/scripts/install_lazygit.sh"
 source "$SCRIPT_DIR/scripts/install_lazydocker.sh"
@@ -52,6 +53,7 @@ main() {
         "run_install_node"
         "run_install_npm_packages"
         "run_install_git"
+        "run_install_github_cli"
         "run_install_zoxide"
         "run_install_lazygit"
         "run_install_lazydocker"
@@ -97,6 +99,7 @@ main() {
     command -v git >/dev/null && echo "✓ git" || echo "✗ git"
     command -v node >/dev/null && echo "✓ node" || echo "✗ node"
     command -v npm >/dev/null && echo "✓ npm" || echo "✗ npm"
+    command -v gh >/dev/null && echo "✓ gh" || echo "✗ gh"
     (source "$HOME/.cargo/env" 2>/dev/null && command -v rustc >/dev/null) && echo "✓ rust" || echo "✗ rust"
     [ -d ~/.forgit ] && echo "✓ forgit" || echo "✗ forgit"
     [ -d ~/.nvm ] && echo "✓ nvm" || echo "✗ nvm"
@@ -109,4 +112,3 @@ main() {
 }
 
 main
-

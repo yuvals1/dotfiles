@@ -53,13 +53,7 @@
 	insteadOf = git@github.com:
 [url "https://"]
 	insteadOf = git://
-[credential "https://github.com"]
-	helper = 
-	helper = !/usr/local/bin/gh auth git-credential
-[credential "https://gist.github.com"]
-	helper = 
-	helper = !/usr/local/bin/gh auth git-credential
-[credential]
-	helper = /usr/local/bin/gh auth git-credential
 [push]
 	autoSetupRemote = true
+[credential]
+	helper = !gh auth git-credential 2>/dev/null
