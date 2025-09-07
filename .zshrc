@@ -14,6 +14,10 @@ done
 
 # Source all .zsh files in the ~/.zsh/tools directory
 for tool_file (~/.zsh/tools/*.zsh); do
+  # Skip macOS-only tools on Linux
+  if [[ "$(uname)" == "Linux" && "$tool_file" == *"sketchybar.zsh" ]]; then
+    continue
+  fi
   source $tool_file
 done
 
