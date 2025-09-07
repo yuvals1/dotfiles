@@ -38,16 +38,25 @@ export PATH="/usr/local/bin:$PATH"
 #
 
 export EDITOR=nvim
-# Add to ~/.zshrc:
-[ -f $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh ] && source $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh
+
+# Platform-specific configurations
+if [[ "$(uname)" == "Darwin" ]]; then
+    # macOS specific
+    [ -f $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh ] && source $HOMEBREW_PREFIX/share/forgit/forgit.plugin.zsh
+elif [[ "$(uname)" == "Linux" ]]; then
+    # Linux specific - forgit is installed in ~/.forgit
+    [ -f ~/.forgit/forgit.plugin.zsh ] && source ~/.forgit/forgit.plugin.zsh
+fi
 
 compdef _git_diff forgit::diff
 
 
 export PATH=/usr/local/smlnj/bin:$PATH
 
-# Ensure sketchybar input source monitor is running
-if ! pgrep -f "input_source_monitor.swift" > /dev/null 2>&1; then
-    # Start it in background
-    nohup swift ~/.config/sketchybar/helpers/input_source_monitor.swift > /dev/null 2>&1 &
+# Ensure sketchybar input source monitor is running (macOS only)
+if [[ "$(uname)" == "Darwin" ]]; then
+    if ! pgrep -f "input_source_monitor.swift" > /dev/null 2>&1; then
+        # Start it in background
+        nohup swift ~/.config/sketchybar/helpers/input_source_monitor.swift > /dev/null 2>&1 &
+    fi
 fi
