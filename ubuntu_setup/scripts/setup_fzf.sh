@@ -18,22 +18,10 @@ check_fzf_version() {
     return 1
 }
 
-# Add fzf to PATH in shell config files
+# Setup fzf PATH (no longer modifies shell configs)
 setup_fzf_path() {
-    local config_files=("$HOME/.zshrc" "$HOME/.bashrc")
-    local path_entry='export PATH="$HOME/.fzf/bin:$PATH"'
-    
-    for config in "${config_files[@]}"; do
-        if [ -f "$config" ]; then
-            if ! grep -q "export PATH.*/.fzf/bin" "$config"; then
-                log "Adding fzf to PATH in $config"
-                # Add a newline if the file doesn't end with one
-                [[ -s "$config" && -z "$(tail -c1 "$config")" ]] || echo '' >> "$config"
-                echo "# fzf" >> "$config"
-                echo "$path_entry" >> "$config"
-            fi
-        fi
-    done
+    # Just export PATH for current session
+    export PATH="$HOME/.fzf/bin:$PATH"
 }
 
 # Install fzf from source
@@ -56,12 +44,8 @@ install_fzf_source() {
     git clone --depth 1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
     "$HOME/.fzf/install" --all --no-update-rc
 
-    # Setup PATH
+    # Setup PATH for current session
     setup_fzf_path
-    
-    # Source the new PATH
-    # shellcheck source=/dev/null
-    source "$HOME/.zshrc" 2>/dev/null || source "$HOME/.bashrc" 2>/dev/null || export PATH="$HOME/.fzf/bin:$PATH"
     
     # Verify installation
     if [ -x "$HOME/.fzf/bin/fzf" ]; then
@@ -84,16 +68,6 @@ setup_zsh_config() {
         "https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh"
     curl -fLo "$config_dir/completion.zsh" \
         "https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh"
-
-    # Add source lines to .zshrc if not already present
-    local zshrc="$HOME/.zshrc"
-    if [ -f "$zshrc" ]; then
-        for file in "key-bindings.zsh" "completion.zsh"; do
-            if ! grep -q "source.*fzf/$file" "$zshrc"; then
-                echo "source ~/.zsh/tools/fzf/$file" >> "$zshrc"
-            fi
-        done
-    fi
 }
 
 run_setup_fzf() {
@@ -111,5 +85,5 @@ run_setup_fzf() {
         success "fzf ZSH configuration completed"
     fi
 
-    log "fzf setup completed. Please run 'source ~/.zshrc' to apply changes"
+    success "fzf setup completed"
 }

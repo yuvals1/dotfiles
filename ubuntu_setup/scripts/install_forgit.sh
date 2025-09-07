@@ -14,12 +14,5 @@ run_install_forgit() {
     # Clone forgit repository
     git clone https://github.com/wfxr/forgit.git "$HOME/.forgit"
 
-    # Add to zshrc if not already present
-    if ! grep -q "source ~/.forgit/forgit.plugin.zsh" "$HOME/.zshrc"; then
-        echo '' >> "$HOME/.zshrc"
-        echo '# forgit' >> "$HOME/.zshrc"
-        echo 'source ~/.forgit/forgit.plugin.zsh' >> "$HOME/.zshrc"
-    fi
-
     success "forgit installed successfully"
 }

@@ -56,20 +56,12 @@ run_setup_rust_tools() {
         log "Building yazi-fm and yazi-cli..."
         cargo build --release || error "Failed to build yazi"
         
-        # Install the built binaries
-        cargo install --path yazi-fm || error "Failed to install yazi-fm"
-        cargo install --path yazi-cli || error "Failed to install yazi-cli"
+        # Create symlinks to the built binaries instead of installing via cargo
+        log "Creating symlinks for yazi binaries..."
+        sudo ln -sf "$HOME/dev/yazi/target/release/yazi" /usr/local/bin/yazi
+        sudo ln -sf "$HOME/dev/yazi/target/release/ya" /usr/local/bin/ya
         
         cd - > /dev/null  # Return to previous directory
-
-        # Create yazi config directory
-        mkdir -p "$HOME/.config/yazi"
-
-        # Initialize package.toml if it doesn't exist
-        if [ ! -f "$HOME/.config/yazi/package.toml" ]; then
-            echo '[plugin]' >"$HOME/.config/yazi/package.toml"
-            echo 'deps = []' >>"$HOME/.config/yazi/package.toml"
-        fi
     else
         exists "yazi and ya already installed"
     fi
