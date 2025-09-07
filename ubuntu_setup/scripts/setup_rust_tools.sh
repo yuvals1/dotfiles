@@ -56,7 +56,7 @@ run_setup_rust_tools() {
         # Download and install eza
         local temp_dir
         temp_dir=$(mktemp -d)
-        cd "$temp_dir" || error "Failed to create temp directory"
+        pushd "$temp_dir" >/dev/null || error "Failed to create temp directory"
         
         log "Downloading eza for $eza_arch..."
         wget -q "https://github.com/eza-community/eza/releases/latest/download/eza_${eza_arch}.tar.gz" || error "Failed to download eza"
@@ -66,7 +66,7 @@ run_setup_rust_tools() {
         sudo chown root:root eza
         sudo mv eza /usr/local/bin/eza || error "Failed to install eza"
         
-        cd - > /dev/null
+        popd >/dev/null
         rm -rf "$temp_dir"
         
         success "eza installed successfully"
@@ -84,7 +84,7 @@ run_setup_rust_tools() {
         fi
         
         # Checkout the yuval branch and build
-        cd "$HOME/dev/yazi" || error "Failed to navigate to yazi directory"
+        pushd "$HOME/dev/yazi" >/dev/null || error "Failed to navigate to yazi directory"
         git fetch origin || error "Failed to fetch from origin"
         git checkout yuval || error "Failed to checkout yuval branch"
         git pull origin yuval || true  # Pull latest changes if possible
@@ -97,7 +97,7 @@ run_setup_rust_tools() {
         sudo ln -sf "$HOME/dev/yazi/target/release/yazi" /usr/local/bin/yazi
         sudo ln -sf "$HOME/dev/yazi/target/release/ya" /usr/local/bin/ya
         
-        cd - > /dev/null  # Return to previous directory
+        popd >/dev/null
     else
         exists "yazi and ya already installed"
     fi

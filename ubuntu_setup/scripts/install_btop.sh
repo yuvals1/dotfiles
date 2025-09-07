@@ -37,7 +37,7 @@ run_install_btop() {
     # Download and install btop
     local temp_dir
     temp_dir=$(mktemp -d)
-    cd "$temp_dir" || error "Failed to create temp directory"
+    pushd "$temp_dir" >/dev/null || error "Failed to create temp directory"
     
     log "Downloading btop for $btop_arch..."
     wget -q "https://github.com/aristocratos/btop/releases/latest/download/btop-${btop_arch}-linux-musl.tbz" || error "Failed to download btop"
@@ -50,7 +50,7 @@ run_install_btop() {
     sudo make install || error "Failed to install btop"
     
     # Cleanup
-    cd - > /dev/null
+    popd >/dev/null
     rm -rf "$temp_dir"
 
     if command_exists btop; then

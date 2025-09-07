@@ -39,7 +39,7 @@ run_install_delta() {
     # Download and install
     local temp_dir
     temp_dir=$(mktemp -d)
-    cd "$temp_dir" || exit 1
+    pushd "$temp_dir" >/dev/null || error "Failed to enter temp directory"
 
     local package_name="git-delta_${version}_${arch}.deb"
     local download_url="https://github.com/dandavison/delta/releases/download/${version}/${package_name}"
@@ -47,19 +47,19 @@ run_install_delta() {
     log "Downloading from: $download_url"
     if ! curl -L -o "$package_name" "$download_url"; then
         error "Failed to download delta package"
-        cd - || exit 1
+        popd >/dev/null
         rm -rf "$temp_dir"
         return 1
     fi
 
-    if ! sudo dpkg -i "$package_name"; then
+    if ! sudo dpkg -i "$package_name" >/dev/null 2>&1; then
         error "Failed to install delta package"
-        cd - || exit 1
+        popd >/dev/null
         rm -rf "$temp_dir"
         return 1
     fi
 
-    cd - || exit 1
+    popd >/dev/null
     rm -rf "$temp_dir"
 
     # Verify installation

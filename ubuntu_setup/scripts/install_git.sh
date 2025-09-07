@@ -14,9 +14,9 @@ run_install_git() {
     fi
 
     log "Installing Git from PPA..."
-    sudo add-apt-repository -y ppa:git-core/ppa
-    sudo apt update
-    sudo apt install -y git
+    sudo add-apt-repository -y ppa:git-core/ppa >/dev/null 2>&1
+    sudo apt update -qq >/dev/null 2>&1
+    sudo apt install -y -qq git >/dev/null 2>&1
 
     local new_version
     new_version=$(git --version | awk '{print $3}')

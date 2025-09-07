@@ -33,7 +33,7 @@ run_install_neovim() {
     # Download the appropriate tarball
     local temp_dir
     temp_dir=$(mktemp -d)
-    cd "$temp_dir" || error "Failed to create temp directory"
+    pushd "$temp_dir" >/dev/null || error "Failed to create temp directory"
     
     log "Downloading Neovim for $nvim_arch..."
     wget -q "https://github.com/neovim/neovim/releases/download/nightly/nvim-${nvim_arch}.tar.gz" || error "Failed to download Neovim"
@@ -50,7 +50,7 @@ run_install_neovim() {
     sudo ln -sf /usr/local/nvim/bin/nvim /usr/local/bin/nvim || error "Failed to create nvim symlink"
     
     # Cleanup
-    cd - > /dev/null
+    popd >/dev/null
     rm -rf "$temp_dir"
 
     if command_exists nvim; then

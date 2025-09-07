@@ -38,7 +38,7 @@ run_setup_fzf() {
         # Download and install fzf
         local temp_dir
         temp_dir=$(mktemp -d)
-        cd "$temp_dir" || error "Failed to create temp directory"
+        pushd "$temp_dir" >/dev/null || error "Failed to create temp directory"
         
         log "Downloading fzf ${fzf_version} for ${fzf_arch}..."
         wget -q "https://github.com/junegunn/fzf/releases/download/v${fzf_version}/fzf-${fzf_version}-${fzf_arch}.tar.gz" || error "Failed to download fzf"
@@ -50,7 +50,7 @@ run_setup_fzf() {
         sudo install -m 755 fzf /usr/local/bin/fzf || error "Failed to install fzf"
         
         # Cleanup
-        cd - > /dev/null
+        popd >/dev/null
         rm -rf "$temp_dir"
         
         if command_exists fzf; then

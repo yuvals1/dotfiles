@@ -5,7 +5,7 @@
 
 run_install_yazi_deps() {
     log "Installing yazi dependencies..."
-    sudo apt install -y \
+    sudo apt install -y -qq \
         file \
         ffmpeg \
         p7zip-full \

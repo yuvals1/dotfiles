@@ -9,7 +9,7 @@ run_install_bat() {
     fi
 
     log "Installing bat..."
-    sudo apt install -y bat || error "Failed to install bat"
+    sudo apt install -y -qq bat >/dev/null 2>&1 || error "Failed to install bat"
 
     # Create bat -> batcat symlink if it doesn't exist
     if [ ! -f "/usr/local/bin/bat" ] && command_exists batcat; then

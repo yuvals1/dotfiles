@@ -32,7 +32,7 @@ run_install_base_packages() {
     sudo rm -f /etc/apt/sources.list.d/nodesource.list
 
     # Update package list quietly
-    sudo apt update -qq 2>/dev/null
+    sudo apt update -qq >/dev/null 2>&1
 
     while read -r package || [ -n "$package" ]; do
         # Skip comments and empty lines
@@ -42,7 +42,7 @@ run_install_base_packages() {
             exists "$package already installed"
         else
             log "Installing $package..."
-            sudo apt install -y "$package" || error "Failed to install $package"
+            sudo apt install -y -qq "$package" >/dev/null 2>&1 || error "Failed to install $package"
         fi
     done <"$SCRIPT_DIR/packages.txt"
 
