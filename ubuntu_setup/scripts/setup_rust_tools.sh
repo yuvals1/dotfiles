@@ -28,12 +28,48 @@ run_setup_rust_tools() {
     log "Setting up Rust tools..."
     source "$HOME/.cargo/env" || true
 
-    # Install eza
+    # Install eza from prebuilt binary
     if command_exists eza; then
         exists "eza already installed"
     else
-        log "Installing eza..."
-        cargo install eza || error "Failed to install eza"
+        log "Installing eza from prebuilt binary..."
+        
+        # Detect architecture
+        local arch
+        arch=$(uname -m)
+        local eza_arch
+        
+        case "$arch" in
+            x86_64)
+                eza_arch="x86_64-unknown-linux-gnu"
+                ;;
+            aarch64|arm64)
+                eza_arch="aarch64-unknown-linux-gnu"
+                ;;
+            *)
+                log "Unsupported architecture for eza: $arch, falling back to cargo install"
+                cargo install eza || error "Failed to install eza"
+                return
+                ;;
+        esac
+        
+        # Download and install eza
+        local temp_dir
+        temp_dir=$(mktemp -d)
+        cd "$temp_dir" || error "Failed to create temp directory"
+        
+        log "Downloading eza for $eza_arch..."
+        wget -q "https://github.com/eza-community/eza/releases/latest/download/eza_${eza_arch}.tar.gz" || error "Failed to download eza"
+        tar xzf "eza_${eza_arch}.tar.gz" || error "Failed to extract eza"
+        
+        sudo chmod +x eza
+        sudo chown root:root eza
+        sudo mv eza /usr/local/bin/eza || error "Failed to install eza"
+        
+        cd - > /dev/null
+        rm -rf "$temp_dir"
+        
+        success "eza installed successfully"
     fi
 
     # Build and install yazi from local source
