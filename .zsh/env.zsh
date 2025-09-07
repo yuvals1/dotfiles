@@ -66,8 +66,7 @@ if [ -d "$HOME/go/bin" ]; then
 fi
 
 # Load secrets file if it exists
+# Source secrets file if it exists (not tracked in git)
 if [ -f "$HOME/.zsh_secrets" ]; then
     source "$HOME/.zsh_secrets"
-else
-    echo "Warning: ~/.zsh_secrets file not found. API keys may not be set."
 fi

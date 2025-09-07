@@ -7,6 +7,9 @@ if [ ! -d "$ZINIT_HOME" ]; then
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
+# Disable zinit aliases to prevent conflicts
+typeset -gx ZINIT_NO_ALIASES=1
+
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
