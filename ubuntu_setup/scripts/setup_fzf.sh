@@ -3,12 +3,7 @@
 # Installs fzf from prebuilt binaries and sets up shell configuration files.
 #
 run_setup_fzf() {
-    if command_exists fzf; then
-        local version
-        version=$(fzf --version | cut -d' ' -f1)
-        exists "fzf version $version already installed"
-    else
-        log "Installing fzf from prebuilt binary..."
+    log "Installing latest fzf (forcing update)..."
         
         # Detect architecture
         local arch
@@ -60,7 +55,6 @@ run_setup_fzf() {
         else
             error "fzf installation failed"
         fi
-    fi
     
     # Setup ZSH configuration files
     if [ -f "$HOME/.zsh/tools/fzf/key-bindings.zsh" ] && [ -f "$HOME/.zsh/tools/fzf/completion.zsh" ]; then
