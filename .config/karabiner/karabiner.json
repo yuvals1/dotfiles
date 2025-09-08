@@ -180,7 +180,7 @@
                                     }
                                 ],
                                 "from": {
-                                    "key_code": "comma",
+                                    "key_code": "m",
                                     "modifiers": {
                                         "mandatory": ["command"],
                                         "optional": ["any"]
