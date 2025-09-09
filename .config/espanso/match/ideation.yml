@@ -5,7 +5,7 @@ matches:
     replace: "brainstorm some ideas first"
     label: "brainstorm some ideas first"
 
-  - trigger: ":cw"
+  - trigger: ":wk"
     replace: "try to think about creative workarounds"
     label: "creative workarounds"
 
