@@ -73,9 +73,6 @@ update_overdue_tags() {
     # Check only past-days directory (archive_past_days runs first)
     if [[ -d "$PAST_DAYS_DIR" ]]; then
         for day_dir in "$PAST_DAYS_DIR"/????-??-??*; do
-            if [[ ! -d "$day_dir" ]]; then
-                continue
-            fi
             
             local day_name=$(basename "$day_dir")
             # Extract just the date part (first 10 characters: YYYY-MM-DD)
