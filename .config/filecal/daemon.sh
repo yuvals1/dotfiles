@@ -4,6 +4,7 @@
 # - Tags today with Point
 # - Creates 2 weeks of future folders
 # - Updates overdue tags for past-dated tasks
+# - Updates overdue tags for time-passed tasks in today
 # - Archives past-dated directories to past-days
 # - Tracks overdue count in days/overdue-count file
 
@@ -66,9 +67,10 @@ tag_today() {
     log "Tagged $TODAY with Point"
 }
 
-# Update overdue tags for past-dated tasks
+# Update overdue tags for past-dated tasks and time-passed tasks
 update_overdue_tags() {
     local TODAY=$(date +%Y-%m-%d)
+    local CURRENT_TIME=$(date +%H%M)
     
     # Process all files in past-days directory
     if [[ -d "$PAST_DAYS_DIR" ]]; then
@@ -83,7 +85,41 @@ update_overdue_tags() {
                 $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
                 $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
                 $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
-                log "Updated overdue tag for: $(basename "$file_path")"
+                log "Updated overdue tag for past date: $(basename "$file_path")"
+            fi
+        done
+    fi
+    
+    # Process files in today's directory for time-based overdue
+    local TODAY_WEEKDAY=$(date +%w)
+    local TODAY_SUFFIX
+    if [[ "$TODAY_WEEKDAY" == "0" ]]; then
+        TODAY_SUFFIX="Sunday"
+    else
+        local DAY_NUM=$((TODAY_WEEKDAY + 1))
+        TODAY_SUFFIX="$DAY_NUM"
+    fi
+    
+    local TODAY_PATH="$DAYS_DIR/${TODAY}  (${TODAY_SUFFIX})"
+    if [[ -d "$TODAY_PATH" ]]; then
+        find "$TODAY_PATH" -type f 2>/dev/null | while IFS= read -r file_path; do
+            local file_name=$(basename "$file_path")
+            local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+            
+            # Check if filename starts with 4-digit time (HHMM format)
+            if [[ "$file_name" =~ ^([0-9]{4})[[:space:]] ]]; then
+                local file_time="${BASH_REMATCH[1]}"
+                
+                # Check if current time has passed the file time and file has task tags
+                if [[ "$CURRENT_TIME" > "$file_time" ]] && echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
+                    # Remove old tags and add Overdue
+                    $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
+                    $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
+                    $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
+                    log "Updated overdue tag for time-passed: $file_name (scheduled: $file_time, current: $CURRENT_TIME)"
+                fi
             fi
         done
     fi
