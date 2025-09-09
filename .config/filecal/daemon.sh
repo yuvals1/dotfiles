@@ -131,9 +131,9 @@ update_overdue_tags() {
 update_overdue_count() {
     local OVERDUE_COUNT_FILE="$CALENDAR_DIR/overdue-count"
     local overdue_count=0
+    local TODAY=$(date +%Y-%m-%d)
     
-    # Count files with Overdue tag in past-days only
-    # (current/future days can't have overdue items)
+    # Count files with Overdue tag in past-days
     if [[ -d "$PAST_DAYS_DIR" ]]; then
         while IFS= read -r file_path; do
             if [[ -f "$file_path" ]]; then
@@ -143,6 +143,28 @@ update_overdue_count() {
                 fi
             fi
         done < <(find "$PAST_DAYS_DIR" -type f 2>/dev/null)
+    fi
+    
+    # Count files with Overdue tag in today's directory (time-based overdue)
+    local TODAY_WEEKDAY=$(date +%w)
+    local TODAY_SUFFIX
+    if [[ "$TODAY_WEEKDAY" == "0" ]]; then
+        TODAY_SUFFIX="Sunday"
+    else
+        local DAY_NUM=$((TODAY_WEEKDAY + 1))
+        TODAY_SUFFIX="$DAY_NUM"
+    fi
+    
+    local TODAY_PATH="$DAYS_DIR/${TODAY}  (${TODAY_SUFFIX})"
+    if [[ -d "$TODAY_PATH" ]]; then
+        while IFS= read -r file_path; do
+            if [[ -f "$file_path" ]]; then
+                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
+                if echo "$file_tags" | grep -q "Overdue"; then
+                    ((overdue_count++))
+                fi
+            fi
+        done < <(find "$TODAY_PATH" -type f 2>/dev/null)
     fi
     
     # Update or remove the count file based on count
