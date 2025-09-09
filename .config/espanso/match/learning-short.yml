@@ -51,6 +51,10 @@ matches:
     replace: "that was too fast and too big"
     label: "too fast and too big"
 
+  - trigger: ":cwc"
+    replace: "consult with codex"
+    label: "consult with codex"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"
