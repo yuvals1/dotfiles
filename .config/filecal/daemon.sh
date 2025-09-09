@@ -70,10 +70,10 @@ tag_today() {
 update_overdue_tags() {
     local TODAY=$(date +%Y-%m-%d)
     
-    # Check all day directories for past-dated tasks (including those in past-days)
-    for search_dir in "$DAYS_DIR" "$PAST_DAYS_DIR"; do
-        for day_dir in "$search_dir"/????-??-??*; do
-            if [[ ! -d "$day_dir" ]] || [[ "$day_dir" == *"past-days"* && "$search_dir" == "$DAYS_DIR" ]]; then
+    # Check only past-days directory (archive_past_days runs first)
+    if [[ -d "$PAST_DAYS_DIR" ]]; then
+        for day_dir in "$PAST_DAYS_DIR"/????-??-??*; do
+            if [[ ! -d "$day_dir" ]]; then
                 continue
             fi
             
@@ -81,7 +81,7 @@ update_overdue_tags() {
             # Extract just the date part (first 10 characters: YYYY-MM-DD)
             local day_date="${day_name:0:10}"
             
-            # Check if this date is in the past
+            # Check if this date is in the past (should always be true in past-days)
             if [[ "$day_date" < "$TODAY" ]]; then
                 # Process all files recursively in the day directory
                 find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
@@ -100,7 +100,7 @@ update_overdue_tags() {
                 done
             fi
         done
-    done
+    fi
     
     log "Completed overdue tag updates"
 }
@@ -110,19 +110,8 @@ update_overdue_count() {
     local OVERDUE_COUNT_FILE="$CALENDAR_DIR/overdue-count"
     local overdue_count=0
     
-    # Count files with Overdue tag in days (excluding past-days) 
-    if [[ -d "$DAYS_DIR" ]]; then
-        while IFS= read -r file_path; do
-            if [[ -f "$file_path" ]] && [[ "$file_path" != "$OVERDUE_COUNT_FILE" ]]; then
-                local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
-                if echo "$file_tags" | grep -q "Overdue"; then
-                    ((overdue_count++))
-                fi
-            fi
-        done < <(find "$DAYS_DIR" -maxdepth 2 -type f -not -path "*/past-days/*" 2>/dev/null)
-    fi
-    
-    # Count files with Overdue tag in past-days
+    # Count files with Overdue tag in past-days only
+    # (current/future days can't have overdue items)
     if [[ -d "$PAST_DAYS_DIR" ]]; then
         while IFS= read -r file_path; do
             if [[ -f "$file_path" ]]; then
