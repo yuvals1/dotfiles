@@ -38,6 +38,7 @@ source "$SCRIPT_DIR/scripts/setup_locales.sh"
 source "$SCRIPT_DIR/scripts/install_forgit.sh"
 source "$SCRIPT_DIR/scripts/install_delta.sh"
 source "$SCRIPT_DIR/scripts/install_glow.sh"
+source "$SCRIPT_DIR/scripts/install_csvq.sh"
 
 main() {
     log "Starting system setup..."
@@ -65,6 +66,7 @@ main() {
 	"run_install_forgit"
 	"run_install_delta"
 	"run_install_glow"
+	"run_install_csvq"
         "run_setup_fzf"
         "run_setup_python_tools"
         "run_setup_locales"
@@ -97,6 +99,7 @@ main() {
     command -v lazydocker >/dev/null && echo "✓ lazydocker" || echo "✗ lazydocker"
     command -v delta >/dev/null && echo "✓ delta" || echo "✗ delta"
     command -v glow >/dev/null && echo "✓ glow" || echo "✗ glow"
+    command -v csvq >/dev/null && echo "✓ csvq" || echo "✗ csvq"
     command -v bat >/dev/null && echo "✓ bat" || echo "✗ bat"
     command -v zoxide >/dev/null && echo "✓ zoxide" || echo "✗ zoxide"
     command -v git >/dev/null && echo "✓ git" || echo "✗ git"
