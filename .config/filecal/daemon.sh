@@ -70,31 +70,20 @@ tag_today() {
 update_overdue_tags() {
     local TODAY=$(date +%Y-%m-%d)
     
-    # Check only past-days directory (archive_past_days runs first)
+    # Process all files in past-days directory
     if [[ -d "$PAST_DAYS_DIR" ]]; then
-        for day_dir in "$PAST_DAYS_DIR"/????-??-??*; do
+        find "$PAST_DAYS_DIR" -type f 2>/dev/null | while IFS= read -r file_path; do
+            local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
             
-            local day_name=$(basename "$day_dir")
-            # Extract just the date part (first 10 characters: YYYY-MM-DD)
-            local day_date="${day_name:0:10}"
-            
-            # Check if this date is in the past (should always be true in past-days)
-            if [[ "$day_date" < "$TODAY" ]]; then
-                # Process all files recursively in the day directory
-                find "$day_dir" -type f 2>/dev/null | while IFS= read -r file_path; do
-                    local file_tags=$($TAG_CMD -l "$file_path" 2>/dev/null)
-                    
-                    # Update overdue tags
-                    if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
-                        # Remove old tags and add Overdue
-                        $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
-                        $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
-                        $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
-                        $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
-                        $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
-                        log "Updated overdue tag for: $(basename "$file_path")"
-                    fi
-                done
+            # Update overdue tags
+            if echo "$file_tags" | grep -qE "(Yellow|Blue|Purple|Waiting)"; then
+                # Remove old tags and add Overdue
+                $TAG_CMD -r "Yellow" "$file_path" 2>/dev/null
+                $TAG_CMD -r "Blue" "$file_path" 2>/dev/null
+                $TAG_CMD -r "Purple" "$file_path" 2>/dev/null
+                $TAG_CMD -r "Waiting" "$file_path" 2>/dev/null
+                $TAG_CMD -a "Overdue" "$file_path" 2>/dev/null
+                log "Updated overdue tag for: $(basename "$file_path")"
             fi
         done
     fi
