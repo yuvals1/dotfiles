@@ -93,5 +93,10 @@ use = "yazi-rs/plugins:mactag"
 rev = "d7588f6"
 hash = "72dfb25e9d0c015365827431e28df322"
 
+[[plugin.deps]]
+use = "KKV9/compress"
+rev = "c264639"
+hash = "e17c11b605d989568a1d1741ca17c584"
+
 [flavor]
 deps = []

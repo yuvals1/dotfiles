@@ -1163,6 +1163,16 @@ on = ["m", "m"]
 run = "plugin mactag-unified none"
 desc = "Clear tag"
 
+# Compression
+[[mgr.prepend_keymap]]
+on = ["c", "a"]
+run = "plugin compress"
+desc = "Archive selected files"
+
+[[mgr.prepend_keymap]]
+on = ["c", "P"]
+run = "plugin compress -p"
+desc = "Archive with password"
 
 # Jump to symlink target
 [[mgr.prepend_keymap]]
