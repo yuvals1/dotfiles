@@ -1,0 +1,6 @@
+# Command line snippets
+
+matches:
+  - trigger: ":xxsetup"
+    replace: "claude mcp add --scope user codex -- uvx codex-as-mcp@latest --yolo"
+    label: "setup codex mcp"
