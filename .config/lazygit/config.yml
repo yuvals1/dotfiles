@@ -8,12 +8,19 @@ gui:
   wrapLinesInStagingView: true
   showListFooter: true
   sidePanelWidth: 0.3333
+  scrollHeight: 4
 keybinding:
   universal:
     nextScreenMode: "z" # z to cycle zoom modes
     undo: "Z" # shift-z for undo
+    scrollUpMain: "<c-k>"
+    scrollDownMain: "<c-j>"
+    scrollUpMainAlt1: "" # disable K for scrolling
+    scrollDownMainAlt1: "" # disable J for scrolling
   commits:
     openLogMenu: "<C-r>"
+    moveDownCommit: "J"
+    moveUpCommit: "K"
 
 customCommands:
   - key: "<c-a>" # ctrl + a
