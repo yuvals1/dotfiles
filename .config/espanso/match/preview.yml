@@ -2,9 +2,9 @@
 
 matches:
   - trigger: ":preview"
-    replace: "preview the way you think about implementing this then if i approve you'll implement it"
+    replace: " preview the way you think about implementing this then if i approve you'll implement it"
     label: "preview"
 
   - trigger: ":plan"
-    replace: "explain how you are planning to do it first. then if i confirm we will continue.\n"
+    replace: " explain how you are planning to do it first. then if i confirm we will continue.\n"
     label: "plan"

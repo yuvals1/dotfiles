@@ -2,5 +2,5 @@
 
 matches:
   - trigger: ":pr"
-    replace: "let's proceed"
+    replace: " let's proceed"
     label: "let's proceed"

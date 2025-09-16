@@ -2,93 +2,93 @@
 
 matches:
   - trigger: ":cn"
-    replace: "continue"
+    replace: " continue"
 
   - trigger: ":sl0"
-    replace: "explain slowly"
+    replace: " explain slowly"
 
   - trigger: ":sm0"
-    replace: "small steps"
+    replace: " small steps"
     label: "small steps"
 
   - trigger: ":du"
-    replace: "do you understand"
+    replace: " do you understand"
     label: "do you undetstand"
 
   - trigger: ":idu"
-    replace: "i don't understand"
+    replace: " i don't understand"
     label: "i dont understand"
 
   - trigger: ":idm"
-    replace: "i don't understand. start from the motivation"
+    replace: " i don't understand. start from the motivation"
     label: "i dont understand motivation"
 
   - trigger: ":etf"
-    replace: "explain the technical flow"
+    replace: " explain the technical flow"
     label: "explain technical flow"
 
   - trigger: ":hci"
-    replace: "how can we implement it?"
+    replace: " how can we implement it?"
     label: "how can we implement"
 
   - trigger: ":wmt"
-    replace: "walk me through your thought process"
+    replace: " walk me through your thought process"
     label: "walk me through thought process"
 
   - trigger: ":ybs"
-    replace: "you're being sloppy"
+    replace: " you're being sloppy"
     label: "youre being sloppy"
 
   - trigger: ":mcu"
-    replace: "let me tell you my current understanding"
+    replace: " let me tell you my current understanding"
     label: "my current understanding"
 
   - trigger: ":ttf"
-    replace: "that was too fast"
+    replace: " that was too fast"
     label: "that was too fast"
 
   - trigger: ":ttb"
-    replace: "that was too fast and too big"
+    replace: " that was too fast and too big"
     label: "too fast and too big"
 
   - trigger: ":xx"
-    replace: "consult with codex"
+    replace: " consult with codex"
     label: "consult with codex"
 
   - trigger: ":idw"
-    replace: "i don't want"
+    replace: " i don't want"
     label: "i dont want"
 
   - trigger: ":idfu"
-    replace: "i don't fucking understand"
+    replace: " i don't fucking understand"
     label: "i dont fucking understand"
 
   - trigger: ":first"
-    replace: "explain from first principles"
+    replace: " explain from first principles"
     label: "first principles"
 
   - trigger: ":sun"
-    replace: "i still not understand"
+    replace: " i still not understand"
     label: "still not understand"
 
   - trigger: ":di"
-    replace: "don't implement yet. let's discuss it first"
+    replace: " don't implement yet. let's discuss it first"
     label: "don't implement yet"
 
   - trigger: ":exp"
-    replace: "explain it to me so i know you understand it"
+    replace: " explain it to me so i know you understand it"
 
   - trigger: ":2pass"
-    replace: "this is a complex refactoring so i want to do it in small steps with verification after each step. we will do it in 2 passes: first pass we extract things out without changing logic, second pass we organize and eliminate redundancy. do you understand?"
+    replace: " this is a complex refactoring so i want to do it in small steps with verification after each step. we will do it in 2 passes: first pass we extract things out without changing logic, second pass we organize and eliminate redundancy. do you understand?"
     label: "two-pass refactoring strategy"
 
   - trigger: ":stepv"
-    replace: "if it's complex do it slowly step after step with verifications for each step"
+    replace: " if it's complex do it slowly step after step with verifications for each step"
     label: "step by step with verification"
 
   - trigger: ":conf"
-    replace: "i'm still confused about the exact technicalities"
+    replace: " i'm still confused about the exact technicalities"
     label: "confused about technicalities"
 
   - trigger: ":ic"
-    replace: "i'm confused"
+    replace: " i'm confused"

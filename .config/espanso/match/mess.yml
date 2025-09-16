@@ -1,10 +1,10 @@
 matches:
   - trigger: ":mess"
-    replace: "there's a little bit of mess in here. currently... "
+    replace: " there's a little bit of mess in here. currently... "
     label: "mess"
   - trigger: ":filename"
-    replace: "the file names became messy. some files have the same prefix. please understand what should be the order and rename accordingly"
+    replace: " the file names became messy. some files have the same prefix. please understand what should be the order and rename accordingly"
     label: "filename"
   - trigger: ":cohesive"
-    replace: "each file should be small and cohesive"
+    replace: " each file should be small and cohesive"
     label: "cohesive"

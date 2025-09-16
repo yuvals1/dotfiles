@@ -2,17 +2,17 @@
 
 matches:
   - trigger: ":inc"
-    replace: "let's start with {} and proceed from there very slowly.\nmade the least amount of modifications each step"
+    replace: " let's start with {} and proceed from there very slowly.\nmade the least amount of modifications each step"
     label: "incremental flow"
 
   - trigger: ":complex"
-    replace: "this is a complex adoption so i want to do it in steps with verification after each step to see it's working as expected before moving to next step"
+    replace: " this is a complex adoption so i want to do it in steps with verification after each step to see it's working as expected before moving to next step"
     label: "complex adoption with verification"
 
   - trigger: ":verify-system"
-    replace: "after each step verify that the full system still work as expected"
+    replace: " after each step verify that the full system still work as expected"
     label: "verify system after each step"
 
   - trigger: ":test-system"
-    replace: "after each step test that the full system still work as expected"
+    replace: " after each step test that the full system still work as expected"
     label: "test system after each step"

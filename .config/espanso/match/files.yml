@@ -3,17 +3,17 @@
 matches:
   # File and Code Management
   - trigger: ":copyable"
-    replace: "show the filename in copyable block"
+    replace: " show the filename in copyable block"
     label: "show the filename in copyable block"
 
   - trigger: ":struct"
-    replace: "provide a command for creating the file structure\n"
+    replace: " provide a command for creating the file structure\n"
     label: "provide a command for creating the file structure"
 
   - trigger: ":empty"
-    replace: "provide command for creating the empty files"
+    replace: " provide command for creating the empty files"
     label: "empty files"
 
   - trigger: ":show"
-    replace: "provide with a command to show you all files (copy it to my clipboard)"
+    replace: " provide with a command to show you all files (copy it to my clipboard)"
     label: "show you"

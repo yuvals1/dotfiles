@@ -2,6 +2,6 @@
 
 matches:
   - trigger: ":mp"
-    replace: "make a plan first"
+    replace: " make a plan first"
     label: "make a plan first"
 

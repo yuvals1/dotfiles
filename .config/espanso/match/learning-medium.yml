@@ -2,28 +2,28 @@
 
 matches:
   - trigger: ":exp1"
-    replace: "explain the task so i know you understood"
+    replace: " explain the task so i know you understood"
     label: "explain the task so i know you understood"
 
   - trigger: ":app"
-    replace: "dont move to next step until i approve"
+    replace: " dont move to next step until i approve"
     label: "important - dont move to next step until i approve"
 
   - trigger: ":readit"
-    replace: "read it carefully and then i'll ask you to help with improving it"
+    replace: " read it carefully and then i'll ask you to help with improving it"
     label: "readit"
 
   - trigger: ":sl1"
-    replace: "start from the beginning and move in very slow steps. dont move to next step until i approve"
+    replace: " start from the beginning and move in very slow steps. dont move to next step until i approve"
     label: "important - start from the beginning and move in very slow steps"
 
   - trigger: ":sm1"
-    replace: "move in very slow and small steps. dont move to next step until i approve"
+    replace: " move in very slow and small steps. dont move to next step until i approve"
     label: "important - move in very slow and small steps"
 
   - trigger: ":terms"
-    replace: "there are a lot of terms here i don't know/understand. please explain all the suspicious terms."
+    replace: " there are a lot of terms here i don't know/understand. please explain all the suspicious terms."
     label: "explain suspicious terms"
 
   - trigger: ":talkabout"
-    replace: "let's talk about it. ill tell what i understand."
+    replace: " let's talk about it. ill tell what i understand."

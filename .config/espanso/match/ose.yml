@@ -1,47 +1,47 @@
 matches:
   # Study slides prompts
   - trigger: ":ose1"
-    replace: "look at the @xv6-md-chapters/chapter \\\nthis is chapter 4 of the xv6 book. we have already read and created the slides of chapters 0-3. look inside either of those folders to see how the slides are structured.\\\n now we are going to create (slowly and incramentally) the slides of chapter 1.\\\nslides should be small, cohesive, prefer diagrams and flow charts over text when possible. you can look at @xv6-slides/examples/  which contains examples of good slides to understand the desired style.\\\n first, start from reading the chapter itself and understand it. understand what are the topics. then we will discuss how to continue"
+    replace: " look at the @xv6-md-chapters/chapter \\\nthis is chapter 4 of the xv6 book. we have already read and created the slides of chapters 0-3. look inside either of those folders to see how the slides are structured.\\\n now we are going to create (slowly and incramentally) the slides of chapter 1.\\\nslides should be small, cohesive, prefer diagrams and flow charts over text when possible. you can look at @xv6-slides/examples/  which contains examples of good slides to understand the desired style.\\\n first, start from reading the chapter itself and understand it. understand what are the topics. then we will discuss how to continue"
     label: "OSE study slides - chapter intro"
 
   - trigger: ":ose2"
-    replace: "first make sure that you read all the examples so you understand how to create high quality slides"
+    replace: " first make sure that you read all the examples so you understand how to create high quality slides"
     label: "OSE study slides - read examples"
 
   - trigger: ":ose3"
-    replace: "can you add a new slide at the end with table like of the core functions/data structures shown in the chapter?\\\nalso create a slide for comparison to jos (in regard to the chapter contents)"
+    replace: " can you add a new slide at the end with table like of the core functions/data structures shown in the chapter?\\\nalso create a slide for comparison to jos (in regard to the chapter contents)"
     label: "OSE study slides - summary tables"
 
   # Study slides with Claude web
   - trigger: ":ose4"
-    replace: "i want you to create slides for comprehensive study of the lecture. look at these example slides. The slides follow the style of the existing chapters: - Small, focused topics - Heavy use of diagrams and ASCII art - Tables for comparisons - Code snippets where helpful - Clear visual flow Each slide is cohesive and can stand alone while building on previous concepts. The progression moves from high-level concepts to specific implementation details, matching the chapter's structure. The slide naming structure follows a consistent pattern: Naming Convention: XX-topic-description.md. put each slide in a separate artifact"
+    replace: " i want you to create slides for comprehensive study of the lecture. look at these example slides. The slides follow the style of the existing chapters: - Small, focused topics - Heavy use of diagrams and ASCII art - Tables for comparisons - Code snippets where helpful - Clear visual flow Each slide is cohesive and can stand alone while building on previous concepts. The progression moves from high-level concepts to specific implementation details, matching the chapter's structure. The slide naming structure follows a consistent pattern: Naming Convention: XX-topic-description.md. put each slide in a separate artifact"
     label: "OSE Claude web - create slides"
 
   # Exams
   - trigger: ":ose5"
-    replace: "these are pdfs of exams in os engineering course. please read them and convert each one to markdown (each one in different artifact)\\\n please notice that these ones include answers (some of the times). please mark answer with \"answer\" and questions with \"question\""
+    replace: " these are pdfs of exams in os engineering course. please read them and convert each one to markdown (each one in different artifact)\\\n please notice that these ones include answers (some of the times). please mark answer with \"answer\" and questions with \"question\""
     label: "OSE exams - convert to markdown"
 
   # Style prompts
   - trigger: ":ose6"
-    replace: "i dont like the the @xv6-slides/3/07-trap-handling-flow.md you created.\\\n look at those files from the examples directory:\\\n @xv6-slides/examples/05-boot-sequence-timeline-only.md\\\n @xv6-slides/examples/17-page-table-walk-timeline.md\\\n\\\n do you recognize the different in styles. explain the differences"
+    replace: " i dont like the the @xv6-slides/3/07-trap-handling-flow.md you created.\\\n look at those files from the examples directory:\\\n @xv6-slides/examples/05-boot-sequence-timeline-only.md\\\n @xv6-slides/examples/17-page-table-walk-timeline.md\\\n\\\n do you recognize the different in styles. explain the differences"
     label: "OSE style - timeline comparison"
 
   - trigger: ":ose7"
-    replace: "let's create a slide for this. suggest strategies for structuring the slide and ill choose one"
+    replace: " let's create a slide for this. suggest strategies for structuring the slide and ill choose one"
     label: "OSE style - suggest strategies"
 
   - trigger: ":ose8"
-    replace: "look at @xv6-slides/examples/05-boot-sequence-timeline-only.md do you understand the style there?\\\n let's create a slide for reading from disk in the in the same style."
+    replace: " look at @xv6-slides/examples/05-boot-sequence-timeline-only.md do you understand the style there?\\\n let's create a slide for reading from disk in the in the same style."
     label: "OSE style - disk read timeline"
 
   - trigger: ":ose9"
-    replace: "suggest few strategies for the structure of the slide and ill choose one"
+    replace: " suggest few strategies for the structure of the slide and ill choose one"
     label: "OSE style - structure strategies"
 
   # Concise answers
 
   - trigger: ":ose10"
-    replace: "let's add a concise high quality answer under the question (edit the file in place). then we will move on to next section"
+    replace: " let's add a concise high quality answer under the question (edit the file in place). then we will move on to next section"
     label: "OSE exams - add answers"
 

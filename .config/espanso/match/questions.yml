@@ -2,25 +2,25 @@
 
 matches:
   - trigger: ":wd"
-    replace: "what's the difference"
+    replace: " what's the difference"
     label: "what's the difference"
 
   - trigger: ":dif"
-    replace: "difference"
+    replace: " difference"
     label: "difference"
 
   - trigger: ":dt"
-    replace: "do you understand the task?"
+    replace: " do you understand the task?"
     label: "do you understand the task?"
 
   - trigger: ":vb"
-    replace: "verify the behavior is as desired"
+    replace: " verify the behavior is as desired"
     label: "verify the behavior is as desired"
 
   - trigger: ":dr"
-    replace: "do you remember the instructions?"
+    replace: " do you remember the instructions?"
     label: "do you remember the instructions?"
 
   - trigger: ":lmu"
-    replace: "let me tell you what I understand so far"
+    replace: " let me tell you what I understand so far"
     label: "let me tell you what I understand so far"
