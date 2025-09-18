@@ -172,3 +172,12 @@ end)
 hs.hotkey.bind({ "alt", "cmd" }, "s", function()
 	hs.caffeinate.systemSleep()
 end)
+
+-- SSH KEEPALIVE (extracted to module)
+local keepalive = require("ssh_keepalive")
+
+-- Bind toggle hotkey (Ctrl+Alt+Cmd+L)
+keepalive.bindHotkeys({ toggle = { {"ctrl","alt","cmd"}, "L" } })
+
+-- Auto-start if previously enabled
+keepalive.startIfEnabled()
