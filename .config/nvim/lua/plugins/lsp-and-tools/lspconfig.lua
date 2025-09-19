@@ -9,7 +9,9 @@ function M.setup(languages, setup_highlighting)
       'williamboman/mason-lspconfig.nvim',
       event = { 'BufReadPre', 'BufNewFile' },
       opts = {
-        ensure_installed = vim.tbl_keys(configs.lsp_servers),
+        -- Don't automatically install anything - let mason-tool-installer handle it
+        ensure_installed = {},
+        automatic_installation = false,
       },
     },
     {
