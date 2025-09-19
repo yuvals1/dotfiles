@@ -1,7 +1,7 @@
 -- linux_arm.lua
--- Narrow, low-friction profile for ARM Ubuntu
--- Keeps only Lua to avoid Mason/platform issues.
+-- Lightweight profile for ARM Ubuntu with Lua and Python tooling.
 return {
+  require 'plugins.lsp-and-tools.languages.python',
   {
     mason = { 'lua-language-server', 'stylua' },
     lsp = {
@@ -12,4 +12,3 @@ return {
     formatters = { lua = { 'stylua' } },
   },
 }
-
