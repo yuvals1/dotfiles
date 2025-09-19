@@ -1,5 +1,15 @@
 local fs = os.getenv("HOME") .. "/.config/yazi/plugins/sudo.yazi/assets/fs.nu"
 
+local nu_bin = os.getenv("NU_BIN")
+if not nu_bin or #nu_bin == 0 then
+    local handle = io.popen("command -v nu 2>/dev/null")
+    if handle then
+        nu_bin = handle:read('*l')
+        handle:close()
+    end
+end
+nu_bin = nu_bin or 'nu'
+
 function string:ends_with_char(suffix)
     return self:sub(-#suffix) == suffix
 end
@@ -98,7 +108,7 @@ end
 local function sudo_paste(value)
     local args = sudo_cmd()
 
-    extend_list(args, { "nu", fs })
+    extend_list(args, { ya.quote(nu_bin), ya.quote(fs) })
     if value.is_cut then
         table.insert(args, "mv")
     else
@@ -115,7 +125,7 @@ end
 local function sudo_link(value)
     local args = sudo_cmd()
 
-    extend_list(args, { "nu", fs, "ln" })
+    extend_list(args, { ya.quote(nu_bin), ya.quote(fs), "ln" })
     if value.relative then
         table.insert(args, "--relative")
     end
@@ -127,7 +137,7 @@ end
 local function sudo_hardlink(value)
     local args = sudo_cmd()
 
-    extend_list(args, { "nu", fs, "hardlink" })
+    extend_list(args, { ya.quote(nu_bin), ya.quote(fs), "hardlink" })
     extend_iter(args, list_map(value.yanked, ya.quote))
 
     execute(args)
@@ -171,7 +181,7 @@ end
 local function sudo_remove(value)
     local args = sudo_cmd()
 
-    extend_list(args, { "nu", fs, "rm" })
+    extend_list(args, { ya.quote(nu_bin), ya.quote(fs), "rm" })
     if value.permanently then
         table.insert(args, "--permanent")
     end
