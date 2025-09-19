@@ -1179,3 +1179,14 @@ desc = "Archive with password"
 on = "<C-l>"
 run = "plugin symlink-jump"
 desc = "Jump to symlink target"
+
+# Sudo operations with R prefix
+[[mgr.prepend_keymap]]
+on = ["R", "d"]
+run = "plugin sudo remove"
+desc = "Remove (trash) with sudo"
+
+[[mgr.prepend_keymap]]
+on = ["R", "D"]
+run = "plugin sudo remove --args='permanently=true'"
+desc = "Permanently delete with sudo"
