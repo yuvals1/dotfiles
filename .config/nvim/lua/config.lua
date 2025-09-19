@@ -1,3 +1,5 @@
+require 'env.node'
+
 local function require_all(directory)
   local config_path = vim.fn.stdpath 'config'
   local lua_pattern = config_path .. '/lua/' .. directory .. '/*.lua'
