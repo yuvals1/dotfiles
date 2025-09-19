@@ -31,12 +31,13 @@ run_install_neovim() {
     esac
     
     # Download the appropriate tarball
+    local nvim_version="v0.11.0"
     local temp_dir
     temp_dir=$(mktemp -d)
     pushd "$temp_dir" >/dev/null || error "Failed to create temp directory"
     
-    log "Downloading Neovim for $nvim_arch..."
-    wget -q "https://github.com/neovim/neovim/releases/download/nightly/nvim-${nvim_arch}.tar.gz" || error "Failed to download Neovim"
+    log "Downloading Neovim $nvim_version for $nvim_arch..."
+    wget -q "https://github.com/neovim/neovim/releases/download/${nvim_version}/nvim-${nvim_arch}.tar.gz" || error "Failed to download Neovim"
     
     # Extract and install
     log "Extracting Neovim..."
