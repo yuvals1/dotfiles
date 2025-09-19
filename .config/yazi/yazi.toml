@@ -66,10 +66,24 @@ hexyl = [
   { run = '''hexyl "$1" | less -R''', block = true, desc = "View with hexyl", for = "unix" },
   { run = 'hexyl %1 | more', block = true, desc = "View with hexyl", for = "windows" },
 ]
+visidata = [
+  { run = 'vd "$@"', desc = "Open in VisiData", block = true, for = "unix" },
+]
 
 
 [open]
 rules = [
+  # CSV files (name-based rule has priority)
+  { name = "*.csv", use = [
+    "visidata",
+    "edit",
+    "reveal",
+  ] },
+  { name = "*.CSV", use = [
+    "visidata",
+    "edit",
+    "reveal",
+  ] },
   # Object files
   { name = "*.o", use = [
     "hexyl",
@@ -86,6 +100,12 @@ rules = [
   { name = "*/", use = [
     "edit",
     "open",
+    "reveal",
+  ] },
+  # CSV files (must come before text/*)
+  { mime = "text/csv", use = [
+    "visidata",
+    "edit",
     "reveal",
   ] },
   # Text
