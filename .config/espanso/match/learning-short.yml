@@ -63,6 +63,10 @@ matches:
     replace: " verify with codex"
     label: "verify with codex"
 
+  - trigger: ":xj"
+    replace: " i want to ask codex (llm) to do it. please provide me with a prompt to give him"
+    label: "codex task prompt"
+
   - trigger: ":idw"
     replace: " i don't want"
     label: "i dont want"
