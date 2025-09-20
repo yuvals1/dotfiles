@@ -91,3 +91,33 @@ vd filename.xlsx   # Open an Excel file
 | `\` | Unselect rows matching regex in current column |
 | `,` | Select rows where current cell matches cursor value |
 | `g,` | Select rows matching cursor row (all columns) |
+
+## Aggregations and Statistics
+
+### Quick Aggregations
+| Key | Action |
+|-----|--------|
+| `+` | Add aggregator to current column |
+| `z+` | Show aggregators result for selected rows (or all if none) |
+
+### Common Aggregators (after pressing `+`)
+- `sum` - Sum of values
+- `mean` - Average
+- `min` / `max` - Minimum/Maximum value
+- `count` - Count of non-null values
+- `distinct` - Count of unique values
+- `stddev` - Standard deviation
+- `median` - Median value
+
+### Frequency & Statistics
+| Key | Action |
+|-----|--------|
+| `Shift+F` | Create frequency table for current column |
+| `Shift+W` | Create pivot table |
+| `Shift+I` | Show descriptive statistics for current column |
+| `zs` | Open stats sheet with summary for all columns |
+
+## View Transformations (important!)
+| Key | Action |
+|-----|--------|
+| `Shift+T` | Transpose sheet (swap rows and columns) |
