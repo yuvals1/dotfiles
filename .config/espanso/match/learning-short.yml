@@ -59,6 +59,10 @@ matches:
     replace: " i want to ask another llm and provide you with its response. please provide me with a prompt to use"
     label: "external prompt request"
 
+  - trigger: ":xv"
+    replace: " verify with codex"
+    label: "verify with codex"
+
   - trigger: ":idw"
     replace: " i don't want"
     label: "i dont want"
