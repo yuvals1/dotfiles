@@ -73,48 +73,37 @@ visidata = [
 
 [open]
 rules = [
-  # CSV files (name-based rule has priority)
-  { name = "*.csv", use = [
+  # CSV files (url-based rule has priority)
+  { url = "*.csv", use = [
     "visidata",
     "edit",
     "reveal",
   ] },
-  { name = "*.CSV", use = [
+  { url = "*.CSV", use = [
     "visidata",
     "edit",
     "reveal",
   ] },
   # Object files
-  { name = "*.o", use = [
+  { url = "*.o", use = [
     "hexyl",
     "edit",
     "reveal",
   ] },
   # html
-  { name = "*.{htm,html}", use = [
+  { url = "*.{htm,html}", use = [
     "browser",
     "edit",
     "reveal",
   ] },
   # Folder
-  { name = "*/", use = [
+  { url = "*/", use = [
     "edit",
     "open",
     "reveal",
   ] },
   # CSV files (must come before text/*)
   { mime = "text/csv", use = [
-    "visidata",
-    "edit",
-    "reveal",
-  ] },
-  # CSV files detected as text/plain (Windows CRLF line endings)
-  { mime = "text/plain", name = "*.csv", use = [
-    "visidata",
-    "edit",
-    "reveal",
-  ] },
-  { mime = "text/plain", name = "*.CSV", use = [
     "visidata",
     "edit",
     "reveal",
