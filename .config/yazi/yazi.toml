@@ -108,6 +108,17 @@ rules = [
     "edit",
     "reveal",
   ] },
+  # CSV files detected as text/plain (Windows CRLF line endings)
+  { mime = "text/plain", name = "*.csv", use = [
+    "visidata",
+    "edit",
+    "reveal",
+  ] },
+  { mime = "text/plain", name = "*.CSV", use = [
+    "visidata",
+    "edit",
+    "reveal",
+  ] },
   # Text
   { mime = "text/*", use = [
     "edit",
