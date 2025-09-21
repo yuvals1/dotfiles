@@ -32,7 +32,8 @@ run_setup_visidata_local() {
     local wrapper="/usr/local/bin/vd-local"
     local tmpfile
     tmpfile=$(mktemp)
-    cat >"$tmpfile" <<WRAP
+    # Use single-quoted heredoc to prevent variable expansion in wrapper contents
+    cat >"$tmpfile" <<'WRAP'
 #!/usr/bin/env bash
 exec env PYTHONPATH="$HOME/dev/visidata" "$HOME/dev/visidata/bin/vd" "$@"
 WRAP
@@ -50,4 +51,3 @@ WRAP
 
     success "Local VisiData setup complete (branch 'yuval')."
 }
-
