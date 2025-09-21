@@ -121,3 +121,4 @@ vd filename.xlsx   # Open an Excel file
 | Key | Action |
 |-----|--------|
 | `Shift+T` | Transpose sheet (swap rows and columns) |
+| `Shift+E` | Heatmap toggle  |
