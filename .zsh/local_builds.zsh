@@ -12,3 +12,4 @@ VISIDATA_ROOT="$HOME/dev/visidata"
 VISIDATA_BIN="$VISIDATA_ROOT/bin/vd"
 # Run VisiData from local source by default
 alias vd="PYTHONPATH=$VISIDATA_ROOT $VISIDATA_BIN"
+alias visidata="PYTHONPATH=$VISIDATA_ROOT $VISIDATA_BIN"
