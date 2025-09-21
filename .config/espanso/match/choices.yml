@@ -14,5 +14,6 @@ matches:
     label: "suggest2"
 
   - trigger: ":suggest3"
-    replace: " suggest a couple of strategies how to do it and ill choose one\n"
+    replace: " suggest 2-3 strategies how to do it and ill choose one"
     label: "suggest3"
+
