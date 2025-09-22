@@ -23,14 +23,26 @@ run_setup_lazygit_local() {
     fi
 
     pushd "$repo_dir" >/dev/null || error "Failed to cd into lazygit repo"
-    git fetch origin || true
-    # Keep current branch if you have local changes; otherwise track master
-    if ! git rev-parse --abbrev-ref --symbolic-full-name @{u} >/dev/null 2>&1; then
-        git checkout master || true
-        git pull --ff-only origin master || true
-    else
-        git pull --ff-only || true
+    git fetch origin --prune || true
+    # Choose branch: prefer $LAZYGIT_BRANCH (default 'yuval') if exists on origin,
+    # else use origin's default branch (master/main)
+    desired_branch="${LAZYGIT_BRANCH:-yuval}"
+    default_branch="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@')"
+    if [ -z "$default_branch" ]; then
+        default_branch="$(git remote show origin | sed -n '/HEAD branch/s/.*: //p')"
     fi
+
+    # Switch to desired branch when available
+    if git ls-remote --exit-code --heads origin "$desired_branch" >/dev/null 2>&1; then
+        git checkout -B "$desired_branch" "origin/$desired_branch" || error "Failed to checkout $desired_branch"
+    elif [ -n "$default_branch" ]; then
+        git checkout "$default_branch" || error "Failed to checkout $default_branch"
+    fi
+
+    # Ensure upstream and pull
+    cur_branch="$(git rev-parse --abbrev-ref HEAD)"
+    git branch --set-upstream-to="origin/$cur_branch" "$cur_branch" >/dev/null 2>&1 || true
+    git pull --ff-only || true
 
     # Build local binary
     log "Building lazygit..."
