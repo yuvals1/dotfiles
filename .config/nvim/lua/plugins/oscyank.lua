@@ -23,4 +23,44 @@ return {
       })
     end,
   },
+  {
+    'ojroques/nvim-osc52',
+    lazy = false,
+    config = function()
+      local osc52 = require 'osc52'
+
+      osc52.setup {
+        max_length = 0,
+        silent = true,
+        trim = false,
+      }
+
+      local function copy(lines, regtype)
+        regtype = regtype or 'v'
+        local data = table.concat(lines, '\n')
+        if regtype == 'V' then
+          data = data .. '\n'
+        end
+        osc52.copy(data)
+        vim.fn.setreg('+', data, regtype)
+        vim.fn.setreg('*', data, regtype)
+      end
+
+      local function paste()
+        return vim.fn.getreg('+', 1, true), vim.fn.getregtype('+')
+      end
+
+      vim.g.clipboard = {
+        name = 'osc52',
+        copy = {
+          ['+'] = copy,
+          ['*'] = copy,
+        },
+        paste = {
+          ['+'] = paste,
+          ['*'] = paste,
+        },
+      }
+    end,
+  },
 }
