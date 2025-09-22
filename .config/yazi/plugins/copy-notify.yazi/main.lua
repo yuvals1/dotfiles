@@ -8,6 +8,18 @@ local function notify(title, content)
   }
 end
 
+local function get_home_path()
+  return os.getenv "HOME" or os.getenv "USERPROFILE" or ""
+end
+
+local function to_relative(path)
+  local home = get_home_path()
+  if home ~= "" and path:sub(1, #home) == home then
+    return "~" .. path:sub(#home + 1)
+  end
+  return path
+end
+
 local descriptors = {
   path = {
     title = "Full Path",
@@ -38,6 +50,14 @@ local descriptors = {
       local name = file.name or ""
       local last_dot = name:match(".*()%.")
       return last_dot and name:sub(1, last_dot - 1) or name
+    end,
+  },
+  relative = {
+    title = "Relative Path",
+    plural = "relative paths",
+    copy = true,
+    format = function(file)
+      return to_relative(file.url)
     end,
   },
 }
@@ -84,9 +104,18 @@ return {
       return
     end
 
+    local values = {}
+    for _, file in ipairs(targets) do
+      values[#values + 1] = desc.format(file) or ""
+    end
+
+    if desc.copy then
+      ya.clipboard(table.concat(values, "\n"))
+    end
+
     if #targets == 1 then
-      local value = desc.format(targets[1])
-      if not value or value == "" then
+      local value = values[1]
+      if value == "" then
         value = desc.title
       end
       notify(desc.title, string.format("Copied: %s", value))
@@ -95,4 +124,3 @@ return {
     end
   end,
 }
-

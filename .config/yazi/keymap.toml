@@ -152,9 +152,8 @@ keymap = [
     "c",
     "c",
   ], run = [
-    "copy path",
-    "plugin copy-notify path",
-  ], desc = "Copy the file path" },
+    "plugin copy-notify relative",
+  ], desc = "Copy the file path relative to home" },
   { on = [
     "c",
     "d",
