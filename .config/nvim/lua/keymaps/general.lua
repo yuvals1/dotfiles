@@ -44,89 +44,11 @@ vim.keymap.set('n', '<leader>wr', function()
   vim.notify('Wrap: ' .. (vim.wo.wrap and 'on' or 'off'))
 end, { desc = 'Toggle line wrapping' })
 
--- Move by visual lines when wrap is on (instead of actual lines)
 -- This makes j/k behave more intuitively with wrapped lines
 vim.keymap.set({ 'n', 'v' }, 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, desc = 'Move down by visual line' })
 vim.keymap.set({ 'n', 'v' }, 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, desc = 'Move up by visual line' })
 
--- Open Yazi in a full-screen terminal tab and auto-close on exit
-local function open_yazi_tab()
-  if vim.fn.executable('yazi') ~= 1 then
-    vim.notify('yazi not found on PATH', vim.log.levels.ERROR)
-    return
-  end
-
-  local dir
-  local bufname = vim.api.nvim_buf_get_name(0)
-  if bufname ~= '' then
-    dir = vim.fn.fnamemodify(bufname, ':p:h')
-  else
-    dir = vim.loop.cwd()
-  end
-
-  vim.cmd('tabnew')
-  local term_buf = vim.api.nvim_get_current_buf()
-  local chan = vim.fn.termopen('yazi', { cwd = dir })
-  if chan <= 0 then
-    vim.notify('failed to start yazi', vim.log.levels.ERROR)
-    if vim.fn.tabpagenr('$') > 1 then vim.cmd('tabclose') end
-    return
-  end
-  vim.cmd('startinsert')
-
-  vim.api.nvim_create_autocmd('TermClose', {
-    buffer = term_buf,
-    once = true,
-    callback = function()
-      if vim.fn.tabpagenr('$') > 1 then
-        vim.cmd('tabclose')
-      else
-        vim.cmd('bdelete!')
-      end
-    end,
-  })
-end
-
-vim.api.nvim_create_user_command('YaziStandalone', open_yazi_tab, { desc = 'Open Yazi in a terminal tab' })
-vim.keymap.set('n', '-', open_yazi_tab, { desc = 'Open Yazi (terminal tab)' })
-
--- Open Lazygit in a full-screen terminal tab and auto-close on exit
-local function open_lazygit_tab()
-  if vim.fn.executable('lazygit') ~= 1 then
-    vim.notify('lazygit not found on PATH', vim.log.levels.ERROR)
-    return
-  end
-
-  local dir
-  local bufname = vim.api.nvim_buf_get_name(0)
-  if bufname ~= '' then
-    dir = vim.fn.fnamemodify(bufname, ':p:h')
-  else
-    dir = vim.loop.cwd()
-  end
-
-  vim.cmd('tabnew')
-  local term_buf = vim.api.nvim_get_current_buf()
-  local chan = vim.fn.termopen('lazygit', { cwd = dir })
-  if chan <= 0 then
-    vim.notify('failed to start lazygit', vim.log.levels.ERROR)
-    if vim.fn.tabpagenr('$') > 1 then vim.cmd('tabclose') end
-    return
-  end
-  vim.cmd('startinsert')
-
-  vim.api.nvim_create_autocmd('TermClose', {
-    buffer = term_buf,
-    once = true,
-    callback = function()
-      if vim.fn.tabpagenr('$') > 1 then
-        vim.cmd('tabclose')
-      else
-        vim.cmd('bdelete!')
-      end
-    end,
-  })
-end
-
-vim.api.nvim_create_user_command('LazyGitStandalone', open_lazygit_tab, { desc = 'Open Lazygit in a terminal tab' })
-vim.keymap.set('n', '<C-g>', open_lazygit_tab, { desc = 'Lazygit (terminal tab)' })
+-- Terminal-tab launchers (logic extracted to utils/terminal_tabs)
+local termtabs = require('utils.terminal_tabs')
+vim.keymap.set('n', '-', termtabs.open_yazi_tab, { desc = 'Open Yazi (terminal tab)' })
+vim.keymap.set('n', '<C-g>', termtabs.open_lazygit_tab, { desc = 'Lazygit (terminal tab)' })
