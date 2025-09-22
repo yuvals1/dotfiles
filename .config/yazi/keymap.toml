@@ -151,23 +151,38 @@ keymap = [
   { on = [
     "c",
     "c",
-  ], run = "copy path", desc = "Copy the file path" },
+  ], run = [
+    "copy path",
+    "plugin copy-notify path",
+  ], desc = "Copy the file path" },
   { on = [
     "c",
     "d",
-  ], run = "copy dirname", desc = "Copy the directory path" },
+  ], run = [
+    "copy dirname",
+    "plugin copy-notify dirname",
+  ], desc = "Copy the directory path" },
   { on = [
     "c",
     "C",
-  ], run = "copy path", desc = "Copy the full path" },
+  ], run = [
+    "copy path",
+    "plugin copy-notify path",
+  ], desc = "Copy the full path" },
   { on = [
     "c",
     "n",
-  ], run = "copy filename", desc = "Copy the filename" },
+  ], run = [
+    "copy filename",
+    "plugin copy-notify filename",
+  ], desc = "Copy the filename" },
   { on = [
     "c",
     "N",
-  ], run = "copy name_without_ext", desc = "Copy the filename without extension" },
+  ], run = [
+    "copy name_without_ext",
+    "plugin copy-notify name_without_ext",
+  ], desc = "Copy the filename without extension" },
 
   # Filter
   { on = "i", run = "filter --smart", desc = "Filter files" },
