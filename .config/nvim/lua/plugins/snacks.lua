@@ -143,13 +143,7 @@ return {
       end,
       desc = 'Lazygit',
     },
-    {
-      '<c-g>',
-      function()
-        Snacks.lazygit()
-      end,
-      desc = 'Lazygit',
-    },
+    -- '<c-g>' is reserved for standalone terminal-tab lazygit mapping
 
     {
       '<leader>gf',
