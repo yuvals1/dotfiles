@@ -1,7 +1,8 @@
 # Local development builds
 # These aliases point to locally built versions of tools
 
-# alias lazygit='/Users/yuvalspiegel/dev/lazygit/lazygit'
+LAZYGIT_BIN="$HOME/dev/lazygit/lazygit"
+alias lazygit="$LAZYGIT_BIN"
 
 # Define yazi binary path as a variable
 YAZI_BIN="$HOME/dev/yazi/target/release/yazi"
