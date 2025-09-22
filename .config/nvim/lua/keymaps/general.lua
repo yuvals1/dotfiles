@@ -50,5 +50,5 @@ vim.keymap.set({ 'n', 'v' }, 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, de
 
 -- Terminal-tab launchers (logic extracted to utils/terminal_tabs)
 local termtabs = require('utils.terminal_tabs')
-vim.keymap.set('n', '-', termtabs.open_yazi_tab, { desc = 'Open Yazi (terminal tab)' })
+-- vim.keymap.set('n', '-', termtabs.open_yazi_tab, { desc = 'Open Yazi (terminal tab)' })
 vim.keymap.set('n', '<C-g>', termtabs.open_lazygit_tab, { desc = 'Lazygit (terminal tab)' })
