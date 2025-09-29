@@ -19,7 +19,7 @@ function M.setup(languages, setup_highlighting)
       dependencies = { 'williamboman/mason-lspconfig.nvim' },
       event = { 'BufReadPre', 'BufNewFile' },
       config = function()
-        local lspconfig = require 'lspconfig'
+        local server_names = {}
         for server, config in pairs(configs.lsp_servers) do
           local original_on_attach = config.on_attach
           config.on_attach = function(client, bufnr)
@@ -28,7 +28,11 @@ function M.setup(languages, setup_highlighting)
             end
             setup_highlighting(client, bufnr)
           end
-          lspconfig[server].setup(config)
+          vim.lsp.config[server] = config
+          table.insert(server_names, server)
+        end
+        if #server_names > 0 then
+          vim.lsp.enable(server_names)
         end
       end,
     },

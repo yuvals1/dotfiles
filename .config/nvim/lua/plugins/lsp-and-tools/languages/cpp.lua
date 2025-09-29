@@ -14,7 +14,7 @@ return {
         offsetEncoding = { 'utf-16' },
       },
       root_dir = function(fname)
-        return require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', 'Makefile', '.git')(fname)
+        return vim.fs.root(fname, {'compile_commands.json', 'compile_flags.txt', 'Makefile', '.git'})
       end,
     },
   },
