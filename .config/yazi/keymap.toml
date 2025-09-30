@@ -1199,6 +1199,12 @@ on = "<C-l>"
 run = "plugin symlink-jump"
 desc = "Jump to symlink target"
 
+# Rsync operations
+[[mgr.prepend_keymap]]
+on = ["R", "s"]
+run = "plugin rsync"
+desc = "Rsync files (prompts for destination)"
+
 # Sudo operations with R prefix
 [[mgr.prepend_keymap]]
 on = ["R", "d"]
