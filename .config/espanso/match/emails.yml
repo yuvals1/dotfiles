@@ -1,0 +1,6 @@
+# Email shortcuts
+
+matches:
+  - trigger: ":ys1"
+    replace: " yuvalspiegel1@gmail.com"
+    label: "yuvalspiegel1"
