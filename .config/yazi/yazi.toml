@@ -67,7 +67,7 @@ hexyl = [
   { run = 'hexyl %1 | more', block = true, desc = "View with hexyl", for = "windows" },
 ]
 visidata = [
-  { run = 'vd "$@"', desc = "Open in VisiData", block = true, for = "unix" },
+  { run = '''env PYTHONPATH="$HOME/dev/visidata" "$HOME/dev/visidata/bin/vd" "$@"''', desc = "Open in VisiData", block = true, for = "unix" },
 ]
 
 
