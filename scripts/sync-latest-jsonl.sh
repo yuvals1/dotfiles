@@ -1,16 +1,26 @@
 #!/bin/bash
 
-# Usage: sync-latest-jsonl.sh <source_remote:path> <dest_remote:path>
+# Usage: sync-latest-jsonl.sh <source_remote:path> <dest_remote:path> [-r]
 # Example: sync-latest-jsonl.sh jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono
+# Example with reverse: sync-latest-jsonl.sh jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono -r
 
-if [ $# -ne 2 ]; then
-    echo "Usage: $0 <source_remote:path> <dest_remote:path>"
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    echo "Usage: $0 <source_remote:path> <dest_remote:path> [-r]"
+    echo "  -r: reverse source and destination"
     echo "Example: $0 jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono"
     exit 1
 fi
 
 SOURCE="$1"
 DEST="$2"
+
+# Check for -r flag
+if [ $# -eq 3 ] && [ "$3" = "-r" ]; then
+    echo "Reversing source and destination..."
+    TEMP="$SOURCE"
+    SOURCE="$DEST"
+    DEST="$TEMP"
+fi
 
 # Find the most recent .jsonl file in the source directory
 echo "Finding most recent .jsonl file in $SOURCE..."
