@@ -131,10 +131,19 @@ cpc() {
 
 # Clipboard-related functions
 yank-line-to-clipboard() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  # Try OSC 52 first (works over SSH)
+  if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+    # Use OSC 52 for remote sessions
+    printf "\033]52;c;$(printf "%s" "$BUFFER" | base64 | tr -d '\n')\a"
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
     echo "$BUFFER" | pbcopy
   elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    echo "$BUFFER" | xclip -selection clipboard
+    if command -v xclip &> /dev/null; then
+      echo "$BUFFER" | xclip -selection clipboard
+    else
+      # Fallback to OSC 52
+      printf "\033]52;c;$(printf "%s" "$BUFFER" | base64 | tr -d '\n')\a"
+    fi
   elif [[ "$OSTYPE" == "cygwin" ]]; then
     echo "$BUFFER" > /dev/clipboard
   else
@@ -165,19 +174,6 @@ rename_hyphens_to_underscores() {
 }
 
 alias rhu='rename_hyphens_to_underscores'
-
-
-function yank-line-to-clipboard() {
-    if [[ "$(uname)" = "Darwin" ]]; then
-        # On macOS, use pbcopy directly
-        echo "$BUFFER" | pbcopy
-    else
-        # On remote systems, use netcat to clipper
-        echo "$BUFFER" | nc -N localhost 8377
-    fi
-    LBUFFER+=$'\n'
-    zle -M "Current line yanked to clipboard"
-}
 
 
 # Search file contents using ripgrep and fzf
