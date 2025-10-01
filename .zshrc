@@ -64,3 +64,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
         nohup swift ~/.config/sketchybar/helpers/input_source_monitor.swift > /dev/null 2>&1 &
     fi
 fi
+
+# Lazygit config: use SSH config with clipper when in SSH session
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    alias lazygit='lazygit --use-config-file $HOME/.config/lazygit/config.ssh.yml'
+    alias lg='lazygit --use-config-file $HOME/.config/lazygit/config.ssh.yml'
+fi
