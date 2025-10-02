@@ -65,8 +65,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
     fi
 fi
 
-# Lazygit config: use SSH config with clipper when in SSH session
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    alias lazygit='lazygit --use-config-file $HOME/.config/lazygit/config.ssh.yml'
-    alias lg='lazygit --use-config-file $HOME/.config/lazygit/config.ssh.yml'
-fi
+
+export PATH="$PATH:$HOME/robopilot/docker/jetson/jetson_rootfs_overlay/home/jetson/"
+
+# Docker registry for reload-main.sh script
+export DOCKER_REGISTRY="localhost:5000"
+export HOME_DIR="$HOME"
+

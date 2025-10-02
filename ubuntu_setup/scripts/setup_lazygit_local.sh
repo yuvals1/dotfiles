@@ -23,9 +23,6 @@ run_setup_lazygit_local() {
     go build -o lazygit || error "go build failed"
 
     # Install binary directly
-    sudo cp lazygit /usr/local/bin/lazygit || error "Failed to install lazygit"
-    sudo chmod +x /usr/local/bin/lazygit
-
     popd >/dev/null
 
     success "Local Lazygit setup complete (branch 'yuval')."
