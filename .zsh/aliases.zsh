@@ -64,3 +64,6 @@ alias yp='y ~/personal'
 alias yc='y ~/personal/calendar/days/'
 alias yd='y ~/dotfiles'
 
+# Sync latest jsonl between remote hosts
+alias sync-jsonl='~/dotfiles/scripts/sync-latest-jsonl.sh'
+
