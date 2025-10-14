@@ -104,3 +104,6 @@ matches:
 
   - trigger: ":ic"
     replace: " i'm confused"
+
+  - trigger: ":st"
+    replace: " start from the beginning"
