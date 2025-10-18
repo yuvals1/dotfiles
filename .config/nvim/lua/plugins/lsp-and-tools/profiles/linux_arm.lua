@@ -21,7 +21,27 @@ return {
           offsetEncoding = { 'utf-16' },
         },
         root_dir = function(fname)
-          return require('lspconfig.util').root_pattern('compile_commands.json', 'compile_flags.txt', 'Makefile', '.git')(fname)
+          if type(fname) == 'number' then
+            fname = vim.api.nvim_buf_get_name(fname)
+          end
+          local markers = { 'compile_commands.json', 'compile_flags.txt', 'Makefile', '.git' }
+          local dir
+          if not fname or fname == '' then
+            dir = vim.loop.cwd()
+          else
+            local stat = vim.uv.fs_stat(fname)
+            if stat and stat.type == 'directory' then
+              dir = fname
+            else
+              dir = vim.fs.dirname(fname)
+            end
+          end
+          dir = dir or vim.loop.cwd()
+          local match = vim.fs.find(markers, { path = dir, upward = true })[1]
+          if match then
+            return vim.fs.dirname(match)
+          end
+          return dir
         end,
       },
     },

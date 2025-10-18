@@ -1,24 +1,13 @@
 -- init.lua
+local language_utils = require 'plugins.lsp-and-tools.language_utils'
 local M = {}
 
--- Require the highlight module
-local highlight = require 'plugins.lsp-and-tools.highlight'
-
--- Set a lower updatetime
 vim.opt.updatetime = 500
-
--- Function to set up highlighting for each language server
-local function setup_highlighting(client, bufnr)
-  if client.server_capabilities.documentHighlightProvider then
-    highlight.setup { buf = bufnr }
-  end
-end
 
 local function build_plugins(languages)
   return {
     require('plugins.lsp-and-tools.mason').setup(languages),
     require('plugins.lsp-and-tools.mason-tool-installer').setup(languages),
-    require('plugins.lsp-and-tools.lspconfig').setup(languages, setup_highlighting),
     require('plugins.lsp-and-tools.conform').setup(languages),
     require('plugins.lsp-and-tools.lint').setup(languages),
     require('plugins.lsp-and-tools.keymaps').setup(),
@@ -54,5 +43,8 @@ elseif profile == 'linux_arm' then
 else
   languages = require 'plugins.lsp-and-tools.profiles.default'
 end
+
+local configs = language_utils.collect_configurations(languages)
+require('plugins.lsp-and-tools.native').setup(configs)
 
 return build_plugins(languages)

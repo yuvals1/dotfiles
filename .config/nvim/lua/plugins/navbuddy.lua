@@ -45,7 +45,6 @@ return {
     custom_hl_group = nil,
   },
   dependencies = {
-    'neovim/nvim-lspconfig',
     'SmiteshP/nvim-navic',
     'MunifTanjim/nui.nvim',
     'numToStr/Comment.nvim',
