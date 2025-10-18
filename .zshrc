@@ -69,6 +69,5 @@ fi
 export PATH="$PATH:$HOME/robopilot/docker/jetson/jetson_rootfs_overlay/home/jetson/"
 
 # Docker registry for reload-main.sh script
-export DOCKER_REGISTRY="localhost:5000"
 export HOME_DIR="$HOME"
 
