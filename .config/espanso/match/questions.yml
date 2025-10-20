@@ -24,3 +24,7 @@ matches:
   - trigger: ":lmu"
     replace: " let me tell you what I understand so far"
     label: "let me tell you what I understand so far"
+
+  - trigger: ":aq"
+    replace: " ask me the questions in interactive mode"
+    label: "ask me the questions in interactive mode"
