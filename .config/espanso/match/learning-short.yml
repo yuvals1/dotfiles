@@ -52,20 +52,20 @@ matches:
     label: "too fast and too big"
 
   - trigger: ":xx"
-    replace: " consult with codex"
-    label: "consult with codex"
+    replace: " consult with codex mcp"
+    label: "consult with codex mcp"
 
   - trigger: ":xp"
     replace: " i want to ask another llm and provide you with its response. please provide me with a prompt to use"
     label: "external prompt request"
 
   - trigger: ":xv"
-    replace: " verify with codex"
-    label: "verify with codex"
+    replace: " verify with codex mcp"
+    label: "verify with codex mcp"
 
   - trigger: ":xj"
-    replace: " i want to ask codex (llm) to do it. please provide me with a prompt to give him"
-    label: "codex task prompt"
+    replace: " i want to ask codex mcp (llm) to do it. please provide me with a prompt to give him"
+    label: "codex mcp task prompt"
 
   - trigger: ":idw"
     replace: " i don't want"
