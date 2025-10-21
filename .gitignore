@@ -16,3 +16,4 @@ __pycache__/
 .config/gh/hosts.yml
 **/.claude/
 helper.md
+tmp/
