@@ -28,3 +28,7 @@ matches:
   - trigger: ":aq"
     replace: " ask me the questions in interactive mode"
     label: "ask me the questions in interactive mode"
+
+  - trigger: ":dm"
+    replace: " do you understand what i mean"
+    label: "do you understand what i mean"
