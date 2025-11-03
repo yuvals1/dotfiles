@@ -231,9 +231,7 @@ function M.setup(configs)
       merged.root_markers = nil
     end
     vim.lsp.config[server] = merged
-    if not vim.lsp.is_enabled(server) then
-      vim.lsp.enable(server)
-    end
+    vim.lsp.enable(server)
   end
 end
 
