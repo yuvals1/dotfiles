@@ -27,3 +27,7 @@ matches:
 
   - trigger: ":talkabout"
     replace: " let's talk about it. ill tell what i understand."
+
+  - trigger: ":hate"
+    replace: " i hate when you throw everything at my face! explain it slowly and in small steps. dont move to next step until i approve"
+    label: "hate when you throw everything - explain slowly"
