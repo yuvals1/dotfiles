@@ -15,12 +15,12 @@ run_setup_python_tools() {
 
     python3 -m pip install --user --upgrade pip
 
-    # Install uv
+    # Install uv using official installer (ensures correct architecture)
     if command_exists uv; then
         exists "uv already installed"
     else
         log "Installing uv..."
-        python3 -m pip install --user uv || error "Failed to install uv"
+        curl -LsSf https://astral.sh/uv/install.sh | sh || error "Failed to install uv"
     fi
 
     # Install black
