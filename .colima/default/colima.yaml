@@ -6,7 +6,7 @@ cpu: 2
 # NOTE: value can only be increased after virtual machine has been created.
 #
 # Default: 100
-disk: 250
+disk: 100
 
 # Size of the memory in GiB to be allocated to the virtual machine.
 # Default: 2
@@ -27,22 +27,23 @@ runtime: docker
 # Set custom hostname for the virtual machine.
 # Default: colima
 #          colima-profile_name for other profiles
-hostname: colima
+hostname: ""
 
 # Kubernetes configuration for the virtual machine.
 kubernetes:
   # Enable kubernetes.
   # Default: false
   enabled: false
-  
+
   # Kubernetes version to use.
   # This needs to exactly match a k3s version https://github.com/k3s-io/k3s/releases
   # Default: latest stable release
   version: v1.33.3+k3s1
-  
+
   # Additional args to pass to k3s https://docs.k3s.io/cli/server
   # Default: traefik is disabled
-  k3sArgs: []
+  k3sArgs:
+    - --disable=traefik
 
 # Auto-activate on the Host for client access.
 # Setting to true does the following on startup
@@ -57,8 +58,8 @@ network:
   # Assign reachable IP address to the virtual machine.
   # NOTE: this is currently macOS only and ignored on Linux.
   # Default: false
-  address: false
-  
+  address: true
+
   # Custom DNS resolvers for the virtual machine.
   #
   # EXAMPLE
@@ -66,7 +67,7 @@ network:
   #
   # Default: []
   dns: []
-  
+
   # DNS hostnames to resolve to custom targets using the internal resolver.
   # This setting has no effect if a custom DNS resolver list is supplied above.
   # It does not configure the /etc/hosts files of any machine or container.
@@ -78,7 +79,7 @@ network:
   dnsHosts:
     office-comp-srv: 10.0.0.150
     treex-docker-registry: 51.16.176.240
-  
+
   # Replicate host IP addresses in the VM. This enables port forwarding to specific
   # host IP addresses.
   #   e.g. `docker run --port 10.0.1.2:8080:8080 alpine` would only forward to the
@@ -124,7 +125,7 @@ docker:
 #
 # NOTE: value cannot be changed after virtual machine is created.
 # Default: qemu
-vmType: qemu
+vmType: vz
 
 # Utilise rosetta for amd64 emulation (requires m1 mac and vmType `vz`)
 # Default: false
@@ -178,10 +179,7 @@ cpuType: ""
 #       touch ~/.provision
 #
 # Default: []
-provision:
-  - mode: system
-    script: |
-      grep -q "treex-docker-registry" /etc/hosts || echo "51.16.176.240 treex-docker-registry" >> /etc/hosts
+provision: []
 
 # Modify ~/.ssh/config automatically to include a SSH config for the virtual machine.
 # SSH config will still be generated in $COLIMA_HOME/ssh_config regardless.
