@@ -67,6 +67,10 @@ matches:
     replace: " i want to ask codex mcp (llm) to do it. please provide me with a prompt to give him"
     label: "codex mcp task prompt"
 
+  - trigger: ":xm"
+    replace: " remember codex mcp is memoryless and doesnt have the previous contexts"
+    label: "codex mcp is memoryless"
+
   - trigger: ":idw"
     replace: " i don't want"
     label: "i dont want"
