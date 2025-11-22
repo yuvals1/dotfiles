@@ -15,6 +15,7 @@ alias glt="python3 ~/dotfiles/scripts/time-calc.py"
 alias zqi="zoxide query -i"
 # [[ -f ~/dev/lazygit/lazygit ]] && alias lazygit="~/dev/lazygit/lazygit"
 alias gdn='git diff --name-only'
+alias gdm='gd main --diff-filter=M'
 alias s='pbpaste | say'
 alias s1='pbpaste | say -r 150'
 alias s2='pbpaste | say -r 180'

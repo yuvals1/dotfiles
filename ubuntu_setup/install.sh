@@ -81,13 +81,15 @@ main() {
 	"run_install_csvq"
         "run_setup_visidata_local"
         # "run_install_visidata"
-	"run_install_nushell"
 	"run_install_exiftool"
 	"run_install_ouch"
 	"run_install_hexyl"
         "run_setup_fzf"
         "run_setup_python_tools"
         "run_setup_locales"
+        	"run_install_nushell"
+
+
     )
 
     local total=${#steps[@]}
