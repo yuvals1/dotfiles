@@ -12,13 +12,12 @@ function M.setup(languages)
     opts = {
       ensure_installed = configs.tools,
       auto_update = false,
-      run_on_start = false, -- do not auto-install on startup
+      run_on_start = false, -- do not auto-install on startup to avoid repeated failures
     },
     config = function(_, opts)
       require('mason-tool-installer').setup(opts)
-      -- No automatic update/clean on startup to avoid noisy failures on
-      -- unsupported platforms or missing toolchains. Use the commands
-      -- :MasonToolsInstall, :MasonToolsUpdate, :MasonToolsClean manually.
+      -- Use :MasonToolsInstall to install tools manually when needed.
+      -- This avoids repeated installation failures on startup.
     end,
   }
 end

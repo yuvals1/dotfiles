@@ -25,7 +25,10 @@ function M.setup(languages)
       vim.api.nvim_create_autocmd({ 'BufWritePost', 'BufEnter', 'InsertLeave' }, {
         group = lint_augroup,
         callback = function()
-          lint.try_lint()
+          -- Safely try to lint, suppressing errors from missing linters
+          pcall(function()
+            lint.try_lint()
+          end)
         end,
       })
     end,
