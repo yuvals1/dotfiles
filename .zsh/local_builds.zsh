@@ -4,12 +4,14 @@
 LAZYGIT_BIN="$HOME/dev/lazygit/lazygit"
 alias lazygit="$LAZYGIT_BIN"
 alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
+alias l='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 
 
 # Lazygit config: use SSH config with clipper when in SSH session
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
     alias lazygit="$LAZYGIT_BIN --use-config-file $HOME/.config/lazygit/config.ssh.yml"
     alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.ssh.yml"'
+    alias l='lazygit --use-config-file="$HOME/.config/lazygit/config.ssh.yml"'
 fi
 
 
