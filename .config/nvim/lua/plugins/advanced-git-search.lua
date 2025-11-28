@@ -5,7 +5,11 @@ return {
     require('telescope').setup {
       extensions = {
         advanced_git_search = {
-          -- You can add custom configuration options here if needed
+          diff_plugin = 'fugitive',
+          git_flags = { '-c', 'delta.side-by-side=false' },
+          git_diff_flags = {},
+          show_builtin_git_pickers = false,
+          entry_default_author_or_date = 'date', -- show date instead of author
         },
       },
     }
