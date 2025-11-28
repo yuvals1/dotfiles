@@ -29,6 +29,10 @@ matches:
     replace: " ask me the questions in interactive mode"
     label: "ask me the questions in interactive mode"
 
+  - trigger: ":aw"
+    replace: " ask me questions in interactive mode to make sure we see eye to eye"
+    label: "ask me questions in interactive mode to make sure we see eye to eye"
+
   - trigger: ":dm"
     replace: " do you understand what i mean"
     label: "do you understand what i mean"
