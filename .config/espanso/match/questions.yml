@@ -33,6 +33,11 @@ matches:
     replace: " ask me questions in interactive mode to make sure we see eye to eye"
     label: "ask me questions in interactive mode to make sure we see eye to eye"
 
+  - trigger: ":ae"
+    replace: " if you have questions or want to verify things, ask me in interactive mode"
+    label: "if you have questions or want to verify things, ask me in interactive mode"
+
   - trigger: ":dm"
     replace: " do you understand what i mean"
     label: "do you understand what i mean"
+

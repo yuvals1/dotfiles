@@ -19,6 +19,14 @@ matches:
     replace: " i don't understand"
     label: "i dont understand"
 
+  - trigger: ":idd"
+    replace: " i didn't understand"
+    label: "i didn't understand"
+
+  - trigger: ":ids"
+    replace: " i don't see"
+    label: "i don't see"
+
   - trigger: ":idm"
     replace: " i don't understand. start from the motivation"
     label: "i dont understand motivation"
