@@ -1,7 +1,7 @@
 # Short learning snippets (under 30 characters)
 
 matches:
-  - trigger: ":cn"
+  - trigger: ":cnn"
     replace: " continue"
 
   - trigger: ":sl0"
@@ -26,6 +26,10 @@ matches:
   - trigger: ":ids"
     replace: " i don't see"
     label: "i don't see"
+
+  - trigger: ":idk"
+    replace: " i don't know"
+    label: "i don't know"
 
   - trigger: ":idm"
     replace: " i don't understand. start from the motivation"
