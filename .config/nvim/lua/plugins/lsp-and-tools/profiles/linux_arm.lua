@@ -20,33 +20,27 @@ return {
         capabilities = {
           offsetEncoding = { 'utf-16' },
         },
-        root_dir = function(fname)
-          if type(fname) == 'number' then
-            fname = vim.api.nvim_buf_get_name(fname)
-          end
+        -- root_dir uses Neovim 0.11 callback style: function(bufnr, on_dir)
+        root_dir = function(bufnr, on_dir)
           local markers = { 'compile_commands.json', 'compile_flags.txt', 'Makefile', '.git' }
-          local dir
-          if not fname or fname == '' then
-            dir = vim.loop.cwd()
+          local root = vim.fs.root(bufnr, markers)
+          if root then
+            on_dir(root)
           else
-            local stat = vim.uv.fs_stat(fname)
-            if stat and stat.type == 'directory' then
-              dir = fname
+            -- Fallback to buffer directory
+            local bufname = vim.api.nvim_buf_get_name(bufnr)
+            if bufname and bufname ~= '' then
+              on_dir(vim.fs.dirname(bufname))
             else
-              dir = vim.fs.dirname(fname)
+              on_dir(vim.uv.cwd())
             end
           end
-          dir = dir or vim.loop.cwd()
-          local match = vim.fs.find(markers, { path = dir, upward = true })[1]
-          if match then
-            return vim.fs.dirname(match)
-          end
-          return dir
         end,
       },
     },
     formatters = {
       cpp = { 'clang-format' },
+      c = { 'clang-format' },
     },
   },
   {
