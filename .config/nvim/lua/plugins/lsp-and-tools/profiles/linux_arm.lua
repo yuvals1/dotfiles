@@ -1,7 +1,11 @@
 -- linux_arm.lua
 -- Targeted profile for ARM Ubuntu with Lua, Python, JavaScript, Svelte, and C++ tooling.
 return {
-  require 'plugins.lsp-and-tools.languages.python',
+  -- Python: only pyright LSP, skip black/isort/mypy (fail to build on ARM)
+  {
+    mason = { 'pyright' },
+    lsp = { pyright = {} },
+  },
   require 'plugins.lsp-and-tools.languages.javascript',
   require 'plugins.lsp-and-tools.languages.svelte',
   -- Custom C++ config for ARM - use system clangd instead of Mason

@@ -7,8 +7,8 @@ function M.setup(languages)
   return {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     dependencies = { 'williamboman/mason.nvim' },
-    event = { 'BufReadPre', 'BufNewFile' },
-    cmd = { 'MasonToolsInstall', 'MasonToolsUpdate', 'MasonToolsClean' },
+    -- Load on startup so run_on_start actually works on new machines
+    lazy = false,
     opts = {
       ensure_installed = configs.tools,
       auto_update = false,
