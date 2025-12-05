@@ -1,5 +1,12 @@
 require 'env.node'
 
+-- Add Mason bin to PATH early, before LSP servers are enabled
+-- This ensures vim.lsp.enable() can find Mason-installed language servers
+local mason_bin = vim.fn.stdpath 'data' .. '/mason/bin'
+if not vim.env.PATH:find(mason_bin, 1, true) then
+  vim.env.PATH = mason_bin .. ':' .. vim.env.PATH
+end
+
 local function require_all(directory)
   local config_path = vim.fn.stdpath 'config'
   local lua_pattern = config_path .. '/lua/' .. directory .. '/*.lua'

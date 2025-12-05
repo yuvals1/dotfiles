@@ -5,12 +5,14 @@ local M = {}
 vim.opt.updatetime = 500
 
 local function build_plugins(languages)
+  -- Set up LSP keymaps (creates LspAttach autocmd, doesn't return a plugin spec)
+  require('plugins.lsp-and-tools.keymaps').setup()
+
   return {
     require('plugins.lsp-and-tools.mason').setup(languages),
     require('plugins.lsp-and-tools.mason-tool-installer').setup(languages),
     require('plugins.lsp-and-tools.conform').setup(languages),
     require('plugins.lsp-and-tools.lint').setup(languages),
-    require('plugins.lsp-and-tools.keymaps').setup(),
   }
 end
 
