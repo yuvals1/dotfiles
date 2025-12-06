@@ -12,7 +12,7 @@ return {
   opts = {
     keywords = {
       DEBUG = { icon = '󰍉', color = '#FF00FF', alt = { 'DEBUGGING', 'DBUG' } },
-      WORK = { icon = '🏢', color = '#4A90E2', alt = { 'JOB', 'TASK' } },
+      -- WORK = { icon = '🏢', color = '#4A90E2', alt = { 'JOB', 'TASK' } },
       LEARNING = { icon = '📚', color = '#FF00FF', alt = { 'STUDY', 'READ' } },
       MEETING = { icon = '🤝', color = '#9B59B6', alt = { 'MEET', 'APPOINTMENT' } },
       BREAK_TIME = { icon = '☕', color = '#2ECC71', alt = { 'REST', 'PAUSE' } },
