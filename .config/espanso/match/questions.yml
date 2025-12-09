@@ -37,6 +37,10 @@ matches:
     replace: " if you have questions or want to verify things, ask me in interactive mode"
     label: "if you have questions or want to verify things, ask me in interactive mode"
 
+  - trigger: ":as"
+    replace: " please plan your implementation in detail and then ask me questions in interactive mode to make sure we see eye to eye"
+    label: "plan implementation then ask questions"
+
   - trigger: ":dm"
     replace: " do you understand what i mean"
     label: "do you understand what i mean"
