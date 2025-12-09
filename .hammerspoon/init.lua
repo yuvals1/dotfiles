@@ -38,22 +38,8 @@ local function createChromeEventtap()
 		
 		-- Only process if we're in Chrome
 		if app and app:name() == "Google Chrome" then
-			-- Check for Cmd+S (keyCode 1 is 's')
-			if flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 1 then
-				hs.mouse.absolutePosition({ x = 2470, y = 644 })
-				hs.timer.doAfter(0.2, function()
-					forceClick()
-				end)
-				return true -- Consume the event
-			-- Check for Cmd+F (keyCode 3 is 'f')
-			elseif flags.cmd and not flags.shift and not flags.alt and not flags.ctrl and keyCode == 3 then
-				hs.mouse.absolutePosition({ x = 2494, y = 645 })
-				hs.timer.doAfter(0.2, function()
-					forceClick()
-				end)
-				return true -- Consume the event
 			-- Check for Ctrl+V (keyCode 9 is 'v')
-			elseif flags.ctrl and not flags.shift and not flags.alt and not flags.cmd and keyCode == 9 then
+			if flags.ctrl and not flags.shift and not flags.alt and not flags.cmd and keyCode == 9 then
 				hs.mouse.absolutePosition({ x = 1074, y = 605 })
 				hs.timer.doAfter(0.2, function()
 					forceClick()
