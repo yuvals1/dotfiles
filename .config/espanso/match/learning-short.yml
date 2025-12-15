@@ -83,6 +83,10 @@ matches:
     replace: " remember codex mcp is memoryless and doesnt have the previous contexts"
     label: "codex mcp is memoryless"
 
+  - trigger: ":xz"
+    replace: " ask codex mcp to investigate it as well and let's see if he reaches similar conclusion and similar fix suggestions. don't reveal your conclusions and suggestions to him in order to keep him unbiased. tell him the relevant observations we saw and tell him to read the code and understand"
+    label: "codex mcp unbiased investigation"
+
   - trigger: ":idw"
     replace: " i don't want"
     label: "i dont want"
