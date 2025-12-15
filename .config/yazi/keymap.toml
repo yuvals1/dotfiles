@@ -185,8 +185,8 @@ keymap = [
 
   # Filter
   { on = "i", run = "filter --smart", desc = "Filter files" },
-  { on = "I", run = "filter --smart --deep --levels=4", desc = "Filter files (deep)" },
-  { on = "s", run = "filter --smart --deep --levels=4", desc = "Filter files (deep)" },
+  # { on = "I", run = "filter --smart --deep --levels=4", desc = "Filter files (deep)" },
+  { on = "s", run = "filter --smart --deep --levels=5", desc = "Filter files (deep)" },
   # Find
   { on = "/", run = "find --smart", desc = "Find next file" },
   { on = "?", run = "find --previous --smart", desc = "Find previous file" },
