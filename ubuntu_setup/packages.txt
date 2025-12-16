@@ -10,6 +10,7 @@ lsb-release
 stow
 libsqlite3-dev
 sqlite3
+htop
 
 # Python (needed for Mason to install black, isort, mypy, etc.)
 python3-pip
