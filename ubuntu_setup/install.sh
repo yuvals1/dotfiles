@@ -141,6 +141,9 @@ main() {
     log "To finish setup, please run:"
     echo "    source ~/.zshrc"
     echo ""
+    echo "    git config --global user.name \"Jetson x\" && git config --global user.email \"jetsonx@treex-robotics.com\""
+    echo "    gh auth login (via ssh)"
+    echo ""
 }
 
 main
