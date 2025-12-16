@@ -11,5 +11,12 @@ stow
 libsqlite3-dev
 sqlite3
 
+# Python (needed for Mason to install black, isort, mypy, etc.)
+python3-pip
+python3-venv
+
+# Lua (needed for Mason to install luacheck)
+luarocks
+
 # Add other packages as needed...
 
