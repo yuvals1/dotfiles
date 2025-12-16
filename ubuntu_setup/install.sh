@@ -139,6 +139,7 @@ main() {
     echo "==========================="
     
     log "To finish setup, please run:"
+    echo "    cd ~/dotfiles && stow --adopt ."
     echo "    source ~/.zshrc"
     echo ""
     echo "    git config --global user.name \"Jetson x\" && git config --global user.email \"jetsonx@treex-robotics.com\""
