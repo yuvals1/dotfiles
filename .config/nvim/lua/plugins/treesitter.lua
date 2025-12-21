@@ -8,6 +8,7 @@ local parsers = {
 
 return {
   'nvim-treesitter/nvim-treesitter',
+  branch = 'master',  -- Use old API with prebuilt parsers (works on all platforms)
   lazy = false,
   build = ':TSUpdate',
   config = function()
@@ -15,23 +16,11 @@ return {
     vim.treesitter.language.register('ruby', 'conf')
     vim.treesitter.language.register('ruby', 'cfg')
 
-    local ts = require('nvim-treesitter')
-
-    if type(ts.install) == 'function' then
-      -- New API
-      ts.setup({})
-      ts.install(parsers)
-      vim.api.nvim_create_autocmd('FileType', {
-        callback = function() pcall(vim.treesitter.start) end,
-      })
-    else
-      -- Old API
-      require('nvim-treesitter.configs').setup({
-        ensure_installed = parsers,
-        auto_install = true,
-        highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
-        indent = { enable = true, disable = { 'ruby' } },
-      })
-    end
+    require('nvim-treesitter.configs').setup({
+      ensure_installed = parsers,
+      auto_install = true,
+      highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby' } },
+    })
   end,
 }
