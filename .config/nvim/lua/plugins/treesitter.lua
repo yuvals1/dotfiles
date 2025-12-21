@@ -64,5 +64,8 @@ return {
     vim.treesitter.language.register('ruby', 'conf')
     vim.treesitter.language.register('ruby', 'cfg')
     require('nvim-treesitter').setup(opts)
+
+    -- Ensure highlighting is enabled
+    vim.cmd('TSEnable highlight')
   end,
 }
