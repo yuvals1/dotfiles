@@ -1,18 +1,16 @@
 return {
   'nvim-treesitter/nvim-treesitter',
-  event = { 'BufReadPost', 'BufNewFile' },
+  lazy = false,
   build = ':TSUpdate',
-  opts = {
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        -- init_selection = '<C-space>',
-        -- node_incremental = '<C-space>',
-        -- scope_incremental = false,
-        -- node_decremental = '<bs>',
-      },
-    },
-    ensure_installed = {
+  config = function()
+    vim.treesitter.language.register('bash', 'zsh')
+    vim.treesitter.language.register('ruby', 'conf')
+    vim.treesitter.language.register('ruby', 'cfg')
+
+    require('nvim-treesitter').setup({})
+
+    -- Install parsers
+    require('nvim-treesitter').install({
       'bash',
       'c',
       'diff',
@@ -51,21 +49,13 @@ return {
       'r',
       'clojure',
       'pascal',
-    },
-    auto_install = true,
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = { 'ruby' },
-    },
-    indent = { enable = true, disable = { 'ruby' } },
-  },
-  config = function(_, opts)
-    vim.treesitter.language.register('bash', 'zsh')
-    vim.treesitter.language.register('ruby', 'conf')
-    vim.treesitter.language.register('ruby', 'cfg')
-    require('nvim-treesitter').setup(opts)
+    })
 
-    -- Ensure highlighting is enabled
-    vim.cmd('TSEnable highlight')
+    -- Enable treesitter highlighting for all filetypes
+    vim.api.nvim_create_autocmd('FileType', {
+      callback = function()
+        pcall(vim.treesitter.start)
+      end,
+    })
   end,
 }
