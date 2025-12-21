@@ -48,12 +48,8 @@ return {
     },
   },
   {
-    mason = { 'lua-language-server', 'stylua' },
-    lsp = {
-      lua_ls = {
-        settings = { Lua = { diagnostics = { globals = { 'vim' } } } },
-      },
-    },
+    -- lua-language-server Mason binary doesn't work on ARM (missing shared libs)
+    mason = { 'stylua' },
     formatters = { lua = { 'stylua' } },
   },
 }
