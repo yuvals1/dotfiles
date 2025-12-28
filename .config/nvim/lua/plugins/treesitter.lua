@@ -8,34 +8,20 @@ local parsers = {
 
 return {
   'nvim-treesitter/nvim-treesitter',
-  branch = 'main',
+  branch = 'master',
+  pin = true,
   lazy = false,
   build = ':TSUpdate',
   config = function()
-    -- Add runtime/queries to runtimepath for query files
-    local plugin_path = vim.fn.stdpath('data') .. '/lazy/nvim-treesitter'
-    vim.opt.runtimepath:prepend(plugin_path .. '/runtime')
-
     vim.treesitter.language.register('bash', 'zsh')
     vim.treesitter.language.register('ruby', 'conf')
     vim.treesitter.language.register('ruby', 'cfg')
 
-    -- Enable treesitter highlighting and indentation for all filetypes
-    vim.api.nvim_create_autocmd('FileType', {
-      callback = function()
-        local ok = pcall(vim.treesitter.start)
-        if ok then
-          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end
-      end,
-    })
-
-    -- Ruby needs additional regex highlighting
-    vim.api.nvim_create_autocmd('FileType', {
-      pattern = 'ruby',
-      callback = function()
-        vim.bo.syntax = 'on'
-      end,
+    require('nvim-treesitter.configs').setup({
+      ensure_installed = parsers,
+      auto_install = true,
+      highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby' } },
     })
   end,
 }
