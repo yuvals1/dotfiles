@@ -10,9 +10,7 @@ return {
   'nvim-treesitter/nvim-treesitter',
   branch = 'main',
   lazy = false,
-  build = function()
-    require('nvim-treesitter').install(parsers)
-  end,
+  build = ':TSUpdate',
   config = function()
     -- Add runtime/queries to runtimepath for query files
     local plugin_path = vim.fn.stdpath('data') .. '/lazy/nvim-treesitter'
