@@ -94,12 +94,6 @@ autoReloadTimer = hs.timer.doEvery(60, function()
 	hs.reload()
 end)
 
--- Reload Sketchybar
-hs.hotkey.bind({ "cmd", "shift" }, "b", function()
-	hs.task.new("/bin/bash", nil, { "-c", "sketchybar --reload" }):start()
-	hs.alert.show("Sketchybar reloaded")
-end)
-
 -- STOPWATCH KEYBINDINGS
 -- Start/stop stopwatch (Alt+N)
 hs.hotkey.bind({ "alt" }, "N", function()
