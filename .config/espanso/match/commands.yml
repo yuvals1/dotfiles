@@ -8,3 +8,7 @@ matches:
   - trigger: ":fixc"
     replace: "Resolve the current git merge conflicts. For each conflicted file, inspect all three stages (git show :1:path :2:path :3:path) and check recent commits on both HEAD and MERGE_HEAD to understand intent. Apply clean edits with no conflict markers remaining, then recommend tests based on files touched."
     label: "fix merge conflicts prompt"
+
+  - trigger: ":fc"
+    replace: " fast commit"
+    label: "fast commit"

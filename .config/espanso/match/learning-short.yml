@@ -118,6 +118,10 @@ matches:
     replace: " if it's complex do it slowly step after step with verifications for each step"
     label: "step by step with verification"
 
+  - trigger: ":vv"
+    replace: " please be more verbose about what you're doing and what you're seeing"
+    label: "be more verbose"
+
   - trigger: ":conf"
     replace: " i'm still confused about the exact technicalities"
     label: "confused about technicalities"
