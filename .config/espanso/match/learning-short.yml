@@ -122,6 +122,10 @@ matches:
     replace: " please be more verbose about what you're doing and what you're seeing"
     label: "be more verbose"
 
+  - trigger: ":bfv"
+    replace: " be fucking verbose!!!!!!!!!!!!"
+    label: "be fucking verbose"
+
   - trigger: ":conf"
     replace: " i'm still confused about the exact technicalities"
     label: "confused about technicalities"
