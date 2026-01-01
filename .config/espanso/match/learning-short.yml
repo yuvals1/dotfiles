@@ -131,3 +131,7 @@ matches:
 
   - trigger: ":st"
     replace: " start from the beginning"
+
+  - trigger: ":ra"
+    replace: " read again!!! investigate deeply and dont stop until you really understand how the system works"
+    label: "read again investigate deeply"
