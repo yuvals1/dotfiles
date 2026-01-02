@@ -5,7 +5,7 @@ return {
   },
   event = 'VeryLazy',
   keys = {
-    { '<leader>tt', '<cmd>TSContextToggle<CR>', desc = 'Toggle Treesitter Context' },
+    { '<leader>tt', '<cmd>TSContext toggle<CR>', desc = 'Toggle Treesitter Context' },
   },
   opts = {
     enable = true,
@@ -16,7 +16,8 @@ return {
     mode = 'cursor',
     zindex = 20,
   },
-  config = function()
+  config = function(_, opts)
+    require('treesitter-context').setup(opts)
     -- Set up custom highlights for the context window
     vim.api.nvim_set_hl(0, 'TreesitterContext', { bg = '#4c313c' }) -- Background color
     vim.api.nvim_set_hl(0, 'TreesitterContextLineNumber', { fg = '#7c8494' }) -- Line number color
