@@ -26,19 +26,19 @@ matches:
     label: "let me tell you what I understand so far"
 
   - trigger: ":aq"
-    replace: " ask me the questions in interactive mode"
-    label: "ask me the questions in interactive mode"
+    replace: " ask me the questions in AskUserQuestion tool"
+    label: "ask me the questions in AskUserQuestion tool"
 
   - trigger: ":aw"
-    replace: " ask me questions in interactive mode to make sure we see eye to eye"
-    label: "ask me questions in interactive mode to make sure we see eye to eye"
+    replace: " ask me questions in AskUserQuestion tool to make sure we see eye to eye"
+    label: "ask me questions in AskUserQuestion tool to make sure we see eye to eye"
 
   - trigger: ":ae"
-    replace: " if you have questions or want to verify things, ask me in interactive mode"
-    label: "if you have questions or want to verify things, ask me in interactive mode"
+    replace: " if you have questions or want to verify things, ask me in AskUserQuestion tool"
+    label: "if you have questions or want to verify things, ask me in AskUserQuestion tool"
 
   - trigger: ":as"
-    replace: " please plan your implementation in detail and then ask me questions in interactive mode to make sure we see eye to eye"
+    replace: " please plan your implementation in detail and then ask me questions in AskUserQuestion tool to make sure we see eye to eye"
     label: "plan implementation then ask questions"
 
   - trigger: ":dm"
