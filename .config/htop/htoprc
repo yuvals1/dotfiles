@@ -1,6 +1,6 @@
 # Beware! This file is rewritten by htop when settings are changed in the interface.
 # The parser is also very primitive, and not human-friendly.
-fields=0 48 2 47 37 46 123
+fields=48 2 47 39 37 46 123
 sort_key=46
 sort_direction=-1
 tree_sort_key=37
@@ -37,3 +37,5 @@ left_meter_modes=1 1 1
 right_meters=RightCPUs Tasks LoadAverage Uptime
 right_meter_modes=1 2 2 2
 hide_function_bar=0
+
+
