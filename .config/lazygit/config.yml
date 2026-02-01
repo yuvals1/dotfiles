@@ -11,6 +11,7 @@ gui:
   scrollHeight: 4
 keybinding:
   universal:
+    toggleRangeSelect: "v" # lowercase v for range select, frees V for paste
     nextScreenMode: "z" # z to cycle zoom modes
     undo: "Z" # shift-z for undo
     scrollUpMain: "<c-k>"
@@ -21,6 +22,7 @@ keybinding:
     openLogMenu: "<C-r>"
     moveDownCommit: "J"
     moveUpCommit: "K"
+    pasteCommits: "V"
 
 customCommands:
   - key: "<c-a>" # ctrl + a
