@@ -75,6 +75,10 @@ matches:
     replace: " verify with codex mcp"
     label: "verify with codex mcp"
 
+  - trigger: ":x3"
+    replace: " verify with codex mcp. explain the motivation, the plan and then tell him to review deeply both the plan and the implementation"
+    label: "codex mcp deep review"
+
   - trigger: ":xj"
     replace: " i want to ask codex mcp (llm) to do it. please provide me with a prompt to give him"
     label: "codex mcp task prompt"
