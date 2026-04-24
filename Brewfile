@@ -74,7 +74,7 @@ cask 'raycast'
 cask 'wezterm'
 cask 'aerospace'
 cask 'iina' # Added optional modern video player for macOS
-cask 'espanso'
+cask 'espanso/espanso/espanso'
 # Additional tools
 brew 'ripgrep'
 brew 'fd'
