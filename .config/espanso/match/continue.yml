@@ -4,3 +4,7 @@ matches:
   - trigger: ":pr"
     replace: " let's proceed"
     label: "let's proceed"
+
+  - trigger: ":iop"
+    replace: " i opened permissions. continue"
+    label: "i opened permissions. continue"
