@@ -6,6 +6,9 @@ alias lazygit="$LAZYGIT_BIN"
 alias lg='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 alias l='lazygit --use-config-file="$HOME/.config/lazygit/config.yml"'
 
+LAZYMONDAY_BIN="$HOME/dev/lazymonday/lazymonday"
+alias lazymonday="$LAZYMONDAY_BIN"
+
 
 # Lazygit config: use SSH config with clipper when in SSH session
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
