@@ -10,9 +10,13 @@ matches:
     replace: " suggest git commit message according to conventional commits"
     label: "conventional commits full"
 
+  - trigger: ":pr"
+    replace: " look at the diff from main and suggest pr title and desc"
+    label: "suggest PR title and desc"
+
   - trigger: ":cc"
-    replace: " let's commit"
-    label: "let's commit"
+    replace: " commit"
+    label: "commit"
 
   - trigger: ":coc"
     replace: " let's commit our changes"
