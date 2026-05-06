@@ -4,3 +4,7 @@ matches:
   - trigger: ":det"
     replace: " make it more detailed"
     label: "make it more detailed"
+
+  - trigger: ":td"
+    replace: " tell me: 1. the things you did 2. the problems you ran into and how you solve them"
+    label: "things done and problems"
