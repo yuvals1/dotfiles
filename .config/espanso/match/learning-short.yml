@@ -1,7 +1,7 @@
 # Short learning snippets (under 30 characters)
 
 matches:
-  - trigger: ":cnn"
+  - trigger: ":cn"
     replace: " continue"
 
   - trigger: ":sl0"
