@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: sync-latest-jsonl.sh <source_path> <dest_path> [-r] [-d] [-n <count>]
+# Usage: sync-latest-jsonl.sh <source_path> <dest_path> [-r] [-d] [-n <count>] [-e <ext>]
 # Paths can be local (e.g., /path/to/dir) or remote (e.g., host:/path/to/dir)
 # Example (remote to remote): sync-latest-jsonl.sh jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono
 # Example (local to remote): sync-latest-jsonl.sh /Users/me/workspace yuval@treex-dev-tlv:~/treex-mono
@@ -8,13 +8,16 @@
 # Example with reverse: sync-latest-jsonl.sh jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono -r
 # Example with directory sync: sync-latest-jsonl.sh jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono -d
 # Example with N latest files: sync-latest-jsonl.sh jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono -n 5
+# Example with custom extension: sync-latest-jsonl.sh source dest -e csv
+# Example with all files: sync-latest-jsonl.sh source dest -e '*'
 
-if [ $# -lt 2 ] || [ $# -gt 6 ]; then
-    echo "Usage: $0 <source_path> <dest_path> [-r] [-d] [-n <count>]"
+if [ $# -lt 2 ] || [ $# -gt 8 ]; then
+    echo "Usage: $0 <source_path> <dest_path> [-r] [-d] [-n <count>] [-e <ext>]"
     echo "  Paths can be local (/path/to/dir) or remote (host:/path/to/dir)"
     echo "  -r: reverse source and destination"
     echo "  -d: sync entire source directory to destination"
-    echo "  -n <count>: number of most recent .jsonl files to sync (default: 1)"
+    echo "  -n <count>: number of most recent files to sync (default: 1)"
+    echo "  -e <ext>: file extension to match (default: jsonl, use '*' for all)"
     echo "Example (remote to remote): $0 jetson11.local:~/.claude_container/projects/-workspace yuval@treex-dev-tlv:~/treex-mono"
     echo "Example (local to remote): $0 /Users/me/workspace yuval@treex-dev-tlv:~/treex-mono"
     exit 1
@@ -24,6 +27,7 @@ SOURCE="$1"
 DEST="$2"
 SYNC_DIR=false
 NUM_FILES=1
+FILE_EXT="jsonl"
 
 # Parse flags
 shift 2
@@ -45,6 +49,10 @@ while [ $# -gt 0 ]; do
                 echo "Error: -n requires a positive integer"
                 exit 1
             fi
+            ;;
+        -e)
+            shift
+            FILE_EXT="$1"
             ;;
         *)
             echo "Unknown option: $1"
@@ -112,16 +120,22 @@ if [ "$SYNC_DIR" = true ]; then
     rm -rf "$TEMP_DIR"
     echo "Successfully synced directory from $SOURCE to $DEST"
 else
-    # Find the most recent .jsonl file(s) in the source directory
-    echo "Finding $NUM_FILES most recent .jsonl file(s) in $SOURCE..."
-    if is_remote "$SOURCE"; then
-        LATEST_FILES=$(ssh "$(get_host "$SOURCE")" "ls -t $(get_path "$SOURCE")/*.jsonl 2>/dev/null | head -n$NUM_FILES")
+    # Find the most recent file(s) in the source directory
+    if [ "$FILE_EXT" = "*" ]; then
+        GLOB="*"
+        echo "Finding $NUM_FILES most recent file(s) in $SOURCE..."
     else
-        LATEST_FILES=$(ls -t "$(get_path "$SOURCE")"/*.jsonl 2>/dev/null | head -n"$NUM_FILES")
+        GLOB="*.$FILE_EXT"
+        echo "Finding $NUM_FILES most recent .$FILE_EXT file(s) in $SOURCE..."
+    fi
+    if is_remote "$SOURCE"; then
+        LATEST_FILES=$(ssh "$(get_host "$SOURCE")" "ls -t $(get_path "$SOURCE")/$GLOB 2>/dev/null | head -n$NUM_FILES")
+    else
+        LATEST_FILES=$(ls -t "$(get_path "$SOURCE")"/$GLOB 2>/dev/null | head -n"$NUM_FILES")
     fi
 
     if [ -z "$LATEST_FILES" ]; then
-        echo "Error: No .jsonl files found in $SOURCE"
+        echo "Error: No matching files found in $SOURCE"
         exit 1
     fi
 
