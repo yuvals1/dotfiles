@@ -67,4 +67,5 @@ alias yd='y ~/dotfiles'
 
 # Sync latest jsonl between remote hosts
 alias sync-jsonl='~/dotfiles/scripts/sync-latest-jsonl.sh'
-
+alias import-codex-session='~/dotfiles/scripts/import_codex_session.sh'
+alias export-codex-session='~/dotfiles/scripts/export_codex_session.sh'
