@@ -1000,9 +1000,9 @@ desc = "Quit and change directory"
 [[mgr.prepend_keymap]]
 on = ["c", "p"]
 run = '''
-	shell --confirm 'pdf2img-ghostscript "$@"'
+	shell --confirm 'pdf2img-pdftoppm "$@"'
 '''
-desc = "Convert PDF to images using Ghostscript"
+desc = "Convert PDF to images using pdftoppm"
 
 # [[mgr.prepend_keymap]]
 # on = ["c", "p", "i"]
