@@ -95,7 +95,14 @@ forgit::diff() {
                     removed = clean_count($4)
                 }
                 payload = "[" status "]\t" path
-                printf "%s %s+%s%s %s-%s%s %s%s%s\n", "[" status "]", added_color, added, reset_color, removed_color, removed, reset_color, path, sep, payload
+                label = "[" status "]"
+                if (added + 0 > 0) {
+                    label = label " " added_color "+" added reset_color
+                }
+                if (removed + 0 > 0) {
+                    label = label " " removed_color "-" removed reset_color
+                }
+                printf "%s %s%s%s\n", label, path, sep, payload
             }
         ' |
         FZF_DEFAULT_OPTS="$opts" fzf
