@@ -3,9 +3,9 @@
 forgit::diff() {
     git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 1
 
-    local -a files commits _forgit_diff_git_opts
+    local -a files commits _forgit_diff_git_opts fzf_args
     local commit escaped_commits fzf_exit_code opts
-    local forgit_bin preview_context sep added_color removed_color reset_color
+    local forgit_bin preview_context sep added_color removed_color reset_color stats_header
 
     commits=()
     files=()
@@ -43,6 +43,39 @@ forgit::diff() {
     added_color="$(git config --get-color color.diff.new green)"
     removed_color="$(git config --get-color color.diff.old red)"
     reset_color=$'\033[m'
+    stats_header="$(
+        git diff --numstat "${_forgit_diff_git_opts[@]}" "${commits[@]}" -- "${files[@]}" |
+            awk \
+                -v added_color="$added_color" \
+                -v removed_color="$removed_color" \
+                -v reset_color="$reset_color" '
+                function is_number(value) {
+                    return value ~ /^[0-9]+$/
+                }
+                {
+                    if (is_number($1)) {
+                        added += $1
+                    }
+                    if (is_number($2)) {
+                        removed += $2
+                    }
+                }
+                END {
+                    header = "Total"
+                    if (added > 0) {
+                        header = header " " added_color "+" added reset_color
+                    }
+                    if (removed > 0) {
+                        header = header " " removed_color "-" removed reset_color
+                    }
+                    if (header != "Total") {
+                        print header
+                    }
+                }
+            '
+    )"
+    fzf_args=()
+    [[ -n "$stats_header" ]] && fzf_args=(--header="$stats_header")
     opts="
         $FZF_DEFAULT_OPTS
         --ansi
@@ -105,7 +138,7 @@ forgit::diff() {
                 printf "%s %s%s%s\n", label, path, sep, payload
             }
         ' |
-        FZF_DEFAULT_OPTS="$opts" fzf
+        FZF_DEFAULT_OPTS="$opts" fzf "${fzf_args[@]}"
     fzf_exit_code=$?
     [[ $fzf_exit_code == 130 ]] && return 0
     return $fzf_exit_code
