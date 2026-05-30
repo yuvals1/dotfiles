@@ -54,8 +54,11 @@ fi
 
 compdef _git_diff forgit::diff
 
-# Add per-file +added/-removed counts to the gd picker.
-[ -f ~/.zsh/forgit-diff-stats.zsh ] && source ~/.zsh/forgit-diff-stats.zsh
+# Add per-file +added/-removed counts to the gd picker after forgit defines gd.
+_forgit_diff_stats="${${(%):-%x}:A:h}/.zsh/forgit-diff-stats.zsh"
+[[ -f "$_forgit_diff_stats" ]] || _forgit_diff_stats="$HOME/.zsh/forgit-diff-stats.zsh"
+[[ -f "$_forgit_diff_stats" ]] && source "$_forgit_diff_stats"
+unset _forgit_diff_stats
 
 export PATH=/usr/local/smlnj/bin:$PATH
 
