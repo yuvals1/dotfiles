@@ -54,6 +54,8 @@ fi
 
 compdef _git_diff forgit::diff
 
+# Add per-file +added/-removed counts to the gd picker.
+[ -f ~/.zsh/forgit-diff-stats.zsh ] && source ~/.zsh/forgit-diff-stats.zsh
 
 export PATH=/usr/local/smlnj/bin:$PATH
 
@@ -70,4 +72,3 @@ export PATH="$PATH:$HOME/robopilot/docker/jetson/jetson_rootfs_overlay/home/jets
 
 # Docker registry for reload-main.sh script
 export HOME_DIR="$HOME"
-
