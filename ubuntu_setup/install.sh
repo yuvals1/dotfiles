@@ -44,7 +44,6 @@ source "$SCRIPT_DIR/scripts/install_glow.sh"
 source "$SCRIPT_DIR/scripts/install_csvq.sh"
 # source "$SCRIPT_DIR/scripts/install_visidata.sh"
 source "$SCRIPT_DIR/scripts/setup_visidata_local.sh"
-source "$SCRIPT_DIR/scripts/install_nushell.sh"
 source "$SCRIPT_DIR/scripts/install_exiftool.sh"
 source "$SCRIPT_DIR/scripts/install_ouch.sh"
 source "$SCRIPT_DIR/scripts/install_hexyl.sh"
@@ -87,7 +86,6 @@ main() {
         "run_setup_fzf"
         "run_setup_python_tools"
         "run_setup_locales"
-        	"run_install_nushell"
 
 
     )
@@ -121,7 +119,6 @@ main() {
     command -v glow >/dev/null && echo "✓ glow" || echo "✗ glow"
     command -v csvq >/dev/null && echo "✓ csvq" || echo "✗ csvq"
     command -v vd >/dev/null && echo "✓ visidata" || echo "✗ visidata"
-    command -v nu >/dev/null && echo "✓ nushell" || echo "✗ nushell"
     command -v exiftool >/dev/null && echo "✓ exiftool" || echo "✗ exiftool"
     command -v ouch >/dev/null && echo "✓ ouch" || echo "✗ ouch"
     command -v hexyl >/dev/null && echo "✓ hexyl" || echo "✗ hexyl"
