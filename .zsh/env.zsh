@@ -1,13 +1,24 @@
 # macOS specific settings
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  if [[ -f /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+  ARCH=$(uname -m)
+  if [[ "$ARCH" == "arm64" ]]; then
+    path=(${path:#/usr/local/bin})
+    path=(${path:#/usr/local/sbin})
+    if [[ -f /opt/homebrew/bin/brew ]]; then
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+    else
+      echo "Apple Silicon Homebrew not found. Install it at /opt/homebrew."
+    fi
   elif [[ -f /usr/local/bin/brew ]]; then
     eval "$(/usr/local/bin/brew shellenv)"
   else
     echo "Homebrew not found on macOS"
   fi
-  export DYLD_LIBRARY_PATH="$(brew --prefix 2>/dev/null)/lib:$DYLD_LIBRARY_PATH"
+
+  if [[ -n "${HOMEBREW_PREFIX:-}" && -x "$HOMEBREW_PREFIX/bin/brew" ]]; then
+    export DYLD_LIBRARY_PATH="$("$HOMEBREW_PREFIX/bin/brew" --prefix 2>/dev/null)/lib:$DYLD_LIBRARY_PATH"
+  fi
+  unset ARCH
 fi
 
 # Linux specific settings

@@ -42,7 +42,7 @@ if [[ -n "${HOMEBREW_PREFIX:-}" && -d "$HOMEBREW_PREFIX/opt/fzf/shell" ]]; then
     fzf_shell_dir="$HOMEBREW_PREFIX/opt/fzf/shell"
 elif [ -d "/opt/homebrew/opt/fzf/shell" ]; then
     fzf_shell_dir="/opt/homebrew/opt/fzf/shell"
-elif [ -d "/usr/local/opt/fzf/shell" ]; then
+elif [[ "$(uname)" != "Darwin" || "$(uname -m)" != "arm64" ]] && [ -d "/usr/local/opt/fzf/shell" ]; then
     fzf_shell_dir="/usr/local/opt/fzf/shell"
 elif [ -d "/home/linuxbrew/.linuxbrew/opt/fzf/shell" ]; then
     fzf_shell_dir="/home/linuxbrew/.linuxbrew/opt/fzf/shell"
