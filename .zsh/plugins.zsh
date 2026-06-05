@@ -38,22 +38,24 @@ zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 
 
-if [ -d "/usr/local/opt/fzf/shell" ]; then
-    # macOS Homebrew path
-    zinit snippet '/usr/local/opt/fzf/shell/key-bindings.zsh'
-    zinit snippet '/usr/local/opt/fzf/shell/completion.zsh'
+if [[ -n "${HOMEBREW_PREFIX:-}" && -d "$HOMEBREW_PREFIX/opt/fzf/shell" ]]; then
+    fzf_shell_dir="$HOMEBREW_PREFIX/opt/fzf/shell"
+elif [ -d "/opt/homebrew/opt/fzf/shell" ]; then
+    fzf_shell_dir="/opt/homebrew/opt/fzf/shell"
+elif [ -d "/usr/local/opt/fzf/shell" ]; then
+    fzf_shell_dir="/usr/local/opt/fzf/shell"
 elif [ -d "/home/linuxbrew/.linuxbrew/opt/fzf/shell" ]; then
-    # Linuxbrew path
-    zinit snippet '/home/linuxbrew/.linuxbrew/opt/fzf/shell/key-bindings.zsh'
-    zinit snippet '/home/linuxbrew/.linuxbrew/opt/fzf/shell/completion.zsh'
+    fzf_shell_dir="/home/linuxbrew/.linuxbrew/opt/fzf/shell"
 elif [ -d "/usr/share/doc/fzf/examples" ]; then
-    # Ubuntu apt installation path
-    zinit snippet '/usr/share/doc/fzf/examples/key-bindings.zsh'
-    zinit snippet '/usr/share/doc/fzf/examples/completion.zsh'
+    fzf_shell_dir="/usr/share/doc/fzf/examples"
 elif [ -d "$HOME/.fzf/shell" ]; then
-    # Git installation path
-    zinit snippet "$HOME/.fzf/shell/key-bindings.zsh"
-    zinit snippet "$HOME/.fzf/shell/completion.zsh"
+    fzf_shell_dir="$HOME/.fzf/shell"
+fi
+
+if [[ -n "${fzf_shell_dir:-}" ]]; then
+    zinit snippet "$fzf_shell_dir/key-bindings.zsh"
+    zinit snippet "$fzf_shell_dir/completion.zsh"
+    unset fzf_shell_dir
 fi
 
 
@@ -75,8 +77,11 @@ export FZF_CTRL_T_OPTS="--preview='bat -n --color=always {}' --bind shift-up:pre
 
 # If you need fzf-tmux, you can add an alias or function like this:
 fzf-tmux() {
-    /usr/local/opt/fzf/bin/fzf-tmux "$@"
+    if [[ -n "${HOMEBREW_PREFIX:-}" && -x "$HOMEBREW_PREFIX/opt/fzf/bin/fzf-tmux" ]]; then
+        "$HOMEBREW_PREFIX/opt/fzf/bin/fzf-tmux" "$@"
+    else
+        command fzf-tmux "$@"
+    fi
 }
 
 zinit cdreplay -q
-

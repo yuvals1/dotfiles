@@ -27,7 +27,9 @@ source ~/.zsh/plugins.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-export PATH="/usr/local/bin:$PATH"
+if [[ "$(uname)" == "Darwin" && "$(uname -m)" == "x86_64" && -d /usr/local/bin ]]; then
+    export PATH="/usr/local/bin:$PATH"
+fi
 
 # if ping -c 1 google.com &> /dev/null; then
 #     kitty +kitten themes --reload-in=all Catppuccin-Frappe
