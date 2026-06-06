@@ -1,4 +1,7 @@
 {
+    "global": {
+        "enable_cgeventtap_fallback": true
+    },
     "profiles": [
         {
             "complex_modifications": {
@@ -492,7 +495,8 @@
                 ]
             },
             "name": "Default profile",
-            "selected": true
+            "selected": true,
+            "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }
     ]
 }
