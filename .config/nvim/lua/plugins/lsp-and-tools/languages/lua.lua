@@ -1,6 +1,6 @@
 -- lua.lua
 return {
-  mason = { 'lua-language-server', 'stylua', 'luacheck' },
+  mason = { 'lua-language-server', 'stylua' },
   lsp = {
     lua_ls = {
       settings = {
@@ -12,13 +12,5 @@ return {
   },
   formatters = {
     lua = { 'stylua' },
-  },
-  linters = {
-    lua = { 'luacheck' },
-  },
-  linter_options = {
-    luacheck = {
-      args = { '--globals', 'vim' },
-    },
   },
 }

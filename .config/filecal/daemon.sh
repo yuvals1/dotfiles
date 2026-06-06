@@ -11,7 +11,13 @@
 CALENDAR_DIR="${CALENDAR_DIR:-$HOME/personal/calendar}"
 DAYS_DIR="$CALENDAR_DIR/days"
 PAST_DAYS_DIR="$DAYS_DIR/past-days"
-TAG_CMD="/usr/local/bin/tag"
+TAG_CMD="${TAG_CMD:-$(command -v tag 2>/dev/null || true)}"
+TAG_CMD="${TAG_CMD:-/opt/homebrew/bin/tag}"
+
+if [ ! -x "$TAG_CMD" ]; then
+    echo "tag command not found" >&2
+    exit 1
+fi
 
 
 # Tag names

@@ -1,6 +1,6 @@
 {
     "global": {
-        "enable_cgeventtap_fallback": true
+        "enable_cgeventtap_fallback": false
     },
     "profiles": [
         {

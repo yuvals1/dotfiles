@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG="${KARABINER_CONFIG:-$HOME/.config/karabiner/karabiner.json}"
+STATE="/Library/Application Support/org.pqrs/tmp/karabiner_grabber_state.json"
+ENV_STATE="/Library/Application Support/org.pqrs/tmp/karabiner_grabber_manipulator_environment.json"
+PID_FILE="/Library/Application Support/org.pqrs/tmp/pid/karabiner_grabber.pid"
+UID_VALUE="$(id -u)"
+
+log() {
+    printf '%s\n' "$*"
+}
+
+warn() {
+    printf 'warning: %s\n' "$*" >&2
+}
+
+run_or_warn() {
+    "$@" || warn "failed: $*"
+}
+
+kickstart_user_service() {
+    local label="$1"
+    local pid
+
+    launchctl kickstart -k "gui/$UID_VALUE/$label" >/dev/null 2>&1 &
+    pid="$!"
+
+    for _ in {1..50}; do
+        if ! kill -0 "$pid" >/dev/null 2>&1; then
+            wait "$pid" 2>/dev/null || true
+            return 0
+        fi
+        sleep 0.1
+    done
+
+    kill "$pid" >/dev/null 2>&1 || true
+    warn "timed out restarting $label"
+}
+
+driver_ready() {
+    karabiner_cli --list-connected-devices 2>/dev/null |
+        grep -q 'Karabiner DriverKit VirtualHIDKeyboard'
+}
+
+print_state() {
+    log ""
+    log "Connected devices:"
+    karabiner_cli --list-connected-devices 2>/dev/null || warn "karabiner_cli could not list devices"
+
+    log ""
+    log "Legacy Karabiner state file:"
+    if [ -f "$STATE" ]; then
+        sed -n '1,80p' "$STATE"
+    else
+        warn "$STATE does not exist"
+    fi
+
+    log ""
+    log "Legacy Virtual HID state file:"
+    if [ -f "$ENV_STATE" ]; then
+        grep -A4 '"virtual_hid_devices_state"' "$ENV_STATE" || true
+    else
+        warn "$ENV_STATE does not exist"
+    fi
+}
+
+disable_cgeventtap_fallback() {
+    if [ ! -f "$CONFIG" ]; then
+        warn "Karabiner config not found: $CONFIG"
+        return 1
+    fi
+
+    if grep -Eq '"enable_cgeventtap_fallback"[[:space:]]*:[[:space:]]*false' "$CONFIG"; then
+        log "CGEventTap fallback already disabled."
+        return 0
+    fi
+
+    local backup="$CONFIG.before-disable-cgeventtap-fallback-$(date +%Y%m%d%H%M%S)"
+    cp "$CONFIG" "$backup"
+    plutil -replace global.enable_cgeventtap_fallback -bool NO "$CONFIG"
+    log "Disabled CGEventTap fallback."
+    log "Backup: $backup"
+}
+
+if driver_ready; then
+    log "VirtualHID keyboard is already connected."
+    disable_cgeventtap_fallback
+    log "Done. Quit and reopen Karabiner-Elements if it was open."
+    exit 0
+fi
+
+log "This will restart Karabiner root services. Enter your Mac password when sudo asks."
+sudo -v
+
+if [ -f "$PID_FILE" ]; then
+    old_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
+    if [ -n "${old_pid:-}" ] && ! ps -p "$old_pid" >/dev/null 2>&1; then
+        sudo rm -f "$PID_FILE"
+        log "Removed stale karabiner_grabber pid file: $old_pid"
+    fi
+fi
+
+log "Restarting Karabiner VirtualHID daemon..."
+sudo launchctl kickstart -k system/org.pqrs.service.daemon.Karabiner-VirtualHIDDevice-Daemon
+
+log "Restarting Karabiner core service..."
+sudo launchctl kickstart -k system/org.pqrs.service.daemon.Karabiner-Core-Service
+
+log "Restarting Karabiner user services..."
+kickstart_user_service org.pqrs.service.agent.Karabiner-Core-Service-rev2
+kickstart_user_service org.pqrs.service.agent.karabiner_session_monitor
+kickstart_user_service org.pqrs.service.agent.karabiner_console_user_server
+
+log "Waiting for VirtualHID keyboard..."
+for _ in {1..20}; do
+    if driver_ready; then
+        log "VirtualHID is ready."
+        disable_cgeventtap_fallback
+        log "Done. If Karabiner was open, quit and reopen it."
+        exit 0
+    fi
+    sleep 1
+done
+
+print_state
+log ""
+warn "VirtualHID did not become ready."
+warn "Open Karabiner-Elements, go to the driver/permissions warning, and approve/reinstall the VirtualHID driver."
+exit 1

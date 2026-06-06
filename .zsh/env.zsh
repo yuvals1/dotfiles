@@ -4,6 +4,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   if [[ "$ARCH" == "arm64" ]]; then
     path=(${path:#/usr/local/bin})
     path=(${path:#/usr/local/sbin})
+    path=(${path:#/usr/local/smlnj/bin})
     if [[ -f /opt/homebrew/bin/brew ]]; then
       eval "$(/opt/homebrew/bin/brew shellenv)"
     else
@@ -74,6 +75,12 @@ fi
 # Go
 if [ -d "$HOME/go/bin" ]; then
   export PATH="$HOME/go/bin:$PATH"
+fi
+
+if [[ "$OSTYPE" == "darwin"* && "$(uname -m)" == "arm64" ]]; then
+  path=(${path:#/usr/local/bin})
+  path=(${path:#/usr/local/sbin})
+  path=(${path:#/usr/local/smlnj/bin})
 fi
 
 # Load secrets file if it exists
