@@ -62,8 +62,6 @@ _forgit_diff_stats="${${(%):-%x}:A:h}/.zsh/forgit-diff-stats.zsh"
 [[ -f "$_forgit_diff_stats" ]] && source "$_forgit_diff_stats"
 unset _forgit_diff_stats
 
-export PATH=/usr/local/smlnj/bin:$PATH
-
 # Ensure sketchybar input source monitor is running (macOS only)
 if [[ "$(uname)" == "Darwin" ]]; then
     if ! pgrep -f "input_source_monitor.swift" > /dev/null 2>&1; then

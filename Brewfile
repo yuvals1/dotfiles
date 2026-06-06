@@ -27,6 +27,7 @@ brew 'btop'
 brew 'lazygit'
 brew 'sketchybar'
 brew 'switchaudio-osx'
+brew 'blueutil'
 brew 'dust'
 brew 'gum'
 brew 'stow'
@@ -88,8 +89,6 @@ brew 'gh'
 brew 'hexyl'
 brew 'ouch'
 brew 'tag'
-# SML/NJ
-cask 'smlnj'
 
 # Sublime Text
 cask 'sublime-text'
