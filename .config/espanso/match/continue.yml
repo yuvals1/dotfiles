@@ -1,6 +1,10 @@
 # Resume/proceed patterns
 
 matches:
+  - trigger: ":cr"
+    replace: "do everyting in one continuous refactor. no stopping. can you handle it?"
+    label: "continuous refactor"
+
   - trigger: ":iop"
     replace: "i opened permissions. continue"
     label: "i opened permissions. continue"
