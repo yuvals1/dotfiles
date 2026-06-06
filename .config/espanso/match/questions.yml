@@ -2,46 +2,46 @@
 
 matches:
   - trigger: ":wd"
-    replace: " what's the difference"
+    replace: "what's the difference"
     label: "what's the difference"
 
   - trigger: ":dif"
-    replace: " difference"
+    replace: "difference"
     label: "difference"
 
   - trigger: ":dt"
-    replace: " do you understand the task?"
+    replace: "do you understand the task?"
     label: "do you understand the task?"
 
   - trigger: ":vb"
-    replace: " verify the behavior is as desired"
+    replace: "verify the behavior is as desired"
     label: "verify the behavior is as desired"
 
   - trigger: ":dr"
-    replace: " do you remember the instructions?"
+    replace: "do you remember the instructions?"
     label: "do you remember the instructions?"
 
   - trigger: ":lmu"
-    replace: " let me tell you what I understand so far"
+    replace: "let me tell you what I understand so far"
     label: "let me tell you what I understand so far"
 
   - trigger: ":aq"
-    replace: " ask me the questions in AskUserQuestion tool"
+    replace: "ask me the questions in AskUserQuestion tool"
     label: "ask me the questions in AskUserQuestion tool"
 
   - trigger: ":aw"
-    replace: " ask me questions in AskUserQuestion tool to make sure we see eye to eye"
+    replace: "ask me questions in AskUserQuestion tool to make sure we see eye to eye"
     label: "ask me questions in AskUserQuestion tool to make sure we see eye to eye"
 
   - trigger: ":ae"
-    replace: " if you have questions or want to verify things, ask me in AskUserQuestion tool"
+    replace: "if you have questions or want to verify things, ask me in AskUserQuestion tool"
     label: "if you have questions or want to verify things, ask me in AskUserQuestion tool"
 
   - trigger: ":as"
-    replace: " please plan your implementation in detail and then ask me questions in AskUserQuestion tool to make sure we see eye to eye"
+    replace: "please plan your implementation in detail and then ask me questions in AskUserQuestion tool to make sure we see eye to eye"
     label: "plan implementation then ask questions"
 
   - trigger: ":dm"
-    replace: " do you understand what i mean"
+    replace: "do you understand what i mean"
     label: "do you understand what i mean"
 

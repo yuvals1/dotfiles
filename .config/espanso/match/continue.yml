@@ -2,5 +2,5 @@
 
 matches:
   - trigger: ":iop"
-    replace: " i opened permissions. continue"
+    replace: "i opened permissions. continue"
     label: "i opened permissions. continue"

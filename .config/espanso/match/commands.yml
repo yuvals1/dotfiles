@@ -2,7 +2,7 @@
 
 matches:
   - trigger: ":xxsetup"
-    replace: " claude mcp add --scope user codex -- uvx codex-as-mcp@latest --yolo"
+    replace: "claude mcp add --scope user codex -- uvx codex-as-mcp@latest --yolo"
     label: "setup codex mcp"
 
   - trigger: ":fixc"
@@ -10,5 +10,5 @@ matches:
     label: "fix merge conflicts prompt"
 
   - trigger: ":fc"
-    replace: " fast commit"
+    replace: "fast commit"
     label: "fast commit"

@@ -3,25 +3,25 @@
 matches:
   # Conventional Commits
   - trigger: ":cv"
-    replace: " conventional commits"
+    replace: "conventional commits"
     label: "conventional commits"
 
   - trigger: ":cm"
-    replace: " suggest git commit message according to conventional commits"
+    replace: "suggest git commit message according to conventional commits"
     label: "conventional commits full"
 
   - trigger: ":pr"
-    replace: " look at the diff from main and suggest pr title and desc"
+    replace: "look at the diff from main and suggest pr title and desc"
     label: "suggest PR title and desc"
 
   - trigger: ":cc"
-    replace: " commit"
+    replace: "commit"
     label: "commit"
 
   - trigger: ":coc"
-    replace: " let's commit our changes"
+    replace: "let's commit our changes"
     label: "let's commit our changes"
 
   - trigger: ":cs"
-    replace: " let's commit our current state"
+    replace: "let's commit our current state"
     label: "let's commit our current state"

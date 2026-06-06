@@ -9,13 +9,13 @@
 
 matches:
   - trigger: ":fu"
-    replace: " fuck you"
+    replace: "fuck you"
     label: "fuck you"
 
   - trigger: ":ido"
-    replace: " you fucking idiot"
+    replace: "you fucking idiot"
     label: "idiot"
 
   - trigger: ":pg"
-    replace: " you fucking pig"
+    replace: "you fucking pig"
     label: "pig"

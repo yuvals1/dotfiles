@@ -17,6 +17,7 @@
 # toggle_key: ALT
 # You can also disable the toggle key completely with
 # toggle_key: OFF
+toggle_key: OFF
 
 # --- Injection Backend
 
@@ -24,7 +25,7 @@
 # them has its quirks, therefore you may want to change it if you are having problems.
 # By default, espanso uses the "Auto" backend which should work well in most cases,
 # but you may want to try the "Clipboard" or "Inject" backend in case of issues.
-backend: Inject
+backend: clipboard
 
 # --- Auto-restart
 
@@ -35,15 +36,21 @@ backend: Inject
 
 # Because injecting long texts char-by-char is a slow operation, espanso automatically
 # uses the clipboard if the text is longer than 'clipboard_threshold' characters.
-clipboard_threshold: 100
+clipboard_threshold: 0
+
+# Make macOS paste-mode explicit and slow enough for trigger cleanup on Apple Silicon.
+paste_shortcut_event_delay: 10
+pre_paste_delay: 50
+restore_clipboard_delay: 50
 
 # For a list of all the available options, visit the official docs at: https://espanso.org/docs/
 
 # Search bar shortcut
-search_shortcut: CMD+SPACE
+search_shortcut: off
 
 # Fixes for Claude Code compatibility
 key_delay: 5
-inject_delay: 10
+inject_delay: 5
 evdev_modifier_delay: 10
 backspace_limit: 5
+undo_backspace: false
