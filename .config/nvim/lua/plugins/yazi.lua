@@ -3,6 +3,7 @@ return {
     'mikavilpas/yazi.nvim',
     event = 'VeryLazy',
     config = function()
+      vim.env.NO_COLOR = nil
       require('yazi').setup {
         open_for_directories = false,
         -- Enable these if you are using the latest version of yazi
@@ -23,4 +24,3 @@ return {
     end,
   },
 }
-

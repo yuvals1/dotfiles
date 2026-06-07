@@ -55,7 +55,12 @@ local function open_in_terminal_tab(cmd, opts)
 
   vim.cmd('tabnew')
   local term_buf = vim.api.nvim_get_current_buf()
-  local chan = vim.fn.termopen({ exe }, { cwd = cwd })
+  local term_opts = { cwd = cwd }
+  if cmd == 'yazi' then
+    term_opts.env = { NO_COLOR = vim.NIL }
+  end
+
+  local chan = vim.fn.termopen({ exe }, term_opts)
   if chan <= 0 then
     vim.notify('failed to start ' .. cmd, vim.log.levels.ERROR)
     if vim.fn.tabpagenr('$') > 1 then vim.cmd('tabclose') end

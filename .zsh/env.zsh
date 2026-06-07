@@ -88,3 +88,6 @@ fi
 if [ -f "$HOME/.zsh_secrets" ]; then
     source "$HOME/.zsh_secrets"
 fi
+
+# Keep terminal tools colorful even if a parent process exports NO_COLOR.
+unset NO_COLOR
