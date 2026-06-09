@@ -44,9 +44,14 @@ alias tl='cd ~/commitments/ && y'
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
     local cdfile="$(mktemp -t "yazi-cd.XXXXXX")"
+    local -a yazi_env
+    yazi_env=(env -u NO_COLOR)
+    if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
+        yazi_env+=(-u DISPLAY -u WAYLAND_DISPLAY -u XAUTHORITY)
+    fi
     
     # Run Yazi with the CD file environment variable
-    env -u NO_COLOR YAZI_CD_FILE="$cdfile" "$YAZI_BIN" "$@" --cwd-file="$tmp"
+    "${yazi_env[@]}" YAZI_CD_FILE="$cdfile" "$YAZI_BIN" "$@" --cwd-file="$tmp"
     
     # Check if the CD file exists and has content
     if [ -f "$cdfile" ] && [ -s "$cdfile" ]; then

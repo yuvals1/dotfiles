@@ -21,7 +21,14 @@ fi
 
 # Define yazi binary path as a variable
 YAZI_BIN="$HOME/dev/yazi/target/release/yazi"
-alias yazi='env -u NO_COLOR "$YAZI_BIN"'
+function yazi() {
+    local -a yazi_env
+    yazi_env=(env -u NO_COLOR)
+    if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
+        yazi_env+=(-u DISPLAY -u WAYLAND_DISPLAY -u XAUTHORITY)
+    fi
+    "${yazi_env[@]}" "$YAZI_BIN" "$@"
+}
 
 # VisiData (local source build)
 VISIDATA_ROOT="$HOME/dev/visidata"

@@ -58,6 +58,11 @@ local function open_in_terminal_tab(cmd, opts)
   local term_opts = { cwd = cwd }
   if cmd == 'yazi' then
     term_opts.env = { NO_COLOR = vim.NIL }
+    if vim.env.SSH_CLIENT or vim.env.SSH_TTY then
+      term_opts.env.DISPLAY = vim.NIL
+      term_opts.env.WAYLAND_DISPLAY = vim.NIL
+      term_opts.env.XAUTHORITY = vim.NIL
+    end
   end
 
   local chan = vim.fn.termopen({ exe }, term_opts)

@@ -4,6 +4,11 @@ return {
     event = 'VeryLazy',
     config = function()
       vim.env.NO_COLOR = nil
+      if vim.env.SSH_CLIENT or vim.env.SSH_TTY then
+        vim.env.DISPLAY = nil
+        vim.env.WAYLAND_DISPLAY = nil
+        vim.env.XAUTHORITY = nil
+      end
       require('yazi').setup {
         open_for_directories = false,
         -- Enable these if you are using the latest version of yazi
