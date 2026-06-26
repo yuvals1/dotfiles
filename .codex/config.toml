@@ -5,6 +5,15 @@ approval_policy = "never"
 sandbox_mode = "danger-full-access"
 approvals_reviewer = "user"
 
+[projects."/homes/yuval"]
+trust_level = "trusted"
+
+[projects."/homes/yuval/dotfiles"]
+trust_level = "trusted"
+
+[projects."/homes/yuval/robopilot"]
+trust_level = "trusted"
+
 [projects."/home/jetson/robopilot"]
 trust_level = "trusted"
 
