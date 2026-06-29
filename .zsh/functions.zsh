@@ -175,6 +175,77 @@ rename_hyphens_to_underscores() {
 
 alias rhu='rename_hyphens_to_underscores'
 
+_codex_path_in_robopilot_tree() {
+    local check_path="${1:-$PWD}"
+    local path_real="${check_path:A}"
+    local root root_real
+    local -a roots=(
+        "$HOME/treex-mono/robopilot"
+        "$HOME/robopilot"
+        "$HOME/dev/robopilot"
+        "/homes/yuval/robopilot"
+        "/home/jetson/robopilot"
+        "/home/yuval/treex-mono/robopilot"
+        "/home/yuvals/robopilot"
+    )
+
+    for root in "${roots[@]}"; do
+        [[ -d "$root" ]] || continue
+        root_real="${root:A}"
+        if [[ "$path_real" == "$root_real" || "$path_real" == "$root_real"/* ]]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+codex() {
+    local arg
+    local expect_cd=0
+    local has_sandbox=0
+    local has_approval=0
+    local target_dir="$PWD"
+    local -a extra=()
+
+    for arg in "$@"; do
+        if (( expect_cd )); then
+            target_dir="$arg"
+            expect_cd=0
+            continue
+        fi
+
+        case "$arg" in
+            --cd|-C)
+                expect_cd=1
+                ;;
+            --cd=*)
+                target_dir="${arg#--cd=}"
+                ;;
+            -C*)
+                target_dir="${arg#-C}"
+                ;;
+            --sandbox|-s|--sandbox=*|-s*)
+                has_sandbox=1
+                ;;
+            --ask-for-approval|-a|--ask-for-approval=*|-a*)
+                has_approval=1
+                ;;
+            --dangerously-bypass-approvals-and-sandbox|--yolo)
+                has_sandbox=1
+                has_approval=1
+                ;;
+        esac
+    done
+
+    if _codex_path_in_robopilot_tree "$target_dir"; then
+        (( has_sandbox )) || extra+=(--sandbox danger-full-access)
+        (( has_approval )) || extra+=(--ask-for-approval never)
+    fi
+
+    command codex "${extra[@]}" "$@"
+}
+
 
 # Search file contents using ripgrep and fzf
 # Search file contents using ripgrep and fzf
