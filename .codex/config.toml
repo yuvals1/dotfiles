@@ -1,9 +1,10 @@
+personality = "pragmatic"
 model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
-service_tier = "fast"
+approvals_reviewer = "user"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
-approvals_reviewer = "user"
+service_tier = "fast"
 
 [projects."/homes/yuval"]
 trust_level = "trusted"
@@ -17,11 +18,24 @@ trust_level = "trusted"
 [projects."/home/jetson/robopilot"]
 trust_level = "trusted"
 
+[projects."/home/jetson/dotfiles"]
+trust_level = "trusted"
+
+[projects."/home/jetson"]
+trust_level = "trusted"
+
 [projects."/home/yuval/treex-mono/robopilot"]
 trust_level = "trusted"
 
 [projects."/home/yuvals/robopilot"]
 trust_level = "trusted"
+
+[plugins."github@openai-curated"]
+enabled = true
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+"gpt-5.4" = "gpt-5.5"
 
 [tui.model_availability_nux]
 "gpt-5.5" = 4
