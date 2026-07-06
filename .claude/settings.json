@@ -3,6 +3,9 @@
     "DISABLE_AUTOUPDATER": "1"
   },
   "model": "claude-fable-5[1m]",
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true
+  },
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
