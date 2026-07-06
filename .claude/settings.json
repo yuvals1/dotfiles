@@ -19,7 +19,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "IN=$(tmux display -t \"$TMUX_PANE\" -p '#{window_active}#{pane_active}' 2>/dev/null); if [ \"$IN\" = \"11\" ] && { ! command -v lsappinfo >/dev/null 2>&1 || lsappinfo info -only name \"$(lsappinfo front)\" 2>/dev/null | grep -qi kitty; }; then exit 0; fi; TTY=$(tmux display -t \"$TMUX_PANE\" -p '#{pane_tty}' 2>/dev/null); printf '\\a' > \"${TTY:-${SSH_TTY:-/dev/tty}}\" 2>/dev/null; exit 0"
+            "command": "IN=''; TTY=''; if [ -n \"$TMUX_PANE\" ]; then IN=$(tmux display -t \"$TMUX_PANE\" -p '#{window_active}#{pane_active}' 2>/dev/null); TTY=$(tmux display -t \"$TMUX_PANE\" -p '#{pane_tty}' 2>/dev/null); fi; if [ \"$IN\" = \"11\" ] && { ! command -v lsappinfo >/dev/null 2>&1 || lsappinfo info -only name \"$(lsappinfo front)\" 2>/dev/null | grep -qi kitty; }; then exit 0; fi; printf '\\a' > \"${TTY:-${SSH_TTY:-/dev/tty}}\" 2>/dev/null; exit 0"
           }
         ]
       }
