@@ -12,7 +12,7 @@
   "skipDangerousModePermissionPrompt": true,
   "alwaysThinkingEnabled": true,
   "autoScrollEnabled": true,
-  "preferredNotifChannel": "terminal_bell",
+  "preferredNotifChannel": "notifications_disabled",
   "hooks": {
     "Stop": [
       {
