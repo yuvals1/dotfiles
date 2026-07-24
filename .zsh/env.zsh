@@ -62,6 +62,12 @@ if [ -d "$HOME/dotfiles/scripts" ]; then
   export PATH="$HOME/dotfiles/scripts:$PATH"
 fi
 
+# NVM
+export NVM_DIR="$HOME/.nvm"
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  source "$NVM_DIR/nvm.sh"
+fi
+
 # Cargo
 if [ ! -f "$HOME/.cargo/env" ]; then
   echo "Cargo not found. Installing Rust and Cargo..."
