@@ -1,18 +1,16 @@
 {
   "env": {
-    "DISABLE_AUTOUPDATER": "1"
-  },
-  "model": "claude-fable-5[1m]",
-  "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_MOUSE": "1"
   },
   "permissions": {
     "defaultMode": "bypassPermissions"
   },
-  "skipDangerousModePermissionPrompt": true,
-  "alwaysThinkingEnabled": true,
-  "autoScrollEnabled": true,
-  "preferredNotifChannel": "notifications_disabled",
+  "model": "opus[1m]",
+  "fileSuggestion": {
+    "type": "command",
+    "command": "rg --files | grep -v '^docs/ai/'"
+  },
   "hooks": {
     "Stop": [
       {
@@ -24,5 +22,13 @@
         ]
       }
     ]
-  }
+  },
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "tui": "default",
+  "skipDangerousModePermissionPrompt": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "autoScrollEnabled": true
 }
