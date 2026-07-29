@@ -45,3 +45,14 @@ matches:
     replace: "do you understand what i mean"
     label: "do you understand what i mean"
 
+  - trigger: ":oq"
+    replace: "are there any open qusetions before we start"
+    label: "open questions before start"
+
+  - trigger: ":a1"
+    replace: "ask me one in a time"
+    label: "ask me one in a time"
+
+  - trigger: ":ot"
+    replace: "one at a time"
+    label: "one at a time"

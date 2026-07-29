@@ -91,6 +91,10 @@ matches:
     replace: "ask codex mcp to investigate it as well and let's see if he reaches similar conclusion and similar fix suggestions. don't reveal your conclusions and suggestions to him in order to keep him unbiased. tell him the relevant observations we saw and tell him to read the code and understand"
     label: "codex mcp unbiased investigation"
 
+  - trigger: ":ag"
+    replace: " run another agent for "
+    label: "run another agent for"
+
   - trigger: ":idw"
     replace: "i don't want"
     label: "i dont want"

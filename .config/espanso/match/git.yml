@@ -14,7 +14,7 @@ matches:
     replace: "look at the diff from main and suggest pr title and desc"
     label: "suggest PR title and desc"
 
-  - trigger: ":cc"
+  - trigger: ":co"
     replace: "commit"
     label: "commit"
 

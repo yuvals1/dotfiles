@@ -18,3 +18,19 @@ matches:
 
   - trigger: ":simplest"
     replace: "is our code the simplest it can be?"
+
+  - trigger: ":pcg"
+    replace: "rethink the whole offline point cloud gui architecture. imagine you would need to write an app of it. how would you do it? i want to refactor in this agenda do you understand what i mean?"
+    label: "offline point cloud gui architecture"
+
+  - trigger: ":hq"
+    replace: "think deeply about what our options and suggest a plan that  will give us high quality result structure"
+    label: "high quality plan"
+
+  - trigger: ":sz"
+    replace: "look at the size of this file.. is it acceptable? is the strcute of such high quality as the strcuture of ..."
+    label: "file size and structure quality"
+
+  - trigger: ":sw"
+    replace: "can you investigate in the web to validate what's is this pattern we got. try to be nuanced and to understand pros and conds. try to see if this pattern exists in real complex svelte apps"
+    label: "svelte web pattern investigation"
