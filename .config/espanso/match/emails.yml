@@ -1,7 +1,7 @@
 # Email shortcuts
 
 matches:
-  - trigger: ":ys1"
+  - trigger: ";ys1"
     replace: "yuvalspiegel1@gmail.com"
     label: "yuvalspiegel1"
     force_mode: clipboard

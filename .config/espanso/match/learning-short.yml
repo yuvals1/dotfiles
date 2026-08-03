@@ -1,149 +1,149 @@
 # Short learning snippets (under 30 characters)
 
 matches:
-  - trigger: ":cn"
+  - trigger: ";cn"
     replace: "continue"
 
-  - trigger: ":sl0"
+  - trigger: ";sl0"
     replace: "explain slowly"
 
-  - trigger: ":sm0"
+  - trigger: ";sm0"
     replace: "small steps"
     label: "small steps"
 
-  - trigger: ":du"
+  - trigger: ";du"
     replace: "do you understand"
     label: "do you undetstand"
 
-  - trigger: ":idu"
+  - trigger: ";idu"
     replace: "i don't understand"
     label: "i dont understand"
 
-  - trigger: ":idd"
+  - trigger: ";idd"
     replace: "i didn't understand"
     label: "i didn't understand"
 
-  - trigger: ":ids"
+  - trigger: ";ids"
     replace: "i don't see"
     label: "i don't see"
 
-  - trigger: ":idk"
+  - trigger: ";idk"
     replace: "i don't know"
     label: "i don't know"
 
-  - trigger: ":idm"
+  - trigger: ";idm"
     replace: "i don't understand. start from the motivation"
     label: "i dont understand motivation"
 
-  - trigger: ":etf"
+  - trigger: ";etf"
     replace: "explain the technical flow"
     label: "explain technical flow"
 
-  - trigger: ":hci"
+  - trigger: ";hci"
     replace: "how can we implement it?"
     label: "how can we implement"
 
-  - trigger: ":wmt"
+  - trigger: ";wmt"
     replace: "walk me through your thought process"
     label: "walk me through thought process"
 
-  - trigger: ":ybs"
+  - trigger: ";ybs"
     replace: "you're being sloppy"
     label: "youre being sloppy"
 
-  - trigger: ":mcu"
+  - trigger: ";mcu"
     replace: "let me tell you my current understanding"
     label: "my current understanding"
 
-  - trigger: ":ttf"
+  - trigger: ";ttf"
     replace: "that was too fast"
     label: "that was too fast"
 
-  - trigger: ":ttb"
+  - trigger: ";ttb"
     replace: "that was too fast and too big"
     label: "too fast and too big"
 
-  - trigger: ":xx"
+  - trigger: ";xx"
     replace: "consult with codex mcp"
     label: "consult with codex mcp"
 
-  - trigger: ":xp"
+  - trigger: ";xp"
     replace: "i want to ask another llm and provide you with its response. please provide me with a prompt to use"
     label: "external prompt request"
 
-  - trigger: ":xv"
+  - trigger: ";xv"
     replace: "verify with codex mcp"
     label: "verify with codex mcp"
 
-  - trigger: ":x3"
+  - trigger: ";x3"
     replace: "verify with codex mcp. explain the motivation, the plan and then tell him to review deeply both the plan and the implementation"
     label: "codex mcp deep review"
 
-  - trigger: ":xj"
+  - trigger: ";xj"
     replace: "i want to ask codex mcp (llm) to do it. please provide me with a prompt to give him"
     label: "codex mcp task prompt"
 
-  - trigger: ":xm"
+  - trigger: ";xm"
     replace: "remember codex mcp is memoryless and doesnt have the previous contexts"
     label: "codex mcp is memoryless"
 
-  - trigger: ":xz"
+  - trigger: ";xz"
     replace: "ask codex mcp to investigate it as well and let's see if he reaches similar conclusion and similar fix suggestions. don't reveal your conclusions and suggestions to him in order to keep him unbiased. tell him the relevant observations we saw and tell him to read the code and understand"
     label: "codex mcp unbiased investigation"
 
-  - trigger: ":ag"
+  - trigger: ";ag"
     replace: " run another agent for "
     label: "run another agent for"
 
-  - trigger: ":idw"
+  - trigger: ";idw"
     replace: "i don't want"
     label: "i dont want"
 
-  - trigger: ":idfu"
+  - trigger: ";idfu"
     replace: "i don't fucking understand"
     label: "i dont fucking understand"
 
-  - trigger: ":first"
+  - trigger: ";first"
     replace: "explain from first principles"
     label: "first principles"
 
-  - trigger: ":sun"
+  - trigger: ";sun"
     replace: "i still not understand"
     label: "still not understand"
 
-  - trigger: ":di"
+  - trigger: ";di"
     replace: "don't implement yet. let's discuss it first"
     label: "don't implement yet"
 
-  - trigger: ":exp"
+  - trigger: ";exp"
     replace: "explain it to me so i know you understand it"
 
-  - trigger: ":2pass"
+  - trigger: ";2pass"
     replace: "this is a complex refactoring so i want to do it in small steps with verification after each step. we will do it in 2 passes: first pass we extract things out without changing logic, second pass we organize and eliminate redundancy. do you understand?"
     label: "two-pass refactoring strategy"
 
-  - trigger: ":stepv"
+  - trigger: ";stepv"
     replace: "if it's complex do it slowly step after step with verifications for each step"
     label: "step by step with verification"
 
-  - trigger: ":vv"
+  - trigger: ";vv"
     replace: "please be more verbose about what you're doing and what you're seeing"
     label: "be more verbose"
 
-  - trigger: ":bfv"
+  - trigger: ";bfv"
     replace: "be fucking verbose!!!!!!!!!!!!"
     label: "be fucking verbose"
 
-  - trigger: ":conf"
+  - trigger: ";conf"
     replace: "i'm still confused about the exact technicalities"
     label: "confused about technicalities"
 
-  - trigger: ":ic"
+  - trigger: ";ic"
     replace: "i'm confused"
 
-  - trigger: ":st"
+  - trigger: ";st"
     replace: "start from the beginning"
 
-  - trigger: ":ra"
+  - trigger: ";ra"
     replace: "read again!!! investigate deeply and dont stop until you really understand how the system works"
     label: "read again investigate deeply"

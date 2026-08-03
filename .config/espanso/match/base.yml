@@ -8,14 +8,14 @@
 # - misc.yml: Miscellaneous snippets
 
 matches:
-  - trigger: ":fu"
+  - trigger: ";fu"
     replace: "fuck you"
     label: "fuck you"
 
-  - trigger: ":ido"
+  - trigger: ";ido"
     replace: "you fucking idiot"
     label: "idiot"
 
-  - trigger: ":pg"
+  - trigger: ";pg"
     replace: "you fucking pig"
     label: "pig"

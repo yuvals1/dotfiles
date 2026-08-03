@@ -1,7 +1,7 @@
 # Halt/delay execution patterns
 
 matches:
-  - trigger: ":mp"
+  - trigger: ";mp"
     replace: "make a plan first"
     label: "make a plan first"
 

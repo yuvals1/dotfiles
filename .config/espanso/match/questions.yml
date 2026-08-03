@@ -1,58 +1,58 @@
 # Question patterns
 
 matches:
-  - trigger: ":wd"
+  - trigger: ";wd"
     replace: "what's the difference"
     label: "what's the difference"
 
-  - trigger: ":dif"
+  - trigger: ";dif"
     replace: "difference"
     label: "difference"
 
-  - trigger: ":dt"
+  - trigger: ";dt"
     replace: "do you understand the task?"
     label: "do you understand the task?"
 
-  - trigger: ":vb"
+  - trigger: ";vb"
     replace: "verify the behavior is as desired"
     label: "verify the behavior is as desired"
 
-  - trigger: ":dr"
+  - trigger: ";dr"
     replace: "do you remember the instructions?"
     label: "do you remember the instructions?"
 
-  - trigger: ":lmu"
+  - trigger: ";lmu"
     replace: "let me tell you what I understand so far"
     label: "let me tell you what I understand so far"
 
-  - trigger: ":aq"
+  - trigger: ";aq"
     replace: "ask me the questions in AskUserQuestion tool"
     label: "ask me the questions in AskUserQuestion tool"
 
-  - trigger: ":aw"
+  - trigger: ";aw"
     replace: "ask me questions in AskUserQuestion tool to make sure we see eye to eye"
     label: "ask me questions in AskUserQuestion tool to make sure we see eye to eye"
 
-  - trigger: ":ae"
+  - trigger: ";ae"
     replace: "if you have questions or want to verify things, ask me in AskUserQuestion tool"
     label: "if you have questions or want to verify things, ask me in AskUserQuestion tool"
 
-  - trigger: ":as"
+  - trigger: ";as"
     replace: "please plan your implementation in detail and then ask me questions in AskUserQuestion tool to make sure we see eye to eye"
     label: "plan implementation then ask questions"
 
-  - trigger: ":dm"
+  - trigger: ";dm"
     replace: "do you understand what i mean"
     label: "do you understand what i mean"
 
-  - trigger: ":oq"
+  - trigger: ";oq"
     replace: "are there any open qusetions before we start"
     label: "open questions before start"
 
-  - trigger: ":a1"
+  - trigger: ";a1"
     replace: "ask me one in a time"
     label: "ask me one in a time"
 
-  - trigger: ":ot"
+  - trigger: ";ot"
     replace: "one at a time"
     label: "one at a time"
