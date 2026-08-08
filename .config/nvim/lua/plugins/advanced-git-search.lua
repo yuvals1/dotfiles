@@ -14,6 +14,18 @@ return {
       },
     }
     require('telescope').load_extension 'advanced_git_search'
+
+    -- The "Git actions" menu closes its picker and synchronously opens the
+    -- selected one; telescope's deferred popup.move() then hits the dead
+    -- window (plenary popup nvim_win_set_config error). Defer the handoff.
+    local global_picker = require 'advanced_git_search.global_picker'
+    local execute = global_picker.execute_git_function
+    global_picker.execute_git_function = function(...)
+      local args = { ... }
+      vim.schedule(function()
+        execute(unpack(args))
+      end)
+    end
   end,
   dependencies = {
     'nvim-telescope/telescope.nvim',
