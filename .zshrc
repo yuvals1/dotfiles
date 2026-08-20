@@ -71,7 +71,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 
-export PATH="$PATH:$HOME/robopilot/docker/jetson/jetson_rootfs_overlay/home/jetson/"
+export PATH="$PATH:$HOME/robopilot/robot-commands"
 
 # Docker registry for reload-main.sh script
 export HOME_DIR="$HOME"
