@@ -34,3 +34,7 @@ matches:
   - trigger: ";sw"
     replace: "can you investigate in the web to validate what's is this pattern we got. try to be nuanced and to understand pros and conds. try to see if this pattern exists in real complex svelte apps"
     label: "svelte web pattern investigation"
+
+  - trigger: ";inv"
+    replace: "start an investigation to make sure we correctly and deeply understanding and articulating ..."
+    label: "investigate understanding and articulation"

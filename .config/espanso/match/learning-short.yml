@@ -4,6 +4,10 @@ matches:
   - trigger: ";cn"
     replace: "continue"
 
+  - trigger: ";en"
+    replace: "english"
+    label: "english"
+
   - trigger: ";sl0"
     replace: "explain slowly"
 

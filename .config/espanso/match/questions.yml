@@ -45,8 +45,16 @@ matches:
     replace: "do you understand what i mean"
     label: "do you understand what i mean"
 
+  - trigger: ";ams"
+    replace: "am i missing something?"
+    label: "am i missing something?"
+
+  - trigger: ";cz"
+    replace: "am i talking crazy"
+    label: "am i talking crazy"
+
   - trigger: ";oq"
-    replace: "are there any open qusetions before we start"
+    replace: "are there any open questions before we start"
     label: "open questions before start"
 
   - trigger: ";a1"
@@ -54,5 +62,9 @@ matches:
     label: "ask me one in a time"
 
   - trigger: ";ot"
-    replace: "one at a time"
-    label: "one at a time"
+    replace: "one at a time with recommendations"
+    label: "one at a time with recommendations"
+
+  - trigger: ";dw"
+    replace: "all this rough time we go through make me feel there is some deep wrong pattern here. im smelling something deeply wrong, am i wrong? what is the software pattern here? what do big companies do?"
+    label: "smelling something deeply wrong"

@@ -12,3 +12,11 @@ matches:
   - trigger: ";fc"
     replace: "fast commit"
     label: "fast commit"
+
+  - trigger: ";ogns"
+    replace: "ONE_GREP_NO_SPEC"
+    label: "ONE_GREP_NO_SPEC"
+
+  - trigger: ";spie"
+    replace: "single-possibility-instant-essence"
+    label: "single-possibility-instant-essence"
