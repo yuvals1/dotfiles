@@ -165,6 +165,18 @@ local default_configs = {
 }
 
 function M.setup(configs)
+  -- macOS: tearing down FSEvents file watchers on exit can deadlock libuv
+  -- (uv__fsevents_close blocks forever on a semaphore), which hangs :q when a
+  -- server like gopls has registered thousands of watchers on a big repo.
+  -- Disable dynamic watcher registration; such servers fall back to polling.
+  vim.lsp.config('*', {
+    capabilities = {
+      workspace = {
+        didChangeWatchedFiles = { dynamicRegistration = false },
+      },
+    },
+  })
+
   local servers = configs and configs.lsp_servers or {}
   for server, user_conf in pairs(servers) do
     local base = default_configs[server]
