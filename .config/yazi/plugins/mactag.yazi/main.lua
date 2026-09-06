@@ -1,21 +1,16 @@
---- @since 25.5.31
+--- @since 26.8.15
 
 local update = ya.sync(function(st, tags)
 	for path, tag in pairs(tags) do
 		st.tags[path] = #tag > 0 and tag or nil
 	end
-	-- TODO: remove this
-	if ui.render then
-		ui.render()
-	else
-		ya.render()
-	end
+	ui.render()
 end)
 
 local selected_or_hovered = ya.sync(function()
 	local tab, urls = cx.active, {}
-	for _, u in pairs(tab.selected) do
-		urls[#urls + 1] = u
+	for _, f in pairs(tab.selected) do
+		urls[#urls + 1] = f.url
 	end
 	if #urls == 0 and tab.current.hovered then
 		urls[1] = tab.current.hovered.url
@@ -32,14 +27,15 @@ local function setup(st, opts)
 		local url = tostring(self._file.url)
 		local spans = {}
 		for _, tag in ipairs(st.tags[url] or {}) do
-			if self._file.is_hovered then
+			if not self._file.in_current then
+			elseif self._file.is_hovered then
 				spans[#spans + 1] = ui.Span(" ●"):bg(st.colors[tag] or "reset")
 			else
 				spans[#spans + 1] = ui.Span(" ●"):fg(st.colors[tag] or "reset")
 			end
 		end
 		return ui.Line(spans)
-	end, 500)
+	end, opts.order or 500)
 end
 
 local function fetch(_, job)
@@ -48,9 +44,10 @@ local function fetch(_, job)
 		paths[#paths + 1] = tostring(file.url)
 	end
 
-	local output, err = Command("tag"):arg(paths):stdout(Command.PIPED):output()
+	local output, err = Command("tag"):arg(paths):output()
 	if not output then
-		return true, Err("Cannot spawn `tag` command, error: %s", err)
+		ya.err("Cannot spawn `tag` command, error: " .. err)
+		return require("noop"):fetch(job)
 	end
 
 	local i, tags = 1, {}
@@ -68,7 +65,7 @@ local function fetch(_, job)
 	end
 
 	update(tags)
-	return true
+	return require("noop"):fetch(job)
 end
 
 local cands = ya.sync(function(st)

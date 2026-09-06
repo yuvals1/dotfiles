@@ -1,107 +1,107 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:diff"
-rev = "d1c8baa"
-hash = "82376c3381ae915fd799d40f4dd4c6cd"
+rev = "4dc7f1b"
+hash = "14558d2829c0aa05e99c57de8f74d199"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:jump-to-char"
-rev = "d1c8baa"
-hash = "ce67445ebb1bf3d97b8e44f50904b2c5"
+rev = "4dc7f1b"
+hash = "7a4b4237223aaa94e589d1c01a23542a"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:chmod"
-rev = "d1c8baa"
-hash = "8ad3e90b079190b4905f24a44f4ca06b"
+rev = "4dc7f1b"
+hash = "87472b05a8c420100f6a2b9cde1e7746"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "d1c8baa"
-hash = "3996fc74044bc44144b323686f887e1"
+rev = "4dc7f1b"
+hash = "f281261ff04ad7ec867c3f802a50835f"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-filter"
-rev = "d1c8baa"
-hash = "bcda8eeb3f4013bae156aecabfc745e8"
+rev = "4dc7f1b"
+hash = "d6f7351ea25a43c9b5f4315fa1e23935"
 
 [[plugin.deps]]
 use = "GianniBYoung/rsync"
-rev = "824d8a3"
-hash = "936d560532b0095d3f27e8fc0824d751"
+rev = "b5c657a"
+hash = "72828957273094ed0ef52792e3290900"
 
 [[plugin.deps]]
 use = "lpanebr/yazi-plugins:first-non-directory"
-rev = "ca18a2c"
-hash = "5c20ffa5171dab34042e03d273dddc5b"
+rev = "ea50bee"
+hash = "cfc60cfcc554a59f87122246d03f7e11"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "d1c8baa"
-hash = "435a2af56ecfb3d05755fd5e24977d8b"
+rev = "4dc7f1b"
+hash = "b95f898e6dc60b52edbc415952e14395"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:toggle-pane"
-rev = "d1c8baa"
-hash = "8a7c58225816a163a6e8730c0adafbc8"
+rev = "4dc7f1b"
+hash = "5b2fbef7d1513ce38ff72623a071a5e"
 
 [[plugin.deps]]
 use = "h-hg/yamb"
-rev = "22af003"
-hash = "7cc42012a7c2099f80064d228feb8d44"
+rev = "971b858"
+hash = "da4534745930e827a44d4585bbd965eb"
 
 [[plugin.deps]]
 use = "boydaihungst/simple-tag"
-rev = "ebcbc9e"
-hash = "fc8d977f168df8ac6db8b5c1167ec777"
+rev = "d019de3"
+hash = "c1c9aaf057e2347942361b7155a0308c"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:piper"
-rev = "d1c8baa"
-hash = "a20327710c3a8d37ee0972128dcb6a31"
+rev = "4dc7f1b"
+hash = "45a533508a9840cc5a10cf6129f63e6a"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-paste"
-rev = "d1c8baa"
-hash = "75fd60b2df7115e0a6ca31a6a804d320"
+rev = "4dc7f1b"
+hash = "5be02722d97561b6f7aec22429aa00be"
 
 [[plugin.deps]]
 use = "ndtoan96/ouch"
-rev = "0742fff"
-hash = "2bd799b42b8e42b8ef100310be71f8d1"
+rev = "cfe4f50"
+hash = "eff5702573b6cfba61e4ac8b1969629a"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:vcs-files"
-rev = "d1c8baa"
-hash = "4ee57085277d616acfa0ef1fef37dc00"
+rev = "4dc7f1b"
+hash = "853240b2454c93a93fd03fc9fd7e06e8"
 
 [[plugin.deps]]
 use = "boydaihungst/pref-by-location"
-rev = "882e752"
-hash = "f45cf212024c85b5f0ea0423e27196a"
+rev = "0248cfe"
+hash = "348b3fc3b313acfb21814ffd5f49b434"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:zoom"
-rev = "d1c8baa"
-hash = "9dee2bf990ea941ccf67df74bca45468"
+rev = "4dc7f1b"
+hash = "e8e279463ee99c940e6945a14cf4aa9e"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "d1c8baa"
-hash = "63b6c222bf2103b3023389dde5e2ecfe"
+rev = "4dc7f1b"
+hash = "5bb0bfab901d3601c370eafdd66edd31"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mactag"
-rev = "d1c8baa"
-hash = "326eb39db39c855a1d564b777b810f05"
+rev = "4dc7f1b"
+hash = "34e3e12060f833cc21446f23a7ced8d1"
 
 [[plugin.deps]]
 use = "KKV9/compress"
-rev = "c264639"
-hash = "e17c11b605d989568a1d1741ca17c584"
+rev = "80e5268"
+hash = "868db729374b97871bc30b96d0e9061f"
 
 [[plugin.deps]]
 use = "TD-Sky/sudo"
-rev = "f35afcb"
-hash = "5db5b16dc96e971f0560a31999271065"
+rev = "e70796a"
+hash = "74129f78c811cfe7c694d86c3f634c26"
 
 [flavor]
 deps = []

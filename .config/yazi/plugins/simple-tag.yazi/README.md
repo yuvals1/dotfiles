@@ -35,10 +35,10 @@ simple-tag is a Yazi plugin that allows you to add tags to files and folders. Ea
 ## Requirements
 
 > [!IMPORTANT]
-> Minimum supported version: Yazi v25.5.31.
+> Minimum supported version: Yazi v26.5.6
 
 - [Yazi](https://github.com/sxyazi/yazi)
-- Tested on Linux
+- Tested on Linux and Windows
 
 ## Installation
 
@@ -74,7 +74,6 @@ ya pkg add boydaihungst/simple-tag
 
 - Filter Files by Tag(s) and Modes:
   In all of examples below, I didn't use fixed tag keys with `--keys`/`--key`/`--tag`/`--tags`
-
   - Mode = and (Default), match all of the selected tags:
 
     ![Recording 2025-03-29 at 20 56 47](https://github.com/user-attachments/assets/e7619681-7ab8-4e2c-b8ea-ea4aeb8c22db)
@@ -87,7 +86,6 @@ ya pkg add boydaihungst/simple-tag
   In all of examples below, I didn't use fixed tag keys with `--keys`/`--key`/`--tag`/`--tags`
 
   ![image](https://github.com/user-attachments/assets/6efabb8a-0022-4aa3-ba20-04127e3c58c1)
-
   - Replace selection:
 
     ![Recording 2025-03-29 at 23 30 56](https://github.com/user-attachments/assets/364c07a7-c1ef-4323-8e92-ccb795233fd7)
@@ -112,6 +110,11 @@ ya pkg add boydaihungst/simple-tag
 
     ![Recording 2025-03-29 at 23 54 55](https://github.com/user-attachments/assets/abf7ccc7-7591-4683-84f9-53e8cb9a280e)
 
+- Display on the left side:
+  <img width="545" height="154" alt="image" src="https://github.com/user-attachments/assets/ae90f44a-e6db-4918-8750-3a9be1d665ef" />
+- Display on the left and hide default icon (if only has 1 tag, the condition to hide default icon is configurable)
+  <img width="546" height="173" alt="image" src="https://github.com/user-attachments/assets/17250122-7728-4a6a-b498-92ca341dd796" />
+
 ## Configuration
 
 ### Add setup function in `yazi/init.lua`.
@@ -126,9 +129,38 @@ require("simple-tag"):setup({
   -- Disable tag key hints (popup in bottom right corner)
   hints_disabled = false, -- (Optional)
 
-  -- linemode order: adjusts icon/text position. Fo example, if you want icon to be on the mose left of linemode then set linemode_order larger than 1000.
-  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-plugin/preset/components/linemode.lua#L4-L5
-  linemode_order = 500, -- (Optional)
+  -- Display tags on the left side or right side.
+  left_side = false, -- (Optional)
+
+  -- Entity order (if left_side = true): adjusts icon/text position.
+  -- For example, if you want icon to be on the most left of line then set render_order less than 1000.
+  -- More info about the order values: https://github.com/sxyazi/yazi/blob/a2996908deddd4fc5061d18cf77f0af9f07b0e5a/yazi-plugin/preset/components/entity.lua#L4-L9
+
+  -- Linemode order (if left_side = false, by default): adjusts icon/text position.
+  -- For example, if you want icon to be on the most right of linemode then set render_order larger than 1000 and less than 2000.
+  -- More info about the order values: https://github.com/sxyazi/yazi/blob/a2996908deddd4fc5061d18cf77f0af9f07b0e5a/yazi-plugin/preset/components/linemode.lua#L4-L5
+  -- Default is 1500 if tags is on the right side, otherwise 500 to make sure it won't conflict with default line padding left/right.
+  render_order = 500, -- (Optional).
+
+  -- Replace default yazi file/folder icons with tag icons. Only apply if left_side = true and have at least 1 tag.
+  -- Look better if it has only 1 tag. -> use function instead of boolean
+  replace_default_icon = false, -- (Optional)
+
+  -- Padding for left/right side. Default will calculate automatically based on render_order and left_side.
+  -- Unless you has custom linemode/entity render function, you mostly don't need to set these values.
+  -- padding_left = " ", -- (Optional, string only)
+  -- padding_right = " ", -- (Optional, string only)
+
+  -- Use replace_default_icon as a function instead
+
+	-- tags: list/table of tag keys
+	-- file: fs::File. https://yazi-rs.github.io/docs/plugins/context#fs-file
+
+	-- replace_default_icon = function(file, tags) -- (Optional)
+	-- 	--return tags[1] == "*" and file.is_hovered -- Only apply to file/folder with tag key * and hovered
+	-- 	return #tags == 1 -- Only apply to file/folder with only 1 tag
+	-- end,
+
 
   -- You can backup/restore this folder within the same OS (Linux, windows, or MacOS).
   -- But you can't restore backed up folder in the different OS because they use difference absolute path.
@@ -141,6 +173,7 @@ require("simple-tag"):setup({
 	  -- Set this same value with `theme.toml` > [mgr] > hovered > reversed
 	  -- Default theme use "reversed = true".
 	  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-config/preset/theme-dark.toml#L25
+	  -- Only need to set this if you use shipped/stable yazi <= v25.5.31 or nightly yazi installed before 11/12/2025
 	  reversed = true, -- (Optional)
 
 	  -- More colors: https://yazi-rs.github.io/docs/configuration/theme#types.color
@@ -165,6 +198,7 @@ require("simple-tag"):setup({
 		["$"] = "",
 		["!"] = "",
 		["p"] = "",
+		["w"] = "This long text also works",
   },
 
 })
@@ -176,27 +210,22 @@ Use one of the following methods:
 
 > [!IMPORTANT]
 >
-> For yazi nightly replace `name` with `url`
+> For yazi after 19-04-2025, add `group = "simple-tag"` to each fetcher below.
 
 ```toml
 [plugin]
 
   fetchers = [
-    { id = "simple-tag", name = "*", run = "simple-tag" },
-    { id = "simple-tag", name = "*/", run = "simple-tag" },
+    { id = "simple-tag", url = "*", run = "simple-tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag" },
+    # { id = "simple-tag", url = "*/", run = "simple-tag", group = "simple-tag" },
   ]
 # or
   prepend_fetchers = [
-    { id = "simple-tag", name = "*", run = "simple-tag" },
-    { id = "simple-tag", name = "*/", run = "simple-tag" },
+    { id = "simple-tag", url = "*", run = "simple-tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag" },
   ]
 # or
-  append_fetchers = [
-    { id = "simple-tag", name = "*", run = "simple-tag" },
-    { id = "simple-tag", name = "*/", run = "simple-tag" },
-  ]
-
-# For yazi nightly, name is replaced with url
   append_fetchers = [
     { id = "simple-tag", url = "*", run = "simple-tag" },
     { id = "simple-tag", url = "*/", run = "simple-tag" },
@@ -312,8 +341,14 @@ Or you can use `keymap` to replace all other keys
 
     #  ─────────────────────── FILTER FILES/FOLDERS BY TAGS: ───────────────────────
     # Available filter modes:
-    # and → Filter files which contain all of selected tags (Default if mode isn't specified).
-    # or → Filter files which contain at least one of selected tags.
+    # and → Show files that contain all selected tags. (Default if mode isn't specified).
+    # or → Show files that contain at least one of the selected tags.
+
+    # nand → ("not and") Hide files that contain all selected tags. Inverse of the "and" mode.
+    # nor → ("not or") Hide files that contain at least one of the selected tags. Inverse of the "or" mode.
+    # not → Show only files that have no tags.
+
+    # NOTE: Not available in vfs mode (Remote Virtual Filesystem)
 
     # Filter files/folders by tags
 
@@ -341,12 +376,12 @@ Or you can use `keymap` to replace all other keys
 
     #  ─────────────────────── VISUAL SELECT FILES/FOLDERS BY TAGS: ───────────────────────
 
-    # Avaiable selection actions:
+    # Available selection actions:
     # replace → Replaces the current selection list with files/folders that have the selected tag.
     # unite → Combines the currently selected files/folders with those that have the selected tag.
     # intersect → Keeps only the files/folders that are present in both the current selection and the tagged items.
-    # subtract → Deselects files/folders that have the selected tag.
-    # exclude → Keeps only the files/folders that do not have the selected tag.
+    # subtract → Deselects files/folders that have the selected tag from the current selection.
+    # exclude → Combines the currently selected files/folders with the tagged items, then deselects any overlapping items between the current selection and the tagged items.
     # undo → Undos or redoes the last selection action.
 
     # which_key will popup to choose selection mode
@@ -358,7 +393,7 @@ Or you can use `keymap` to replace all other keys
 
     # Run action on files/folders by a tag.
     # A tag hint window will show up.
-    # Simply press any tag key to do the folowing action:
+    # Simply press any tag key to do the following action:
     { on = [ "t", "s", "r" ], run = "plugin simple-tag -- replace-select", desc = "replace-select" },
     { on = [ "t", "s", "u" ], run = "plugin simple-tag -- unite-select", desc = "unite-select" },
     { on = [ "t", "s", "i" ], run = "plugin simple-tag -- intersect-select", desc = "intersect-select" },
@@ -369,7 +404,7 @@ Or you can use `keymap` to replace all other keys
 
     # Run action on files/folders by tag(s) with value from input box.
     # A tag hint window will show up.
-    # Simply input tag key(s) to do the folowing action:
+    # Simply input tag key(s) to do the following action:
     { on = [ "t", "s", "R" ], run = "plugin simple-tag -- replace-select --input", desc = "replace-select --input" },
     { on = [ "t", "s", "U" ], run = "plugin simple-tag -- unite-select --input", desc = "unite-select --input" },
     { on = [ "t", "s", "I" ], run = "plugin simple-tag -- intersect-select --input", desc = "intersect-select --input" },
@@ -387,7 +422,7 @@ Or you can use `keymap` to replace all other keys
 ### Customizing the Theme for tag hints window
 
 To modify the tag hints window appearance, edit `.../yazi/theme.toml`:
-You can also use Falvors file instead.
+You can also use Flavors file instead.
 
 ```toml
 
