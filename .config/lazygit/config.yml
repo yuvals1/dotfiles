@@ -19,7 +19,7 @@ keybinding:
     scrollUpMainAlt1: "" # disable K for scrolling
     scrollDownMainAlt1: "" # disable J for scrolling
   commits:
-    openLogMenu: "<C-r>"
+    openLogMenu: "<c-r>"
     moveDownCommit: "J"
     moveUpCommit: "K"
     pasteCommits: "V"

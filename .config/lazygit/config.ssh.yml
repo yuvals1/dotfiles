@@ -18,7 +18,7 @@ keybinding:
     scrollUpMainAlt1: ""
     scrollDownMainAlt1: ""
   commits:
-    openLogMenu: "<C-r>"
+    openLogMenu: "<c-r>"
     moveDownCommit: "J"
     moveUpCommit: "K"
 
