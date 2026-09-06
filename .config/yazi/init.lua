@@ -1,14 +1,5 @@
--- Configure git signs before setup
-th = th or {}
-th.git = {
-	modified_sign = "M",
-	added_sign = "A", 
-	untracked_sign = "?",
-	ignored_sign = "!",
-	deleted_sign = "D",
-	updated_sign = "U"
-}
-
+-- Git signs are configured in theme.toml's [git] section (a custom theme
+-- section): anything set on `th` here is wiped on theme reloads.
 require('git'):setup {}
 -- require('my_linemode'):setup()
 require('full-border'):setup()

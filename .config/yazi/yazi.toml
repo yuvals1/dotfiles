@@ -31,43 +31,43 @@ ueberzug_offset = [0, 0, 0, 0]
 
 [opener]
 edit = [
-  { run = 'nvim "$@"', desc = "Neovim", block = true, for = "unix" },
-  { run = 'code %*', orphan = true, desc = "code", for = "windows" },
-  { run = 'code -w %*', block = true, desc = "code (block)", for = "windows" },
+  { run = 'nvim %s', desc = "Neovim", block = true, for = "unix" },
+  { run = 'code %s', orphan = true, desc = "code", for = "windows" },
+  { run = 'code -w %s', block = true, desc = "code (block)", for = "windows" },
 ]
 open = [
-  { run = 'xdg-open "$1"', desc = "Open", for = "linux" },
-  { run = 'open "$@"', desc = "Open", for = "macos" },
+  { run = 'xdg-open %s1', desc = "Open", for = "linux" },
+  { run = 'open %s', desc = "Open", for = "macos" },
   { run = 'start "" "%1"', orphan = true, desc = "Open", for = "windows" },
 ]
 reveal = [
-  { run = 'xdg-open "$(dirname "$1")"', desc = "Reveal", for = "linux" },
-  { run = 'open -R "$1"', desc = "Reveal", for = "macos" },
+  { run = 'xdg-open %d1', desc = "Reveal", for = "linux" },
+  { run = 'open -R %s1', desc = "Reveal", for = "macos" },
   { run = 'explorer /select,"%1"', orphan = true, desc = "Reveal", for = "windows" },
-  { run = '''exiftool "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show EXIF", for = "unix" },
+  { run = '''exiftool %s1; echo "Press enter to exit"; read _''', block = true, desc = "Show EXIF", for = "unix" },
 ]
 extract = [
-  { run = 'ouch d -y "$@"', desc = "Extract here with ouch", for = "unix" },
-  { run = 'ouch d -y %*', desc = "Extract here with ouch", for = "windows" },
-  { run = 'ya pub extract --list "$@"', desc = "Extract here (yazi)", for = "unix" },
-  { run = 'ya pub extract --list %*', desc = "Extract here (yazi)", for = "windows" },
+  { run = 'ouch d -y %s', desc = "Extract here with ouch", for = "unix" },
+  { run = 'ouch d -y %s', desc = "Extract here with ouch", for = "windows" },
+  { run = 'ya pub extract --list %s', desc = "Extract here (yazi)", for = "unix" },
+  { run = 'ya pub extract --list %s', desc = "Extract here (yazi)", for = "windows" },
 ]
 play = [
-  { run = 'mpv "$@"', orphan = true, for = "unix" },
-  { run = 'mpv %*', orphan = true, for = "windows" },
-  { run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
+  { run = 'mpv %s', orphan = true, for = "unix" },
+  { run = 'mpv %s', orphan = true, for = "windows" },
+  { run = '''mediainfo %s1; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
 ]
 browser = [
-  { run = 'open -a "Google Chrome" "$@"', desc = "Open in Chrome", for = "macos" },
-  { run = 'google-chrome "$@"', desc = "Open in Chrome", for = "linux" },
+  { run = 'open -a "Google Chrome" %s', desc = "Open in Chrome", for = "macos" },
+  { run = 'google-chrome %s', desc = "Open in Chrome", for = "linux" },
   { run = 'start chrome "%1"', orphan = true, desc = "Open in Chrome", for = "windows" },
 ]
 hexyl = [
-  { run = '''hexyl "$1" | less -R''', block = true, desc = "View with hexyl", for = "unix" },
+  { run = '''hexyl %s1 | less -R''', block = true, desc = "View with hexyl", for = "unix" },
   { run = 'hexyl %1 | more', block = true, desc = "View with hexyl", for = "windows" },
 ]
 visidata = [
-  { run = '''env PYTHONPATH="$HOME/dev/visidata" "$HOME/dev/visidata/bin/vd" "$@"''', desc = "Open in VisiData", block = true, for = "unix" },
+  { run = '''env PYTHONPATH="$HOME/dev/visidata" "$HOME/dev/visidata/bin/vd" %s''', desc = "Open in VisiData", block = true, for = "unix" },
 ]
 
 
@@ -153,7 +153,7 @@ rules = [
     "reveal",
   ] },
   # Fallback
-  { name = "*", use = [
+  { url = "*", use = [
     "open",
     "reveal",
   ] },
@@ -171,7 +171,9 @@ suppress_preload = false
 
 fetchers = [
   # Mimetype
-  { id = "mime", url = "*", run = "mime", if = "!mime", prio = "high" },
+  { url = "*/",        run = "mime.dir",   prio = "high", group = "mime" },
+  { url = "local://*", run = "mime.local", prio = "high", group = "mime" },
+  { url = "trash://*", run = "mime.trash", prio = "high", group = "mime" },
   # { id = "simple-tag", url = "*", run = "simple-tag" },
   # { id = "simple-tag", url = "*/", run = "simple-tag" },
 ]
@@ -335,12 +337,12 @@ sort_reverse = false
 sort_translit = false
 
 [[plugin.prepend_fetchers]]
-id = "git"
+group = "git"
 url = "*"
 run = "git"
 
 [[plugin.prepend_fetchers]]
-id = "git"
+group = "git"
 url = "*/"
 run = "git"
 

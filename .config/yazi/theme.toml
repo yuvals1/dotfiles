@@ -3,7 +3,6 @@
 
 # If you want to dynamically override their content based on dark/light mode, you can specify two different flavors
 # for dark and light modes under `[flavor]`, and do so in those flavors instead.
-"$schema" = "https://yazi-rs.github.io/schemas/theme.json"
 
 # vim:fileencoding=utf-8:foldmethod=marker
 
@@ -897,3 +896,14 @@ conds = [
 ]
 
 # : }}}
+
+# git.yazi plugin signs (custom theme section; survives theme reloads,
+# unlike setting th.git in init.lua)
+[git]
+unstaged_sign = "M"
+staged_sign = "M"
+added_sign = "A"
+untracked_sign = "?"
+ignored_sign = "!"
+deleted_sign = "D"
+updated_sign = "U"
