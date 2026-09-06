@@ -4,12 +4,14 @@ set -euo pipefail
 
 DEFAULT_SESSIONS_DIR="~/.codex/sessions"
 SAVED_SESSIONS_DIR="$HOME/codex_saved_sessions"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HISTORY_HELPER="$SCRIPT_DIR/codex_session_history.py"
 
 usage() {
     cat <<'EOF'
 Usage: import_codex_session.sh <source> <target> <session_id> [title...]
 
-Imports a Codex session JSONL from one machine/path to another so the target can run:
+Imports a Codex session and all required source rollouts so the target can run:
   codex resume <session_id>
 
 Source/target forms:
@@ -21,6 +23,8 @@ Source/target forms:
   local                                  local ~/.codex/sessions
 
 If target is not already a YYYY/MM/DD directory, the source session date is appended.
+History dependencies are resolved across dates in the enclosing session tree.
+Requires Python 3 to validate JSON metadata; existing source histories are preserved.
 If title is provided, a local copy is saved under:
   ~/codex_saved_sessions/<title>/
 EOF
@@ -178,7 +182,7 @@ find_session_file() {
         quoted_path=$(remote_path_expr "$path")
         local quoted_name
         quoted_name=$(sh_quote "*${session_id}.jsonl")
-        ssh "$host" "find $quoted_path -type f -name $quoted_name -print" >"$output_file"
+        ssh -n "$host" "find $quoted_path -type f -name $quoted_name -print" >"$output_file"
     else
         local local_path
         local_path=$(expand_local_path "$path")
@@ -206,19 +210,30 @@ copy_to_target() {
     local host="$2"
     local target_dir="$3"
     local local_file="$4"
+    local preserve_existing="${5:-false}"
 
     if [ "$remote" = true ]; then
         require_command ssh
         require_command rsync
         local quoted_target_dir
         quoted_target_dir=$(remote_path_expr "$target_dir")
-        ssh "$host" "mkdir -p -- $quoted_target_dir"
-        rsync -az "$local_file" "$host:$target_dir/"
+        ssh -n "$host" "mkdir -p -- $quoted_target_dir"
+        if [ "$preserve_existing" = true ]; then
+            rsync -az --ignore-existing "$local_file" "$host:$target_dir/"
+        else
+            rsync -az "$local_file" "$host:$target_dir/"
+        fi
     else
         local local_target_dir
         local_target_dir=$(expand_local_path "$target_dir")
         mkdir -p "$local_target_dir"
-        cp -f "$local_file" "$local_target_dir/"
+        if [ "$preserve_existing" = true ]; then
+            if [ ! -e "$local_target_dir/$(basename "$local_file")" ]; then
+                cp -n "$local_file" "$local_target_dir/"
+            fi
+        else
+            cp -f "$local_file" "$local_target_dir/"
+        fi
     fi
 }
 
@@ -241,6 +256,25 @@ save_local_archive() {
     echo "Saved local archive: $archive_dir"
 }
 
+history_tree_for() {
+    local path
+    path=$(trim_trailing_slashes "$1")
+    if [[ "$path" =~ ^(.*)/[0-9]{4}/[0-9]{2}/[0-9]{2}$ ]]; then
+        printf '%s\n' "${BASH_REMATCH[1]}"
+    else
+        printf '%s\n' "$path"
+    fi
+}
+
+check_target_history() {
+    local path="$1" bytes="$2" digest="$3"
+    if [ "$TARGET_REMOTE" = true ]; then
+        ssh "$TARGET_HOST" "python3 - check-existing $(sh_quote "$path") $(sh_quote "$bytes") $(sh_quote "$digest")" <"$HISTORY_HELPER"
+    else
+        python3 "$HISTORY_HELPER" check-existing "$(expand_local_path "$path")" "$bytes" "$digest"
+    fi
+}
+
 if [ "$#" -lt 3 ]; then
     usage
     exit 1
@@ -251,6 +285,11 @@ TARGET_ARG="$2"
 SESSION_ID="$3"
 shift 3
 TITLE="${*:-}"
+require_command python3
+[ -f "$HISTORY_HELPER" ] || die "Missing history helper: $HISTORY_HELPER"
+if [ -n "$TITLE" ]; then
+    [[ "$TITLE" != *"/"* && "$TITLE" != "." && "$TITLE" != ".." ]] || die "Invalid archive title"
+fi
 
 case "$SESSION_ID" in
     ""|*[!A-Za-z0-9_-]*)
@@ -292,14 +331,59 @@ fi
 FOUND_PATH=$(sed -n '1p' "$MATCHES_FILE")
 FILE_NAME=$(basename "$FOUND_PATH")
 DATE_REL=$(derive_date_rel "$FOUND_PATH" "$FILE_NAME")
-LOCAL_SESSION_FILE="$TMP_DIR/$FILE_NAME"
 TARGET_DIR=$(target_dir_for "$TARGET_PATH" "$DATE_REL")
+SELECTED_FILE_NAME="$FILE_NAME"
+SELECTED_DATE_REL="$DATE_REL"
+HISTORY_SOURCE_PATH=$(history_tree_for "$(dirname "$FOUND_PATH")")
+HISTORY_TARGET_PATH=$(history_tree_for "$TARGET_PATH")
 
 echo "Found: $FOUND_PATH"
-echo "Copying session through local staging..."
-copy_from_source "$SOURCE_REMOTE" "$SOURCE_HOST" "$FOUND_PATH" "$LOCAL_SESSION_FILE"
-save_local_archive "$TITLE" "$SESSION_ID" "$LOCAL_SESSION_FILE" "$FILE_NAME" "$DATE_REL"
-copy_to_target "$TARGET_REMOTE" "$TARGET_HOST" "$TARGET_DIR" "$LOCAL_SESSION_FILE"
+echo "Staging and validating the complete session history..."
+CURRENT_ID="$SESSION_ID"
+SEEN_IDS="|"
+while [ -n "$CURRENT_ID" ]; do
+    [[ "$SEEN_IDS" != *"|$CURRENT_ID|"* ]] || die "History dependency cycle: $CURRENT_ID"
+    SEEN_IDS="$SEEN_IDS$CURRENT_ID|"
+    FILE_NAME=$(basename "$FOUND_PATH")
+    DATE_REL=$(derive_date_rel "$FOUND_PATH" "$FILE_NAME")
+    copy_from_source "$SOURCE_REMOTE" "$SOURCE_HOST" "$FOUND_PATH" "$TMP_DIR/$FILE_NAME"
+    printf '%s\n' "$DATE_REL" >"$TMP_DIR/$FILE_NAME.date"
+    CURRENT_ID=$(python3 "$HISTORY_HELPER" parent "$TMP_DIR/$FILE_NAME" "$CURRENT_ID")
+    [ -n "$CURRENT_ID" ] || break
+    find_session_file "$SOURCE_REMOTE" "$SOURCE_HOST" "$HISTORY_SOURCE_PATH" "$CURRENT_ID" "$MATCHES_FILE"
+    MATCH_COUNT=$(awk 'END { print NR }' "$MATCHES_FILE")
+    [ "$MATCH_COUNT" -ne 0 ] || die "Missing source rollout: $CURRENT_ID in $HISTORY_SOURCE_PATH"
+    [ "$MATCH_COUNT" -eq 1 ] || die "Ambiguous source rollout: $CURRENT_ID in $HISTORY_SOURCE_PATH"
+    FOUND_PATH=$(sed -n '1p' "$MATCHES_FILE")
+done
+
+MANIFEST="$TMP_DIR/history.tsv"
+python3 "$HISTORY_HELPER" manifest "$TMP_DIR" "$SESSION_ID" >"$MANIFEST"
+# Reject target conflicts before publishing any part of the session.
+while IFS=$'\t' read -r FILE_NAME REQUIRED_BYTES PREFIX_DIGEST; do
+    [ "$REQUIRED_BYTES" != "-" ] || continue
+    DATE_REL=$(cat "$TMP_DIR/$FILE_NAME.date")
+    HISTORY_DIR=$(target_dir_for "$HISTORY_TARGET_PATH" "$DATE_REL")
+    check_target_history "$HISTORY_DIR/$FILE_NAME" "$REQUIRED_BYTES" "$PREFIX_DIGEST" >/dev/null
+done <"$MANIFEST"
+
+while IFS=$'\t' read -r FILE_NAME REQUIRED_BYTES PREFIX_DIGEST; do
+    DATE_REL=$(cat "$TMP_DIR/$FILE_NAME.date")
+    if [ "$REQUIRED_BYTES" = "-" ]; then
+        copy_to_target "$TARGET_REMOTE" "$TARGET_HOST" "$TARGET_DIR" "$TMP_DIR/$FILE_NAME"
+    else
+        HISTORY_DIR=$(target_dir_for "$HISTORY_TARGET_PATH" "$DATE_REL")
+        copy_to_target "$TARGET_REMOTE" "$TARGET_HOST" "$HISTORY_DIR" "$TMP_DIR/$FILE_NAME" true
+        check_target_history "$HISTORY_DIR/$FILE_NAME" "$REQUIRED_BYTES" "$PREFIX_DIGEST" >/dev/null
+    fi
+    if [ -n "$TITLE" ] && [ "$REQUIRED_BYTES" != "-" ]; then
+        ARCHIVE_DATE_DIR="$SAVED_SESSIONS_DIR/$TITLE/$DATE_REL"
+        mkdir -p "$ARCHIVE_DATE_DIR"
+        cp -f "$TMP_DIR/$FILE_NAME" "$ARCHIVE_DATE_DIR/$FILE_NAME"
+    fi
+done <"$MANIFEST"
+save_local_archive "$TITLE" "$SESSION_ID" "$TMP_DIR/$SELECTED_FILE_NAME" "$SELECTED_FILE_NAME" "$SELECTED_DATE_REL"
+echo "Transferred $(awk 'END { print NR }' "$MANIFEST") rollout file(s)."
 
 if [ "$TARGET_REMOTE" = true ]; then
     echo "Imported session to $TARGET_HOST:$TARGET_DIR"

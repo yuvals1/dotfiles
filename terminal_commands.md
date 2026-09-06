@@ -10,3 +10,12 @@ pandoc homework4.md -o homework4.pdf
 ```bash
 aerospace reload-config && sketchybar --reload
 ```
+
+## Codex session transfer
+
+```bash
+~/scripts/import_codex_session.sh local installer1.local SESSION_ID
+```
+
+The importer includes required source histories. See
+[Codex session import](docs/codex-session-import.md) for validation and archive behavior.
