@@ -75,10 +75,10 @@ end)
 
 local get_selected = ya.sync(function()
   local selected = {}
-  for _, u in pairs(cx.active.selected) do
+  for _, file in pairs(cx.active.selected) do
     selected[#selected + 1] = {
-      url = tostring(u),
-      name = u.name,
+      url = tostring(file.url),
+      name = file.name,
     }
   end
   return selected
